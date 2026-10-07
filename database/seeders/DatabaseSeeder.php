@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             BankSeeder::class,
             MembershipPackageSeeder::class,
             PtPackageSeeder::class,
+            PtBookingDemoSeeder::class,
         ]);
     }
 }
