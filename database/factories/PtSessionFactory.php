@@ -2,52 +2,26 @@
 
 namespace Database\Factories;
 
-use App\Models\MemberPtQuota;
 use App\Models\PtSession;
-use App\Models\User;
+use App\Models\MemberProfile;
+use App\Models\TrainerProfile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<PtSession>
- */
 class PtSessionFactory extends Factory
 {
     protected $model = PtSession::class;
 
     public function definition(): array
     {
+        $startTime = fake()->numberBetween(8, 20);
         return [
-            'member_pt_quota_id' => MemberPtQuota::factory(),
-            'member_id' => function (array $attributes) {
-                return MemberPtQuota::find($attributes['member_pt_quota_id'])->member_id ?? User::factory()->member();
-            },
-            'trainer_id' => User::factory()->trainer(),
-            'session_date' => now()->addDays(2)->toDateString(),
-            'start_time' => '10:00:00',
-            'end_time' => '11:00:00',
-            'status' => 'scheduled',
+            'member_pt_quota_id' => \App\Models\MemberPtQuota::factory(),
+            'member_id' => MemberProfile::factory(),
+            'trainer_id' => TrainerProfile::factory(),
+            'session_date' => fake()->dateTimeBetween('-1 month', '+1 month')->format('Y-m-d'),
+            'start_time' => sprintf('%02d:00:00', $startTime),
+            'end_time' => sprintf('%02d:00:00', $startTime + 1),
+            'status' => fake()->randomElement(['scheduled', 'done', 'cancelled']),
         ];
-    }
-
-    public function scheduled(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'status' => 'scheduled',
-        ]);
-    }
-
-    public function done(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'session_date' => now()->subDays(2)->toDateString(),
-            'status' => 'done',
-        ]);
-    }
-
-    public function cancelled(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'status' => 'cancelled',
-        ]);
     }
 }

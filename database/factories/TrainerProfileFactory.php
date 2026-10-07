@@ -6,9 +6,6 @@ use App\Models\TrainerProfile;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends Factory<TrainerProfile>
- */
 class TrainerProfileFactory extends Factory
 {
     protected $model = TrainerProfile::class;
@@ -16,15 +13,10 @@ class TrainerProfileFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->trainer(),
-            'specialization' => 'Hypertrophy & Strength',
-            'bio' => 'Certified strength and conditioning specialist with 6+ years experience.',
-            'experience' => 6,
-            'tier' => 'Senior PT Tier III',
-            'studio' => 'SCBD Studio',
-            'rating' => 4.98,
-            'review_count' => 184,
-            'photo_path' => null,
+            'user_id' => User::factory(),
+            'specialization' => fake()->randomElement(['Weight Loss', 'Muscle Gain', 'Cardio', 'Strength Training', 'CrossFit']),
+            'bio' => fake()->paragraph(),
+            'experience' => fake()->numberBetween(1, 10),
             'status' => 'active',
         ];
     }
