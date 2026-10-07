@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use Database\Factories\TrainerProfileFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TrainerProfile extends Model
 {
-    /** @use HasFactory<TrainerProfileFactory> */
     use HasFactory;
 
     protected $guarded = [];

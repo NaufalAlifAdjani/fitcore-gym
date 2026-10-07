@@ -3,12 +3,12 @@
      x-show="show"
      x-init="setTimeout(() => show = false, 6000)"
      x-transition:enter="transition ease-out duration-300"
-     x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+     x-transition:enter-start="opacity-0 -translate-y-4 scale-95"
      x-transition:enter-end="opacity-100 translate-y-0 scale-100"
      x-transition:leave="transition ease-in duration-200"
      x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-     x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-     class="fixed bottom-6 right-6 z-50 max-w-md w-full shadow-2xl rounded-2xl p-4 border backdrop-blur-md transition-all
+     x-transition:leave-end="opacity-0 -translate-y-4 scale-95"
+     class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-md shadow-2xl rounded-2xl p-4 border backdrop-blur-md transition-all
             {{ session('success') ? 'bg-zinc-900/95 border-emerald-500/40 text-zinc-100' : 'bg-zinc-900/95 border-red-500/40 text-zinc-100' }}">
 
     <div class="flex items-start gap-3">

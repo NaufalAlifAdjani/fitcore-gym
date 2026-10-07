@@ -6,8 +6,7 @@
         currentSlot: '{{ substr($session->start_time, 0, 5) }}',
         slotsUrl: '{{ route('pt-sessions.slots') }}',
         availabilityUrl: '{{ route('pt-sessions.availability') }}'
-    })"
-    class="py-8 sm:py-10">
+    })" class="py-8 sm:py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
             <!-- Breadcrumbs -->
@@ -15,13 +14,14 @@
                 <nav class="flex items-center gap-2 font-medium">
                     <a href="{{ route('dashboard') }}" class="hover:text-[#16151A] transition-colors">Beranda</a>
                     <span>/</span>
-                    <a href="{{ route('pt-sessions.index') }}" class="hover:text-[#16151A] transition-colors">Riwayat Sesi</a>
+                    <a href="{{ route('pt-sessions.index') }}" class="hover:text-[#16151A] transition-colors">Riwayat
+                        Sesi</a>
                     <span>/</span>
                     <span class="text-[#ED1B45] font-bold">Ubah Jadwal</span>
                 </nav>
 
                 <a href="{{ route('pt-sessions.index') }}"
-                   class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white hover:bg-zinc-100 text-[#16151A] border border-[#E5E7EB] text-xs font-semibold shadow-xs transition-colors w-fit">
+                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white hover:bg-zinc-100 text-[#16151A] border border-[#E5E7EB] text-xs font-semibold shadow-xs transition-colors w-fit">
                     &larr; Batalkan & Kembali
                 </a>
             </div>
@@ -32,12 +32,16 @@
                     Ubah Jadwal Sesi Latihan
                 </h1>
                 <p class="text-sm text-[#565A66] leading-relaxed">
-                    Pilih tanggal dan jam pengganti untuk sesi latihan privat Anda bersama <strong class="text-[#16151A]">{{ $trainer->name }}</strong>.
+                    Pilih tanggal dan jam pengganti untuk sesi latihan privat Anda bersama <strong
+                        class="text-[#16151A]">{{ $trainer->name }}</strong>.
                 </p>
 
-                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-800 flex items-center gap-2 mt-2">
+                <div
+                    class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-800 flex items-center gap-2 mt-2">
                     <div>
-                        Jadwal saat ini: <strong>{{ $session->session_date->locale('id')->translatedFormat('l, d F Y') }}</strong> pukul <strong>{{ $session->time_range }}</strong>.
+                        Jadwal saat ini:
+                        <strong>{{ $session->session_date->locale('id')->translatedFormat('l, d F Y') }}</strong> pukul
+                        <strong>{{ $session->time_range }}</strong>.
                         Perubahan jadwal tidak akan memotong kuota baru.
                     </div>
                 </div>
@@ -58,11 +62,13 @@
 
                             <!-- Month Navigation -->
                             <div class="flex items-center gap-3 text-xs font-bold text-[#16151A]">
-                                <button type="button" @click="changeWeek(-7)" class="p-1 hover:text-[#ED1B45] transition-colors">
+                                <button type="button" @click="changeWeek(-7)"
+                                    class="p-1 hover:text-[#ED1B45] transition-colors">
                                     &lsaquo;
                                 </button>
                                 <span x-text="currentMonthYear">Oktober 2026</span>
-                                <button type="button" @click="changeWeek(7)" class="p-1 hover:text-[#ED1B45] transition-colors">
+                                <button type="button" @click="changeWeek(7)"
+                                    class="p-1 hover:text-[#ED1B45] transition-colors">
                                     &rsaquo;
                                 </button>
                             </div>
@@ -71,20 +77,18 @@
                         <!-- 7 Days Strip -->
                         <div class="grid grid-cols-7 gap-2.5 sm:gap-3">
                             <template x-for="day in dateStrip" :key="day.date">
-                                <button type="button"
-                                        @click="selectDate(day.date)"
-                                        :class="{
+                                <button type="button" @click="selectDate(day.date)" :class="{
                                             'bg-[#ED1B45] text-white shadow-lg shadow-[#ED1B45]/30 ring-2 ring-[#ED1B45] scale-102': selectedDate === day.date,
                                             'bg-white hover:bg-zinc-50 text-[#16151A] border border-[#E5E7EB]': selectedDate !== day.date && day.has_slots,
                                             'bg-zinc-50 text-zinc-400 border border-zinc-200 cursor-not-allowed opacity-60': !day.has_slots
                                         }"
-                                        class="flex flex-col items-center justify-center py-4 px-1 rounded-2xl transition-all duration-200 text-center">
+                                    class="flex flex-col items-center justify-center py-4 px-1 rounded-2xl transition-all duration-200 text-center">
                                     <span class="text-xs font-semibold"
-                                          :class="selectedDate === day.date ? 'text-white' : 'text-[#565A66]'"
-                                          x-text="day.day_name"></span>
+                                        :class="selectedDate === day.date ? 'text-white' : 'text-[#565A66]'"
+                                        x-text="day.day_name"></span>
                                     <span class="text-xl font-extrabold my-1 font-heading"
-                                          :class="selectedDate === day.date ? 'text-white' : 'text-[#16151A]'"
-                                          x-text="day.day_num"></span>
+                                        :class="selectedDate === day.date ? 'text-white' : 'text-[#16151A]'"
+                                        x-text="day.day_num"></span>
 
                                 </button>
                             </template>
@@ -93,7 +97,8 @@
 
                     <!-- Card 2: Pilih Jam Sesi Pengganti -->
                     <div class="bg-white rounded-2xl border border-[#E5E7EB] p-6 shadow-sm space-y-6">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E5E7EB]">
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E5E7EB]">
                             <div>
                                 <h2 class="text-base font-bold text-[#16151A] font-heading">
                                     Pilih Jam Sesi Pengganti
@@ -101,22 +106,6 @@
                                 <p class="text-xs text-[#565A66] mt-0.5">
                                     Durasi 60 Menit — Jadwal Real-Time Coach Rama Prasetya
                                 </p>
-                            </div>
-
-                            <!-- Legend -->
-                            <div class="flex items-center gap-4 text-xs font-medium">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
-                                    <span class="text-[#565A66]">Tersedia</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-[#ED1B45]"></span>
-                                    <span class="text-[#ED1B45] font-bold">Jadwal Baru</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="w-2.5 h-2.5 rounded-full bg-zinc-400"></span>
-                                    <span class="text-zinc-400">Penuh</span>
-                                </div>
                             </div>
                         </div>
 
@@ -131,18 +120,17 @@
                                     <template x-for="slot in slots.morning" :key="slot.time">
                                         <div class="relative">
                                             <div x-show="selectedSlot === slot.time"
-                                                 class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
+                                                class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
                                                 JADWAL BARU
                                             </div>
                                             <button type="button"
-                                                    @click="slot.status === 'available' && selectSlot(slot.time)"
-                                                    :disabled="slot.status !== 'available'"
-                                                    :class="{
+                                                @click="slot.status === 'available' && selectSlot(slot.time)"
+                                                :disabled="slot.status !== 'available'" :class="{
                                                         'bg-[#FFE8EC] border-2 border-[#ED1B45] text-[#ED1B45] shadow-sm': selectedSlot === slot.time,
                                                         'bg-white hover:bg-zinc-50 border border-[#E5E7EB] text-[#16151A] hover:border-teal-400': selectedSlot !== slot.time && slot.status === 'available',
                                                         'bg-[#F9FAFB] border border-[#E5E7EB] text-zinc-400 cursor-not-allowed opacity-60': slot.status !== 'available'
                                                     }"
-                                                    class="w-full flex flex-col items-center justify-center p-3.5 rounded-2xl transition-all duration-150">
+                                                class="w-full flex flex-col items-center justify-center p-3.5 rounded-2xl transition-all duration-150">
                                                 <span class="text-sm font-bold" x-text="slot.time"></span>
                                             </button>
                                         </div>
@@ -159,18 +147,17 @@
                                     <template x-for="slot in slots.afternoon" :key="slot.time">
                                         <div class="relative">
                                             <div x-show="selectedSlot === slot.time"
-                                                 class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
+                                                class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
                                                 JADWAL BARU
                                             </div>
                                             <button type="button"
-                                                    @click="slot.status === 'available' && selectSlot(slot.time)"
-                                                    :disabled="slot.status !== 'available'"
-                                                    :class="{
+                                                @click="slot.status === 'available' && selectSlot(slot.time)"
+                                                :disabled="slot.status !== 'available'" :class="{
                                                         'bg-[#FFE8EC] border-2 border-[#ED1B45] text-[#ED1B45] shadow-sm': selectedSlot === slot.time,
                                                         'bg-white hover:bg-zinc-50 border border-[#E5E7EB] text-[#16151A] hover:border-teal-400': selectedSlot !== slot.time && slot.status === 'available',
                                                         'bg-[#F9FAFB] border border-[#E5E7EB] text-zinc-400 cursor-not-allowed opacity-60': slot.status !== 'available'
                                                     }"
-                                                    class="w-full flex flex-col items-center justify-center p-3.5 rounded-2xl transition-all duration-150">
+                                                class="w-full flex flex-col items-center justify-center p-3.5 rounded-2xl transition-all duration-150">
                                                 <span class="text-sm font-bold" x-text="slot.time"></span>
                                             </button>
                                         </div>
@@ -187,18 +174,17 @@
                                     <template x-for="slot in slots.evening" :key="slot.time">
                                         <div class="relative">
                                             <div x-show="selectedSlot === slot.time"
-                                                 class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
+                                                class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
                                                 JADWAL BARU
                                             </div>
                                             <button type="button"
-                                                    @click="slot.status === 'available' && selectSlot(slot.time)"
-                                                    :disabled="slot.status !== 'available'"
-                                                    :class="{
+                                                @click="slot.status === 'available' && selectSlot(slot.time)"
+                                                :disabled="slot.status !== 'available'" :class="{
                                                         'bg-[#FFE8EC] border-2 border-[#ED1B45] text-[#ED1B45] shadow-sm': selectedSlot === slot.time,
                                                         'bg-white hover:bg-zinc-50 border border-[#E5E7EB] text-[#16151A] hover:border-teal-400': selectedSlot !== slot.time && slot.status === 'available',
                                                         'bg-[#F9FAFB] border border-[#E5E7EB] text-zinc-400 cursor-not-allowed opacity-60': slot.status !== 'available'
                                                     }"
-                                                    class="w-full flex flex-col items-center justify-center p-3.5 rounded-2xl transition-all duration-150">
+                                                class="w-full flex flex-col items-center justify-center p-3.5 rounded-2xl transition-all duration-150">
                                                 <span class="text-sm font-bold" x-text="slot.time"></span>
                                             </button>
                                         </div>
@@ -215,8 +201,10 @@
                     <!-- Coach Info Card -->
                     <div class="bg-white rounded-2xl border border-[#E5E7EB] p-5 shadow-sm space-y-4">
                         <div class="flex items-center gap-3.5">
-                            <div class="w-14 h-14 rounded-full overflow-hidden bg-zinc-800 shrink-0 border-2 border-[#E5E7EB]">
-                                <div class="w-full h-full bg-gradient-to-tr from-zinc-800 to-zinc-600 flex items-center justify-center text-white font-black text-lg">
+                            <div
+                                class="w-14 h-14 rounded-full overflow-hidden bg-zinc-800 shrink-0 border-2 border-[#E5E7EB]">
+                                <div
+                                    class="w-full h-full bg-gradient-to-tr from-zinc-800 to-zinc-600 flex items-center justify-center text-white font-black text-lg">
                                     {{ substr($trainer->name ?? 'Rama', 0, 2) }}
                                 </div>
                             </div>
@@ -225,7 +213,8 @@
                                     {{ $trainer->name }}
                                 </h4>
                                 <p class="text-[11px] text-[#565A66]">
-                                    {{ $trainer->trainerProfile->tier ?? 'Senior PT Tier III' }} — {{ $trainer->trainerProfile->studio ?? 'SCBD Studio' }}
+                                    {{ $trainer->trainerProfile->tier ?? 'Senior PT Tier III' }} —
+                                    {{ $trainer->trainerProfile->studio ?? 'SCBD Studio' }}
                                 </p>
                             </div>
                         </div>
@@ -233,7 +222,9 @@
 
                     <!-- Ringkasan Perubahan Jadwal (Dark Card #141414) -->
                     <div class="bg-[#141414] rounded-2xl p-6 text-white space-y-5 shadow-xl relative overflow-hidden">
-                        <div class="absolute -top-12 -right-12 w-44 h-44 bg-[#ED1B45]/20 rounded-full blur-3xl pointer-events-none"></div>
+                        <div
+                            class="absolute -top-12 -right-12 w-44 h-44 bg-[#ED1B45]/20 rounded-full blur-3xl pointer-events-none">
+                        </div>
 
                         <h3 class="text-base font-extrabold font-heading text-white">
                             Ringkasan Perubahan
@@ -244,7 +235,8 @@
                             <div>
                                 <span class="text-[#A1A1AA] text-[11px] block">Jadwal Sebelumnya:</span>
                                 <span class="font-medium text-zinc-400 line-through">
-                                    {{ $session->session_date->locale('id')->translatedFormat('d M Y') }} ({{ substr($session->start_time, 0, 5) }})
+                                    {{ $session->session_date->locale('id')->translatedFormat('d M Y') }}
+                                    ({{ substr($session->start_time, 0, 5) }})
                                 </span>
                             </div>
 
@@ -257,7 +249,8 @@
                             <!-- Jam Baru -->
                             <div>
                                 <span class="text-[#A1A1AA] text-[11px] block">Jam Sesi Baru:</span>
-                                <span class="font-bold text-[#ED1B45] text-xs mt-0.5" x-text="selectedSlot ? (selectedSlot + ' - ' + endSlotTime + ' WIB') : 'Pilih slot jam'"></span>
+                                <span class="font-bold text-[#ED1B45] text-xs mt-0.5"
+                                    x-text="selectedSlot ? (selectedSlot + ' - ' + endSlotTime + ' WIB') : 'Pilih slot jam'"></span>
                             </div>
 
                             <!-- Kuota Status -->
@@ -274,13 +267,11 @@
                             <input type="hidden" name="session_date" :value="selectedDate">
                             <input type="hidden" name="start_time" :value="selectedSlot">
 
-                            <button type="submit"
-                                    :disabled="!selectedDate || !selectedSlot"
-                                    :class="{
+                            <button type="submit" :disabled="!selectedDate || !selectedSlot" :class="{
                                         'bg-[#ED1B45] hover:bg-[#D1123D] text-white shadow-lg shadow-[#ED1B45]/30 cursor-pointer': selectedDate && selectedSlot,
                                         'bg-zinc-800 text-zinc-500 cursor-not-allowed': !selectedDate || !selectedSlot
                                     }"
-                                    class="w-full py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2">
+                                class="w-full py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2">
                                 <span>Simpan Jadwal Baru</span>
                                 <span>&rarr;</span>
                             </button>

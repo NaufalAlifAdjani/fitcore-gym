@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $this->call(PtBookingDemoSeeder::class);
         // 1. Admin Users (2)
         User::factory()->create([
             'name' => 'Admin Utama',

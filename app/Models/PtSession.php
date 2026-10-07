@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Enums\PtSessionStatus;
 use Carbon\Carbon;
-use Database\Factories\PtSessionFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PtSession extends Model
 {
-    /** @use HasFactory<PtSessionFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -53,7 +51,7 @@ class PtSession extends Model
     // Accessors
     public function getStartsAtAttribute(): ?Carbon
     {
-        if (! $this->session_date || ! $this->start_time) {
+        if (!$this->session_date || !$this->start_time) {
             return null;
         }
 
@@ -61,12 +59,12 @@ class PtSession extends Model
             ? $this->session_date->toDateString()
             : (string) $this->session_date;
 
-        return Carbon::parse($dateString.' '.$this->start_time);
+        return Carbon::parse($dateString . ' ' . $this->start_time);
     }
 
     public function getEndsAtAttribute(): ?Carbon
     {
-        if (! $this->session_date || ! $this->end_time) {
+        if (!$this->session_date || !$this->end_time) {
             return null;
         }
 
@@ -74,7 +72,7 @@ class PtSession extends Model
             ? $this->session_date->toDateString()
             : (string) $this->session_date;
 
-        return Carbon::parse($dateString.' '.$this->end_time);
+        return Carbon::parse($dateString . ' ' . $this->end_time);
     }
 
     public function getCanBeChangedAttribute(): bool
@@ -84,7 +82,7 @@ class PtSession extends Model
         }
 
         $startsAt = $this->starts_at;
-        if (! $startsAt) {
+        if (!$startsAt) {
             return false;
         }
 
@@ -108,7 +106,7 @@ class PtSession extends Model
         }
 
         $startsAt = $this->starts_at;
-        if (! $startsAt) {
+        if (!$startsAt) {
             return $this->status->label();
         }
 

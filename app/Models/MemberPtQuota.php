@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use Database\Factories\MemberPtQuotaFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MemberPtQuota extends Model
 {
-    /** @use HasFactory<MemberPtQuotaFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -57,7 +53,7 @@ class MemberPtQuota extends Model
 
     public function hasRemainingSessions(): bool
     {
-        return $this->remaining_sessions > 0 && ! $this->isExpired();
+        return $this->remaining_sessions > 0 && !$this->isExpired();
     }
 
     public function scopeActiveValid(Builder $query): Builder
