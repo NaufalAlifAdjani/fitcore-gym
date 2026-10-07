@@ -19,7 +19,6 @@ class RatingFactory extends Factory
             'trainer_id' => TrainerProfile::factory(),
             'pt_session_id' => PtSession::factory(),
             'rating' => fake()->numberBetween(1, 5),
-            'review' => fake()->optional()->paragraph(),
         ];
     }
 }

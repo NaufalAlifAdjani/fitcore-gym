@@ -40,17 +40,17 @@ class DatabaseSeeder extends Seeder
 
         // 2. Master Data
         $banks = Bank::factory(5)->create();
-        
+
         $membershipPackages = [
             MembershipPackage::factory()->create(['name' => 'Basic Package', 'duration_days' => 30, 'price' => 200000]),
             MembershipPackage::factory()->create(['name' => 'Pro Package', 'duration_days' => 90, 'price' => 500000]),
             MembershipPackage::factory()->create(['name' => 'Elite Package', 'duration_days' => 365, 'price' => 1800000]),
         ];
-        
+
         $ptPackages = [
-            PtPackage::factory()->create(['name' => '5 Sessions', 'sessions' => 5, 'price' => 750000]),
-            PtPackage::factory()->create(['name' => '10 Sessions', 'sessions' => 10, 'price' => 1400000]),
-            PtPackage::factory()->create(['name' => '20 Sessions', 'sessions' => 20, 'price' => 2500000]),
+            PtPackage::factory()->create(['name' => '5 Sessions', 'pt_session_count' => 5, 'price' => 750000]),
+            PtPackage::factory()->create(['name' => '10 Sessions', 'pt_session_count' => 10, 'price' => 1400000]),
+            PtPackage::factory()->create(['name' => '20 Sessions', 'pt_session_count' => 20, 'price' => 2500000]),
         ];
 
         // 3. Trainer Users (10)
@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
         $trainers = User::factory(9)->create(['role' => 'trainer'])->each(function ($user) {
             TrainerProfile::factory()->create(['user_id' => $user->id]);
         });
-        
+
         $trainerProfiles = TrainerProfile::all();
 
         // 4. Member Users (40)
@@ -84,7 +84,7 @@ class DatabaseSeeder extends Seeder
         $members = User::factory(39)->create(['role' => 'member'])->each(function ($user) {
             MemberProfile::factory()->create(['user_id' => $user->id]);
         });
-        
+
         $memberProfiles = MemberProfile::all();
 
         // 5. Memberships, Payments & Quotas
@@ -93,15 +93,15 @@ class DatabaseSeeder extends Seeder
             $package = $membershipPackages[array_rand($membershipPackages)];
             $membership = Membership::factory()->create([
                 'member_id' => $member->id, // Assumes member_id is member_profiles.id based on factory
-                'package_id' => $package->id,
+                'membership_package_id' => $package->id,
             ]);
 
             Payment::factory()->create([
                 'member_id' => $member->id,
                 'amount' => $package->price,
-                'payment_method' => 'bank_transfer',
                 'bank_id' => $banks->random()->id,
-                'type' => 'membership',
+                'payment_type' => 'membership',
+                'membership_id' => $membership->id,
             ]);
 
             // Only half of members get a PT quota
@@ -110,33 +110,43 @@ class DatabaseSeeder extends Seeder
                 MemberPtQuota::factory()->create([
                     'member_id' => $member->id,
                     'pt_package_id' => $ptPkg->id,
-                    'total_sessions' => $ptPkg->sessions,
-                    'used_sessions' => rand(0, $ptPkg->sessions),
+                    'total_sessions' => $ptPkg->pt_session_count,
+                    'used_sessions' => rand(0, $ptPkg->pt_session_count),
                 ]);
 
                 Payment::factory()->create([
                     'member_id' => $member->id,
                     'amount' => $ptPkg->price,
-                    'payment_method' => 'bank_transfer',
                     'bank_id' => $banks->random()->id,
-                    'type' => 'pt_package',
+                    'payment_type' => 'pt_package',
+                    'pt_package_id' => $ptPkg->id,
                 ]);
             }
         }
 
         // 6. PT Sessions (100)
-        for ($i = 0; $i < 100; $i++) {
-            PtSession::factory()->create([
-                'member_id' => $memberProfiles->random()->id,
-                'trainer_id' => $trainerProfiles->random()->id,
-            ]);
+        $quotas = \App\Models\MemberPtQuota::all();
+        if ($quotas->count() > 0) {
+            for ($i = 0; $i < 100; $i++) {
+                $quota = $quotas->random();
+                try {
+                    PtSession::factory()->create([
+                        'member_pt_quota_id' => $quota->id,
+                        'member_id' => $quota->member_id,
+                        'trainer_id' => $trainerProfiles->random()->id,
+                    ]);
+                } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                    // Ignore duplicate schedule and try again for this iteration
+                    $i--;
+                }
+            }
         }
 
         // 7. Ratings (50)
         $sessions = PtSession::all();
-        if ($sessions->count() > 0) {
-            for ($i = 0; $i < 50; $i++) {
-                $session = $sessions->random();
+        if ($sessions->count() >= 50) {
+            $randomSessions = $sessions->random(50);
+            foreach ($randomSessions as $session) {
                 Rating::factory()->create([
                     'member_id' => $session->member_id,
                     'trainer_id' => $session->trainer_id,

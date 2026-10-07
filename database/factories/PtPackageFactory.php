@@ -14,7 +14,7 @@ class PtPackageFactory extends Factory
         $sessions = fake()->randomElement([5, 10, 20]);
         return [
             'name' => $sessions . ' PT Sessions',
-            'sessions' => $sessions,
+            'pt_session_count' => $sessions,
             'price' => $sessions * 100000,
             'validity_days' => $sessions * 7, // 1 week per session
             'status' => 'active',

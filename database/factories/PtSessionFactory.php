@@ -13,13 +13,15 @@ class PtSessionFactory extends Factory
 
     public function definition(): array
     {
+        $startTime = fake()->numberBetween(8, 20);
         return [
+            'member_pt_quota_id' => \App\Models\MemberPtQuota::factory(),
             'member_id' => MemberProfile::factory(),
             'trainer_id' => TrainerProfile::factory(),
-            'scheduled_at' => fake()->dateTimeBetween('-1 month', '+1 month'),
-            'completed_at' => fake()->optional()->dateTimeBetween('-1 month', 'now'),
-            'status' => fake()->randomElement(['scheduled', 'completed', 'cancelled']),
-            'notes' => fake()->optional()->sentence(),
+            'session_date' => fake()->dateTimeBetween('-1 month', '+1 month')->format('Y-m-d'),
+            'start_time' => sprintf('%02d:00:00', $startTime),
+            'end_time' => sprintf('%02d:00:00', $startTime + 1),
+            'status' => fake()->randomElement(['scheduled', 'done', 'cancelled']),
         ];
     }
 }

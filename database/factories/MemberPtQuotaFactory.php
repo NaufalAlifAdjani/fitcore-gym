@@ -16,7 +16,7 @@ class MemberPtQuotaFactory extends Factory
         $total = fake()->randomElement([5, 10, 20]);
         $used = fake()->numberBetween(0, $total);
         $startDate = fake()->dateTimeBetween('-3 months', 'now');
-        
+
         return [
             'member_id' => MemberProfile::factory(),
             'membership_id' => null,

@@ -15,31 +15,31 @@ class UserSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'admin@gym.test'],
             [
-                'name'     => 'Admin Gym',
+                'name' => 'Admin Gym',
                 'password' => Hash::make('password123'),
-                'role'     => 'admin',
-                'phone'    => '081200000001',
-                'status'   => 'active',
+                'role' => 'admin',
+                'phone' => '081200000001',
+                'status' => 'active',
             ]
         );
 
         // Trainer
         $trainers = [
             [
-                'name'           => 'Budi Santoso',
-                'email'          => 'budi@gym.test',
-                'phone'          => '081200000002',
+                'name' => 'Budi Santoso',
+                'email' => 'budi@gym.test',
+                'phone' => '081200000002',
                 'specialization' => 'Muscle Building',
-                'bio'            => 'Berpengalaman melatih program hipertrofi dan strength.',
-                'experience'     => 5,
+                'bio' => 'Berpengalaman melatih program hipertrofi dan strength.',
+                'experience' => 5,
             ],
             [
-                'name'           => 'Sari Wulandari',
-                'email'          => 'sari@gym.test',
-                'phone'          => '081200000003',
+                'name' => 'Sari Wulandari',
+                'email' => 'sari@gym.test',
+                'phone' => '081200000003',
                 'specialization' => 'Weight Loss & Cardio',
-                'bio'            => 'Fokus pada program penurunan berat badan dan kebugaran.',
-                'experience'     => 3,
+                'bio' => 'Fokus pada program penurunan berat badan dan kebugaran.',
+                'experience' => 3,
             ],
         ];
 
@@ -47,11 +47,11 @@ class UserSeeder extends Seeder
             $user = User::updateOrCreate(
                 ['email' => $t['email']],
                 [
-                    'name'     => $t['name'],
+                    'name' => $t['name'],
                     'password' => Hash::make('password123'),
-                    'role'     => 'trainer',
-                    'phone'    => $t['phone'],
-                    'status'   => 'active',
+                    'role' => 'trainer',
+                    'phone' => $t['phone'],
+                    'status' => 'active',
                 ]
             );
 
@@ -59,9 +59,9 @@ class UserSeeder extends Seeder
                 ['user_id' => $user->id],
                 [
                     'specialization' => $t['specialization'],
-                    'bio'            => $t['bio'],
-                    'experience'     => $t['experience'],
-                    'status'         => 'active',
+                    'bio' => $t['bio'],
+                    'experience' => $t['experience'],
+                    'status' => 'active',
                 ]
             );
         }
