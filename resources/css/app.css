@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.flatpickr-calendar {
+    font-family: inherit;
+}
+.flatpickr-day.selected {
+    background: #B80029 !important;
+    border-color: #B80029 !important;
+}

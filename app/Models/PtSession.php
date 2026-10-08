@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class PtSession extends Model
 {
@@ -97,6 +98,18 @@ class PtSession extends Model
         $end = substr((string) $this->end_time, 0, 5);
 
         return "{$start} - {$end} WIB";
+    }
+
+    public function getSessionInfoAttribute(): string
+    {
+        if (!$this->quota) return '';
+        $sesiKe = $this->quota->used_sessions + 1;
+        $totalSesi = $this->quota->total_sessions ?? $this->quota->remaining_sessions + $this->quota->used_sessions;
+        
+        if ($sesiKe === 1) {
+            return "Paket {$totalSesi} Sesi (Sesi 1 / Orientasi)";
+        }
+        return "Paket {$totalSesi} Sesi (Sesi ke-{$sesiKe})";
     }
 
     public function getRelativeTimeBadgeAttribute(): string

@@ -7,21 +7,7 @@
     })" class="py-8 sm:py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
 
-            <!-- Breadcrumbs & Status Sync -->
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[#565A66]">
-                <nav class="flex items-center gap-2 font-medium">
-                    <a href="{{ route('dashboard') }}" class="hover:text-[#16151A] transition-colors">Beranda</a>
-                    <span>/</span>
-                    <a href="#" class="hover:text-[#16151A] transition-colors">Personal Trainer</a>
-                    <span>/</span>
-                    <span class="text-[#16151A] font-bold">Pilih Jadwal</span>
-                </nav>
 
-                <div class="flex items-center gap-2 text-emerald-600 font-semibold text-xs">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Sistem Sinkronisasi Real-Time</span>
-                </div>
-            </div>
 
             <!-- Page Title Card -->
             <div class="bg-white rounded-2xl border border-[#E5E7EB] p-6 sm:p-8 shadow-sm">
@@ -64,7 +50,7 @@
                         <!-- 7 Days Strip -->
                         <div class="grid grid-cols-7 gap-2.5 sm:gap-3">
                             <template x-for="day in dateStrip" :key="day.date">
-                                <button type="button" @click="selectDate(day.date)" :class="{
+                                <button type="button" @click="selectDate(day.date)" :disabled="!day.has_slots" :class="{
                                             'bg-[#ED1B45] text-white shadow-lg shadow-[#ED1B45]/30 ring-2 ring-[#ED1B45] scale-102': selectedDate === day.date,
                                             'bg-white hover:bg-zinc-50 text-[#16151A] border border-[#E5E7EB]': selectedDate !== day.date && day.has_slots,
                                             'bg-zinc-50 text-zinc-400 border border-zinc-200 cursor-not-allowed opacity-60': !day.has_slots
@@ -90,9 +76,6 @@
                                 <h2 class="text-base font-bold text-[#16151A] font-heading">
                                     Pilih Jam Sesi
                                 </h2>
-                                <p class="text-xs text-[#565A66] mt-0.5">
-                                    Durasi 60 Menit — Jadwal Real-Time Coach Rama Prasetya
-                                </p>
                             </div>
                         </div>
 
@@ -293,18 +276,12 @@
                                 <div>
                                     <div class="text-[#A1A1AA] text-[11px]">Pelatih</div>
                                     <div class="font-bold text-white text-xs mt-0.5">
-                                        {{ $trainer->name ?? 'Coach Rama Prasetya' }}</div>
+                                        {{ $trainer->name ?? 'Coach Rama Prasetya' }}
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Kuota Terpakai -->
-                            <div class="flex items-start gap-2.5">
 
-                                <div>
-                                    <div class="text-[#A1A1AA] text-[11px]">Kuota Terpakai</div>
-                                    <div class="font-bold text-white text-xs mt-0.5">1 Sesi</div>
-                                </div>
-                            </div>
                         </div>
 
                         <!-- Form Submit -->
@@ -391,17 +368,27 @@
             return {
                 trainerId: config.trainerId,
                 selectedDate: config.initialDate,
-                selectedSlot: '15:00',
+                selectedSlot: '',
                 isLoadingSlots: false,
                 dateStrip: [],
                 slots: { morning: [], afternoon: [], evening: [] },
                 formattedSelectedDate: '',
-                endSlotTime: '16:00',
+                endSlotTime: '',
                 currentMonthYear: 'Oktober 2026',
                 showSuccessModal: false,
 
                 async init() {
                     await this.fetchAvailability();
+
+                    // Otomatis pilih hari pertama yang tersedia jika hari awal tidak memiliki slot
+                    const initialDay = this.dateStrip.find(d => d.date === this.selectedDate);
+                    if (!initialDay || !initialDay.has_slots) {
+                        const firstAvailable = this.dateStrip.find(d => d.has_slots);
+                        if (firstAvailable) {
+                            this.selectedDate = firstAvailable.date;
+                        }
+                    }
+
                     await this.fetchSlots(this.selectedDate);
                 },
 
@@ -442,6 +429,8 @@
 
                 selectDate(date) {
                     this.selectedDate = date;
+                    this.selectedSlot = '';
+                    this.endSlotTime = '';
                     const d = new Date(date);
                     const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                     this.currentMonthYear = `${months[d.getMonth()]} ${d.getFullYear()}`;
@@ -455,12 +444,32 @@
                     this.endSlotTime = `${endH}:${String(m).padStart(2, '0')}`;
                 },
 
-                changeWeek(offsetDays) {
+                async changeWeek(offsetDays) {
                     const current = new Date(this.selectedDate);
                     current.setDate(current.getDate() + offsetDays);
+
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (current < today && offsetDays < 0) {
+                        current.setTime(today.getTime());
+                    }
+
                     this.selectedDate = current.toISOString().split('T')[0];
-                    this.fetchAvailability();
-                    this.fetchSlots(this.selectedDate);
+                    this.selectedSlot = '';
+                    this.endSlotTime = '';
+
+                    await this.fetchAvailability();
+
+                    const initialDay = this.dateStrip.find(d => d.date === this.selectedDate);
+                    if (!initialDay || !initialDay.has_slots) {
+                        const firstAvailable = this.dateStrip.find(d => d.has_slots);
+                        if (firstAvailable) {
+                            this.selectedDate = firstAvailable.date;
+                        }
+                    }
+
+                    await this.fetchSlots(this.selectedDate);
                 }
             };
         }

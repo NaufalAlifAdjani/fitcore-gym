@@ -42,3 +42,7 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
+    Route::get('/jadwal-sesi', \App\Livewire\Trainer\Sessions\Index::class)->name('sessions.index');
+});
