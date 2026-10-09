@@ -1,10 +1,10 @@
-<section class="overflow-hidden rounded-[20px] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)]" aria-label="Daftar pembayaran">
-    <div class="flex flex-col gap-2 border-b border-[#F0F0F1] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+<x-card :padding="false" aria-label="Daftar pembayaran">
+    <x-slot:header>
         <h2 class="font-heading text-base font-bold text-[#16151A]">Riwayat Pembayaran</h2>
         <p class="text-xs text-[#858894]">
             Menampilkan {{ $payments->firstItem() ?? 0 }}–{{ $payments->lastItem() ?? 0 }} dari {{ $payments->total() }} pembayaran
         </p>
-    </div>
+    </x-slot:header>
 
     <div class="overflow-x-auto">
         <table class="w-full min-w-[1120px] border-collapse text-left">
@@ -55,15 +55,17 @@
                             @include('admin.verifikasi-pembayaran.partials.payment-status-badge', ['payment' => $payment])
                         </td>
                         <td class="whitespace-nowrap px-5 py-5 text-right">
-                            <button
+                            <x-button
                                 type="button"
+                                variant="outline"
+                                size="xs"
                                 x-on:click="openDetails($el.dataset.detailUrl)"
                                 data-detail-url="{{ route('admin.payments.show', $payment->id) }}"
                                 x-bind:disabled="isLoadingDetail"
-                                class="rounded-full border border-[#E5E5E8] px-4 py-2 text-xs font-semibold text-[#BA0030] transition hover:border-[#BA0030] hover:bg-rose-50 disabled:cursor-wait disabled:opacity-60"
+                                class="!rounded-full !border-[#E5E5E8] !text-[#BA0030] hover:!border-[#BA0030] hover:!bg-rose-50 disabled:cursor-wait disabled:opacity-60"
                             >
                                 Detail / Verifikasi
-                            </button>
+                            </x-button>
                         </td>
                     </tr>
                 @empty
@@ -79,7 +81,7 @@
     </div>
 
     @if ($payments->hasPages())
-        <footer class="flex flex-col gap-4 border-t border-[#F0F0F1] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
+        <x-slot:footer class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <p class="text-xs text-[#858894]">Halaman {{ $payments->currentPage() }} dari {{ $payments->lastPage() }}</p>
             <nav aria-label="Navigasi halaman pembayaran" class="flex items-center gap-1 rounded-full bg-[#EEEEEF] p-1">
                 @if ($payments->onFirstPage())
@@ -94,6 +96,6 @@
                     <span aria-disabled="true" class="rounded-full px-3 py-2 text-xs font-semibold text-[#A5A6AD]">Berikutnya</span>
                 @endif
             </nav>
-        </footer>
+        </x-slot:footer>
     @endif
-</section>
+</x-card>

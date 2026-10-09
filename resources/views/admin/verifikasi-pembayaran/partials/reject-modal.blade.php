@@ -17,17 +17,19 @@
 
         <div class="mt-5 flex flex-wrap gap-2">
             @foreach (['Bukti Buram / Tidak Jelas', 'Nominal Transfer Kurang', 'Nama Rekening Beda'] as $reason)
-                <button
+                <x-button
                     type="button"
+                    variant="outline"
+                    size="xs"
                     x-on:click="useQuickReason(@js($reason))"
-                    class="rounded-full border border-[#E5E5E8] px-3 py-2 text-xs font-semibold text-[#565A66] transition hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
+                    class="!rounded-full hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
                 >
                     {{ $reason }}
-                </button>
+                </x-button>
             @endforeach
         </div>
 
-        <label for="payment-rejection-reason" class="mt-5 block text-xs font-semibold text-[#565A66]">Alasan penolakan</label>
+        <x-input-label for="payment-rejection-reason" value="Alasan penolakan" class="mt-5 !mb-2" />
         <textarea
             id="payment-rejection-reason"
             x-model="rejectionReason"
@@ -35,28 +37,30 @@
             maxlength="2000"
             required
             placeholder="Tuliskan alasan yang akan disampaikan kepada member..."
-            class="mt-2 w-full rounded-2xl border-[#E5E5E8] px-4 py-3 text-sm focus:border-rose-500 focus:ring-rose-500"
+            class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-rose-500 focus:bg-white focus:ring-2 focus:ring-rose-200"
         ></textarea>
 
         <p x-show="actionError" x-cloak role="alert" class="mt-2 text-xs font-medium text-rose-700" x-text="actionError"></p>
 
         <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-            <button
+            <x-button
                 type="button"
+                variant="secondary"
                 x-on:click="showRejectModal = false; actionError = ''"
                 x-bind:disabled="isSubmitting"
-                class="rounded-full bg-[#EEEEEF] px-5 py-3 text-sm font-semibold text-[#565A66] hover:bg-[#E4E4E7] disabled:opacity-60"
+                class="!px-5 !py-3 !text-sm"
             >
                 Batal
-            </button>
-            <button
+            </x-button>
+            <x-button
                 type="button"
+                variant="primary"
                 x-on:click="reject()"
                 x-bind:disabled="isSubmitting"
-                class="rounded-full bg-[#BA0030] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#970027] disabled:cursor-wait disabled:opacity-60"
+                class="!px-5 !py-3 !text-sm disabled:cursor-wait"
             >
                 <span x-text="isSubmitting ? 'Memproses...' : 'Konfirmasi Penolakan'"></span>
-            </button>
+            </x-button>
         </div>
     </section>
 </div>

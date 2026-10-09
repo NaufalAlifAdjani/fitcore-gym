@@ -15,9 +15,9 @@
                 <h2 id="payment-detail-title" class="mt-1 font-heading text-xl font-bold text-[#16151A]">Detail Pembayaran</h2>
                 <p class="mt-1 font-mono text-xs text-[#858894]" x-text="selectedPayment?.invoice_id || ''"></p>
             </div>
-            <button type="button" x-on:click="closeModals()" aria-label="Tutup detail" class="rounded-full p-2 text-[#858894] hover:bg-[#F4F4F5] hover:text-[#16151A]">
+            <x-button type="button" variant="ghost" size="xs" x-on:click="closeModals()" aria-label="Tutup detail" class="!rounded-full !p-2">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
-            </button>
+            </x-button>
         </header>
 
         <div x-show="isLoadingDetail" class="p-12 text-center text-sm font-semibold text-[#565A66]">Memuat detail pembayaran...</div>
@@ -78,15 +78,16 @@
                             </div>
                             <div class="flex items-center justify-between gap-4">
                                 <dt class="text-[#858894]">Status</dt>
-                                <dd
-                                    x-bind:class="{
-                                        'bg-amber-50 text-amber-700': selectedPayment.status === 'pending',
-                                        'bg-emerald-50 text-emerald-700': selectedPayment.status === 'verified',
-                                        'bg-rose-50 text-rose-700': selectedPayment.status === 'rejected'
-                                    }"
-                                    class="rounded-full px-3 py-1 font-bold uppercase"
-                                    x-text="{pending: 'Menunggu verifikasi', verified: 'Terverifikasi', rejected: 'Ditolak'}[selectedPayment.status]"
-                                ></dd>
+                                <dd>
+                                    <x-badge
+                                        x-bind:class="{
+                                            'bg-amber-50 text-amber-700 ring-amber-200': selectedPayment.status === 'pending',
+                                            'bg-emerald-50 text-emerald-700 ring-emerald-200': selectedPayment.status === 'verified',
+                                            'bg-rose-50 text-rose-700 ring-rose-200': selectedPayment.status === 'rejected'
+                                        }"
+                                        x-text="{pending: 'Menunggu verifikasi', verified: 'Terverifikasi', rejected: 'Ditolak'}[selectedPayment.status]"
+                                    ></x-badge>
+                                </dd>
                             </div>
                         </dl>
                         <p x-show="selectedPayment.rejection_reason" x-cloak class="mt-4 rounded-xl bg-rose-50 p-3 text-xs leading-5 text-rose-700" x-text="selectedPayment.rejection_reason"></p>
@@ -98,28 +99,36 @@
         <footer class="sticky bottom-0 flex flex-col-reverse gap-3 border-t border-[#F0F0F1] bg-white px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
             <p x-show="actionError" x-cloak role="alert" class="text-xs font-medium text-rose-700" x-text="actionError"></p>
             <div class="flex flex-col-reverse gap-3 sm:ml-auto sm:flex-row">
-                <button
+                <x-button
                     type="button"
+                    variant="danger-outline"
                     x-show="selectedPayment?.status === 'pending'"
                     x-on:click="showRejectModal = true; actionError = ''"
                     x-bind:disabled="isSubmitting"
-                    class="rounded-full border border-rose-200 px-5 py-3 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 disabled:opacity-60"
+                    class="!px-5 !py-3 !text-sm"
                 >
                     Tolak Pembayaran
-                </button>
-                <button
+                </x-button>
+                <x-button
                     type="button"
+                    variant="success"
                     x-show="selectedPayment?.status === 'pending'"
                     x-on:click="approve()"
                     x-bind:disabled="isSubmitting"
-                    class="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-wait disabled:opacity-60"
+                    class="!px-5 !py-3 !text-sm disabled:cursor-wait"
                 >
                     <span x-show="isSubmitting" class="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span>
                     <span x-text="isSubmitting ? 'Memproses...' : 'Setujui & Aktifkan'"></span>
-                </button>
-                <button type="button" x-show="selectedPayment?.status !== 'pending'" x-on:click="closeModals()" class="rounded-full bg-[#EEEEEF] px-5 py-3 text-sm font-semibold text-[#565A66] hover:bg-[#E4E4E7]">
+                </x-button>
+                <x-button
+                    type="button"
+                    variant="secondary"
+                    x-show="selectedPayment?.status !== 'pending'"
+                    x-on:click="closeModals()"
+                    class="!px-5 !py-3 !text-sm"
+                >
                     Tutup
-                </button>
+                </x-button>
             </div>
         </footer>
     </section>

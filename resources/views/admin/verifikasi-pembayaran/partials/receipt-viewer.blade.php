@@ -12,15 +12,35 @@
 </div>
 
 <div class="flex flex-wrap gap-2">
-    <button type="button" x-on:click="showReceiptLightbox = true" x-bind:disabled="!selectedPayment?.proof_image_url" class="rounded-full border border-[#E5E5E8] px-4 py-2 text-xs font-semibold text-[#565A66] hover:bg-[#F9F9FA] disabled:opacity-50">
+    <x-button
+        type="button"
+        variant="outline"
+        size="xs"
+        x-on:click="showReceiptLightbox = true"
+        x-bind:disabled="!selectedPayment?.proof_image_url"
+        class="!rounded-full"
+    >
         Perbesar
-    </button>
-    <a x-bind:href="selectedPayment?.proof_image_url || '#'" x-bind:download="selectedPayment?.invoice_id || 'bukti-transfer'" class="rounded-full border border-[#E5E5E8] px-4 py-2 text-xs font-semibold text-[#565A66] hover:bg-[#F9F9FA]">
+    </x-button>
+    <x-button
+        variant="outline"
+        size="xs"
+        x-bind:href="selectedPayment?.proof_image_url || '#'"
+        x-bind:download="selectedPayment?.invoice_id || 'bukti-transfer'"
+        class="!rounded-full"
+    >
         Unduh Gambar
-    </a>
-    <button type="button" x-on:click="printReceipt()" x-bind:disabled="!selectedPayment?.proof_image_url" class="rounded-full border border-[#E5E5E8] px-4 py-2 text-xs font-semibold text-[#565A66] hover:bg-[#F9F9FA] disabled:opacity-50">
+    </x-button>
+    <x-button
+        type="button"
+        variant="outline"
+        size="xs"
+        x-on:click="printReceipt()"
+        x-bind:disabled="!selectedPayment?.proof_image_url"
+        class="!rounded-full"
+    >
         Cetak Slip
-    </button>
+    </x-button>
 </div>
 
 <div
@@ -33,9 +53,15 @@
     aria-modal="true"
     aria-label="Pratinjau bukti transfer"
 >
-    <button type="button" x-on:click="showReceiptLightbox = false" class="absolute right-5 top-5 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/20">
+    <x-button
+        type="button"
+        variant="dark"
+        size="xs"
+        x-on:click="showReceiptLightbox = false"
+        class="absolute right-5 top-5 !bg-white/10 hover:!bg-white/20 text-white"
+    >
         Tutup
-    </button>
+    </x-button>
     <img
         x-bind:src="selectedPayment?.proof_image_url || ''"
         x-bind:alt="`Bukti transfer ${selectedPayment?.invoice_id || ''}`"
