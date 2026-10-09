@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Membership;
 use App\Models\MemberProfile;
+use App\Models\Membership;
 use App\Models\MembershipPackage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -14,6 +14,7 @@ class MembershipFactory extends Factory
     public function definition(): array
     {
         $startDate = fake()->dateTimeBetween('-6 months', 'now');
+
         return [
             'member_id' => MemberProfile::factory(),
             'membership_package_id' => MembershipPackage::factory(),

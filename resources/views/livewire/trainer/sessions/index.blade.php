@@ -19,59 +19,83 @@
 
     <div class="max-w-6xl mx-auto mt-8 px-4 sm:px-6">
         
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-8 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <button wire:click="previousPeriod" class="p-2 hover:bg-gray-100 rounded-lg text-gray-600 transition" aria-label="Previous">
-                    &larr;
-                </button>
-                <div class="text-xl font-bold text-gray-900">
-                    {{ \Carbon\Carbon::parse($date)->translatedFormat('F Y') }}
-                </div>
-                <button wire:click="nextPeriod" class="p-2 hover:bg-gray-100 rounded-lg text-gray-600 transition" aria-label="Next">
-                    &rarr;
-                </button>
-            </div>
-            
-            <div class="flex items-center gap-3">
-                <div wire:ignore>
-                    <input type="text" x-data x-init="
-                        flatpickr($el, {
-                            dateFormat: 'Y-m-d',
-                            defaultDate: '{{ $date }}',
-                            onChange: function(selectedDates, dateStr) {
-                                $wire.goToDate(dateStr);
-                            }
-                        });
-                    " class="text-sm rounded-lg border-gray-300 focus:ring-[#B80029] focus:border-[#B80029]" placeholder="Pilih Tanggal">
-                </div>
-                
-                <div class="bg-gray-100 p-1 rounded-lg flex text-sm font-medium">
-                    <button wire:click="setView('daily')" class="px-4 py-1.5 rounded-md transition-colors {{ $view === 'daily' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500' }}">Hari Ini</button>
-                    <button wire:click="setView('weekly')" class="px-4 py-1.5 rounded-md transition-colors {{ $view === 'weekly' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500' }}">Minggu Ini</button>
-                </div>
-            </div>
-        </div>
+        <!-- Card: Pilih Tanggal Sesi (Design Gambar 1 & Gambar 2) -->
+        <div class="bg-white rounded-2xl border border-[#E5E7EB] p-6 shadow-sm space-y-5 mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <h2 class="text-base font-bold text-[#16151A] font-heading">
+                    Pilih Tanggal Sesi
+                </h2>
 
-        @if($view === 'daily')
-        <div class="flex gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
-            @foreach($this->weekDates as $weekDate)
-                @php 
-                    $isActive = $weekDate->toDateString() === $date;
-                    $isToday = $weekDate->isToday();
-                @endphp
-                <button 
-                    wire:click="goToDate('{{ $weekDate->toDateString() }}')"
-                    class="flex-shrink-0 flex flex-col items-center justify-center w-20 h-24 rounded-2xl transition-all border {{ $isActive ? 'bg-[#B80029] text-white border-[#B80029] shadow-md' : 'bg-white text-gray-600 border-gray-100 hover:border-gray-300' }}"
-                >
-                    <span class="text-xs font-semibold uppercase mb-1 {{ $isActive ? 'text-red-100' : 'text-gray-400' }}">{{ $weekDate->translatedFormat('D') }}</span>
-                    <span class="text-2xl font-bold">{{ $weekDate->format('d') }}</span>
-                    @if($isActive)
-                        <div class="w-1.5 h-1.5 bg-white rounded-full mt-2"></div>
-                    @endif
-                </button>
-            @endforeach
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <!-- Date Picker Input (Gambar 2) -->
+                    <div wire:ignore x-data="{
+                        picker: null,
+                        init() {
+                            this.picker = flatpickr($refs.dateInput, {
+                                dateFormat: 'Y-m-d',
+                                defaultDate: @js($date),
+                                onChange: (selectedDates, dateStr) => {
+                                    if (dateStr) {
+                                        $wire.goToDate(dateStr);
+                                    }
+                                }
+                            });
+
+                            this.$watch('$wire.date', (newDate) => {
+                                if (this.picker && newDate) {
+                                    this.picker.setDate(newDate, false);
+                                }
+                            });
+                        }
+                    }">
+                        <input 
+                            type="text" 
+                            x-ref="dateInput"
+                            class="text-xs sm:text-sm rounded-xl border-[#E5E7EB] text-[#16151A] font-medium py-1.5 px-3 focus:ring-[#ED1B45] focus:border-[#ED1B45] cursor-pointer shadow-sm hover:border-gray-400 transition" 
+                            placeholder="Pilih Tanggal"
+                        >
+                    </div>
+
+                    <!-- Month Navigation (< Bulan Tahun >) -->
+                    <div class="flex items-center gap-3 text-xs font-bold text-[#16151A]">
+                        <button type="button" wire:click="previousPeriod"
+                            class="p-1 hover:text-[#ED1B45] transition-colors text-base font-bold"
+                            aria-label="Previous week">
+                            &lsaquo;
+                        </button>
+                        <span class="font-heading capitalize text-xs sm:text-sm">{{ \Carbon\Carbon::parse($date)->translatedFormat('F Y') }}</span>
+                        <button type="button" wire:click="nextPeriod"
+                            class="p-1 hover:text-[#ED1B45] transition-colors text-base font-bold"
+                            aria-label="Next week">
+                            &rsaquo;
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7 Days Strip (Gambar 1) -->
+            <div class="grid grid-cols-7 gap-2.5 sm:gap-3">
+                @foreach($this->weekDates as $weekDate)
+                    @php 
+                        $isActive = $weekDate->toDateString() === $date;
+                    @endphp
+                    <button 
+                        type="button"
+                        wire:click="goToDate('{{ $weekDate->toDateString() }}')"
+                        class="flex flex-col items-center justify-center py-4 px-1 rounded-2xl transition-all duration-200 text-center {{ $isActive 
+                            ? 'bg-[#ED1B45] text-white shadow-lg shadow-[#ED1B45]/30 ring-2 ring-[#ED1B45]' 
+                            : 'bg-white hover:bg-zinc-50 text-[#16151A] border border-[#E5E7EB]' }}"
+                    >
+                        <span class="text-xs font-semibold {{ $isActive ? 'text-white' : 'text-[#565A66]' }}">
+                            {{ $weekDate->translatedFormat('D') }}
+                        </span>
+                        <span class="text-xl font-extrabold my-1 font-heading {{ $isActive ? 'text-white' : 'text-[#16151A]' }}">
+                            {{ $weekDate->format('j') }}
+                        </span>
+                    </button>
+                @endforeach
+            </div>
         </div>
-        @endif
 
         <div wire:loading class="w-full text-center py-10">
             <div class="animate-pulse flex flex-col items-center gap-4">
@@ -98,27 +122,19 @@
                             $isLive = $statusEnum === \App\Enums\PtSessionStatus::Ongoing;
                         @endphp
                         
-                        <div wire:key="session-{{ $session->id }}" class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 relative overflow-hidden flex flex-col transition hover:shadow-md {{ $isLive ? 'bg-zinc-900 text-white border-zinc-800' : '' }}">
+                        <div wire:key="session-{{ $session->id }}" class="bg-white rounded-2xl p-5 shadow-sm border relative overflow-hidden flex flex-col transition hover:shadow-md {{ $isLive ? 'border-[#ED1B45] ring-2 ring-[#ED1B45]/15' : 'border-gray-100' }}">
                             
                             <div class="flex justify-between items-center mb-4">
-                                <div class="flex items-center gap-2 text-sm font-medium {{ $isLive ? 'text-gray-300' : 'text-gray-600' }}">
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                    {{ $session->time_range }}
+                                <div class="flex items-center gap-2 text-sm font-medium text-gray-600">
+                                    <svg class="w-4 h-4 {{ $isLive ? 'text-[#ED1B45]' : 'text-gray-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    <span class="{{ $isLive ? 'font-bold text-gray-900' : '' }}">{{ $session->time_range }}</span>
                                 </div>
                                 
                                 @if($isLive)
-                                    <div x-data="{
-                                            start: new Date('{{ $session->session_date->format('Y-m-d') }}T{{ $session->start_time }}'),
-                                            now: new Date(),
-                                            get duration() { return Math.floor((this.now - this.start) / 60000); }
-                                        }" 
-                                        x-init="setInterval(() => { now = new Date() }, 60000)"
-                                        class="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded-full flex items-center gap-1.5"
-                                    >
-                                        <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                                        LIVE (<span x-text="duration"></span>')
+                                    <div class="px-3 py-1 text-xs font-bold rounded-full bg-[#ED1B45]/10 text-[#ED1B45] border border-[#ED1B45]/20 flex items-center gap-1.5 shadow-2xs">
+                                        Sedang Berjalan
                                     </div>
-                                @else
+                                @elseif(!empty($statusEnum->label()))
                                     <div class="px-3 py-1 text-xs font-bold rounded-full border {{ $classes }}">
                                         {{ $statusEnum->label() }}
                                     </div>
@@ -127,22 +143,22 @@
 
                             <div class="flex items-center gap-4 mb-6">
                                 <div class="relative">
-                                    <div class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 text-xl overflow-hidden shrink-0">
+                                    <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-700 text-xl overflow-hidden shrink-0 border border-gray-200">
                                         @if($session->member->memberProfile?->photo_path)
-                                            <img src="{{ asset('storage/' . $session->member->memberProfile->photo_path) }}" class="w-full h-full object-cover">
+                                             <img src="{{ asset('storage/' . $session->member->memberProfile->photo_path) }}" class="w-full h-full object-cover">
                                         @else
                                             {{ strtoupper(substr($session->member->name, 0, 2)) }}
                                         @endif
                                     </div>
                                     @if($isLive)
-                                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-red-500 border-2 border-zinc-900 rounded-full"></div>
+                                        <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full" title="Member sedang sesi aktif"></div>
                                     @endif
                                 </div>
                                 
                                 <div>
-                                    <h4 class="font-bold text-lg {{ $isLive ? 'text-white' : 'text-gray-900' }} leading-tight mb-1">{{ $session->member->name }}</h4>
-                                    <div class="flex items-center gap-1 text-xs {{ $isLive ? 'text-gray-400' : 'text-gray-500' }}">
-                                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                                    <h4 class="font-bold text-lg text-gray-900 leading-tight mb-1">{{ $session->member->name }}</h4>
+                                    <div class="flex items-center gap-1.5 text-xs text-gray-500">
+                                        <svg class="w-3.5 h-3.5 {{ $isLive ? 'text-[#ED1B45]' : 'text-gray-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                                         {{ $session->session_info }}
                                     </div>
                                 </div>
@@ -150,32 +166,33 @@
 
                             <div class="flex-grow"></div>
 
-                            <div class="flex gap-2 mt-4 pt-4 border-t {{ $isLive ? 'border-zinc-800' : 'border-gray-100' }}">
+                            <div class="flex gap-2 mt-4 pt-4 border-t border-gray-100">
                                 @if($statusEnum === \App\Enums\PtSessionStatus::Completed || $statusEnum === \App\Enums\PtSessionStatus::Done)
-                                    <button class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl text-sm transition">
-                                        Catatan Latihan
+                                    <button type="button" class="w-1/2 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl text-sm transition">
+                                        Catatan
+                                    </button>
+                                    <button type="button" class="w-1/2 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold rounded-xl text-sm border border-amber-200 transition flex items-center justify-center gap-1.5">
+                                        <svg class="w-4 h-4 text-amber-500 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        <span>Rating{{ $session->rating ? ' ' . number_format($session->rating->rating, 1) : '' }}</span>
                                     </button>
                                 @elseif($statusEnum === \App\Enums\PtSessionStatus::Scheduled)
-                                    <button class="w-full py-2.5 bg-[#B80029]/10 hover:bg-[#B80029]/20 text-[#B80029] font-semibold rounded-xl text-sm transition">
+                                    <button type="button" class="w-full py-2.5 bg-[#ED1B45]/10 hover:bg-[#ED1B45]/20 text-[#ED1B45] font-semibold rounded-xl text-sm transition">
                                         Detail & Asesmen
                                     </button>
                                 @elseif($statusEnum === \App\Enums\PtSessionStatus::PendingConfirmation)
-                                    <button class="w-1/2 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm transition">
+                                    <button type="button" class="w-1/2 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl text-sm transition">
                                         Tolak
                                     </button>
-                                    <button class="w-1/2 py-2.5 bg-[#B80029] hover:bg-[#9a0022] text-white font-semibold rounded-xl text-sm transition shadow-sm">
+                                    <button type="button" class="w-1/2 py-2.5 bg-[#ED1B45] hover:bg-[#D1123D] text-white font-semibold rounded-xl text-sm transition shadow-sm">
                                         Konfirmasi
                                     </button>
                                 @elseif($statusEnum === \App\Enums\PtSessionStatus::Rescheduled)
-                                    <button class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl text-sm transition">
+                                    <button type="button" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl text-sm transition">
                                         Lihat Alasan
                                     </button>
                                 @elseif($statusEnum === \App\Enums\PtSessionStatus::Ongoing)
-                                    <button class="w-1/2 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold rounded-xl text-sm transition">
-                                        Timer
-                                    </button>
-                                    <button class="w-1/2 py-2.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl text-sm transition shadow-sm">
-                                        Selesai
+                                    <button type="button" class="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl text-sm transition">
+                                        Catatan
                                     </button>
                                 @endif
                             </div>

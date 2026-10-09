@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class PtSession extends Model
 {
@@ -52,7 +51,7 @@ class PtSession extends Model
     // Accessors
     public function getStartsAtAttribute(): ?Carbon
     {
-        if (!$this->session_date || !$this->start_time) {
+        if (! $this->session_date || ! $this->start_time) {
             return null;
         }
 
@@ -60,12 +59,12 @@ class PtSession extends Model
             ? $this->session_date->toDateString()
             : (string) $this->session_date;
 
-        return Carbon::parse($dateString . ' ' . $this->start_time);
+        return Carbon::parse($dateString.' '.$this->start_time);
     }
 
     public function getEndsAtAttribute(): ?Carbon
     {
-        if (!$this->session_date || !$this->end_time) {
+        if (! $this->session_date || ! $this->end_time) {
             return null;
         }
 
@@ -73,7 +72,7 @@ class PtSession extends Model
             ? $this->session_date->toDateString()
             : (string) $this->session_date;
 
-        return Carbon::parse($dateString . ' ' . $this->end_time);
+        return Carbon::parse($dateString.' '.$this->end_time);
     }
 
     public function getCanBeChangedAttribute(): bool
@@ -83,7 +82,7 @@ class PtSession extends Model
         }
 
         $startsAt = $this->starts_at;
-        if (!$startsAt) {
+        if (! $startsAt) {
             return false;
         }
 
@@ -102,13 +101,16 @@ class PtSession extends Model
 
     public function getSessionInfoAttribute(): string
     {
-        if (!$this->quota) return '';
+        if (! $this->quota) {
+            return '';
+        }
         $sesiKe = $this->quota->used_sessions + 1;
         $totalSesi = $this->quota->total_sessions ?? $this->quota->remaining_sessions + $this->quota->used_sessions;
-        
+
         if ($sesiKe === 1) {
             return "Paket {$totalSesi} Sesi (Sesi 1 / Orientasi)";
         }
+
         return "Paket {$totalSesi} Sesi (Sesi ke-{$sesiKe})";
     }
 
@@ -119,7 +121,7 @@ class PtSession extends Model
         }
 
         $startsAt = $this->starts_at;
-        if (!$startsAt) {
+        if (! $startsAt) {
             return $this->status->label();
         }
 

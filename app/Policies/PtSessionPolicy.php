@@ -14,7 +14,7 @@ class PtSessionPolicy
         if ($user->isTrainer()) {
             return $user->id === $ptSession->trainer_id;
         }
-        
+
         if ($user->isMember()) {
             return $user->id === $ptSession->member_id;
         }

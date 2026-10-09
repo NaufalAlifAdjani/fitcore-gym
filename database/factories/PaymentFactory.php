@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Payment;
-use App\Models\MemberProfile;
 use App\Models\Bank;
+use App\Models\MemberProfile;
+use App\Models\Payment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PaymentFactory extends Factory

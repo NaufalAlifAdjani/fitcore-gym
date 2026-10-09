@@ -53,7 +53,7 @@ class MemberPtQuota extends Model
 
     public function hasRemainingSessions(): bool
     {
-        return $this->remaining_sessions > 0 && !$this->isExpired();
+        return $this->remaining_sessions > 0 && ! $this->isExpired();
     }
 
     public function scopeActiveValid(Builder $query): Builder

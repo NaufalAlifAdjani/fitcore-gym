@@ -2,19 +2,20 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\User;
-use App\Models\TrainerProfile;
-use App\Models\MemberProfile;
 use App\Models\Bank;
-use App\Models\MembershipPackage;
-use App\Models\PtPackage;
-use App\Models\Membership;
+use App\Models\CheckIn;
+use App\Models\MemberProfile;
 use App\Models\MemberPtQuota;
+use App\Models\Membership;
+use App\Models\MembershipPackage;
 use App\Models\Payment;
+use App\Models\PtPackage;
 use App\Models\PtSession;
 use App\Models\Rating;
-use App\Models\CheckIn;
+use App\Models\TrainerProfile;
+use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -24,8 +25,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
-        $this->call(PtBookingDemoSeeder::class);
         // 1. Admin Users (2)
         User::factory()->create([
             'name' => 'Admin Utama',
@@ -57,13 +56,18 @@ class DatabaseSeeder extends Seeder
 
         // 3. Trainer Users (10)
         // Buat 1 akun trainer statis agar mudah digunakan untuk testing login
-        $trainerUser = User::factory()->create([
-            'name' => 'Trainer Utama',
-            'email' => 'trainer@fitcore.test',
-            'role' => 'trainer',
-            'password' => Hash::make('password123'),
-        ]);
-        TrainerProfile::factory()->create(['user_id' => $trainerUser->id]);
+        $trainerUser = User::firstOrCreate(
+            ['email' => 'trainer@fitcore.test'],
+            [
+                'name' => 'Trainer Utama',
+                'role' => 'trainer',
+                'password' => Hash::make('password123'),
+                'phone' => '081299990005',
+                'status' => 'active',
+                'email_verified_at' => now(),
+            ]
+        );
+        TrainerProfile::firstOrCreate(['user_id' => $trainerUser->id]);
 
         // Sisa 9 trainer di-generate secara random
         $trainers = User::factory(9)->create(['role' => 'trainer'])->each(function ($user) {
@@ -74,13 +78,25 @@ class DatabaseSeeder extends Seeder
 
         // 4. Member Users (40)
         // Buat 1 akun member statis agar mudah digunakan untuk testing login
-        $memberUser = User::factory()->create([
-            'name' => 'Member Utama',
-            'email' => 'member@fitcore.test',
-            'role' => 'member',
-            'password' => Hash::make('password123'),
-        ]);
-        MemberProfile::factory()->create(['user_id' => $memberUser->id]);
+        $memberUser = User::firstOrCreate(
+            ['email' => 'member@fitcore.test'],
+            [
+                'name' => 'Member Utama',
+                'role' => 'member',
+                'password' => Hash::make('password123'),
+                'phone' => '081299990015',
+                'status' => 'active',
+                'email_verified_at' => now(),
+            ]
+        );
+        MemberProfile::firstOrCreate(
+            ['user_id' => $memberUser->id],
+            [
+                'member_code' => 'MEM000001',
+                'gender' => 'male',
+                'address' => 'Jakarta Selatan',
+            ]
+        );
 
         // Sisa 39 member di-generate secara random
         $members = User::factory(39)->create(['role' => 'member'])->each(function ($user) {
@@ -127,7 +143,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // 6. PT Sessions (100)
-        $quotas = \App\Models\MemberPtQuota::all();
+        $quotas = MemberPtQuota::all();
         if ($quotas->count() > 0) {
             for ($i = 0; $i < 100; $i++) {
                 $quota = $quotas->random();
@@ -135,9 +151,9 @@ class DatabaseSeeder extends Seeder
                     PtSession::factory()->create([
                         'member_pt_quota_id' => $quota->id,
                         'member_id' => $quota->member_id,
-                        'trainer_id' => $trainerProfiles->random()->id,
+                        'trainer_id' => $trainerProfiles->random()->user_id,
                     ]);
-                } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+                } catch (UniqueConstraintViolationException $e) {
                     // Ignore duplicate schedule and try again for this iteration
                     $i--;
                 }
@@ -168,5 +184,8 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        // 9. Booking Demo Sesi untuk Trainer (Jadwal Hari Ini, Minggu Ini, & Mendatang)
+        $this->call(PtBookingDemoSeeder::class);
     }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
+use App\Livewire\Trainer\Sessions\Index;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -44,5 +45,5 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
-    Route::get('/jadwal-sesi', \App\Livewire\Trainer\Sessions\Index::class)->name('sessions.index');
+    Route::get('/jadwal-sesi', Index::class)->name('sessions.index');
 });

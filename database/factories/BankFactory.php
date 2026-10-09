@@ -12,6 +12,7 @@ class BankFactory extends Factory
     public function definition(): array
     {
         $banks = ['BCA', 'BNI', 'Mandiri', 'BRI', 'CIMB Niaga'];
+
         return [
             'name' => fake()->randomElement($banks),
             'account_number' => fake()->numerify('##########'),

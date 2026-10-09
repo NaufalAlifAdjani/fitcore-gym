@@ -14,6 +14,7 @@
 
         <!-- Styles & Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
         <style>
             body {
                 font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -46,5 +47,7 @@
 
         <!-- Fitcore Footer -->
         <x-fitcore.footer />
+
+        @livewireScripts
     </body>
 </html>

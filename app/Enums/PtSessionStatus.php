@@ -15,7 +15,7 @@ enum PtSessionStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::Scheduled => 'Nanti Sore',
+            self::Scheduled => '',
             self::PendingConfirmation => 'Konfirmasi',
             self::Rescheduled => 'Rescheduled',
             self::Ongoing => 'LIVE',
@@ -35,7 +35,7 @@ enum PtSessionStatus: string
             self::Cancelled => 'zinc',
         };
     }
-    
+
     public function badgeClasses(): string
     {
         return match ($this) {

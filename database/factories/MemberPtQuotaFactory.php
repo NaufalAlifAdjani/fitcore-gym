@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\MemberPtQuota;
 use App\Models\MemberProfile;
+use App\Models\MemberPtQuota;
 use App\Models\PtPackage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

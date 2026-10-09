@@ -8,7 +8,6 @@ use App\Actions\GetTrainerSchedule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
-use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -23,8 +22,8 @@ class Index extends Component
     public function mount(): void
     {
         $this->date = $this->date ?: now()->toDateString();
-        
-        if (!in_array($this->view, ['daily', 'weekly'])) {
+
+        if (! in_array($this->view, ['daily', 'weekly'])) {
             $this->view = 'daily';
         }
     }
@@ -53,17 +52,13 @@ class Index extends Component
     public function previousPeriod(): void
     {
         $carbon = Carbon::parse($this->date);
-        $this->date = $this->view === 'weekly' 
-            ? $carbon->subWeek()->toDateString() 
-            : $carbon->subDay()->toDateString();
+        $this->date = $carbon->subWeek()->toDateString();
     }
 
     public function nextPeriod(): void
     {
         $carbon = Carbon::parse($this->date);
-        $this->date = $this->view === 'weekly' 
-            ? $carbon->addWeek()->toDateString() 
-            : $carbon->addDay()->toDateString();
+        $this->date = $carbon->addWeek()->toDateString();
     }
 
     public function goToDate(string $date): void
@@ -80,17 +75,18 @@ class Index extends Component
             $this->view
         );
     }
-    
+
     #[Computed]
     public function weekDates(): array
     {
         $carbon = Carbon::parse($this->date);
         $start = $carbon->copy()->startOfWeek(Carbon::MONDAY);
-        
+
         $dates = [];
         for ($i = 0; $i < 7; $i++) {
             $dates[] = $start->copy()->addDays($i);
         }
+
         return $dates;
     }
 
