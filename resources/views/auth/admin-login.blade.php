@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <!-- Title Heading (Sama persis seperti Member) -->
+    <!-- Title Heading -->
     <h2 class="text-3xl sm:text-4xl font-black text-gray-950 leading-tight mb-8">
         Masuk Akun<br>
         Admin<br>
@@ -12,15 +12,18 @@
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
 
-        <!-- Input Username -->
+        <!-- Menyampaikan role admin ke controller jika diperlukan -->
+        <input type="hidden" name="role" value="admin">
+
+        <!-- Input Username / Email (Ubah name menjadi 'email' agar dibaca oleh Laravel AuthenticatedSessionController) -->
         <x-auth-input 
-            label="Username" 
+            label="Username / Email Admin" 
             badge="Akun Admin"
             icon="user"
             type="text" 
-            name="username" 
-            :value="old('username')" 
-            placeholder="Masukkan username admin" 
+            name="email" 
+            :value="old('email')" 
+            placeholder="Masukkan username atau email admin" 
             required autofocus />
 
         <!-- Input Password -->
