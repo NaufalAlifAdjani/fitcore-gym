@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             MembershipPackageSeeder::class,
+            PtPackageSeeder::class,
+            PaymentSeeder::class,
         ]);
     }
 }

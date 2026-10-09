@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * Menampilkan halaman/form login
      */
     public function create(): View
     {
@@ -20,26 +20,42 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * Memproses otentikasi login
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        // Validasi input
+        $credentials = $request->validated();
 
-        $request->session()->regenerate();
+        // Coba lakukan autentikasi
+        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+            // Redirect berdasarkan Role User
+            $role = Auth::user()->role;
+            if ($role === 'admin') {
+                return redirect()->intended(route('admin.dashboard', absolute: false));
+            } elseif ($role === 'trainer') {
+                return redirect()->intended('/trainer/dashboard');
+            }
+
+            return redirect()->intended('/dashboard');
+        }
+
+        // Jika gagal, kembalikan pesan error
+        return back()->withErrors([
+            'email' => 'Email atau password yang Anda masukkan salah.',
+        ])->onlyInput('email');
     }
 
     /**
-     * Destroy an authenticated session.
+     * Memproses Logout
      */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect('/');

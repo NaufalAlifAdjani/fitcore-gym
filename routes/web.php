@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\MembershipPackageController;
+use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,8 +26,17 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
     Route::put('/packages/{package}', [MembershipPackageController::class, 'update'])->name('packages.update');
     Route::patch('/packages/{package}/toggle-status', [MembershipPackageController::class, 'toggleStatus'])->name('packages.toggle-status');
 
+    Route::prefix('verifikasi-pembayaran')
+        ->name('payments.')
+        ->controller(PaymentVerificationController::class)
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/{id}', 'show')->whereNumber('id')->name('show');
+            Route::post('/{id}/approve', 'approve')->whereNumber('id')->name('approve');
+            Route::post('/{id}/reject', 'reject')->whereNumber('id')->name('reject');
+        });
+
     Route::view('/pt-sessions', 'admin.placeholder', ['title' => 'Paket Sesi & Jadwal PT'])->name('pt-sessions.index');
-    Route::view('/payments', 'admin.placeholder', ['title' => 'Verifikasi Pembayaran'])->name('payments.index');
     Route::view('/check-in', 'admin.placeholder', ['title' => 'Scanner Check-in'])->name('check-in.index');
     Route::view('/members', 'admin.placeholder', ['title' => 'Manajemen Member'])->name('members.index');
     Route::view('/settings', 'admin.placeholder', ['title' => 'Pengaturan'])->name('settings.index');
