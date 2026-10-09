@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use App\Exceptions\PaymentAlreadyProcessedException;
+use App\Models\MemberPtQuota;
 use App\Models\Membership;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\PtPackage;
-use App\Models\PtSessionPackage;
 use App\Models\User;
 use App\Notifications\ChoosePtScheduleNotification;
 use Carbon\CarbonImmutable;
@@ -21,7 +21,11 @@ class PaymentVerificationService
         return DB::transaction(function () use ($payment, $adminId): Payment {
             $lockedPayment = $this->lockPendingPayment($payment);
 
-            if ($lockedPayment->package_type === 'membership') {
+            $isMembershipPayment = $lockedPayment->package_type !== null
+                ? $lockedPayment->package_type === 'membership'
+                : $lockedPayment->payment_type === 'membership';
+
+            if ($isMembershipPayment) {
                 $this->activateMembership($lockedPayment);
             } else {
                 $this->activatePtPackage($lockedPayment);
@@ -97,7 +101,8 @@ class PaymentVerificationService
             ->lockForUpdate()
             ->firstOrFail();
 
-        $package = MembershipPackage::query()->findOrFail($payment->package_id);
+        $package = MembershipPackage::query()
+            ->findOrFail($payment->package_id ?? $payment->membership?->membership_package_id);
         $today = CarbonImmutable::today();
         $latestActiveEndDate = Membership::query()
             ->where('member_id', $payment->member_id)
@@ -108,7 +113,8 @@ class PaymentVerificationService
         $startDate = $latestActiveEndDate
             ? CarbonImmutable::parse($latestActiveEndDate)->addDay()
             : $today;
-        $endDate = $startDate->addDays($package->duration_in_days - 1);
+        $durationDays = $package->duration_in_days ?? $package->duration_days;
+        $endDate = $startDate->addDays($durationDays - 1);
 
         Membership::query()
             ->where('member_id', $payment->member_id)
@@ -118,7 +124,7 @@ class PaymentVerificationService
 
         Membership::query()->create([
             'member_id' => $payment->member_id,
-            'package_id' => $package->id,
+            'membership_package_id' => $package->id,
             'payment_id' => $payment->id,
             'start_date' => $startDate,
             'end_date' => $endDate,
@@ -128,20 +134,23 @@ class PaymentVerificationService
 
     private function activatePtPackage(Payment $payment): void
     {
-        $package = PtPackage::query()->findOrFail($payment->package_id);
-
-        $memberPackage = PtSessionPackage::query()->create([
+        $package = PtPackage::query()->findOrFail($payment->package_id ?? $payment->pt_package_id);
+        $startDate = CarbonImmutable::today();
+        $memberQuota = MemberPtQuota::query()->create([
             'member_id' => $payment->member_id,
             'pt_package_id' => $package->id,
-            'payment_id' => $payment->id,
-            'sessions_total' => $package->sessions_count,
-            'sessions_remaining' => $package->sessions_count,
+            'source' => 'purchase',
+            'total_sessions' => $package->pt_session_count,
+            'used_sessions' => 0,
+            'remaining_sessions' => $package->pt_session_count,
+            'start_date' => $startDate,
+            'end_date' => $startDate->addDays($package->validity_days),
             'status' => 'active',
         ]);
 
         $member = User::query()->findOrFail($payment->member_id);
         $member->notify(new ChoosePtScheduleNotification(
-            $memberPackage->id,
+            $memberQuota->id,
             $package->name,
         ));
     }

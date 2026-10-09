@@ -9,56 +9,37 @@ class PtPackageSeeder extends Seeder
 {
     public function run(): void
     {
-<<<<<<< HEAD
-        foreach ([
+        $packages = [
             [
                 'name' => 'Personal Trainer - 5 Sesi',
-                'description' => 'Paket latihan personal lima sesi.',
-                'sessions_count' => 5,
+                'pt_session_count' => 5,
                 'price' => 300000,
-                'is_active' => true,
+                'min_membership_days' => 0,
+                'validity_days' => 60,
+                'status' => 'active',
             ],
             [
                 'name' => 'Personal Trainer - 10 Sesi',
-                'description' => 'Paket latihan personal sepuluh sesi.',
-                'sessions_count' => 10,
-                'price' => 600000,
-                'is_active' => true,
-            ],
-        ] as $package) {
-            PtPackage::query()->updateOrCreate(
-                ['name' => $package['name']],
-                $package,
-=======
-        $packages = [
-            [
-                'name' => 'PT 5 Sesi',
-                'pt_session_count' => 5,
-                'price' => 500000,
-                'min_membership_days' => 30,
-                'validity_days' => 60,
-            ],
-            [
-                'name' => 'PT 10 Sesi',
                 'pt_session_count' => 10,
-                'price' => 900000,
-                'min_membership_days' => 30,
+                'price' => 600000,
+                'min_membership_days' => 0,
                 'validity_days' => 90,
+                'status' => 'active',
             ],
             [
-                'name' => 'PT 20 Sesi',
+                'name' => 'Personal Trainer - 20 Sesi',
                 'pt_session_count' => 20,
-                'price' => 1600000,
-                'min_membership_days' => 60,
+                'price' => 1100000,
+                'min_membership_days' => 0,
                 'validity_days' => 180,
+                'status' => 'active',
             ],
         ];
 
         foreach ($packages as $package) {
-            PtPackage::updateOrCreate(
+            PtPackage::query()->updateOrCreate(
                 ['name' => $package['name']],
-                $package + ['status' => 'active']
->>>>>>> origin/develop
+                $package,
             );
         }
     }

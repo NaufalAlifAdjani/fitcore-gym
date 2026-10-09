@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'member_id',
-    'package_id',
+    'membership_package_id',
     'payment_id',
     'start_date',
     'end_date',
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 ])]
 class Membership extends Model
 {
+    use HasFactory;
+
     protected function casts(): array
     {
         return [
@@ -32,32 +35,26 @@ class Membership extends Model
 
     public function package(): BelongsTo
     {
-        return $this->belongsTo(MembershipPackage::class, 'package_id');
+        return $this->belongsTo(MembershipPackage::class, 'membership_package_id');
     }
 
     public function payment(): BelongsTo
     {
         return $this->belongsTo(Payment::class);
     }
-=======
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Membership extends Model
-{
-    use HasFactory;
+    public function ptQuotas(): HasMany
+    {
+        return $this->hasMany(MemberPtQuota::class);
+    }
 
-    protected $guarded = [];
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 
-    protected $casts = [
-        'start_date' => 'date',
-        'end_date'   => 'date',
-    ];
-
-    public function member()   { return $this->belongsTo(User::class, 'member_id'); }
-    public function package()  { return $this->belongsTo(MembershipPackage::class, 'membership_package_id'); }
-    public function ptQuotas() { return $this->hasMany(MemberPtQuota::class); }
-    public function payments() { return $this->hasMany(Payment::class); }
-    public function checkIns() { return $this->hasMany(CheckIn::class); }
->>>>>>> origin/develop
+    public function checkIns(): HasMany
+    {
+        return $this->hasMany(CheckIn::class);
+    }
 }

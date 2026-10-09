@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Bank;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\PtPackage;
@@ -21,13 +22,26 @@ class PaymentSeeder extends Seeder
         $ptPackageTenSessions = PtPackage::query()
             ->where('name', 'Personal Trainer - 10 Sesi')
             ->firstOrFail();
-        $now = now();
 
+        $banks = collect(['BCA', 'BRI', 'BNI', 'Mandiri'])
+            ->mapWithKeys(fn (string $name) => [
+                $name => Bank::query()->firstOrCreate(
+                    ['name' => $name],
+                    [
+                        'account_number' => '0000000000',
+                        'account_holder' => 'Fitcore Gym',
+                        'status' => 'active',
+                    ],
+                ),
+            ]);
+
+        $now = now();
         $payments = [
             [
                 'invoice_id' => 'INV-GYM-2026-0001',
                 'package_type' => 'membership',
                 'package_id' => $membershipPackage->id,
+                'payment_type' => 'membership',
                 'amount' => 450000,
                 'bank_sender' => 'BCA',
                 'status' => 'pending',
@@ -40,6 +54,8 @@ class PaymentSeeder extends Seeder
                 'invoice_id' => 'INV-GYM-2026-0002',
                 'package_type' => 'pt_session',
                 'package_id' => $ptPackageFiveSessions->id,
+                'pt_package_id' => $ptPackageFiveSessions->id,
+                'payment_type' => 'pt_package',
                 'amount' => 300000,
                 'bank_sender' => 'BRI',
                 'status' => 'verified',
@@ -52,7 +68,8 @@ class PaymentSeeder extends Seeder
                 'invoice_id' => 'INV-GYM-2026-0003',
                 'package_type' => 'membership',
                 'package_id' => $membershipPackage->id,
-                'amount' => 2400000,
+                'payment_type' => 'membership',
+                'amount' => 450000,
                 'bank_sender' => 'BNI',
                 'status' => 'rejected',
                 'rejection_reason' => 'Bukti transfer tidak menampilkan nominal dengan jelas.',
@@ -64,6 +81,8 @@ class PaymentSeeder extends Seeder
                 'invoice_id' => 'INV-GYM-2026-0004',
                 'package_type' => 'pt_session',
                 'package_id' => $ptPackageTenSessions->id,
+                'pt_package_id' => $ptPackageTenSessions->id,
+                'payment_type' => 'pt_package',
                 'amount' => 600000,
                 'bank_sender' => 'Mandiri',
                 'status' => 'pending',
@@ -76,7 +95,8 @@ class PaymentSeeder extends Seeder
                 'invoice_id' => 'INV-GYM-2026-0005',
                 'package_type' => 'membership',
                 'package_id' => $membershipPackage->id,
-                'amount' => 1600000,
+                'payment_type' => 'membership',
+                'amount' => 450000,
                 'bank_sender' => 'BCA',
                 'status' => 'verified',
                 'rejection_reason' => null,
@@ -92,9 +112,9 @@ class PaymentSeeder extends Seeder
                 [
                     ...$payment,
                     'member_id' => $member->id,
+                    'bank_id' => $banks->get($payment['bank_sender'])->id,
                     'bank_destination' => 'Mandiri',
                     'proof_image_url' => 'https://example.test/receipts/'.$payment['invoice_id'].'.jpg',
-                    'updated_at' => $now,
                 ],
             );
         }

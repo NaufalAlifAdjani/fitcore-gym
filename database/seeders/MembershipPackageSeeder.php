@@ -11,7 +11,6 @@ class MembershipPackageSeeder extends Seeder
     {
         $packages = [
             [
-<<<<<<< HEAD
                 'name' => 'Silver Monthly Pass',
                 'badge' => 'SILVER',
                 'tier' => 'Basic',
@@ -21,11 +20,12 @@ class MembershipPackageSeeder extends Seeder
                 'duration_value' => 1,
                 'duration_unit' => 'Bulan',
                 'duration_in_days' => 30,
-                'facilities' => [
-                    'Akses Gym Jam Tertentu (06.00 - 16.00)',
-                    '1x Konsultasi Fitness Awal',
-                ],
+                'duration_days' => 30,
+                'facilities' => ['Akses gym jam tertentu', 'Konsultasi fitness awal'],
                 'pt_sessions' => 0,
+                'pt_session_count' => 0,
+                'type' => 'basic',
+                'status' => 'active',
                 'is_active' => true,
             ],
             [
@@ -38,13 +38,12 @@ class MembershipPackageSeeder extends Seeder
                 'duration_value' => 6,
                 'duration_unit' => 'Bulan',
                 'duration_in_days' => 180,
-                'facilities' => [
-                    'Akses Gym All-Hours Penuh',
-                    'Free All Regular Studio Classes',
-                    '2x Sesi Personal Trainer Gratis',
-                    'Free Locker Harian',
-                ],
+                'duration_days' => 180,
+                'facilities' => ['Akses gym 24 jam', 'Kelas studio', '2 sesi PT gratis'],
                 'pt_sessions' => 2,
+                'pt_session_count' => 2,
+                'type' => 'standard',
+                'status' => 'active',
                 'is_active' => true,
             ],
             [
@@ -57,14 +56,12 @@ class MembershipPackageSeeder extends Seeder
                 'duration_value' => 12,
                 'duration_unit' => 'Bulan',
                 'duration_in_days' => 365,
-                'facilities' => [
-                    'Akses Gym Tanpa Batas 24/7 di Semua Cabang',
-                    'Akses Semua Studio Class & HIIT',
-                    '5x Sesi 1-on-1 PT Gratis',
-                    'Locker Permanen + Free Towel Service',
-                    'Akses Sauna & Ice Bath Recovery',
-                ],
+                'duration_days' => 365,
+                'facilities' => ['Akses gym semua cabang', 'Kelas studio', '5 sesi PT gratis'],
                 'pt_sessions' => 5,
+                'pt_session_count' => 5,
+                'type' => 'premium',
+                'status' => 'active',
                 'is_active' => true,
             ],
             [
@@ -77,14 +74,12 @@ class MembershipPackageSeeder extends Seeder
                 'duration_value' => 12,
                 'duration_unit' => 'Bulan',
                 'duration_in_days' => 365,
-                'facilities' => [
-                    'All-Branch VIP Priority Access',
-                    'Unlimited Class Priority Fast-Pass',
-                    '12x Sesi Personal Trainer (Exclusive)',
-                    'Private VIP Lounge & Valet Parking',
-                    'Suplemen Starter Pack & Towel Premium',
-                ],
+                'duration_days' => 365,
+                'facilities' => ['Akses semua cabang', 'Kelas prioritas', '12 sesi PT eksklusif'],
                 'pt_sessions' => 12,
+                'pt_session_count' => 12,
+                'type' => 'vip',
+                'status' => 'active',
                 'is_active' => true,
             ],
             [
@@ -97,49 +92,21 @@ class MembershipPackageSeeder extends Seeder
                 'duration_value' => 5,
                 'duration_unit' => 'Bulan',
                 'duration_in_days' => 150,
-                'facilities' => [
-                    'Akses Gym Weekdays (09:00 - 17:00)',
-                    'Kartu Mahasiswa Aktif Wajib',
-                ],
+                'duration_days' => 150,
+                'facilities' => ['Akses gym weekdays', 'Kartu mahasiswa aktif wajib'],
                 'pt_sessions' => 0,
+                'pt_session_count' => 0,
+                'type' => 'student',
+                'status' => 'inactive',
                 'is_active' => false,
             ],
         ];
 
-        foreach ($packages as $pkg) {
-            MembershipPackage::create($pkg);
-=======
-                'name' => 'Basic 1 Bulan',
-                'type' => 'basic',
-                'duration_days' => 30,
-                'price' => 250000,
-                'facilities' => 'Akses alat gym, loker, area kardio',
-                'pt_session_count' => 0,
-            ],
-            [
-                'name' => 'Premium 3 Bulan',
-                'type' => 'premium',
-                'duration_days' => 90,
-                'price' => 650000,
-                'facilities' => 'Akses alat gym, loker, area kardio, kelas grup',
-                'pt_session_count' => 2,
-            ],
-            [
-                'name' => 'VIP 12 Bulan',
-                'type' => 'vip',
-                'duration_days' => 365,
-                'price' => 2200000,
-                'facilities' => 'Semua fasilitas, kelas grup, handuk, sauna',
-                'pt_session_count' => 8,
-            ],
-        ];
-
         foreach ($packages as $package) {
-            MembershipPackage::updateOrCreate(
+            MembershipPackage::query()->updateOrCreate(
                 ['name' => $package['name']],
-                $package + ['status' => 'active']
+                $package,
             );
->>>>>>> origin/develop
         }
     }
 }

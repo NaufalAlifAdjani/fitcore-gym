@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 class ChoosePtScheduleNotification extends Notification
 {
     public function __construct(
-        public readonly int $ptSessionPackageId,
+        public readonly int $memberPtQuotaId,
         public readonly string $packageName,
     ) {}
 
@@ -17,7 +17,7 @@ class ChoosePtScheduleNotification extends Notification
     }
 
     /**
-     * @return array{type: string, title: string, message: string, pt_session_package_id: int}
+     * @return array{type: string, title: string, message: string, member_pt_quota_id: int}
      */
     public function toDatabase(object $notifiable): array
     {
@@ -25,7 +25,7 @@ class ChoosePtScheduleNotification extends Notification
             'type' => 'choose_pt_schedule',
             'title' => 'Pilih jadwal Personal Trainer',
             'message' => "Paket {$this->packageName} sudah aktif. Silakan pilih jadwal sesi PT Anda.",
-            'pt_session_package_id' => $this->ptSessionPackageId,
+            'member_pt_quota_id' => $this->memberPtQuotaId,
         ];
     }
 }

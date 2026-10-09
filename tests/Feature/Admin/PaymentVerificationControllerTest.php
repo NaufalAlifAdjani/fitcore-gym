@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Bank;
 use App\Models\Membership;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
@@ -132,10 +133,11 @@ class PaymentVerificationControllerTest extends TestCase
         $member = User::factory()->create(['role' => 'member']);
         $ptPackage = PtPackage::create([
             'name' => 'PT 8 Sesi',
-            'description' => 'Delapan sesi latihan personal.',
-            'sessions_count' => 8,
+            'pt_session_count' => 8,
             'price' => 800000,
-            'is_active' => true,
+            'min_membership_days' => 0,
+            'validity_days' => 56,
+            'status' => 'active',
         ]);
         $payment = $this->createPayment($member, [
             'package_type' => 'pt_session',
@@ -147,12 +149,12 @@ class PaymentVerificationControllerTest extends TestCase
             ->assertOk()
             ->assertJsonPath('success', true);
 
-        $this->assertDatabaseHas('pt_session_packages', [
+        $this->assertDatabaseHas('member_pt_quotas', [
             'member_id' => $member->id,
             'pt_package_id' => $ptPackage->id,
-            'payment_id' => $payment->id,
-            'sessions_total' => 8,
-            'sessions_remaining' => 8,
+            'source' => 'purchase',
+            'total_sessions' => 8,
+            'remaining_sessions' => 8,
         ]);
         Notification::assertSentTo($member, ChoosePtScheduleNotification::class);
     }
@@ -235,7 +237,9 @@ class PaymentVerificationControllerTest extends TestCase
             'member_id' => $member->id,
             'package_id' => $package->id,
             'package_type' => 'membership',
+            'payment_type' => 'membership',
             'amount' => 450000,
+            'bank_id' => Bank::factory()->create()->id,
             'bank_sender' => 'BCA',
             'bank_destination' => 'Mandiri',
             'proof_image_url' => 'https://example.test/receipt.jpg',

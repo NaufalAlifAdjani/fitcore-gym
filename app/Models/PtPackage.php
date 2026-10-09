@@ -2,44 +2,40 @@
 
 namespace App\Models;
 
-<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'name',
-    'description',
-    'sessions_count',
+    'pt_session_count',
     'price',
-    'is_active',
+    'min_membership_days',
+    'validity_days',
+    'status',
 ])]
-class PtPackage extends Model
-{
-    protected function casts(): array
-    {
-        return [
-            'sessions_count' => 'integer',
-            'price' => 'integer',
-            'is_active' => 'boolean',
-        ];
-    }
-
-    public function memberPackages(): HasMany
-    {
-        return $this->hasMany(PtSessionPackage::class);
-    }
-=======
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
 class PtPackage extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected function casts(): array
+    {
+        return [
+            'pt_session_count' => 'integer',
+            'price' => 'integer',
+            'min_membership_days' => 'integer',
+            'validity_days' => 'integer',
+        ];
+    }
 
-    public function quotas()   { return $this->hasMany(MemberPtQuota::class); }
-    public function payments() { return $this->hasMany(Payment::class); }
->>>>>>> origin/develop
+    public function quotas(): HasMany
+    {
+        return $this->hasMany(MemberPtQuota::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 }
