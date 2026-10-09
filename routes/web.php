@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
+use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Member Membership Package, Checkout, and Payment Status routes
+    Route::prefix('membership')->name('member.membership.')->controller(MemberMembershipPackageController::class)->group(function () {
+        Route::get('/packages', 'index')->name('packages');
+        Route::get('/checkout/{package}', 'checkout')->name('checkout');
+        Route::post('/checkout/{package}', 'processPayment')->name('process-payment');
+        Route::get('/payment-status/{payment}', 'paymentStatus')->name('payment-status');
+    });
 });
 
 Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->name('admin.')->group(function () {
