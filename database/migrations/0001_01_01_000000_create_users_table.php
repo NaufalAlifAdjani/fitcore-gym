@@ -17,7 +17,13 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+<<<<<<< HEAD
             $table->string('role')->default('member'); // <-- Tambahan kolom role di sini
+=======
+            $table->string('role')->default('member'); // admin, trainer, member
+            $table->string('phone')->nullable();
+            $table->string('status')->default('active');
+>>>>>>> origin/develop
             $table->rememberToken();
             $table->timestamps();
         });

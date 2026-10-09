@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,4 +29,17 @@ class PtPackage extends Model
     {
         return $this->hasMany(PtSessionPackage::class);
     }
+=======
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class PtPackage extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    public function quotas()   { return $this->hasMany(MemberPtQuota::class); }
+    public function payments() { return $this->hasMany(Payment::class); }
+>>>>>>> origin/develop
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -38,4 +39,25 @@ class Membership extends Model
     {
         return $this->belongsTo(Payment::class);
     }
+=======
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Membership extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date'   => 'date',
+    ];
+
+    public function member()   { return $this->belongsTo(User::class, 'member_id'); }
+    public function package()  { return $this->belongsTo(MembershipPackage::class, 'membership_package_id'); }
+    public function ptQuotas() { return $this->hasMany(MemberPtQuota::class); }
+    public function payments() { return $this->hasMany(Payment::class); }
+    public function checkIns() { return $this->hasMany(CheckIn::class); }
+>>>>>>> origin/develop
 }

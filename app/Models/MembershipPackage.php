@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,10 +21,16 @@ use Illuminate\Database\Eloquent\Model;
     'pt_sessions',
     'is_active',
 ])]
+=======
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+>>>>>>> origin/develop
 class MembershipPackage extends Model
 {
     use HasFactory;
 
+<<<<<<< HEAD
     protected function casts(): array
     {
         return [
@@ -33,4 +40,9 @@ class MembershipPackage extends Model
             'promo_price' => 'integer',
         ];
     }
+=======
+    protected $guarded = [];
+
+    public function memberships() { return $this->hasMany(Membership::class); }
+>>>>>>> origin/develop
 }
