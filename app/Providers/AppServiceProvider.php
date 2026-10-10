@@ -25,5 +25,10 @@ class AppServiceProvider extends ServiceProvider
             'manage-membership-packages',
             fn (User $user): bool => $user->role === 'admin',
         );
+
+        Gate::define(
+            'access-member-dashboard',
+            fn (User $user): bool => $user->role === 'member',
+        );
     }
 }
