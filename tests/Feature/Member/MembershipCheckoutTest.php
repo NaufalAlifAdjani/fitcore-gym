@@ -170,4 +170,77 @@ class MembershipCheckoutTest extends TestCase
 
         $this->assertTrue(Storage::disk('public')->exists($payment->proof_image_path));
     }
+
+    public function test_member_can_access_upload_proof_page_with_selected_bank_and_nominal(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '8271081234567890',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Starter Pass',
+            'tier' => 'Basic',
+            'price' => 450000,
+            'duration_value' => 1,
+            'duration_unit' => 'Bulan',
+            'duration_in_days' => 30,
+            'facilities' => ['Akses Gym'],
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.membership.upload-proof', [
+            'package' => $package,
+            'bank_id' => $bank->id,
+            'unique_code' => 421,
+        ]));
+
+        $response->assertOk()
+            ->assertSee('Upload Bukti Pembayaran')
+            ->assertSee('FitCore Starter Pass')
+            ->assertSee('BCA')
+            ->assertSee('8271081234567890')
+            ->assertSee('KIRIM BUKTI PEMBAYARAN');
+    }
+
+    public function test_member_can_submit_payment_proof_via_upload_proof_post_route(): void
+    {
+        Storage::fake('public');
+
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'Mandiri',
+            'account_number' => '1234509876',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Elite Champion',
+            'tier' => 'Premium & VIP',
+            'price' => 299000,
+            'duration_value' => 1,
+            'duration_unit' => 'Bulan',
+            'duration_in_days' => 30,
+            'facilities' => ['Akses Penuh'],
+            'is_active' => true,
+        ]);
+
+        $fakeReceipt = UploadedFile::fake()->image('struk-transfer.png', 500, 500);
+
+        $response = $this->actingAs($member)
+            ->post(route('member.membership.upload-proof.store', $package), [
+                'bank_id' => $bank->id,
+                'sender_name' => 'Siti Nurhaliza',
+                'proof_image' => $fakeReceipt,
+            ]);
+
+        $payment = Payment::query()->latest('id')->first();
+
+        $this->assertNotNull($payment);
+        $response->assertRedirect(route('member.membership.payment-status', $payment));
+        $this->assertEquals('pending', $payment->status);
+        $this->assertEquals('Siti Nurhaliza', $payment->bank_sender);
+    }
 }

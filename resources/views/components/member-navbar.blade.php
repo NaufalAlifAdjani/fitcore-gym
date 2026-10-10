@@ -5,7 +5,7 @@
 <header class="sticky top-0 z-40 w-full border-b border-slate-800 bg-[#0B0F17]/95 backdrop-blur-md">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
         <!-- Logo -->
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
+        <a href="{{ route('member.dashboard') }}" class="flex items-center gap-3 group">
             <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#BA0030] text-white shadow-[0_0_15px_rgba(186,0,48,0.5)] transition group-hover:scale-105">
                 <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path d="M6.5 6.5h11M6.5 17.5h11M4 9.5h16M4 14.5h16M8.5 4.5v15M15.5 4.5v15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -21,23 +21,23 @@
 
         <!-- Desktop Navigation Items -->
         <nav class="hidden md:flex items-center gap-1 bg-slate-900/80 p-1.5 rounded-full border border-slate-800">
-            <a href="{{ route('dashboard') }}"
+            <a href="{{ route('member.dashboard') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md' => $active === 'beranda',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => $active !== 'beranda',
+                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('member.dashboard') || $active === 'beranda',
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('member.dashboard') && $active !== 'beranda',
                 ])>
                 Beranda
             </a>
             <a href="{{ route('member.membership.packages') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30' => $active === 'packages',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => $active !== 'packages',
+                    'bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30' => (request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && $active !== 'beranda' && $active !== 'riwayat',
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => (!request()->routeIs('member.membership.*') && $active !== 'packages') || request()->routeIs('member.dashboard') || $active === 'beranda' || $active === 'riwayat',
                 ])>
                 Paket Membership
             </a>
-            <a href="{{ route('admin.pt-sessions.index') }}"
+            <a href="#"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
                     'bg-[#BA0030] text-white shadow-md' => $active === 'pt',
@@ -45,7 +45,7 @@
                 ])>
                 Personal Trainer
             </a>
-            <a href="{{ route('admin.check-in.index') }}"
+            <a href="#"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
                     'bg-[#BA0030] text-white shadow-md' => $active === 'booking',
@@ -53,7 +53,7 @@
                 ])>
                 Booking Sesi
             </a>
-            <a href="{{ route('member.membership.packages') }}"
+            <a href="#"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
                     'bg-[#BA0030] text-white shadow-md' => $active === 'riwayat',

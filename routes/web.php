@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
+use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -11,7 +12,17 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $role = auth()->user()?->role;
+
+    if ($role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    if ($role === 'trainer') {
+        return redirect('/trainer/dashboard');
+    }
+
+    return redirect()->route('member.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -19,10 +30,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Member Membership Package, Checkout, and Payment Status routes
+    // Member Dashboard
+    Route::get('/member/dashboard', [MemberDashboardController::class, 'index'])
+        ->middleware('can:access-member-dashboard')
+        ->name('member.dashboard');
+
+    // Member Membership Package, Checkout, Upload Proof, and Payment Status routes
     Route::prefix('membership')->name('member.membership.')->controller(MemberMembershipPackageController::class)->group(function () {
         Route::get('/packages', 'index')->name('packages');
         Route::get('/checkout/{package}', 'checkout')->name('checkout');
+        Route::get('/upload-proof/{package}', 'uploadProof')->name('upload-proof');
+        Route::post('/upload-proof/{package}', 'processPayment')->name('upload-proof.store');
         Route::post('/checkout/{package}', 'processPayment')->name('process-payment');
         Route::get('/payment-status/{payment}', 'paymentStatus')->name('payment-status');
     });

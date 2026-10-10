@@ -8,6 +8,7 @@ use App\Models\Bank;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -47,6 +48,47 @@ class MembershipPackageController extends Controller
         }
 
         return view('member.packages.checkout', compact('package', 'banks'));
+    }
+
+    /**
+     * Menampilkan formulir upload bukti transfer pembayaran.
+     */
+    public function uploadProof(Request $request, MembershipPackage $package): View
+    {
+        if (! $package->is_active && $package->status !== 'active') {
+            abort(404, 'Paket membership tidak aktif atau tidak ditemukan.');
+        }
+
+        $banks = Bank::query()
+            ->where('status', 'active')
+            ->get();
+
+        if ($banks->isEmpty()) {
+            $banks = Bank::all();
+        }
+
+        $selectedBank = null;
+        if ($request->filled('bank_id')) {
+            $selectedBank = $banks->firstWhere('id', (int) $request->query('bank_id'));
+        }
+
+        $selectedBank ??= $banks->first();
+
+        $uniqueCode = (int) $request->query('unique_code', 421);
+
+        $effectivePrice = ($package->promo_price !== null && $package->promo_price < $package->price)
+            ? $package->promo_price
+            : $package->price;
+
+        $totalAmount = $effectivePrice + $uniqueCode;
+
+        return view('member.packages.upload-proof', compact(
+            'package',
+            'banks',
+            'selectedBank',
+            'uniqueCode',
+            'totalAmount'
+        ));
     }
 
     /**
