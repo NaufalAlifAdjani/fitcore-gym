@@ -51,7 +51,7 @@ class PtSession extends Model
     // Accessors
     public function getStartsAtAttribute(): ?Carbon
     {
-        if (!$this->session_date || !$this->start_time) {
+        if (! $this->session_date || ! $this->start_time) {
             return null;
         }
 
@@ -59,12 +59,12 @@ class PtSession extends Model
             ? $this->session_date->toDateString()
             : (string) $this->session_date;
 
-        return Carbon::parse($dateString . ' ' . $this->start_time);
+        return Carbon::parse($dateString.' '.$this->start_time);
     }
 
     public function getEndsAtAttribute(): ?Carbon
     {
-        if (!$this->session_date || !$this->end_time) {
+        if (! $this->session_date || ! $this->end_time) {
             return null;
         }
 
@@ -72,23 +72,39 @@ class PtSession extends Model
             ? $this->session_date->toDateString()
             : (string) $this->session_date;
 
-        return Carbon::parse($dateString . ' ' . $this->end_time);
+        return Carbon::parse($dateString.' '.$this->end_time);
     }
 
     public function getCanBeChangedAttribute(): bool
     {
-        if ($this->status !== PtSessionStatus::Scheduled) {
+        if (! in_array($this->status, [PtSessionStatus::Pending, PtSessionStatus::Scheduled, PtSessionStatus::Confirmed], true)) {
             return false;
         }
 
         $startsAt = $this->starts_at;
-        if (!$startsAt) {
+        if (! $startsAt) {
             return false;
         }
 
-        $deadlineHours = (int) config('pt_booking.change_deadline_hours', 4);
+        $deadlineHours = (int) config('pt_booking.change_deadline_hours', 24);
 
         return $startsAt->greaterThanOrEqualTo(now()->addHours($deadlineHours));
+    }
+
+    public function isPendingExpired(): bool
+    {
+        if ($this->status !== PtSessionStatus::Pending) {
+            return false;
+        }
+
+        $startsAt = $this->starts_at;
+        if (! $startsAt) {
+            return false;
+        }
+
+        $cutoffHours = (int) config('pt_booking.auto_cancel_pending_hours_before', 12);
+
+        return now()->greaterThanOrEqualTo($startsAt->copy()->subHours($cutoffHours));
     }
 
     public function getTimeRangeAttribute(): string
@@ -106,7 +122,7 @@ class PtSession extends Model
         }
 
         $startsAt = $this->starts_at;
-        if (!$startsAt) {
+        if (! $startsAt) {
             return $this->status->label();
         }
 
@@ -114,26 +130,18 @@ class PtSession extends Model
             return 'Selesai';
         }
 
-        $now = now();
-        $diffHours = (int) $now->diffInHours($startsAt);
-
-        if ($startsAt->isToday()) {
-            return "Hari Ini ({$diffHours} Jam Lagi)";
-        }
-
-        if ($startsAt->isTomorrow()) {
-            return "Besok ({$diffHours} Jam Lagi)";
-        }
-
-        $diffDays = (int) $now->diffInDays($startsAt);
-
-        return "Mendatang ({$diffDays} Hari Lagi)";
+        return $this->status->label();
     }
 
     // Scopes
+    public function scopePending(Builder $query): Builder
+    {
+        return $query->where('status', PtSessionStatus::Pending->value);
+    }
+
     public function scopeScheduled(Builder $query): Builder
     {
-        return $query->where('status', PtSessionStatus::Scheduled->value);
+        return $query->whereIn('status', [PtSessionStatus::Scheduled->value, PtSessionStatus::Confirmed->value]);
     }
 
     public function scopeDone(Builder $query): Builder
@@ -148,7 +156,7 @@ class PtSession extends Model
 
     public function scopeUpcoming(Builder $query): Builder
     {
-        return $query->where('status', PtSessionStatus::Scheduled->value)
+        return $query->whereIn('status', [PtSessionStatus::Pending->value, PtSessionStatus::Scheduled->value, PtSessionStatus::Confirmed->value])
             ->where(function (Builder $q) {
                 $q->where('session_date', '>', now()->toDateString())
                     ->orWhere(function (Builder $sub) {

@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\MemberPtQuota;
 use App\Models\MemberProfile;
+use App\Models\MemberPtQuota;
 use App\Models\PtPackage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,5 +29,27 @@ class MemberPtQuotaFactory extends Factory
             'end_date' => fake()->dateTimeBetween($startDate, '+3 months'),
             'status' => 'active',
         ];
+    }
+
+    public function depleted(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'total_sessions' => 10,
+            'used_sessions' => 10,
+            'remaining_sessions' => 0,
+            'status' => 'active',
+            'end_date' => now()->addMonth(),
+        ]);
+    }
+
+    public function expired(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'total_sessions' => 10,
+            'used_sessions' => 2,
+            'remaining_sessions' => 8,
+            'status' => 'expired',
+            'end_date' => now()->subDay(),
+        ]);
     }
 }

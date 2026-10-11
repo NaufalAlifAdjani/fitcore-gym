@@ -27,6 +27,8 @@ class PtSessionController extends Controller
      */
     public function index(Request $request): View
     {
+        $this->ptSessionService->cancelExpiredPendingSessions();
+
         $user = $request->user();
         $tab = $request->query('tab', 'all');
         $month = $request->query('month');
@@ -40,24 +42,20 @@ class PtSessionController extends Controller
                 ->whereMonth('session_date', $monthCarbon->month);
         }
 
-        if ($tab === 'scheduled') {
-            $query->where('status', PtSessionStatus::Scheduled->value)
-                ->orderBy('session_date', 'asc')
-                ->orderBy('start_time', 'asc');
+        if ($tab === 'pending') {
+            $query->where('status', PtSessionStatus::Pending->value);
+        } elseif ($tab === 'scheduled') {
+            $query->whereIn('status', [PtSessionStatus::Scheduled->value, PtSessionStatus::Confirmed->value]);
         } elseif ($tab === 'done') {
-            $query->where('status', PtSessionStatus::Done->value)
-                ->orderBy('session_date', 'desc')
-                ->orderBy('start_time', 'desc');
+            $query->where('status', PtSessionStatus::Done->value);
         } elseif ($tab === 'cancelled') {
-            $query->where('status', PtSessionStatus::Cancelled->value)
-                ->orderBy('session_date', 'desc')
-                ->orderBy('start_time', 'desc');
-        } else {
-            // Urutkan jadwal mendatang dahulu, lalu riwayat lampau
-            $query->orderByRaw("CASE WHEN status = 'scheduled' THEN 0 ELSE 1 END")
-                ->orderBy('session_date', 'desc')
-                ->orderBy('start_time', 'desc');
+            $query->where('status', PtSessionStatus::Cancelled->value);
         }
+
+        // Tampilkan yang terbaru di setiap filter (berdasarkan tanggal sesi, jam sesi, dan waktu dibuat)
+        $query->orderBy('session_date', 'desc')
+            ->orderBy('start_time', 'desc')
+            ->orderBy('created_at', 'desc');
 
         $sessions = $query->paginate(10)->withQueryString();
 
@@ -70,7 +68,8 @@ class PtSessionController extends Controller
         // Counter untuk Tabs
         $counts = [
             'all' => PtSession::where('member_id', $user->id)->count(),
-            'scheduled' => PtSession::where('member_id', $user->id)->where('status', PtSessionStatus::Scheduled->value)->count(),
+            'pending' => PtSession::where('member_id', $user->id)->where('status', PtSessionStatus::Pending->value)->count(),
+            'scheduled' => PtSession::where('member_id', $user->id)->whereIn('status', [PtSessionStatus::Scheduled->value, PtSessionStatus::Confirmed->value])->count(),
             'done' => PtSession::where('member_id', $user->id)->where('status', PtSessionStatus::Done->value)->count(),
             'cancelled' => PtSession::where('member_id', $user->id)->where('status', PtSessionStatus::Cancelled->value)->count(),
         ];
@@ -90,6 +89,8 @@ class PtSessionController extends Controller
     public function create(Request $request): View
     {
         $user = $request->user();
+
+        $this->ptSessionService->cancelExpiredPendingSessions($user->id);
 
         $quota = MemberPtQuota::where('member_id', $user->id)
             ->where('status', 'active')

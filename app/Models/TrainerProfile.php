@@ -13,8 +13,6 @@ class TrainerProfile extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'rating' => 'float',
-        'review_count' => 'integer',
         'experience' => 'integer',
     ];
 

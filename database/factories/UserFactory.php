@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 class UserFactory extends Factory
 {
     protected $model = User::class;
+
     protected static ?string $password;
 
     public function definition(): array
@@ -24,5 +25,26 @@ class UserFactory extends Factory
             'status' => 'active',
             'remember_token' => Str::random(10),
         ];
+    }
+
+    public function member(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'member',
+        ]);
+    }
+
+    public function trainer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'trainer',
+        ]);
+    }
+
+    public function unverified(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email_verified_at' => null,
+        ]);
     }
 }

@@ -16,11 +16,6 @@
                     <span>/</span>
                     <span class="text-[#16151A] font-bold">Pilih Jadwal</span>
                 </nav>
-
-                <div class="flex items-center gap-2 text-emerald-600 font-semibold text-xs">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Sistem Sinkronisasi Real-Time</span>
-                </div>
             </div>
 
             <!-- Page Title Card -->
@@ -64,19 +59,23 @@
                         <!-- 7 Days Strip -->
                         <div class="grid grid-cols-7 gap-2.5 sm:gap-3">
                             <template x-for="day in dateStrip" :key="day.date">
-                                <button type="button" @click="selectDate(day.date)" :class="{
-                                            'bg-[#ED1B45] text-white shadow-lg shadow-[#ED1B45]/30 ring-2 ring-[#ED1B45] scale-102': selectedDate === day.date,
-                                            'bg-white hover:bg-zinc-50 text-[#16151A] border border-[#E5E7EB]': selectedDate !== day.date && day.has_slots,
-                                            'bg-zinc-50 text-zinc-400 border border-zinc-200 cursor-not-allowed opacity-60': !day.has_slots
-                                        }"
+                                <button type="button" @click="day.has_slots && selectDate(day.date)"
+                                    :disabled="!day.has_slots" :class="{
+                                        'bg-[#ED1B45] text-white shadow-lg shadow-[#ED1B45]/30 ring-2 ring-[#ED1B45] scale-102': selectedDate === day.date && day.has_slots,
+                                        'bg-white hover:bg-zinc-50 text-[#16151A] border border-[#E5E7EB] cursor-pointer': selectedDate !== day.date && day.has_slots,
+                                        'bg-zinc-100 border border-zinc-200 cursor-not-allowed opacity-50': !day.has_slots
+                                    }"
                                     class="flex flex-col items-center justify-center py-4 px-1 rounded-2xl transition-all duration-200 text-center">
-                                    <span class="text-xs font-semibold"
-                                        :class="selectedDate === day.date ? 'text-white' : 'text-[#565A66]'"
-                                        x-text="day.day_name"></span>
-                                    <span class="text-xl font-extrabold my-1 font-heading"
-                                        :class="selectedDate === day.date ? 'text-white' : 'text-[#16151A]'"
-                                        x-text="day.day_num"></span>
-
+                                    <span class="text-xs font-semibold" :class="{
+                                            'text-white': selectedDate === day.date && day.has_slots,
+                                            'text-[#565A66]': selectedDate !== day.date && day.has_slots,
+                                            'text-zinc-400': !day.has_slots
+                                        }" x-text="day.day_name"></span>
+                                    <span class="text-xl font-extrabold my-1 font-heading" :class="{
+                                            'text-white': selectedDate === day.date && day.has_slots,
+                                            'text-[#16151A]': selectedDate !== day.date && day.has_slots,
+                                            'text-zinc-400': !day.has_slots
+                                        }" x-text="day.day_num"></span>
                                 </button>
                             </template>
                         </div>
@@ -215,13 +214,7 @@
                                     <span class="text-[#ED1B45] text-xs">✓</span>
                                 </div>
                                 <p class="text-[11px] text-[#565A66]">
-                                    {{ $trainer->trainerProfile->tier ?? 'Senior PT Tier III' }} •
-                                    {{ $trainer->trainerProfile->studio ?? 'SCBD Studio' }}
-                                </p>
-                                <p class="text-[11px] text-amber-500 font-bold">
-                                    ★ {{ number_format($trainer->trainerProfile->rating ?? 4.98, 2) }} <span
-                                        class="text-[#565A66] font-normal">({{ $trainer->trainerProfile->review_count ?? 184 }}
-                                        ulasan member)</span>
+                                    {{ $trainer->trainerProfile->specialization ?? 'Hypertrophy & Strength Conditioning' }}
                                 </p>
                             </div>
                         </div>
@@ -293,16 +286,8 @@
                                 <div>
                                     <div class="text-[#A1A1AA] text-[11px]">Pelatih</div>
                                     <div class="font-bold text-white text-xs mt-0.5">
-                                        {{ $trainer->name ?? 'Coach Rama Prasetya' }}</div>
-                                </div>
-                            </div>
-
-                            <!-- Kuota Terpakai -->
-                            <div class="flex items-start gap-2.5">
-
-                                <div>
-                                    <div class="text-[#A1A1AA] text-[11px]">Kuota Terpakai</div>
-                                    <div class="font-bold text-white text-xs mt-0.5">1 Sesi</div>
+                                        {{ $trainer->name ?? 'Coach Rama Prasetya' }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -326,9 +311,7 @@
                     </div>
 
                 </div>
-            </div>
-
-            <!-- Modal Booking Berhasil Dikonfirmasi (Reference Image 1) -->
+            </div> <!-- Modal Booking Berhasil Diajukan -->
             <div x-show="showSuccessModal" x-transition:enter="transition ease-out duration-300"
                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                 x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
@@ -346,30 +329,31 @@
                         ✕
                     </button>
 
-                    <!-- Green Check Icon with Glow -->
+                    <!-- Amber Clock/Check Icon with Glow -->
                     <div
-                        class="w-16 h-16 rounded-full bg-[#10B981] text-white flex items-center justify-center mx-auto shadow-xl shadow-[#10B981]/30">
+                        class="w-16 h-16 rounded-full bg-amber-500 text-white flex items-center justify-center mx-auto shadow-xl shadow-amber-500/30">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
 
                     <!-- Status Pill Badge -->
                     <div>
-                        <span class="text-xs font-black uppercase tracking-wider text-[#ED1B45]">
-                            STATUS: TERVERIFIKASI
+                        <span class="text-xs font-black uppercase tracking-wider text-amber-400">
+                            STATUS: MENUNGGU KONFIRMASI PT
                         </span>
                     </div>
 
                     <!-- Modal Title -->
                     <h3 class="text-2xl font-black text-white font-heading">
-                        Booking Berhasil <span class="text-[#ED1B45]">Dikonfirmasi!</span>
+                        Booking Berhasil <span class="text-[#ED1B45]">Diajukan!</span>
                     </h3>
 
                     <!-- Subtext -->
                     <p class="text-xs text-[#A1A1AA] leading-relaxed max-w-xs mx-auto">
-                        Sesi latihan privat atletik Anda bersama pelatih telah resmi terjadwal di sistem Maxfit Athletic
-                        Arena.
+                        Permintaan booking sesi privat Anda telah terkirim. Status saat ini menunggu konfirmasi dari
+                        Personal Trainer Anda.
                     </p>
 
                     <!-- Action Button -->
@@ -390,32 +374,39 @@
         function ptBooking(config) {
             return {
                 trainerId: config.trainerId,
-                selectedDate: config.initialDate,
-                selectedSlot: '15:00',
+                selectedDate: '',
+                selectedSlot: '',
                 isLoadingSlots: false,
                 dateStrip: [],
                 slots: { morning: [], afternoon: [], evening: [] },
                 formattedSelectedDate: '',
-                endSlotTime: '16:00',
+                endSlotTime: '',
                 currentMonthYear: 'Oktober 2026',
                 showSuccessModal: false,
 
                 async init() {
-                    await this.fetchAvailability();
-                    await this.fetchSlots(this.selectedDate);
+                    await this.fetchAvailability(config.initialDate);
                 },
 
-                async fetchAvailability() {
+                async fetchAvailability(startDate) {
+                    const dateToUse = startDate || config.initialDate;
                     try {
-                        const url = `${config.availabilityUrl}?trainer_id=${this.trainerId}&start_date=${this.selectedDate}&days=7`;
+                        const url = `${config.availabilityUrl}?trainer_id=${this.trainerId}&start_date=${dateToUse}&days=7`;
                         const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
                         if (res.ok) {
                             const data = await res.json();
                             this.dateStrip = data.days || [];
                             if (this.dateStrip.length > 0) {
-                                const d = new Date(this.selectedDate);
+                                const d = new Date(dateToUse);
                                 const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                                 this.currentMonthYear = `${months[d.getMonth()]} ${d.getFullYear()}`;
+
+                                if (!this.selectedDate) {
+                                    const firstAvailable = this.dateStrip.find(item => item.has_slots);
+                                    if (firstAvailable) {
+                                        this.selectDate(firstAvailable.date);
+                                    }
+                                }
                             }
                         }
                     } catch (e) {
@@ -424,6 +415,7 @@
                 },
 
                 async fetchSlots(date) {
+                    if (!date) return;
                     this.isLoadingSlots = true;
                     try {
                         const url = `${config.slotsUrl}?trainer_id=${this.trainerId}&date=${date}`;
@@ -456,11 +448,15 @@
                 },
 
                 changeWeek(offsetDays) {
-                    const current = new Date(this.selectedDate);
+                    const baseDate = this.selectedDate || config.initialDate;
+                    const current = new Date(baseDate);
                     current.setDate(current.getDate() + offsetDays);
-                    this.selectedDate = current.toISOString().split('T')[0];
-                    this.fetchAvailability();
-                    this.fetchSlots(this.selectedDate);
+                    const nextDateStr = current.toISOString().split('T')[0];
+                    this.fetchAvailability(nextDateStr);
+                    if (this.selectedDate) {
+                        this.selectedDate = nextDateStr;
+                        this.fetchSlots(nextDateStr);
+                    }
                 }
             };
         }
