@@ -15,6 +15,22 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    {{-- Member: Kartu Digital --}}
+                    @auth
+                        @if(Auth::user()->role === 'member')
+                            <x-nav-link :href="route('member.card')" :active="request()->routeIs('member.card')">
+                                {{ __('Kartu Member') }}
+                            </x-nav-link>
+                        @endif
+
+                        {{-- Admin / Trainer: Scan Check-In --}}
+                        @if(in_array(Auth::user()->role, ['admin', 'trainer']))
+                            <x-nav-link :href="route('admin.checkin.index')" :active="request()->routeIs('admin.checkin.*')">
+                                {{ __('Scan Check-In') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
                 </div>
             </div>
 
@@ -70,6 +86,22 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            {{-- Member: Kartu Digital --}}
+            @auth
+                @if(Auth::user()->role === 'member')
+                    <x-responsive-nav-link :href="route('member.card')" :active="request()->routeIs('member.card')">
+                        {{ __('Kartu Member') }}
+                    </x-responsive-nav-link>
+                @endif
+
+                {{-- Admin / Trainer: Scan Check-In --}}
+                @if(in_array(Auth::user()->role, ['admin', 'trainer']))
+                    <x-responsive-nav-link :href="route('admin.checkin.index')" :active="request()->routeIs('admin.checkin.*')">
+                        {{ __('Scan Check-In') }}
+                    </x-responsive-nav-link>
+                @endif
+            @endauth
         </div>
 
         <!-- Responsive Settings Options -->
