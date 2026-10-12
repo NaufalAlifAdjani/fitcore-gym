@@ -11,6 +11,13 @@ class PtPackage extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'pt_session_count'    => 'integer',
+        'price'               => 'decimal:2',
+        'min_membership_days' => 'integer',
+        'validity_days'       => 'integer',
+    ];
+
     public function quotas()   { return $this->hasMany(MemberPtQuota::class); }
     public function payments() { return $this->hasMany(Payment::class); }
 }
