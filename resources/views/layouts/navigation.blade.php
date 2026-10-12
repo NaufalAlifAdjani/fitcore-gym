@@ -16,11 +16,14 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    {{-- Member: Kartu Digital --}}
+                    {{-- Member: Kartu Digital & Paket PT --}}
                     @auth
                         @if(Auth::user()->role === 'member')
                             <x-nav-link :href="route('member.card')" :active="request()->routeIs('member.card')">
                                 {{ __('Kartu Member') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('member.pt-packages.index')" :active="request()->routeIs('member.pt-packages.*')">
+                                {{ __('Paket PT') }}
                             </x-nav-link>
                         @endif
 
@@ -87,11 +90,14 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            {{-- Member: Kartu Digital --}}
+            {{-- Member: Kartu Digital & Paket PT --}}
             @auth
                 @if(Auth::user()->role === 'member')
                     <x-responsive-nav-link :href="route('member.card')" :active="request()->routeIs('member.card')">
                         {{ __('Kartu Member') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('member.pt-packages.index')" :active="request()->routeIs('member.pt-packages.*')">
+                        {{ __('Paket PT') }}
                     </x-responsive-nav-link>
                 @endif
 
