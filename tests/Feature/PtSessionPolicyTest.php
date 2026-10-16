@@ -26,7 +26,7 @@ class PtSessionPolicyTest extends TestCase
             'member_pt_quota_id' => $quotaB->id,
             'session_date' => now()->addDays(2)->toDateString(),
             'start_time' => '10:00:00',
-            'status' => 'scheduled',
+            'status' => 'confirmed',
         ]);
 
         // Member A tries to view edit page of Member B
@@ -55,7 +55,7 @@ class PtSessionPolicyTest extends TestCase
             'member_pt_quota_id' => $quotaB->id,
             'session_date' => now()->addDays(2)->toDateString(),
             'start_time' => '10:00:00',
-            'status' => 'scheduled',
+            'status' => 'confirmed',
         ]);
 
         // Member A tries to cancel Member B's session

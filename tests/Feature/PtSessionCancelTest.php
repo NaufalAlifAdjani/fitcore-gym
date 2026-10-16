@@ -30,7 +30,7 @@ class PtSessionCancelTest extends TestCase
             'member_pt_quota_id' => $quota->id,
             'session_date' => now()->addDays(2)->toDateString(),
             'start_time' => '15:00:00',
-            'status' => 'scheduled',
+            'status' => PtSessionStatus::Confirmed,
         ]);
 
         $response = $this->actingAs($member)->patch(route('pt-sessions.cancel', $session), [
@@ -67,7 +67,7 @@ class PtSessionCancelTest extends TestCase
             'member_pt_quota_id' => $quota->id,
             'session_date' => now()->toDateString(),
             'start_time' => now()->addHours(2)->format('H:i:00'),
-            'status' => 'scheduled',
+            'status' => PtSessionStatus::Confirmed,
         ]);
 
         $response = $this->actingAs($member)->patch(route('pt-sessions.cancel', $session), [
@@ -77,7 +77,7 @@ class PtSessionCancelTest extends TestCase
         $response->assertSessionHasErrors('cancel_error');
 
         $session->refresh();
-        $this->assertEquals(PtSessionStatus::Scheduled, $session->status);
+        $this->assertEquals(PtSessionStatus::Confirmed, $session->status);
 
         // Quota NOT refunded
         $quota->refresh();

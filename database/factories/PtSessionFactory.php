@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\PtSessionStatus;
 use App\Models\MemberProfile;
 use App\Models\MemberPtQuota;
 use App\Models\PtSession;
@@ -23,7 +24,7 @@ class PtSessionFactory extends Factory
             'session_date' => fake()->dateTimeBetween('-1 month', '+1 month')->format('Y-m-d'),
             'start_time' => sprintf('%02d:00:00', $startTime),
             'end_time' => sprintf('%02d:00:00', $startTime + 1),
-            'status' => fake()->randomElement(['scheduled', 'done', 'cancelled']),
+            'status' => fake()->randomElement([PtSessionStatus::Pending, PtSessionStatus::Confirmed, PtSessionStatus::Cancelled]),
         ];
     }
 }

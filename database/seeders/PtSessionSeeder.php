@@ -43,7 +43,7 @@ class PtSessionSeeder extends Seeder
             'session_date' => $today,
             'start_time' => '15:00:00',
             'end_time' => '16:00:00',
-            'status' => PtSessionStatus::Ongoing,
+            'status' => PtSessionStatus::Confirmed,
         ]);
 
         PtSession::create([
@@ -53,7 +53,7 @@ class PtSessionSeeder extends Seeder
             'session_date' => $today,
             'start_time' => '19:00:00',
             'end_time' => '20:00:00',
-            'status' => PtSessionStatus::PendingConfirmation,
+            'status' => PtSessionStatus::Pending,
         ]);
 
         PtSession::create([
@@ -63,7 +63,7 @@ class PtSessionSeeder extends Seeder
             'session_date' => $today,
             'start_time' => '08:00:00',
             'end_time' => '09:00:00',
-            'status' => PtSessionStatus::Done,
+            'status' => PtSessionStatus::Confirmed,
         ]);
     }
 }

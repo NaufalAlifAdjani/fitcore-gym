@@ -21,4 +21,14 @@ class PtSessionPolicy
 
         return false;
     }
+
+    public function update(User $user, PtSession $ptSession): bool
+    {
+        return $user->id === $ptSession->member_id;
+    }
+
+    public function cancel(User $user, PtSession $ptSession): bool
+    {
+        return $user->id === $ptSession->member_id || $user->id === $ptSession->trainer_id;
+    }
 }

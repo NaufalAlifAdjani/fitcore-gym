@@ -64,16 +64,16 @@
                         <!-- 3 Stat Boxes -->
                         <div class="flex items-center gap-3">
                             <div class="bg-[#1E1E1E] border border-[#2E2E2E] rounded-2xl p-4 text-center min-w-[90px]">
-                                <div class="text-3xl font-extrabold font-heading text-white">{{ $counts['scheduled'] }}</div>
-                                <div class="text-[10px] font-extrabold text-[#A1A1AA] uppercase tracking-wider mt-1">MENDATANG</div>
+                                <div class="text-3xl font-extrabold font-heading text-white">{{ $counts['pending'] }}</div>
+                                <div class="text-[10px] font-extrabold text-[#A1A1AA] uppercase tracking-wider mt-1">MENUNGGU</div>
                             </div>
                             <div class="bg-[#1E1E1E] border border-[#2E2E2E] rounded-2xl p-4 text-center min-w-[90px]">
-                                <div class="text-3xl font-extrabold font-heading text-white">{{ $counts['done'] }}</div>
-                                <div class="text-[10px] font-extrabold text-[#A1A1AA] uppercase tracking-wider mt-1">SELESAI</div>
+                                <div class="text-3xl font-extrabold font-heading text-white">{{ $counts['confirmed'] }}</div>
+                                <div class="text-[10px] font-extrabold text-[#A1A1AA] uppercase tracking-wider mt-1">TERKONFIRMASI</div>
                             </div>
                             <div class="bg-[#1E1E1E] border border-[#2E2E2E] rounded-2xl p-4 text-center min-w-[90px]">
                                 <div class="text-3xl font-extrabold font-heading text-white">{{ $counts['cancelled'] }}</div>
-                                <div class="text-[10px] font-extrabold text-[#A1A1AA] uppercase tracking-wider mt-1">BATAL</div>
+                                <div class="text-[10px] font-extrabold text-[#A1A1AA] uppercase tracking-wider mt-1">DIBATALKAN</div>
                             </div>
                         </div>
 
@@ -95,13 +95,13 @@
                        class="px-5 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap {{ $currentTab === 'all' ? 'bg-[#ED1B45] text-white shadow-md shadow-[#ED1B45]/25' : 'text-[#565A66] hover:text-[#16151A] hover:bg-white' }}">
                         Semua
                     </a>
-                    <a href="{{ route('pt-sessions.index', ['tab' => 'scheduled', 'month' => $selectedMonth]) }}"
-                       class="px-5 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap {{ $currentTab === 'scheduled' ? 'bg-[#ED1B45] text-white shadow-md shadow-[#ED1B45]/25' : 'text-[#565A66] hover:text-[#16151A] hover:bg-white' }}">
-                        Mendatang ({{ $counts['scheduled'] }})
+                    <a href="{{ route('pt-sessions.index', ['tab' => 'pending', 'month' => $selectedMonth]) }}"
+                       class="px-5 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap {{ $currentTab === 'pending' ? 'bg-[#ED1B45] text-white shadow-md shadow-[#ED1B45]/25' : 'text-[#565A66] hover:text-[#16151A] hover:bg-white' }}">
+                        Menunggu ({{ $counts['pending'] }})
                     </a>
-                    <a href="{{ route('pt-sessions.index', ['tab' => 'done', 'month' => $selectedMonth]) }}"
-                       class="px-5 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap {{ $currentTab === 'done' ? 'bg-[#ED1B45] text-white shadow-md shadow-[#ED1B45]/25' : 'text-[#565A66] hover:text-[#16151A] hover:bg-white' }}">
-                        Selesai ({{ $counts['done'] }})
+                    <a href="{{ route('pt-sessions.index', ['tab' => 'confirmed', 'month' => $selectedMonth]) }}"
+                       class="px-5 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap {{ $currentTab === 'confirmed' ? 'bg-[#ED1B45] text-white shadow-md shadow-[#ED1B45]/25' : 'text-[#565A66] hover:text-[#16151A] hover:bg-white' }}">
+                        Terkonfirmasi ({{ $counts['confirmed'] }})
                     </a>
                     <a href="{{ route('pt-sessions.index', ['tab' => 'cancelled', 'month' => $selectedMonth]) }}"
                        class="px-5 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap {{ $currentTab === 'cancelled' ? 'bg-[#ED1B45] text-white shadow-md shadow-[#ED1B45]/25' : 'text-[#565A66] hover:text-[#16151A] hover:bg-white' }}">

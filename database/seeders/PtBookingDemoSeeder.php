@@ -121,9 +121,9 @@ class PtBookingDemoSeeder extends Seeder
                 ],
                 [
                     'pt_package_id' => $ptPackage->id,
-                    'total_sessions' => 12,
-                    'used_sessions' => rand(2, 6),
-                    'remaining_sessions' => 6,
+                    'total_sessions' => 20,
+                    'used_sessions' => 4,
+                    'remaining_sessions' => 16,
                     'start_date' => Carbon::now()->startOfMonth()->toDateString(),
                     'end_date' => Carbon::now()->addMonths(3)->endOfMonth()->toDateString(),
                     'status' => 'active',
@@ -139,42 +139,165 @@ class PtBookingDemoSeeder extends Seeder
         $startOfWeek = $today->copy()->startOfWeek(Carbon::MONDAY);
 
         foreach ($trainers as $trainer) {
-            // Skenario sesi hari ini ($today)
+            // Bersihkan sesi lama agar state testing reset dengan konsisten saat seeder dijalankan ulang
+            PtSession::where('trainer_id', $trainer->id)->delete();
+
+            // Sesi Hari Ini ($today) - banyak variasi untuk testing status Menunggu (Terima/Tolak), Terkonfirmasi, dan Dibatalkan
             $todaySessions = [
-                [
-                    'member' => $members[0], // Demo Member
-                    'date' => $today->toDateString(),
-                    'start' => '08:00:00',
-                    'end' => '09:00:00',
-                    'status' => PtSessionStatus::Done,
-                ],
                 [
                     'member' => $members[2], // Jessica Tan
                     'date' => $today->toDateString(),
-                    'start' => '10:00:00',
-                    'end' => '11:00:00',
-                    'status' => PtSessionStatus::Ongoing,
+                    'start' => '07:00:00',
+                    'end' => '08:00:00',
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 [
                     'member' => $members[1], // Budi Santoso
                     'date' => $today->toDateString(),
-                    'start' => '14:00:00',
-                    'end' => '15:00:00',
-                    'status' => PtSessionStatus::Scheduled,
+                    'start' => '09:00:00',
+                    'end' => '10:00:00',
+                    'status' => PtSessionStatus::Pending,
                 ],
                 [
                     'member' => $members[3], // Dimas Pratama
                     'date' => $today->toDateString(),
-                    'start' => '16:30:00',
-                    'end' => '17:30:00',
-                    'status' => PtSessionStatus::PendingConfirmation,
+                    'start' => '10:30:00',
+                    'end' => '11:30:00',
+                    'status' => PtSessionStatus::Pending,
                 ],
                 [
                     'member' => $members[4], // Siti Rahmah
                     'date' => $today->toDateString(),
+                    'start' => '13:00:00',
+                    'end' => '14:00:00',
+                    'status' => PtSessionStatus::Pending,
+                ],
+                [
+                    'member' => $members[0], // Demo Member
+                    'date' => $today->toDateString(),
+                    'start' => '14:30:00',
+                    'end' => '15:30:00',
+                    'status' => PtSessionStatus::Confirmed,
+                ],
+                [
+                    'member' => $members[2], // Jessica Tan
+                    'date' => $today->toDateString(),
+                    'start' => '16:00:00',
+                    'end' => '17:00:00',
+                    'status' => PtSessionStatus::Pending,
+                ],
+                [
+                    'member' => $members[4], // Siti Rahmah
+                    'date' => $today->toDateString(),
+                    'start' => '17:30:00',
+                    'end' => '18:30:00',
+                    'status' => PtSessionStatus::Cancelled,
+                ],
+                [
+                    'member' => $members[1], // Budi Santoso
+                    'date' => $today->toDateString(),
                     'start' => '19:00:00',
                     'end' => '20:00:00',
-                    'status' => PtSessionStatus::Scheduled,
+                    'status' => PtSessionStatus::Pending,
+                ],
+                [
+                    'member' => $members[3], // Dimas Pratama
+                    'date' => $today->toDateString(),
+                    'start' => '20:30:00',
+                    'end' => '21:30:00',
+                    'status' => PtSessionStatus::Confirmed,
+                ],
+            ];
+
+            // Sesi Kemarin ($today - 1 hari)
+            $yesterday = $today->copy()->subDay();
+            $yesterdaySessions = [
+                [
+                    'member' => $members[0],
+                    'date' => $yesterday->toDateString(),
+                    'start' => '09:00:00',
+                    'end' => '10:00:00',
+                    'status' => PtSessionStatus::Confirmed,
+                ],
+                [
+                    'member' => $members[1],
+                    'date' => $yesterday->toDateString(),
+                    'start' => '13:00:00',
+                    'end' => '14:00:00',
+                    'status' => PtSessionStatus::Cancelled,
+                ],
+                [
+                    'member' => $members[4],
+                    'date' => $yesterday->toDateString(),
+                    'start' => '16:00:00',
+                    'end' => '17:00:00',
+                    'status' => PtSessionStatus::Confirmed,
+                ],
+            ];
+
+            // Sesi Besok ($today + 1 hari)
+            $tomorrow = $today->copy()->addDay();
+            $tomorrowSessions = [
+                [
+                    'member' => $members[0],
+                    'date' => $tomorrow->toDateString(),
+                    'start' => '08:00:00',
+                    'end' => '09:00:00',
+                    'status' => PtSessionStatus::Pending,
+                ],
+                [
+                    'member' => $members[2],
+                    'date' => $tomorrow->toDateString(),
+                    'start' => '10:00:00',
+                    'end' => '11:00:00',
+                    'status' => PtSessionStatus::Confirmed,
+                ],
+                [
+                    'member' => $members[3],
+                    'date' => $tomorrow->toDateString(),
+                    'start' => '14:00:00',
+                    'end' => '15:00:00',
+                    'status' => PtSessionStatus::Pending,
+                ],
+                [
+                    'member' => $members[1],
+                    'date' => $tomorrow->toDateString(),
+                    'start' => '16:30:00',
+                    'end' => '17:30:00',
+                    'status' => PtSessionStatus::Confirmed,
+                ],
+                [
+                    'member' => $members[4],
+                    'date' => $tomorrow->toDateString(),
+                    'start' => '19:00:00',
+                    'end' => '20:00:00',
+                    'status' => PtSessionStatus::Pending,
+                ],
+            ];
+
+            // Sesi lusa ($today + 2 hari)
+            $dayAfter = $today->copy()->addDays(2);
+            $dayAfterSessions = [
+                [
+                    'member' => $members[2],
+                    'date' => $dayAfter->toDateString(),
+                    'start' => '09:00:00',
+                    'end' => '10:00:00',
+                    'status' => PtSessionStatus::Pending,
+                ],
+                [
+                    'member' => $members[3],
+                    'date' => $dayAfter->toDateString(),
+                    'start' => '11:00:00',
+                    'end' => '12:00:00',
+                    'status' => PtSessionStatus::Confirmed,
+                ],
+                [
+                    'member' => $members[4],
+                    'date' => $dayAfter->toDateString(),
+                    'start' => '15:00:00',
+                    'end' => '16:00:00',
+                    'status' => PtSessionStatus::Pending,
                 ],
             ];
 
@@ -186,14 +309,14 @@ class PtBookingDemoSeeder extends Seeder
                     'date' => $startOfWeek->copy()->addDays(0)->toDateString(),
                     'start' => '09:00:00',
                     'end' => '10:00:00',
-                    'status' => PtSessionStatus::Done,
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 [
                     'member' => $members[3],
                     'date' => $startOfWeek->copy()->addDays(0)->toDateString(),
                     'start' => '15:00:00',
                     'end' => '16:00:00',
-                    'status' => PtSessionStatus::Done,
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 // Selasa
                 [
@@ -201,7 +324,7 @@ class PtBookingDemoSeeder extends Seeder
                     'date' => $startOfWeek->copy()->addDays(1)->toDateString(),
                     'start' => '10:00:00',
                     'end' => '11:00:00',
-                    'status' => PtSessionStatus::Done,
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 // Rabu
                 [
@@ -209,14 +332,29 @@ class PtBookingDemoSeeder extends Seeder
                     'date' => $startOfWeek->copy()->addDays(2)->toDateString(),
                     'start' => '08:30:00',
                     'end' => '09:30:00',
-                    'status' => PtSessionStatus::Done,
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 [
                     'member' => $members[0],
                     'date' => $startOfWeek->copy()->addDays(2)->toDateString(),
                     'start' => '14:00:00',
                     'end' => '15:00:00',
-                    'status' => PtSessionStatus::Done,
+                    'status' => PtSessionStatus::Confirmed,
+                ],
+                // Kamis
+                [
+                    'member' => $members[1],
+                    'date' => $startOfWeek->copy()->addDays(3)->toDateString(),
+                    'start' => '10:00:00',
+                    'end' => '11:00:00',
+                    'status' => PtSessionStatus::Pending,
+                ],
+                [
+                    'member' => $members[3],
+                    'date' => $startOfWeek->copy()->addDays(3)->toDateString(),
+                    'start' => '16:00:00',
+                    'end' => '17:00:00',
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 // Jumat
                 [
@@ -224,14 +362,14 @@ class PtBookingDemoSeeder extends Seeder
                     'date' => $startOfWeek->copy()->addDays(4)->toDateString(),
                     'start' => '09:00:00',
                     'end' => '10:00:00',
-                    'status' => PtSessionStatus::Scheduled,
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 [
                     'member' => $members[2],
                     'date' => $startOfWeek->copy()->addDays(4)->toDateString(),
                     'start' => '15:00:00',
                     'end' => '16:00:00',
-                    'status' => PtSessionStatus::PendingConfirmation,
+                    'status' => PtSessionStatus::Pending,
                 ],
                 // Sabtu
                 [
@@ -239,50 +377,72 @@ class PtBookingDemoSeeder extends Seeder
                     'date' => $startOfWeek->copy()->addDays(5)->toDateString(),
                     'start' => '10:00:00',
                     'end' => '11:00:00',
-                    'status' => PtSessionStatus::Scheduled,
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 [
                     'member' => $members[4],
                     'date' => $startOfWeek->copy()->addDays(5)->toDateString(),
                     'start' => '13:00:00',
                     'end' => '14:00:00',
-                    'status' => PtSessionStatus::Scheduled,
+                    'status' => PtSessionStatus::Confirmed,
+                ],
+                // Minggu
+                [
+                    'member' => $members[0],
+                    'date' => $startOfWeek->copy()->addDays(6)->toDateString(),
+                    'start' => '09:00:00',
+                    'end' => '10:00:00',
+                    'status' => PtSessionStatus::Pending,
                 ],
             ];
 
-            // Sesi minggu depan (termasuk 14 Okt & 20 Okt)
+            // Sesi minggu depan
             $futureSessions = [
                 [
                     'member' => $members[0],
                     'date' => $today->copy()->addDays(6)->toDateString(),
                     'start' => '10:00:00',
                     'end' => '11:00:00',
-                    'status' => PtSessionStatus::Scheduled,
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 [
                     'member' => $members[1],
                     'date' => $today->copy()->addDays(6)->toDateString(),
                     'start' => '14:00:00',
                     'end' => '15:00:00',
-                    'status' => PtSessionStatus::PendingConfirmation,
+                    'status' => PtSessionStatus::Pending,
                 ],
                 [
                     'member' => $members[2],
-                    'date' => $today->copy()->addDays(12)->toDateString(),
+                    'date' => $today->copy()->addDays(9)->toDateString(),
                     'start' => '09:00:00',
                     'end' => '10:00:00',
-                    'status' => PtSessionStatus::Scheduled,
+                    'status' => PtSessionStatus::Pending,
                 ],
                 [
                     'member' => $members[3],
-                    'date' => $today->copy()->addDays(12)->toDateString(),
+                    'date' => $today->copy()->addDays(9)->toDateString(),
                     'start' => '16:00:00',
                     'end' => '17:00:00',
-                    'status' => PtSessionStatus::Scheduled,
+                    'status' => PtSessionStatus::Confirmed,
+                ],
+                [
+                    'member' => $members[4],
+                    'date' => $today->copy()->addDays(14)->toDateString(),
+                    'start' => '10:00:00',
+                    'end' => '11:00:00',
+                    'status' => PtSessionStatus::Confirmed,
                 ],
             ];
 
-            $allSessions = array_merge($todaySessions, $weekSessions, $futureSessions);
+            $allSessions = array_merge(
+                $todaySessions,
+                $yesterdaySessions,
+                $tomorrowSessions,
+                $dayAfterSessions,
+                $weekSessions,
+                $futureSessions
+            );
 
             foreach ($allSessions as $s) {
                 PtSession::updateOrCreate(

@@ -30,4 +30,19 @@ class MemberPtQuotaFactory extends Factory
             'status' => 'active',
         ];
     }
+
+    public function depleted(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'remaining_sessions' => 0,
+            'used_sessions' => $attributes['total_sessions'] ?? 10,
+        ]);
+    }
+
+    public function expired(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'end_date' => now()->subDay()->toDateString(),
+        ]);
+    }
 }

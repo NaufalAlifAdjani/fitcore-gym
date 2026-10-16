@@ -224,7 +224,7 @@ class PtSessionService
                 'session_date' => $sessionDate->toDateString(),
                 'start_time' => $startTime,
                 'end_time' => $endTime,
-                'status' => PtSessionStatus::Scheduled,
+                'status' => PtSessionStatus::Pending,
             ]);
         });
     }
