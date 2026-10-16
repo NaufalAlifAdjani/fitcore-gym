@@ -60,7 +60,8 @@ class PtSessionService
                 $slotStartCarbon = Carbon::parse($dateString.' '.$timeShort);
                 $endTime = Carbon::parse($timeShort)->addMinutes($durationMinutes)->format('H:i');
 
-                if ($isPastDate || ($isToday && $slotStartCarbon->isPast())) {
+                $minNoticeHours = (int) config('pt_booking.min_booking_notice_hours', 24);
+                if ($isPastDate || $slotStartCarbon->lessThan($now->copy()->addHours($minNoticeHours))) {
                     $status = 'passed';
                     $label = 'Sudah Lewat';
                 } elseif ($bookedSessions->has($timeShort)) {
@@ -149,8 +150,9 @@ class PtSessionService
         $timeShort = substr($startTime, 0, 5);
         $sessionDateTime = Carbon::parse($sessionDate->toDateString().' '.$timeShort);
 
-        if ($sessionDateTime->isPast()) {
-            throw new SlotUnavailableException('Tidak dapat memilih jadwal dan jam di masa lampau.');
+        $minNoticeHours = (int) config('pt_booking.min_booking_notice_hours', 24);
+        if ($sessionDateTime->lessThan(now()->addHours($minNoticeHours))) {
+            throw new SlotUnavailableException("Pemesanan sesi PT minimal dilakukan 1 hari ({$minNoticeHours} jam) sebelum jadwal sesi.");
         }
 
         // 1. Quota check with lock
@@ -255,8 +257,9 @@ class PtSessionService
             $startTime = substr($data['start_time'], 0, 5).':00';
             $sessionDateTime = Carbon::parse($sessionDate->toDateString().' '.substr($startTime, 0, 5));
 
-            if ($sessionDateTime->isPast()) {
-                throw new SlotUnavailableException('Tidak dapat memilih jadwal dan jam di masa lampau.');
+            $minNoticeHours = (int) config('pt_booking.min_booking_notice_hours', 24);
+            if ($sessionDateTime->lessThan(now()->addHours($minNoticeHours))) {
+                throw new SlotUnavailableException("Jadwal baru sesi PT minimal dilakukan 1 hari ({$minNoticeHours} jam) sebelum jadwal sesi.");
             }
 
             // Trainer check
@@ -292,6 +295,7 @@ class PtSessionService
                 'session_date' => $sessionDate->toDateString(),
                 'start_time' => $startTime,
                 'end_time' => $endTime,
+                'status' => PtSessionStatus::Pending,
             ]);
 
             return $lockedSession->fresh();
@@ -327,5 +331,62 @@ class PtSessionService
 
             return $lockedSession->fresh();
         });
+    }
+
+    /**
+     * Membatalkan otomatis sesi-sesi yang masih berstatus 'pending' jika telah melewati
+     * batas konfirmasi (H-12 jam sebelum jadwal sesi atau sudah lewat waktu).
+     * Kuota sesi yang sebelumnya terpakai akan dikembalikan ke member.
+     *
+     * @return int Jumlah sesi yang berhasil dibatalkan
+     */
+    public function cancelExpiredPendingSessions(?int $memberId = null): int
+    {
+        $cutoffHours = (int) config('pt_booking.auto_cancel_pending_hours_before', 12);
+        $threshold = now()->addHours($cutoffHours);
+
+        $query = PtSession::query()
+            ->where('status', PtSessionStatus::Pending->value)
+            ->where('session_date', '<=', $threshold->toDateString());
+
+        if ($memberId) {
+            $query->where('member_id', $memberId);
+        }
+
+        $candidates = $query->get();
+        $cancelledCount = 0;
+
+        foreach ($candidates as $candidate) {
+            $startsAt = $candidate->starts_at;
+            if ($startsAt && $startsAt->lessThanOrEqualTo($threshold)) {
+                DB::transaction(function () use ($candidate, &$cancelledCount) {
+                    $lockedSession = PtSession::where('id', $candidate->id)
+                        ->where('status', PtSessionStatus::Pending->value)
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (! $lockedSession) {
+                        return;
+                    }
+
+                    $lockedSession->update([
+                        'status' => PtSessionStatus::Cancelled,
+                    ]);
+
+                    $quota = MemberPtQuota::where('id', $lockedSession->member_pt_quota_id)
+                        ->lockForUpdate()
+                        ->first();
+
+                    if ($quota) {
+                        $quota->decrement('used_sessions');
+                        $quota->increment('remaining_sessions');
+                    }
+
+                    $cancelledCount++;
+                });
+            }
+        }
+
+        return $cancelledCount;
     }
 }

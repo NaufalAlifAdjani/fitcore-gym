@@ -26,6 +26,11 @@ enum PtSessionStatus: string
         };
     }
 
+    public function color(): string
+    {
+        return $this->badgeColor();
+    }
+
     public function badgeClasses(): string
     {
         return match ($this) {

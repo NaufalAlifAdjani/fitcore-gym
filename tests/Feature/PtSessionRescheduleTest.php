@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PtSessionStatus;
 use App\Models\MemberPtQuota;
 use App\Models\PtSession;
 use App\Models\TrainerProfile;
@@ -92,6 +93,7 @@ class PtSessionRescheduleTest extends TestCase
         $this->assertEquals($newDate, $session->session_date->toDateString());
         $this->assertEquals('14:00:00', $session->start_time);
         $this->assertEquals('15:00:00', $session->end_time);
+        $this->assertEquals(PtSessionStatus::Pending, $session->status);
 
         // Quota should remain completely untouched
         $quota->refresh();

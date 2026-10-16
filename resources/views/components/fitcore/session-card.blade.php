@@ -85,11 +85,11 @@
                         Batal Sesi
                     </button>
                 @else
-                    <button disabled title="Batas waktu perubahan jadwal maksimal 4 jam sebelum sesi."
+                    <button disabled title="Batas waktu perubahan jadwal maksimal 1 hari (24 jam) sebelum sesi."
                         class="inline-flex items-center justify-center px-5 py-2 rounded-full bg-zinc-100 text-zinc-400 border border-zinc-200 text-xs font-semibold cursor-not-allowed">
                         Ubah Jadwal
                     </button>
-                    <span class="text-[11px] text-zinc-400 italic">Batas waktu lewat (&lt; 4 jam)</span>
+                    <span class="text-[11px] text-zinc-400 italic">Batas waktu lewat (&lt; 24 jam)</span>
                 @endif
             @else
                 <div class="text-xs text-zinc-400 italic">

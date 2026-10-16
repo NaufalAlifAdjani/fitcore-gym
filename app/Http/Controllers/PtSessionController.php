@@ -27,6 +27,8 @@ class PtSessionController extends Controller
      */
     public function index(Request $request): View
     {
+        $this->ptSessionService->cancelExpiredPendingSessions();
+
         $user = $request->user();
         $tab = $request->query('tab', 'all');
         $month = $request->query('month');
@@ -91,6 +93,8 @@ class PtSessionController extends Controller
     public function create(Request $request): View
     {
         $user = $request->user();
+
+        $this->ptSessionService->cancelExpiredPendingSessions($user->id);
 
         $quota = MemberPtQuota::where('member_id', $user->id)
             ->where('status', 'active')

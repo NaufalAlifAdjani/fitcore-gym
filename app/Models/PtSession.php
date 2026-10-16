@@ -86,9 +86,25 @@ class PtSession extends Model
             return false;
         }
 
-        $deadlineHours = (int) config('pt_booking.change_deadline_hours', 4);
+        $deadlineHours = (int) config('pt_booking.change_deadline_hours', 24);
 
         return $startsAt->greaterThanOrEqualTo(now()->addHours($deadlineHours));
+    }
+
+    public function isPendingExpired(): bool
+    {
+        if ($this->status !== PtSessionStatus::Pending) {
+            return false;
+        }
+
+        $startsAt = $this->starts_at;
+        if (! $startsAt) {
+            return false;
+        }
+
+        $cutoffHours = (int) config('pt_booking.auto_cancel_pending_hours_before', 12);
+
+        return now()->greaterThanOrEqualTo($startsAt->copy()->subHours($cutoffHours));
     }
 
     public function getTimeRangeAttribute(): string

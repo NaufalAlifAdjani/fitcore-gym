@@ -18,6 +18,20 @@
                 </a>
             </div>
 
+            <!-- Error Notification Banner -->
+            @if ($errors->any())
+                <div class="bg-red-50 border border-red-200 rounded-2xl p-4 text-xs text-red-800 space-y-1">
+                    <div class="font-bold text-sm text-red-900 flex items-center gap-2">
+                        <span>⚠️ Gagal Mengubah Jadwal</span>
+                    </div>
+                    <ul class="list-disc list-inside space-y-0.5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <!-- Page Title Card with Notice -->
             <div class="bg-white rounded-2xl border border-[#E5E7EB] p-6 sm:p-8 shadow-sm space-y-3">
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-[#16151A] font-heading tracking-tight">
@@ -75,13 +89,16 @@
                                             'bg-zinc-50 text-zinc-400 border border-zinc-200 cursor-not-allowed opacity-60': !day.has_slots
                                         }"
                                     class="flex flex-col items-center justify-center py-4 px-1 rounded-2xl transition-all duration-200 text-center">
-                                    <span class="text-xs font-semibold"
-                                        :class="selectedDate === day.date ? 'text-white' : 'text-[#565A66]'"
-                                        x-text="day.day_name"></span>
-                                    <span class="text-xl font-extrabold my-1 font-heading"
-                                        :class="selectedDate === day.date ? 'text-white' : 'text-[#16151A]'"
-                                        x-text="day.day_num"></span>
-
+                                    <span class="text-xs font-semibold" :class="{
+                                            'text-white': selectedDate === day.date && day.has_slots,
+                                            'text-[#565A66]': selectedDate !== day.date && day.has_slots,
+                                            'text-zinc-400': !day.has_slots
+                                        }" x-text="day.day_name"></span>
+                                    <span class="text-xl font-extrabold my-1 font-heading" :class="{
+                                            'text-white': selectedDate === day.date && day.has_slots,
+                                            'text-[#16151A]': selectedDate !== day.date && day.has_slots,
+                                            'text-zinc-400': !day.has_slots
+                                        }" x-text="day.day_num"></span>
                                 </button>
                             </template>
                         </div>
@@ -96,6 +113,14 @@
                                     Pilih Jam Sesi Pengganti
                                 </h2>
                             </div>
+                        </div>
+
+                        <!-- Loading Slots Indicator -->
+                        <div x-show="isLoadingSlots" class="py-12 text-center space-y-3">
+                            <div
+                                class="inline-block w-8 h-8 border-4 border-[#ED1B45] border-t-transparent rounded-full animate-spin">
+                            </div>
+                            <p class="text-xs text-[#565A66]">Memeriksa ketersediaan jam latihan...</p>
                         </div>
 
                         <!-- Slots Grid -->
@@ -202,8 +227,7 @@
                                     {{ $trainer->name }}
                                 </h4>
                                 <p class="text-[11px] text-[#565A66]">
-                                    {{ $trainer->trainerProfile->tier ?? 'Senior PT Tier III' }} —
-                                    {{ $trainer->trainerProfile->studio ?? 'SCBD Studio' }}
+                                    {{ $trainer->trainerProfile->specialization ?? 'Hypertrophy & Strength Conditioning' }}
                                 </p>
                             </div>
                         </div>
@@ -232,7 +256,8 @@
                             <!-- Tanggal Baru -->
                             <div>
                                 <span class="text-[#A1A1AA] text-[11px] block">Tanggal Baru:</span>
-                                <span class="font-bold text-white text-xs mt-0.5" x-text="formattedSelectedDate"></span>
+                                <span class="font-bold text-white text-xs mt-0.5"
+                                    x-text="formattedSelectedDate || selectedDate"></span>
                             </div>
 
                             <!-- Jam Baru -->
@@ -253,9 +278,9 @@
                             <input type="hidden" name="start_time" :value="selectedSlot">
 
                             <button type="submit" :disabled="!selectedDate || !selectedSlot" :class="{
-                                        'bg-[#ED1B45] hover:bg-[#D1123D] text-white shadow-lg shadow-[#ED1B45]/30 cursor-pointer': selectedDate && selectedSlot,
-                                        'bg-zinc-800 text-zinc-500 cursor-not-allowed': !selectedDate || !selectedSlot
-                                    }"
+                                         'bg-[#ED1B45] hover:bg-[#D1123D] text-white shadow-lg shadow-[#ED1B45]/30 cursor-pointer': selectedDate && selectedSlot,
+                                         'bg-zinc-800 text-zinc-500 cursor-not-allowed': !selectedDate || !selectedSlot
+                                     }"
                                 class="w-full py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2">
                                 <span>Simpan Jadwal Baru</span>
                                 <span>&rarr;</span>
@@ -318,6 +343,7 @@
                 },
 
                 async fetchSlots(date) {
+                    if (!date) return;
                     this.isLoadingSlots = true;
                     try {
                         const url = `${config.slotsUrl}?trainer_id=${this.trainerId}&date=${date}&ignore_session_id=${this.sessionId}`;
