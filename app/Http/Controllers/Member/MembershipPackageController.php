@@ -21,10 +21,8 @@ class MembershipPackageController extends Controller
     public function index(): View
     {
         $packages = MembershipPackage::query()
-            ->where(function ($query): void {
-                $query->where('is_active', true)
-                    ->orWhere('status', 'active');
-            })
+            ->where('is_active', true)
+            ->where('status', 'active')
             ->get();
 
         return view('member.packages.index', compact('packages'));
@@ -33,10 +31,12 @@ class MembershipPackageController extends Controller
     /**
      * Menampilkan form checkout & instruksi pembayaran.
      */
-    public function checkout(MembershipPackage $package): View
+    public function checkout(MembershipPackage $package): View|RedirectResponse
     {
-        if (! $package->is_active && $package->status !== 'active') {
-            abort(404, 'Paket membership tidak aktif atau tidak ditemukan.');
+        if (! $package->is_active || $package->status !== 'active') {
+            return redirect()
+                ->route('member.membership.packages')
+                ->with('error', 'Paket membership yang dipilih sedang tidak aktif.');
         }
 
         $banks = Bank::query()
@@ -53,10 +53,12 @@ class MembershipPackageController extends Controller
     /**
      * Menampilkan formulir upload bukti transfer pembayaran.
      */
-    public function uploadProof(Request $request, MembershipPackage $package): View
+    public function uploadProof(Request $request, MembershipPackage $package): View|RedirectResponse
     {
-        if (! $package->is_active && $package->status !== 'active') {
-            abort(404, 'Paket membership tidak aktif atau tidak ditemukan.');
+        if (! $package->is_active || $package->status !== 'active') {
+            return redirect()
+                ->route('member.membership.packages')
+                ->with('error', 'Paket membership yang dipilih sedang tidak aktif.');
         }
 
         $banks = Bank::query()
@@ -96,8 +98,10 @@ class MembershipPackageController extends Controller
      */
     public function processPayment(StoreMembershipPaymentRequest $request, MembershipPackage $package): RedirectResponse
     {
-        if (! $package->is_active && $package->status !== 'active') {
-            abort(404, 'Paket membership tidak aktif.');
+        if (! $package->is_active || $package->status !== 'active') {
+            return redirect()
+                ->route('member.membership.packages')
+                ->with('error', 'Paket membership yang dipilih sedang tidak aktif.');
         }
 
         $validated = $request->validated();
@@ -107,9 +111,11 @@ class MembershipPackageController extends Controller
         $path = $file->store('payment-proofs', 'public');
         $url = Storage::url($path);
 
-        $amount = ($package->promo_price !== null && $package->promo_price < $package->price)
+        $uniqueCode = (int) $request->input('unique_code', 0);
+        $basePrice = ($package->promo_price !== null && $package->promo_price < $package->price)
             ? $package->promo_price
             : $package->price;
+        $totalAmount = (int) $basePrice + $uniqueCode;
 
         do {
             $invoiceId = 'INV-'.strtoupper(Str::random(8));
@@ -123,7 +129,7 @@ class MembershipPackageController extends Controller
             'package_id' => $package->id,
             'package_type' => 'membership',
             'payment_type' => 'membership',
-            'amount' => $amount,
+            'amount' => $totalAmount,
             'bank_id' => $bank->id,
             'bank_sender' => $validated['sender_name'],
             'bank_destination' => $bankDestination,

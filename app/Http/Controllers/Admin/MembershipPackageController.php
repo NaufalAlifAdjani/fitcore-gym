@@ -69,7 +69,11 @@ class MembershipPackageController extends Controller
 
     public function toggleStatus(Request $request, MembershipPackage $package): JsonResponse|RedirectResponse
     {
-        $package->update(['is_active' => ! $package->is_active]);
+        $newActive = ! $package->is_active;
+        $package->update([
+            'is_active' => $newActive,
+            'status' => $newActive ? 'active' : 'inactive',
+        ]);
 
         if ($request->expectsJson()) {
             return response()->json([

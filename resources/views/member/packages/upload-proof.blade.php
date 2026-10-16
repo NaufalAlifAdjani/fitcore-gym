@@ -211,6 +211,7 @@
                         >
                             @csrf
                             <input type="hidden" name="bank_id" value="{{ $selectedBank->id }}" />
+                            <input type="hidden" name="unique_code" value="{{ $uniqueCode }}" />
 
                             <!-- Kotak Drag & Drop Upload File -->
                             <div>

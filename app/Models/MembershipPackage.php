@@ -44,6 +44,29 @@ class MembershipPackage extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saving(function (self $package): void {
+            if (isset($package->duration_in_days)) {
+                $package->duration_days = (int) $package->duration_in_days;
+            } elseif (isset($package->duration_days) && ! isset($package->duration_in_days)) {
+                $package->duration_in_days = (int) $package->duration_days;
+            }
+
+            if (isset($package->pt_sessions)) {
+                $package->pt_session_count = (int) $package->pt_sessions;
+            } elseif (isset($package->pt_session_count) && ! isset($package->pt_sessions)) {
+                $package->pt_sessions = (int) $package->pt_session_count;
+            }
+
+            if (isset($package->is_active)) {
+                $package->status = $package->is_active ? 'active' : 'inactive';
+            } elseif (isset($package->status) && ! isset($package->is_active)) {
+                $package->is_active = $package->status === 'active';
+            }
+        });
+    }
+
     public function memberships(): HasMany
     {
         return $this->hasMany(Membership::class);

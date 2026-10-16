@@ -26,6 +26,7 @@ class StoreMembershipPaymentRequest extends FormRequest
             'bank_id' => ['required', 'exists:banks,id'],
             'sender_name' => ['required', 'string', 'max:255'],
             'proof_image' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            'unique_code' => ['nullable', 'integer', 'min:0'],
         ];
     }
 

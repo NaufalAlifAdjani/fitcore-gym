@@ -21,6 +21,13 @@
                 </x-alert>
             @endif
 
+            @if (session('error'))
+                <x-alert type="danger" class="mb-8 max-w-3xl mx-auto">
+                    {{ session('error') }}
+                </x-alert>
+            @endif
+
+
             @php
                 $activePkgs = $packages->values();
 
