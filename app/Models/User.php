@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,13 +10,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'phone', 'status',
+        'name', 'email', 'password', 'role', 'phone', 'status', 'google_id', 'avatar',
     ];
 
     /**
@@ -44,4 +44,9 @@ class User extends Authenticatable
 
     public function givenRatings()    { return $this->hasMany(Rating::class, 'member_id'); }
     public function receivedRatings() { return $this->hasMany(Rating::class, 'trainer_id'); }
+
+    // Native Role Authorization Helpers (No Spatie)
+    public function isAdmin(): bool   { return $this->role === 'admin'; }
+    public function isTrainer(): bool { return $this->role === 'trainer'; }
+    public function isMember(): bool  { return $this->role === 'member'; }
 }

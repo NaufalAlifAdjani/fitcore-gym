@@ -20,7 +20,7 @@
         </div>
     @endif
 
-    <div class="relative flex items-center">
+    <div class="relative flex items-center" @if($type === 'password') x-data="{ showPassword: false }" @endif>
         @if ($icon === 'at')
             <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400 text-sm font-medium">
                 @

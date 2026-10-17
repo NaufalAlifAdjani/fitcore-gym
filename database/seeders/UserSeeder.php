@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
                 'role' => 'admin',
                 'phone' => '081200000001',
                 'status' => 'active',
+                'email_verified_at' => now(),
             ]
         );
 
@@ -52,6 +53,7 @@ class UserSeeder extends Seeder
                     'role' => 'trainer',
                     'phone' => $t['phone'],
                     'status' => 'active',
+                    'email_verified_at' => now(),
                 ]
             );
 
