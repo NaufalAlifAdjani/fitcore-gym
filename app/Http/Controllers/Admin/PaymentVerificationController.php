@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Services\PaymentVerificationService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
@@ -108,30 +109,38 @@ class PaymentVerificationController extends Controller
         Request $request,
         PaymentVerificationService $service,
         int $id,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         try {
             $service->approvePayment(
                 Payment::query()->findOrFail($id),
                 (int) $request->user()->getAuthIdentifier(),
             );
         } catch (PaymentAlreadyProcessedException $exception) {
-            return response()->json([
-                'success' => false,
-                'message' => $exception->getMessage(),
-            ], 409);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $exception->getMessage(),
+                ], 409);
+            }
+
+            return back()->with('error', $exception->getMessage());
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Pembayaran berhasil diverifikasi.',
-        ]);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pembayaran berhasil diverifikasi.',
+            ]);
+        }
+
+        return back()->with('success', 'Pembayaran berhasil diverifikasi.');
     }
 
     public function reject(
         Request $request,
         PaymentVerificationService $service,
         int $id,
-    ): JsonResponse {
+    ): JsonResponse|RedirectResponse {
         $validated = $request->validate([
             'reason' => ['required', 'string', 'max:2000'],
         ]);
@@ -143,16 +152,24 @@ class PaymentVerificationController extends Controller
                 (int) $request->user()->getAuthIdentifier(),
             );
         } catch (PaymentAlreadyProcessedException $exception) {
-            return response()->json([
-                'success' => false,
-                'message' => $exception->getMessage(),
-            ], 409);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $exception->getMessage(),
+                ], 409);
+            }
+
+            return back()->with('error', $exception->getMessage());
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Pembayaran berhasil ditolak.',
-        ]);
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pembayaran berhasil ditolak.',
+            ]);
+        }
+
+        return back()->with('success', 'Pembayaran berhasil ditolak.');
     }
 
     /**

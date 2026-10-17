@@ -1,5 +1,7 @@
-export default function paymentVerification({ approveUrlTemplate, rejectUrlTemplate }) {
+export default function paymentVerification({ approveUrlTemplate = '', rejectUrlTemplate = '' } = {}) {
     return {
+        approveUrlTemplate,
+        rejectUrlTemplate,
         selectedPayment: null,
         showDetailModal: false,
         showRejectModal: false,
@@ -43,21 +45,53 @@ export default function paymentVerification({ approveUrlTemplate, rejectUrlTempl
             }
         },
 
-        async approve() {
-            if (!this.selectedPayment || this.isSubmitting || this.selectedPayment.status !== 'pending') {
+        openRejectModal(paymentId = null) {
+            if (paymentId && (!this.selectedPayment || this.selectedPayment.id !== paymentId)) {
+                this.selectedPayment = { id: paymentId, status: 'pending' };
+            }
+            this.actionError = '';
+            this.rejectionReason = '';
+            this.showRejectModal = true;
+        },
+
+        async approve(paymentId = null, event = null) {
+            if (event && typeof event.preventDefault === 'function') {
+                event.preventDefault();
+            }
+
+            const id = paymentId || this.selectedPayment?.id;
+            if (!id || this.isSubmitting) {
+                return;
+            }
+
+            if (this.selectedPayment && this.selectedPayment.status && this.selectedPayment.status !== 'pending') {
+                return;
+            }
+
+            const url = (this.approveUrlTemplate || '').replace('__PAYMENT_ID__', encodeURIComponent(id));
+            if (!url) {
                 return;
             }
 
             await this.submitVerification(
-                this.approveUrlTemplate.replace('__PAYMENT_ID__', encodeURIComponent(this.selectedPayment.id)),
+                url,
                 {},
                 'Pembayaran berhasil diverifikasi.',
                 'verified',
             );
         },
 
-        async reject() {
-            if (!this.selectedPayment || this.isSubmitting || this.selectedPayment.status !== 'pending') {
+        async reject(paymentId = null, event = null) {
+            if (event && typeof event.preventDefault === 'function') {
+                event.preventDefault();
+            }
+
+            const id = paymentId || this.selectedPayment?.id;
+            if (!id || this.isSubmitting) {
+                return;
+            }
+
+            if (this.selectedPayment && this.selectedPayment.status && this.selectedPayment.status !== 'pending') {
                 return;
             }
 
@@ -66,8 +100,13 @@ export default function paymentVerification({ approveUrlTemplate, rejectUrlTempl
                 return;
             }
 
+            const url = (this.rejectUrlTemplate || '').replace('__PAYMENT_ID__', encodeURIComponent(id));
+            if (!url) {
+                return;
+            }
+
             const rejected = await this.submitVerification(
-                this.rejectUrlTemplate.replace('__PAYMENT_ID__', encodeURIComponent(this.selectedPayment.id)),
+                url,
                 { reason: this.rejectionReason.trim() },
                 'Pembayaran berhasil ditolak.',
                 'rejected',
@@ -84,12 +123,16 @@ export default function paymentVerification({ approveUrlTemplate, rejectUrlTempl
             this.actionError = '';
 
             try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+                    || document.querySelector('input[name="_token"]')?.value
+                    || '';
+
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'X-CSRF-TOKEN': csrfToken,
                         'X-Requested-With': 'XMLHttpRequest',
                     },
                     credentials: 'same-origin',
@@ -103,13 +146,16 @@ export default function paymentVerification({ approveUrlTemplate, rejectUrlTempl
                     throw new Error(validationMessage || payload.message || 'Status pembayaran gagal diperbarui.');
                 }
 
-                this.selectedPayment.status = newStatus;
-                if (newStatus === 'rejected') {
-                    this.selectedPayment.rejection_reason = data.reason;
+                if (this.selectedPayment) {
+                    this.selectedPayment.status = newStatus;
+                    if (newStatus === 'rejected') {
+                        this.selectedPayment.rejection_reason = data.reason;
+                    }
                 }
+
                 window.dispatchEvent(new CustomEvent('payment-status-updated', {
                     detail: {
-                        id: this.selectedPayment.id,
+                        id: this.selectedPayment?.id,
                         status: newStatus,
                         rejectionReason: data.reason || null,
                     },
@@ -119,6 +165,10 @@ export default function paymentVerification({ approveUrlTemplate, rejectUrlTempl
                 this.showRejectModal = false;
                 this.showReceiptLightbox = false;
                 this.showToast(successMessage);
+
+                setTimeout(() => {
+                    window.location.reload();
+                }, 600);
 
                 return true;
             } catch (error) {

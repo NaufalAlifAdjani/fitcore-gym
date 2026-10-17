@@ -29,38 +29,45 @@
             @endforeach
         </div>
 
-        <x-input-label for="payment-rejection-reason" value="Alasan penolakan" class="mt-5 !mb-2" />
-        <textarea
-            id="payment-rejection-reason"
-            x-model="rejectionReason"
-            rows="4"
-            maxlength="2000"
-            required
-            placeholder="Tuliskan alasan yang akan disampaikan kepada member..."
-            class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-rose-500 focus:bg-white focus:ring-2 focus:ring-rose-200"
-        ></textarea>
+        <form
+            x-bind:action="(rejectUrlTemplate || '').replace('__PAYMENT_ID__', selectedPayment?.id || '')"
+            method="POST"
+            @submit.prevent="reject(selectedPayment?.id, $event)"
+        >
+            @csrf
+            <x-input-label for="payment-rejection-reason" value="Alasan penolakan" class="mt-5 !mb-2" />
+            <textarea
+                id="payment-rejection-reason"
+                name="reason"
+                x-model="rejectionReason"
+                rows="4"
+                maxlength="2000"
+                required
+                placeholder="Tuliskan alasan yang akan disampaikan kepada member..."
+                class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-rose-500 focus:bg-white focus:ring-2 focus:ring-rose-200"
+            ></textarea>
 
-        <p x-show="actionError" x-cloak role="alert" class="mt-2 text-xs font-medium text-rose-700" x-text="actionError"></p>
+            <p x-show="actionError" x-cloak role="alert" class="mt-2 text-xs font-medium text-rose-700" x-text="actionError"></p>
 
-        <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-            <x-button
-                type="button"
-                variant="secondary"
-                x-on:click="showRejectModal = false; actionError = ''"
-                x-bind:disabled="isSubmitting"
-                class="!px-5 !py-3 !text-sm"
-            >
-                Batal
-            </x-button>
-            <x-button
-                type="button"
-                variant="primary"
-                x-on:click="reject()"
-                x-bind:disabled="isSubmitting"
-                class="!px-5 !py-3 !text-sm disabled:cursor-wait"
-            >
-                <span x-text="isSubmitting ? 'Memproses...' : 'Konfirmasi Penolakan'"></span>
-            </x-button>
-        </div>
+            <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <x-button
+                    type="button"
+                    variant="secondary"
+                    @click="showRejectModal = false; actionError = ''"
+                    x-bind:disabled="isSubmitting"
+                    class="!px-5 !py-3 !text-sm"
+                >
+                    Batal
+                </x-button>
+                <x-button
+                    type="submit"
+                    variant="primary"
+                    x-bind:disabled="isSubmitting"
+                    class="!px-5 !py-3 !text-sm disabled:cursor-wait"
+                >
+                    <span x-text="isSubmitting ? 'Memproses...' : 'Konfirmasi Penolakan'">Konfirmasi Penolakan</span>
+                </x-button>
+            </div>
+        </form>
     </section>
 </div>

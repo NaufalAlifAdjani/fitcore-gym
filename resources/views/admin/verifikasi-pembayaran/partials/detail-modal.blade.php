@@ -104,28 +104,37 @@
                     type="button"
                     variant="danger-outline"
                     x-show="selectedPayment?.status === 'pending'"
-                    x-on:click="showRejectModal = true; actionError = ''"
+                    @click="openRejectModal(selectedPayment?.id)"
                     x-bind:disabled="isSubmitting"
                     class="!px-5 !py-3 !text-sm"
                 >
                     Tolak Pembayaran
                 </x-button>
-                <x-button
-                    type="button"
-                    variant="success"
+
+                <form
+                    x-bind:action="(approveUrlTemplate || '').replace('__PAYMENT_ID__', selectedPayment?.id || '')"
+                    method="POST"
+                    @submit.prevent="approve(selectedPayment?.id, $event)"
+                    class="inline"
                     x-show="selectedPayment?.status === 'pending'"
-                    x-on:click="approve()"
-                    x-bind:disabled="isSubmitting"
-                    class="!px-5 !py-3 !text-sm disabled:cursor-wait"
                 >
-                    <span x-show="isSubmitting" class="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span>
-                    <span x-text="isSubmitting ? 'Memproses...' : 'Setujui & Aktifkan'"></span>
-                </x-button>
+                    @csrf
+                    <x-button
+                        type="submit"
+                        variant="primary"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white !px-5 !py-3 !text-sm disabled:cursor-wait"
+                        x-bind:disabled="isSubmitting"
+                    >
+                        <span x-show="isSubmitting" class="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span>
+                        <span x-text="isSubmitting ? 'Memproses...' : 'Setujui & Aktifkan'">Setujui & Aktifkan</span>
+                    </x-button>
+                </form>
+
                 <x-button
                     type="button"
                     variant="secondary"
                     x-show="selectedPayment?.status !== 'pending'"
-                    x-on:click="closeModals()"
+                    @click="closeModals()"
                     class="!px-5 !py-3 !text-sm"
                 >
                     Tutup
