@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <h2 class="font-bold text-2xl text-gray-800 leading-tight">
-                    {{ __('Beli Paket Sesi Personal Trainer') }}
+                    {{ __('Sewa PT - Paket Sesi Personal Trainer') }}
                 </h2>
                 <p class="text-sm text-gray-600 mt-1">
                     Pilih paket sesi latihan bersama pelatih profesional FitCore Gym sesuai kebutuhan Anda.
@@ -85,13 +85,13 @@
                 <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                     <div class="space-y-2">
                         <span class="inline-block bg-blue-500/30 text-blue-200 border border-blue-400/30 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full">
-                            Ketentuan Pembelian Paket PT
+                            Ketentuan Sewa Personal Trainer
                         </span>
                         <h3 class="text-xl sm:text-2xl font-bold tracking-tight">
                             Aturan Validasi Syarat Minimum Hari
                         </h3>
                         <p class="text-blue-100/90 text-sm max-w-2xl leading-relaxed">
-                            Setiap paket Personal Trainer memiliki syarat sisa masa aktif membership minimal. Member hanya dapat membeli paket jika sisa hari aktif membership saat ini memenuhi atau melebihi syarat yang ditentukan.
+                            Setiap paket Personal Trainer memiliki syarat sisa masa aktif membership minimal. Sistem hanya menampilkan paket yang nilai syarat minimum harinya terpenuhi oleh sisa hari membership aktif Anda saat ini.
                         </p>
                     </div>
 
@@ -117,32 +117,52 @@
                 </div>
             </div>
 
-            {{-- ── Daftar Paket PT Tersedia ─────────────────────────────────── --}}
+            {{-- ── Daftar Paket PT Tersedia (Katalog Paket yang Memenuhi Syarat) ── --}}
             <div>
                 <div class="flex items-center justify-between mb-6">
                     <div>
                         <h3 class="text-lg font-bold text-gray-900">Pilihan Paket Sesi Personal Trainer</h3>
-                        <p class="text-sm text-gray-500">Pilih paket yang sesuai dengan target kebugaran Anda.</p>
+                        <p class="text-sm text-gray-500">Pilih paket yang memenuhi syarat masa aktif membership Anda.</p>
                     </div>
                 </div>
 
                 @if($packages->isEmpty())
-                    <div class="bg-white rounded-2xl p-12 text-center border border-gray-200 shadow-sm">
-                        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                        </svg>
-                        <h4 class="text-base font-semibold text-gray-800">Belum Ada Paket PT Tersedia</h4>
-                        <p class="text-sm text-gray-500 mt-1">Silakan cek kembali beberapa saat lagi.</p>
+                    {{-- State: Tidak ada paket yang memenuhi syarat --}}
+                    <div class="bg-white rounded-2xl p-8 sm:p-12 text-center border border-rose-200 shadow-sm max-w-2xl mx-auto">
+                        <div class="w-16 h-16 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-gray-900">Sisa Masa Aktif Membership Tidak Mencukupi</h4>
+                        <p class="text-sm text-gray-600 mt-2 max-w-lg mx-auto leading-relaxed">
+                            @if($activeMembership)
+                                Sisa masa aktif membership Anda saat ini adalah <strong>{{ $remainingDays }} hari</strong>, sehingga belum memenuhi syarat minimum hari untuk paket sesi Personal Trainer yang tersedia.
+                            @else
+                                Anda belum memiliki membership yang berstatus aktif. Untuk menyewa Personal Trainer, Anda harus memiliki membership aktif terlebih dahulu.
+                            @endif
+                        </p>
+                        <p class="text-xs text-gray-500 mt-2">
+                            Silakan lakukan perpanjangan masa aktif membership Anda untuk membuka akses katalog paket Personal Trainer.
+                        </p>
+                        <div class="mt-6">
+                            <a href="{{ Route::has('member.membership.packages') ? route('member.membership.packages') : url('/membership/packages') }}"
+                               class="inline-flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold px-6 py-3 rounded-xl shadow-sm transition duration-150 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                <span>Perpanjang Membership Sekarang</span>
+                            </a>
+                        </div>
                     </div>
                 @else
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($packages as $package)
                             @php
                                 $minDays = (int) $package->min_membership_days;
-                                $isEligible = ($minDays === 0) || ($activeMembership && $remainingDays >= $minDays);
                             @endphp
 
-                            <div class="bg-white rounded-2xl border transition duration-300 flex flex-col justify-between shadow-sm hover:shadow-md {{ $isEligible ? 'border-gray-200 hover:border-blue-400' : 'border-gray-200 bg-gray-50/50 opacity-90' }}">
+                            <div class="bg-white rounded-2xl border border-gray-200 hover:border-blue-400 transition duration-300 flex flex-col justify-between shadow-sm hover:shadow-md">
                                 <div class="p-6">
                                     {{-- Badges --}}
                                     <div class="flex items-center justify-between gap-2 mb-4">
@@ -153,17 +173,10 @@
                                             {{ $package->pt_session_count }} Sesi Latihan
                                         </span>
 
-                                        @if($isEligible)
-                                            <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                Memenuhi Syarat
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center gap-1 bg-rose-50 text-rose-700 border border-rose-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                                                Syarat Belum Cukup
-                                            </span>
-                                        @endif
+                                        <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Memenuhi Syarat
+                                        </span>
                                     </div>
 
                                     {{-- Package Name & Price --}}
@@ -182,7 +195,7 @@
                                         <div class="flex items-start justify-between gap-2">
                                             <span class="text-gray-500 text-xs">Syarat Min. Membership:</span>
                                             @if($minDays > 0)
-                                                <span class="font-semibold text-xs {{ $isEligible ? 'text-gray-800' : 'text-rose-600' }}">
+                                                <span class="font-semibold text-xs text-gray-800">
                                                     Minimal {{ $minDays }} hari
                                                 </span>
                                             @else
@@ -194,49 +207,43 @@
 
                                         <div class="flex items-start justify-between gap-2">
                                             <span class="text-gray-500 text-xs">Sisa Hari Anda:</span>
-                                            <span class="font-semibold text-xs {{ $isEligible ? 'text-emerald-700' : 'text-rose-700' }}">
+                                            <span class="font-semibold text-xs text-emerald-700">
                                                 {{ $remainingDays }} hari
                                             </span>
                                         </div>
-
-                                        {{-- Alert box on card if not eligible --}}
-                                        @if(!$isEligible)
-                                            <div class="bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs text-rose-700 mt-2">
-                                                @if(!$activeMembership)
-                                                    Memerlukan membership aktif dengan sisa minimal <strong>{{ $minDays }} hari</strong>.
-                                                @else
-                                                    Kurang <strong>{{ $minDays - $remainingDays }} hari</strong> lagi untuk dapat membeli paket ini.
-                                                @endif
-                                            </div>
-                                        @endif
                                     </div>
                                 </div>
 
                                 {{-- Card Footer Action --}}
                                 <div class="p-6 pt-0">
-                                    @if($isEligible)
-                                        <button type="button"
-                                                @click="openBuyModal({{ json_encode($package) }})"
-                                                class="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-3 rounded-xl shadow-sm transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                            </svg>
-                                            Beli Paket Ini
-                                        </button>
-                                    @else
-                                        <button type="button"
-                                                disabled
-                                                class="w-full inline-flex items-center justify-center gap-2 bg-gray-200 text-gray-500 font-semibold px-4 py-3 rounded-xl cursor-not-allowed">
-                                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                            </svg>
-                                            Syarat Belum Terpenuhi
-                                        </button>
-                                    @endif
+                                    <button type="button"
+                                            @click="openBuyModal({{ json_encode($package) }})"
+                                            class="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-3 rounded-xl shadow-sm transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                        Pilih & Beli Paket
+                                    </button>
                                 </div>
                             </div>
                         @endforeach
                     </div>
+
+                    {{-- Info jika ada paket lain yang disembunyikan karena butuh durasi lebih panjang --}}
+                    @if(!empty($hasHiddenPackages))
+                        <div class="mt-6 bg-blue-50/70 border border-blue-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-sm text-blue-900">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-5 h-5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>Beberapa paket sesi yang memerlukan sisa masa membership lebih tinggi disembunyikan.</span>
+                            </div>
+                            <a href="{{ Route::has('member.membership.packages') ? route('member.membership.packages') : url('/membership/packages') }}"
+                               class="text-blue-700 hover:text-blue-900 font-semibold underline shrink-0">
+                                Perpanjang Membership &rarr;
+                            </a>
+                        </div>
+                    @endif
                 @endif
             </div>
 
@@ -244,8 +251,11 @@
             @if($myQuotas->isNotEmpty())
                 <div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
-                        <h4 class="font-bold text-base text-gray-900">Kuota Sesi PT yang Anda Miliki</h4>
-                        <span class="text-xs text-gray-500">{{ $myQuotas->count() }} Paket Terdaftar</span>
+                        <div>
+                            <h4 class="font-bold text-base text-gray-900">Kuota Sesi PT yang Anda Miliki</h4>
+                            <p class="text-xs text-gray-500">Gunakan kuota sesi PT Anda untuk menetapkan preferensi jadwal latihan.</p>
+                        </div>
+                        <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full font-medium">{{ $myQuotas->count() }} Paket Terdaftar</span>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -259,6 +269,7 @@
                                     <th class="py-3 px-4 text-center">Sisa Sesi</th>
                                     <th class="py-3 px-4">Masa Berlaku</th>
                                     <th class="py-3 px-4 text-center">Status</th>
+                                    <th class="py-3 px-4 text-center">Tindakan</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
@@ -280,6 +291,19 @@
                                             <span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $q->status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-800' }}">
                                                 {{ ucfirst($q->status) }}
                                             </span>
+                                        </td>
+                                        <td class="py-3 px-4 text-center">
+                                            @if($q->status === 'active' && $q->remaining_sessions > 0)
+                                                <a href="{{ Route::has('pt-sessions.create') ? route('pt-sessions.create') : (Route::has('pt-sessions.index') ? route('pt-sessions.index') : '#') }}"
+                                                   class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800">
+                                                    <span>Atur Jadwal</span>
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                </a>
+                                            @else
+                                                <span class="text-xs text-gray-400">-</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -324,7 +348,7 @@
 
                         <input type="hidden" name="pt_package_id" :value="selectedPackage ? selectedPackage.id : ''" />
 
-                        <div class="bg-gradient-to-r from-blue-700 to-indigo-800 px-6 py-4 text-white">
+                        <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-900 px-6 py-4 text-white">
                             <div class="flex items-center justify-between">
                                 <h3 class="text-lg font-bold" id="modal-title">Konfirmasi Pembelian Paket PT</h3>
                                 <button type="button" @click="showModal = false" class="text-white/80 hover:text-white">

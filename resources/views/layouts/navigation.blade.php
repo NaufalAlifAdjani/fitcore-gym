@@ -23,7 +23,7 @@
                                 {{ __('Kartu Member') }}
                             </x-nav-link>
                             <x-nav-link :href="route('member.pt-packages.index')" :active="request()->routeIs('member.pt-packages.*')">
-                                {{ __('Paket PT') }}
+                                {{ __('Sewa PT') }}
                             </x-nav-link>
                         @endif
 
@@ -97,7 +97,7 @@
                         {{ __('Kartu Member') }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('member.pt-packages.index')" :active="request()->routeIs('member.pt-packages.*')">
-                        {{ __('Paket PT') }}
+                        {{ __('Sewa PT') }}
                     </x-responsive-nav-link>
                 @endif
 
