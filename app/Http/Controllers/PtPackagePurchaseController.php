@@ -44,10 +44,21 @@ class PtPackagePurchaseController extends Controller
             $remainingDays = max(0, (int) $today->diffInDays($endDate, false));
         }
 
-        // ── 2. Fetch Active PT Packages & Banks ───────────────────────────────
-        $packages = PtPackage::where('status', 'active')
+        // ── 2. Fetch Active PT Packages & Filter by Min Membership Days ───────
+        $allPackages = PtPackage::where('status', 'active')
             ->orderBy('pt_session_count')
             ->get();
+
+        // Hanya tampilkan paket yang nilai min_membership_days-nya terpenuhi oleh sisa hari membership Member
+        $packages = $allPackages->filter(function ($pkg) use ($activeMembership, $remainingDays) {
+            $minDays = (int) $pkg->min_membership_days;
+            if ($minDays === 0) {
+                return true;
+            }
+            return $activeMembership && ($remainingDays >= $minDays);
+        })->values();
+
+        $hasHiddenPackages = $allPackages->count() > $packages->count();
 
         $banks = Bank::where('status', 'active')
             ->orderBy('name')
@@ -61,17 +72,20 @@ class PtPackagePurchaseController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'success'           => true,
-                'active_membership' => $activeMembership,
-                'remaining_days'    => $remainingDays,
-                'packages'          => $packages,
-                'banks'             => $banks,
-                'my_quotas'         => $myQuotas,
+                'success'             => true,
+                'active_membership'   => $activeMembership,
+                'remaining_days'      => $remainingDays,
+                'packages'            => $packages,
+                'has_hidden_packages' => $hasHiddenPackages,
+                'banks'               => $banks,
+                'my_quotas'           => $myQuotas,
             ]);
         }
 
         return view('member.pt-packages', compact(
             'packages',
+            'allPackages',
+            'hasHiddenPackages',
             'banks',
             'activeMembership',
             'remainingDays',
