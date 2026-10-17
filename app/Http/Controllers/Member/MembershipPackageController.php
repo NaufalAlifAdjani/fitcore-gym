@@ -7,8 +7,11 @@ use App\Http\Requests\StoreMembershipPaymentRequest;
 use App\Models\Bank;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
+use App\Models\User;
+use App\Notifications\AdminNewPaymentNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -138,6 +141,9 @@ class MembershipPackageController extends Controller
             'transfer_date' => now(),
             'status' => 'pending',
         ]);
+
+        $admins = User::where('role', 'admin')->get();
+        Notification::send($admins, new AdminNewPaymentNotification($payment));
 
         return redirect()
             ->route('member.membership.payment-status', $payment->id)
