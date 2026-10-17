@@ -23,8 +23,11 @@
     class="fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-[#EEEEEF] bg-white transition-transform duration-200 lg:translate-x-0"
     aria-label="Navigasi utama"
 >
-    <a href="{{ route('admin.dashboard') }}" class="flex h-20 shrink-0 items-center gap-3 border-b border-[#F0F0F1] px-6">
-        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#BA0030] text-sm font-extrabold text-white">FC</span>
+    <a href="{{ route('admin.dashboard') }}" class="flex h-16 shrink-0 items-center gap-3 border-b border-[#EEEEEF] px-6">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+            <rect width="36" height="36" rx="18" fill="#BA0030"/>
+            <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="white"/>
+        </svg>
         <span class="font-heading text-sm font-extrabold leading-tight tracking-wide text-[#16151A]">
             FITCORE
             <span class="block text-[10px] font-semibold tracking-[0.2em] text-[#565A66]">MAXFIT GYM</span>
@@ -115,7 +118,7 @@
         </nav>
 
         @if (Auth::user()->role === 'admin')
-            <div class="mt-8 border-t border-[#F0F0F1] pt-5">
+            <div class="mt-8 border-t border-[#EEEEEF] pt-5">
                 <p class="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#565A66]">Bantuan</p>
                 <a href="{{ route('admin.help.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-[#565A66] transition hover:bg-[#F9F9FA] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -128,7 +131,7 @@
         @endif
     </div>
 
-    <div class="border-t border-[#F0F0F1] p-4">
+    <div class="border-t border-[#EEEEEF] p-4">
         <button
             type="button"
             x-on:click="showLogoutModal = true"
@@ -142,7 +145,7 @@
     </div>
 </aside>
 
-<header class="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-[#EEEEEF] bg-white/95 px-4 backdrop-blur sm:px-6 lg:left-72 lg:px-8">
+<header class="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-[#EEEEEF] bg-white px-4 sm:px-6 lg:left-72 lg:px-8">
     <div class="flex min-w-0 flex-1 items-center gap-3">
         <button
             type="button"
@@ -194,7 +197,7 @@
                 x-transition
                 class="absolute right-0 top-12 z-40 w-56 rounded-2xl border border-[#EEEEEF] bg-white p-2 shadow-lg"
             >
-                <div class="border-b border-[#F0F0F1] px-3 py-2 sm:hidden">
+                <div class="border-b border-[#EEEEEF] px-3 py-2 sm:hidden">
                     <p class="truncate text-xs font-semibold text-[#16151A]">{{ Auth::user()->name }}</p>
                     <p class="truncate text-[10px] text-[#858894]">{{ Auth::user()->email ?: 'admin@fitcore.id' }}</p>
                 </div>

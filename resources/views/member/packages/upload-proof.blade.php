@@ -39,7 +39,7 @@
                 <!-- Kolom Kiri: Ringkasan Pesanan & Rekening Tujuan Transfer -->
                 <div class="lg:col-span-6 space-y-6">
                     <!-- 1. Ringkasan Pesanan Card -->
-                    <div class="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-7 shadow-sm">
+                    <x-card :padding="false" class="!rounded-3xl border border-slate-200/90 p-6 sm:p-7 shadow-sm">
                         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">
                             Ringkasan Pesanan
                         </h2>
@@ -78,7 +78,7 @@
                                 <span class="text-[11px] text-rose-400 font-semibold">Termasuk kode unik: +{{ $uniqueCode }}</span>
                             </div>
                         </div>
-                    </div>
+                    </x-card>
 
                     <!-- 2. Rekening Tujuan Transfer Card (Hitam Elegan ber-badge "Akun Bisnis") -->
                     <div class="rounded-3xl border border-slate-800 bg-[#0B0F17] p-6 sm:p-7 text-white shadow-xl relative overflow-hidden" x-data="{ copied: false }">
@@ -170,7 +170,7 @@
 
                 <!-- Kolom Kanan: Form Card Unggah Bukti Transfer (Langkah Terakhir) -->
                 <div class="lg:col-span-6">
-                    <div class="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm">
+                    <x-card :padding="false" class="!rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-sm">
                         <div class="border-b border-slate-100 pb-4 mb-6">
                             <span class="inline-block px-2.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-rose-50 text-[#BA0030] border border-rose-200 mb-1.5">
                                 LANGKAH TERAKHIR
@@ -285,17 +285,15 @@
 
                             <!-- Input Field: Nama Pemilik Rekening Pengirim -->
                             <div>
-                                <label for="sender_name" class="block text-xs font-bold text-slate-700 mb-2">
-                                    Nama Pemilik Rekening Pengirim <span class="text-rose-500">*</span>
-                                </label>
-                                <input
+                                <x-input-label for="sender_name" value="Nama Pemilik Rekening Pengirim *" class="!mb-2 text-xs font-bold text-slate-700" />
+                                <x-text-input
                                     type="text"
                                     id="sender_name"
                                     name="sender_name"
                                     value="{{ old('sender_name', Auth::user()?->name) }}"
                                     placeholder="Contoh: Budi Santoso"
                                     required
-                                    class="w-full rounded-xl border-slate-300 text-xs text-slate-900 focus:border-[#BA0030] focus:ring-[#BA0030] p-3.5 shadow-sm"
+                                    class="!w-full !rounded-xl !border-slate-300 !text-xs !text-slate-900 focus:!border-[#BA0030] focus:!ring-[#BA0030] !p-3.5 shadow-sm"
                                 />
                                 <p class="mt-1 text-[11px] text-slate-400">
                                     Pastikan nama sesuai dengan yang tertera pada buku tabungan atau akun e-banking pengirim.
@@ -304,13 +302,11 @@
 
                             <!-- Dropdown Select: Bank Asal Pengirim -->
                             <div>
-                                <label for="bank_sender_origin" class="block text-xs font-bold text-slate-700 mb-2">
-                                    Bank Asal Pengirim <span class="text-rose-500">*</span>
-                                </label>
-                                <select
+                                <x-input-label for="bank_sender_origin" value="Bank Asal Pengirim *" class="!mb-2 text-xs font-bold text-slate-700" />
+                                <x-select-input
                                     id="bank_sender_origin"
                                     name="bank_sender_origin"
-                                    class="w-full rounded-xl border-slate-300 text-xs text-slate-900 focus:border-[#BA0030] focus:ring-[#BA0030] p-3.5 shadow-sm"
+                                    class="!w-full !rounded-xl !border-slate-300 !text-xs !text-slate-900 focus:!border-[#BA0030] focus:!ring-[#BA0030] !p-3.5 shadow-sm"
                                 >
                                     <option value="BCA">Bank Central Asia (BCA)</option>
                                     <option value="Mandiri">Bank Mandiri</option>
@@ -321,7 +317,7 @@
                                     <option value="Permata">Bank Permata</option>
                                     <option value="Jago">Bank Jago</option>
                                     <option value="Lainnya">Bank Lainnya / E-Wallet</option>
-                                </select>
+                                </x-select-input>
                             </div>
 
                             <!-- Checkbox Pernyataan Integritas Bukti Pembayaran -->
@@ -340,16 +336,17 @@
 
                             <!-- Tombol Submit Crimson Besar -->
                             <div class="pt-2">
-                                <button
+                                <x-button
                                     type="submit"
-                                    class="w-full py-4 rounded-full bg-[#BA0030] hover:bg-[#970027] text-white font-extrabold text-sm tracking-wider uppercase shadow-xl shadow-[#BA0030]/30 transition hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
+                                    variant="primary"
+                                    class="w-full !py-4 font-extrabold !text-sm tracking-wider uppercase shadow-xl shadow-[#BA0030]/30 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
                                 >
                                     <span>KIRIM BUKTI PEMBAYARAN</span>
                                     <span class="text-base">→</span>
-                                </button>
+                                </x-button>
                             </div>
                         </form>
-                    </div>
+                    </x-card>
                 </div>
             </div>
         </div>

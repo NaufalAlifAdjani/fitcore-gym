@@ -30,91 +30,93 @@
             <input type="hidden" name="package_id" x-bind:value="form.id">
 
             <div class="grid gap-4 sm:grid-cols-2">
-                <label class="block">
-                    <span class="mb-1.5 block text-xs font-semibold text-[#565A66]">Nama Paket Membership *</span>
-                    <input type="text" name="name" x-model="form.name" required maxlength="255" placeholder="FitCore Unlimited Pro Year" class="w-full rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030]">
+                <div>
+                    <x-input-label for="pkg-name" value="Nama Paket Membership *" class="!mb-1.5 text-xs text-[#565A66]" />
+                    <x-text-input id="pkg-name" type="text" name="name" x-model="form.name" required maxlength="255" placeholder="FitCore Unlimited Pro Year" class="!bg-white !border-[#E5E5E8] !p-3 !text-sm" />
                     @error('name') <span class="mt-1 block text-xs text-red-600">{{ $message }}</span> @enderror
-                </label>
-                <label class="block">
-                    <span class="mb-1.5 block text-xs font-semibold text-[#565A66]">Kategori / Tier *</span>
-                    <select name="tier" x-model="form.tier" required class="w-full rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030]">
+                </div>
+                <div>
+                    <x-input-label for="pkg-tier" value="Kategori / Tier *" class="!mb-1.5 text-xs text-[#565A66]" />
+                    <x-select-input id="pkg-tier" name="tier" x-model="form.tier" required class="!bg-white !border-[#E5E5E8] !p-3 !text-sm">
                         <option value="Basic">Basic</option>
                         <option value="Standard">Standard</option>
                         <option value="Premium & VIP">Premium &amp; VIP</option>
-                    </select>
+                    </x-select-input>
                     @error('tier') <span class="mt-1 block text-xs text-red-600">{{ $message }}</span> @enderror
-                </label>
+                </div>
             </div>
 
             <div class="grid gap-4 sm:grid-cols-2">
-                <label class="block">
-                    <span class="mb-1.5 block text-xs font-semibold text-[#565A66]">Nama Badge</span>
-                    <input type="text" name="badge" x-model="form.badge" maxlength="50" placeholder="Contoh: BEST SELLER" class="w-full rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm uppercase focus:border-[#BA0030] focus:ring-[#BA0030]">
+                <div>
+                    <x-input-label for="pkg-badge" value="Nama Badge" class="!mb-1.5 text-xs text-[#565A66]" />
+                    <x-text-input id="pkg-badge" type="text" name="badge" x-model="form.badge" maxlength="50" placeholder="Contoh: BEST SELLER" class="!bg-white !border-[#E5E5E8] !p-3 !text-sm uppercase" />
                     @error('badge') <span class="mt-1 block text-xs text-red-600">{{ $message }}</span> @enderror
-                </label>
-                <label class="block">
-                    <span class="mb-1.5 block text-xs font-semibold text-[#565A66]">Sesi Personal Trainer</span>
-                    <input type="number" name="pt_sessions" x-model="form.pt_sessions" min="0" step="1" class="w-full rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030]">
+                </div>
+                <div>
+                    <x-input-label for="pkg-pt-sessions" value="Sesi Personal Trainer" class="!mb-1.5 text-xs text-[#565A66]" />
+                    <x-text-input id="pkg-pt-sessions" type="number" name="pt_sessions" x-model="form.pt_sessions" min="0" step="1" class="!bg-white !border-[#E5E5E8] !p-3 !text-sm" />
                     @error('pt_sessions') <span class="mt-1 block text-xs text-red-600">{{ $message }}</span> @enderror
-                </label>
+                </div>
             </div>
 
-            <label class="block">
-                <span class="mb-1.5 block text-xs font-semibold text-[#565A66]">Deskripsi</span>
-                <textarea name="description" x-model="form.description" rows="2" class="w-full rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030]"></textarea>
+            <div>
+                <x-input-label for="pkg-description" value="Deskripsi" class="!mb-1.5 text-xs text-[#565A66]" />
+                <textarea id="pkg-description" name="description" x-model="form.description" rows="2" class="w-full rounded-xl border border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030] outline-none"></textarea>
                 @error('description') <span class="mt-1 block text-xs text-red-600">{{ $message }}</span> @enderror
-            </label>
+            </div>
 
             <div class="grid gap-4 sm:grid-cols-2">
-                <label class="block">
-                    <span class="mb-1.5 block text-xs font-semibold text-[#565A66]">Tarif Normal (Rp) *</span>
-                    <input type="number" name="price" x-model="form.price" required min="0" step="1" placeholder="4500000" class="w-full rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030]">
+                <div>
+                    <x-input-label for="pkg-price" value="Tarif Normal (Rp) *" class="!mb-1.5 text-xs text-[#565A66]" />
+                    <x-text-input id="pkg-price" type="number" name="price" x-model="form.price" required min="0" step="1" placeholder="4500000" class="!bg-white !border-[#E5E5E8] !p-3 !text-sm" />
                     @error('price') <span class="mt-1 block text-xs text-red-600">{{ $message }}</span> @enderror
-                </label>
-                <label class="block">
-                    <span class="mb-1.5 block text-xs font-semibold text-[#565A66]">Harga Promo (Rp)</span>
-                    <input type="number" name="promo_price" x-model="form.promo_price" min="0" step="1" placeholder="Opsional" class="w-full rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030]">
+                </div>
+                <div>
+                    <x-input-label for="pkg-promo-price" value="Harga Promo (Rp)" class="!mb-1.5 text-xs text-[#565A66]" />
+                    <x-text-input id="pkg-promo-price" type="number" name="promo_price" x-model="form.promo_price" min="0" step="1" placeholder="Opsional" class="!bg-white !border-[#E5E5E8] !p-3 !text-sm" />
                     <span x-show="discountPercent() > 0" x-cloak class="mt-2 inline-flex rounded-full bg-[#E61241] px-3 py-1 text-xs font-bold text-white">
                         Hemat <span x-text="discountPercent()" class="mx-1"></span>%
                     </span>
                     @error('promo_price') <span class="mt-1 block text-xs text-red-600">{{ $message }}</span> @enderror
-                </label>
+                </div>
             </div>
 
             <div class="grid gap-4 sm:grid-cols-2">
                 <div>
                     <span class="mb-1.5 block text-xs font-semibold text-[#565A66]">Durasi Masa Aktif *</span>
                     <div class="flex gap-2">
-                        <input type="number" name="duration_value" x-model="form.duration_value" required min="1" step="1" aria-label="Jumlah durasi" class="w-1/2 rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030]">
-                        <select name="duration_unit" x-model="form.duration_unit" required aria-label="Satuan durasi" class="w-1/2 rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030]">
+                        <x-text-input type="number" name="duration_value" x-model="form.duration_value" required min="1" step="1" aria-label="Jumlah durasi" class="!w-1/2 !bg-white !border-[#E5E5E8] !p-3 !text-sm" />
+                        <x-select-input name="duration_unit" x-model="form.duration_unit" required aria-label="Satuan durasi" class="!w-1/2 !bg-white !border-[#E5E5E8] !p-3 !text-sm">
                             <option value="Hari">Hari</option>
                             <option value="Bulan">Bulan</option>
                             <option value="Tahun">Tahun</option>
-                        </select>
+                        </x-select-input>
                     </div>
                     @error('duration_value') <span class="mt-1 block text-xs text-red-600">{{ $message }}</span> @enderror
                     @error('duration_unit') <span class="mt-1 block text-xs text-red-600">{{ $message }}</span> @enderror
                 </div>
-                <label class="block">
-                    <span class="mb-1.5 block text-xs font-semibold text-[#565A66]">Kalkulasi Masa Aktif (Hari) *</span>
-                    <input type="number" name="duration_in_days" x-model="form.duration_in_days" required min="1" step="1" class="w-full rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030]">
+                <div>
+                    <x-input-label for="pkg-duration-in-days" value="Kalkulasi Masa Aktif (Hari) *" class="!mb-1.5 text-xs text-[#565A66]" />
+                    <x-text-input id="pkg-duration-in-days" type="number" name="duration_in_days" x-model="form.duration_in_days" required min="1" step="1" class="!bg-white !border-[#E5E5E8] !p-3 !text-sm" />
                     @error('duration_in_days') <span class="mt-1 block text-xs text-red-600">{{ $message }}</span> @enderror
-                </label>
+                </div>
             </div>
 
             <div>
-                <label for="package-feature-input" class="mb-1.5 block text-xs font-semibold text-[#565A66]">Fitur &amp; Fasilitas Benefit *</label>
+                <x-input-label for="package-feature-input" value="Fitur &amp; Fasilitas Benefit *" class="!mb-1.5 text-xs text-[#565A66]" />
                 <div class="flex flex-col gap-2 sm:flex-row">
-                    <input
+                    <x-text-input
                         id="package-feature-input"
                         type="text"
                         x-model="newFeature"
                         x-on:keydown.enter.prevent="addFeature()"
                         maxlength="255"
                         placeholder="Ketik nama fasilitas, lalu tekan Enter..."
-                        class="min-w-0 flex-1 rounded-xl border-[#E5E5E8] bg-white px-3.5 py-3 text-sm focus:border-[#BA0030] focus:ring-[#BA0030]"
-                    >
-                    <button type="button" x-on:click="addFeature()" class="rounded-xl bg-[#1E1E1E] px-4 py-3 text-xs font-semibold text-white transition hover:bg-black">+ Tambah Fitur</button>
+                        class="min-w-0 flex-1 !bg-white !border-[#E5E5E8] !p-3 !text-sm"
+                    />
+                    <x-button type="button" variant="dark" size="xs" x-on:click="addFeature()" class="!rounded-xl px-4 py-3 text-xs font-semibold">
+                        + Tambah Fitur
+                    </x-button>
                 </div>
                 <p x-show="form.facilities.length === 0" class="mt-2 text-xs text-[#858894]">Tambahkan setidaknya satu fasilitas.</p>
                 <div class="mt-3 flex flex-wrap gap-2">
@@ -137,8 +139,12 @@
             </label>
 
             <div class="flex flex-col-reverse gap-3 border-t border-[#F0F0F1] pt-5 sm:flex-row sm:justify-end">
-                <button type="button" x-on:click="showModal = false" class="rounded-full px-5 py-3 text-sm font-semibold text-[#565A66] transition hover:bg-[#F4F4F5]">Batal</button>
-                <button type="submit" class="rounded-full bg-[#BA0030] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#970027] focus:outline-none focus:ring-2 focus:ring-[#BA0030] focus:ring-offset-2" x-text="isEditMode ? 'Simpan Perubahan' : 'Simpan Paket'"></button>
+                <x-button type="button" variant="secondary" x-on:click="showModal = false">
+                    Batal
+                </x-button>
+                <x-button type="submit" variant="primary">
+                    <span x-text="isEditMode ? 'Simpan Perubahan' : 'Simpan Paket'"></span>
+                </x-button>
             </div>
         </form>
     </div>

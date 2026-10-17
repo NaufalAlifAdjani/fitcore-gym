@@ -56,7 +56,7 @@
                 <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
                     <!-- Kolom Kiri: Card Rekening Transfer -->
                     <div class="lg:col-span-7 space-y-6">
-                        <div class="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm">
+                        <x-card :padding="false" class="!rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-sm">
                             <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
                                 <div>
                                     <h2 class="font-heading text-lg font-extrabold text-slate-900 flex items-center gap-2">
@@ -125,10 +125,10 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </x-card>
 
                         <!-- Card Bantuan -->
-                        <div class="rounded-2xl border border-slate-200/80 bg-white p-5 flex items-center justify-between gap-4 shadow-sm">
+                        <x-card :padding="false" class="!rounded-2xl border border-slate-200/80 p-5 flex items-center justify-between gap-4 shadow-sm">
                             <div class="flex items-center gap-3">
                                 <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
                                     <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -143,12 +143,12 @@
                             <a href="https://wa.me/6281234567890" target="_blank" class="px-3.5 py-1.5 rounded-full text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-300 hover:bg-emerald-100 transition whitespace-nowrap">
                                 WhatsApp CS
                             </a>
-                        </div>
+                        </x-card>
                     </div>
 
                     <!-- Kolom Kanan: Card Ringkasan Langganan -->
                     <div class="lg:col-span-5 space-y-6">
-                        <div class="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm">
+                        <x-card :padding="false" class="!rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-sm">
                             <h2 class="font-heading text-lg font-extrabold text-slate-900 border-b border-slate-100 pb-4">
                                 Ringkasan Langganan
                             </h2>
@@ -179,19 +179,21 @@
                                     Punya kode promo atau referral?
                                 </label>
                                 <div class="flex gap-2">
-                                    <input
+                                    <x-text-input
                                         type="text"
                                         x-model="promoCode"
                                         placeholder="Contoh: FITCORENEW"
-                                        class="w-full rounded-xl border-slate-200 text-xs text-slate-900 uppercase tracking-wider focus:border-[#BA0030] focus:ring-[#BA0030]"
+                                        class="uppercase tracking-wider !text-xs !p-2.5"
                                     />
-                                    <button
+                                    <x-button
                                         type="button"
+                                        variant="dark"
+                                        size="sm"
                                         x-on:click="applyPromo()"
-                                        class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white text-xs font-bold transition shrink-0"
+                                        class="!rounded-xl shrink-0"
                                     >
                                         Terapkan
-                                    </button>
+                                    </x-button>
                                 </div>
                                 <div x-show="promoApplied" x-cloak class="mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
                                     <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
@@ -253,15 +255,16 @@
 
                             <!-- Tombol CTA Beli Sekarang -->
                             <div class="mt-6">
-                                <button
+                                <x-button
                                     type="submit"
-                                    class="w-full py-4 rounded-full bg-[#BA0030] hover:bg-[#970027] text-white font-bold text-sm tracking-wide shadow-lg shadow-[#BA0030]/30 transition hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
+                                    variant="primary"
+                                    class="w-full !py-4 !text-sm font-bold tracking-wide shadow-lg shadow-[#BA0030]/30 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
                                 >
                                     <span>Beli Sekarang</span>
                                     <span class="text-lg">→</span>
-                                </button>
+                                </x-button>
                             </div>
-                        </div>
+                        </x-card>
                     </div>
                 </div>
             </form>

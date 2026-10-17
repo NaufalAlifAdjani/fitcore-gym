@@ -28,202 +28,210 @@
             @endif
 
 
-            @php
-                $activePkgs = $packages->values();
+            <style>
+                .hide-scrollbar::-webkit-scrollbar {
+                    display: none;
+                }
+            </style>
 
-                // Identifikasi paket untuk 3 slot kartu (Kiri, Tengah, Kanan)
-                $starterPkg = $activePkgs->first(function ($p) {
-                    $name = strtolower($p->name);
-                    return str_contains($name, 'starter') || str_contains($name, 'silver') || str_contains($name, 'basic') || $p->duration_value == 1;
-                }) ?? $activePkgs->first();
+            <!-- Wrapper Slider dengan Deteksi Active Slide Berdasarkan Posisi Scroll -->
+            <div
+                x-data="{
+                    activeSlide: 1,
+                    scrollNext() { this.$refs.slider.scrollBy({ left: 380, behavior: 'smooth' }); },
+                    scrollPrev() { this.$refs.slider.scrollBy({ left: -380, behavior: 'smooth' }); },
+                    checkCenter() {
+                        const container = this.$refs.slider;
+                        const containerCenter = container.scrollLeft + (container.clientWidth / 2);
+                        let closestIndex = 1;
+                        let minDistance = Infinity;
 
-                $elitePkg = $activePkgs->first(function ($p) use ($starterPkg) {
-                    $name = strtolower($p->name);
-                    $badge = strtoupper($p->badge ?? '');
-                    return ($badge === 'BEST SELLER' || str_contains($name, 'elite') || str_contains($name, 'annual') || $p->duration_value == 12) && $p->id !== $starterPkg?->id;
-                }) ?? $activePkgs->skip(1)->first() ?? $starterPkg;
+                        const cards = container.querySelectorAll('.snap-center-card');
+                        cards.forEach(card => {
+                            // Hitung posisi tengah masing-masing kartu
+                            const cardCenter = card.offsetLeft + (card.clientWidth / 2) - container.offsetLeft;
+                            const distance = Math.abs(containerCenter - cardCenter);
 
-                $proPkg = $activePkgs->first(function ($p) use ($starterPkg, $elitePkg) {
-                    $name = strtolower($p->name);
-                    return $p->id !== $starterPkg?->id && $p->id !== $elitePkg?->id;
-                }) ?? $activePkgs->skip(2)->first() ?? $starterPkg;
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                closestIndex = parseInt(card.dataset.index);
+                            }
+                        });
+                        this.activeSlide = closestIndex;
+                    },
+                    init() {
+                        this.$nextTick(() => {
+                            // Geser otomatis ke paket ke-2 di awal jika paket >= 3 agar yang tengah langsung aktif
+                            if (this.$refs.slider.children.length >= 3) {
+                                this.scrollNext();
+                            } else {
+                                this.checkCenter(); // Panggil sekali di awal
+                            }
+                        });
+                    }
+                }"
+                class="relative w-full max-w-[1400px] mx-auto py-10 px-16 group"
+            >
+                <!-- Tombol Panah Kiri (Ubah posisinya agar lebih keluar) -->
+                <button
+                    type="button"
+                    @click="scrollPrev()"
+                    aria-label="Geser ke paket sebelumnya"
+                    class="absolute -left-4 md:left-2 top-1/2 z-30 -translate-y-1/2 bg-white text-gray-800 shadow-xl rounded-full p-4 hover:bg-gray-50 focus:outline-none transition-transform hover:scale-110 border border-gray-100"
+                >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
 
-                // 3 Card Slot Configurations
-                $slots = [
-                    [
-                        'key' => 'starter',
-                        'pkg' => $starterPkg,
-                        'name' => $starterPkg?->name ?? 'Starter Pass',
-                        'price_str' => $starterPkg ? 'Rp ' . number_format($starterPkg->promo_price ?? $starterPkg->price, 0, ',', '.') : 'Rp 450.000',
-                        'period' => '/ bln',
-                        'commitment' => $starterPkg ? 'Komitmen ' . $starterPkg->duration_value . ' ' . $starterPkg->duration_unit : 'Komitmen 1 Bulan',
-                        'button_text' => 'Pilih Paket Starter',
-                        'button_variant' => 'outline',
-                        'highlight' => false,
-                        'badge_text' => null,
-                        'facilities' => ($starterPkg && !empty($starterPkg->facilities)) ? $starterPkg->facilities : [
-                            'Akses Penuh Area Gym & Cardio',
-                            'Loker Harian & Kamar Bilas',
-                            'Free Sesi Konsultasi Fitness',
-                            'Akses Check-in Aplikasi FitCore',
-                        ],
-                    ],
-                    [
-                        'key' => 'elite',
-                        'pkg' => $elitePkg,
-                        'name' => $elitePkg?->name ?? 'Elite Annual Champion',
-                        'price_str' => $elitePkg ? 'Rp ' . number_format($elitePkg->promo_price ?? $elitePkg->price, 0, ',', '.') : 'Rp 299.000',
-                        'period' => '/ bln',
-                        'commitment' => $elitePkg ? 'Komitmen ' . $elitePkg->duration_value . ' ' . $elitePkg->duration_unit : 'Komitmen 12 Bulan',
-                        'button_text' => 'Gabung Elite Sekarang',
-                        'button_variant' => 'primary',
-                        'highlight' => true,
-                        'badge_text' => 'PALING DIMINATI • HEMAT 35%',
-                        'facilities' => ($elitePkg && !empty($elitePkg->facilities)) ? $elitePkg->facilities : [
-                            'Akses 24 Jam Seluruh Cabang FitCore',
-                            'Loker VIP & Kamar Mandi Air Panas',
-                            '5 Sesi Personal Trainer Berlisensi',
-                            'Akses Bebas Semua Kelas Studio',
-                            'Diskon Kafe & Merchandise 20%',
-                        ],
-                    ],
-                    [
-                        'key' => 'pro',
-                        'pkg' => $proPkg,
-                        'name' => $proPkg?->name ?? 'All-Access Pro',
-                        'price_str' => $proPkg ? 'Rp ' . number_format($proPkg->promo_price ?? $proPkg->price, 0, ',', '.') : 'Rp 380.000',
-                        'period' => '/ bln',
-                        'commitment' => $proPkg ? 'Komitmen ' . $proPkg->duration_value . ' ' . $proPkg->duration_unit : 'Komitmen 6 Bulan',
-                        'button_text' => 'Pilih All-Access Pro',
-                        'button_variant' => 'outline',
-                        'highlight' => false,
-                        'badge_text' => null,
-                        'facilities' => ($proPkg && !empty($proPkg->facilities)) ? $proPkg->facilities : [
-                            'Akses Fleksibel 06:00 - 23:00 WIB',
-                            'Loker Pribadi & Kamar Mandi Bersih',
-                            '2 Sesi Personal Trainer Gratis',
-                            'Akses Kelas Studio Reguler',
-                        ],
-                    ],
-                ];
-            @endphp
+                <!-- Container Slider -->
+                <div
+                    x-ref="slider"
+                    @scroll.debounce.10ms="checkCenter()"
+                    class="flex overflow-x-auto snap-x snap-mandatory gap-8 scroll-smooth pb-16 pt-12 px-8 sm:px-12 hide-scrollbar"
+                    style="scrollbar-width: none; -ms-overflow-style: none;"
+                >
+                    @forelse ($packages as $package)
+                        @php
+                            $facilities = is_array($package->facilities)
+                                ? $package->facilities
+                                : (is_string($package->facilities) ? json_decode($package->facilities, true) ?? [] : []);
 
-            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:items-stretch pt-4">
-                @foreach ($slots as $slot)
-                    @php
-                        $targetPackageId = $slot['pkg']?->id ?? ($packages->first()?->id ?? 1);
-                        $checkoutUrl = route('member.membership.checkout', $targetPackageId);
-                    @endphp
+                            if (empty($facilities)) {
+                                $facilities = [
+                                    'Akses Penuh Area Gym & Cardio',
+                                    'Loker Harian & Kamar Bilas',
+                                    'Akses Check-in Aplikasi FitCore',
+                                ];
+                            }
 
-                    @if ($slot['highlight'])
-                        <!-- Tengah - Elite Annual Champion (Highlighted Dark Navy / Dark Slate) -->
-                        <div class="relative flex flex-col justify-between rounded-3xl bg-[#0B0F17] p-8 border-2 border-[#BA0030] shadow-[0_12px_45px_rgba(186,0,48,0.28)] text-white scale-[1.02] sm:scale-105 z-10 transition-all duration-300">
-                            <!-- Badge Lengkung Merah Atas -->
-                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-[#BA0030] px-4 py-1.5 text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-white shadow-md shadow-[#BA0030]/40 whitespace-nowrap">
-                                {{ $slot['badge_text'] }}
-                            </div>
+                            $effectivePrice = $package->promo_price && $package->promo_price < $package->price
+                                ? $package->promo_price
+                                : $package->price;
+                            $checkoutUrl = route('member.membership.checkout', $package->id);
+                        @endphp
 
-                            <div>
-                                <div class="mt-2">
-                                    <h3 class="font-heading text-xl sm:text-2xl font-extrabold text-white">
-                                        {{ $slot['name'] }}
-                                    </h3>
-                                    <p class="mt-1 text-xs text-slate-300 font-medium">
-                                        {{ $slot['commitment'] }}
-                                    </p>
-                                </div>
+                        <!-- Wrapper Kartu dengan Efek Skala Pop-out -->
+                        <div
+                            data-index="{{ $loop->iteration }}"
+                            class="snap-center-card snap-center shrink-0 w-[300px] md:w-[350px] transition-all duration-500 ease-out"
+                            :class="activeSlide === {{ $loop->iteration }} ? 'scale-105 z-20' : 'scale-95 opacity-60 hover:opacity-100'"
+                        >
+                            <!-- Kartu Dinamis (Warna Berubah Sesuai Active Slide) -->
+                            <div
+                                class="relative h-full rounded-3xl border transition-colors duration-500 p-8 flex flex-col justify-between"
+                                :class="activeSlide === {{ $loop->iteration }} ? 'bg-[#0B0F17] border-[#BA0030] text-white shadow-2xl' : 'bg-white border-gray-200 text-gray-900 shadow-md'"
+                            >
+                                @if ($package->badge)
+                                    <!-- Badge Dinamis -->
+                                    <div
+                                        class="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-wider shadow-md whitespace-nowrap z-10 transition-colors"
+                                        :class="activeSlide === {{ $loop->iteration }} ? 'bg-[#BA0030] text-white shadow-[#BA0030]/40' : 'bg-slate-100 text-slate-700 border border-slate-200'"
+                                    >
+                                        {{ $package->badge }}
+                                    </div>
+                                @endif
 
-                                <!-- Price -->
-                                <div class="mt-6 flex items-baseline gap-1.5">
-                                    <span class="font-heading text-3xl sm:text-4xl font-black text-white tracking-tight">
-                                        {{ $slot['price_str'] }}
-                                    </span>
-                                    <span class="text-xs font-bold text-slate-400">
-                                        {{ $slot['period'] }}
-                                    </span>
-                                </div>
-
-                                <!-- Facilities Checklist -->
-                                <div class="mt-7 border-t border-slate-800 pt-6">
-                                    <p class="text-[11px] font-bold uppercase tracking-wider text-rose-400 mb-4">
-                                        Fasilitas &amp; Keuntungan Termasuk:
-                                    </p>
-                                    <ul class="space-y-3.5">
-                                        @foreach ($slot['facilities'] as $facility)
-                                            <li class="flex items-start gap-3 text-xs leading-relaxed text-slate-200">
-                                                <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#BA0030] text-white text-[10px] font-bold shadow-sm">
-                                                    ✓
-                                                </span>
-                                                <span class="font-medium">{{ $facility }}</span>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="mt-8 pt-4">
-                                <x-button
-                                    href="{{ $checkoutUrl }}"
-                                    variant="primary"
-                                    class="w-full !py-4 font-bold shadow-lg shadow-[#BA0030]/30 hover:scale-[1.02] transition"
-                                >
-                                    {{ $slot['button_text'] }}
-                                </x-button>
-                            </div>
-                        </div>
-                    @else
-                        <!-- Kiri (Starter) & Kanan (All-Access Pro) - Kartu Putih Bersih -->
-                        <div class="flex flex-col justify-between rounded-3xl bg-white p-8 border border-slate-200/90 shadow-md hover:shadow-xl transition-all duration-300 text-slate-900">
-                            <div>
                                 <div>
-                                    <h3 class="font-heading text-xl sm:text-2xl font-extrabold text-slate-900">
-                                        {{ $slot['name'] }}
-                                    </h3>
-                                    <p class="mt-1 text-xs text-slate-500 font-medium">
-                                        {{ $slot['commitment'] }}
-                                    </p>
-                                </div>
+                                    <!-- Header Paket -->
+                                    <div class="mb-6 mt-2">
+                                        <span
+                                            class="text-xs font-bold tracking-wider uppercase transition-colors"
+                                            :class="activeSlide === {{ $loop->iteration }} ? 'text-gray-400' : 'text-gray-500'"
+                                        >
+                                            {{ $package->tier }}
+                                        </span>
+                                        <h3 class="text-2xl font-bold mt-2 font-heading tracking-tight">{{ $package->name }}</h3>
+                                        <p
+                                            class="text-sm mt-1 transition-colors"
+                                            :class="activeSlide === {{ $loop->iteration }} ? 'text-gray-300' : 'text-gray-500'"
+                                        >
+                                            Komitmen {{ $package->duration_days }} Hari
+                                        </p>
+                                    </div>
 
-                                <!-- Price -->
-                                <div class="mt-6 flex items-baseline gap-1.5">
-                                    <span class="font-heading text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                                        {{ $slot['price_str'] }}
-                                    </span>
-                                    <span class="text-xs font-bold text-slate-500">
-                                        {{ $slot['period'] }}
-                                    </span>
-                                </div>
+                                    <!-- Harga -->
+                                    <div class="mb-8">
+                                        @if ($package->promo_price && $package->promo_price < $package->price)
+                                            <p
+                                                class="text-xs font-semibold line-through transition-colors"
+                                                :class="activeSlide === {{ $loop->iteration }} ? 'text-slate-400' : 'text-slate-400'"
+                                            >
+                                                Rp {{ number_format($package->price, 0, ',', '.') }}
+                                            </p>
+                                        @endif
+                                        <div class="flex items-baseline gap-1.5">
+                                            <span class="text-4xl font-extrabold font-heading tracking-tight">Rp {{ number_format($effectivePrice, 0, ',', '.') }}</span>
+                                            <span
+                                                class="text-xs font-bold transition-colors"
+                                                :class="activeSlide === {{ $loop->iteration }} ? 'text-slate-400' : 'text-slate-500'"
+                                            >
+                                                / {{ strtolower($package->duration_unit ?? 'bln') }}
+                                            </span>
+                                        </div>
+                                    </div>
 
-                                <!-- Facilities Checklist -->
-                                <div class="mt-7 border-t border-slate-100 pt-6">
-                                    <p class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-4">
-                                        Fasilitas &amp; Keuntungan Termasuk:
-                                    </p>
-                                    <ul class="space-y-3.5">
-                                        @foreach ($slot['facilities'] as $facility)
-                                            <li class="flex items-start gap-3 text-xs leading-relaxed text-slate-700">
-                                                <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#BA0030] text-white text-[10px] font-bold shadow-sm">
-                                                    ✓
-                                                </span>
-                                                <span class="font-medium">{{ $facility }}</span>
+                                    <!-- Fasilitas -->
+                                    <ul class="space-y-4 mb-8 flex-1">
+                                        @foreach ($facilities as $facility)
+                                            <li class="flex items-start gap-3 text-sm">
+                                                <svg
+                                                    class="w-5 h-5 shrink-0 text-[#BA0030]"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span class="leading-relaxed">{{ $facility }}</span>
                                             </li>
                                         @endforeach
+                                        @if ($package->pt_session_count > 0)
+                                            <li
+                                                class="flex items-start gap-3 text-sm font-semibold transition-colors"
+                                                :class="activeSlide === {{ $loop->iteration }} ? 'text-rose-300' : 'text-[#BA0030]'"
+                                            >
+                                                <svg
+                                                    class="w-5 h-5 shrink-0 text-[#BA0030]"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                    aria-hidden="true"
+                                                >
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                <span class="leading-relaxed">{{ $package->pt_session_count }} Sesi Personal Trainer Gratis</span>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
-                            </div>
 
-                            <div class="mt-8 pt-4">
-                                <x-button
-                                    href="{{ $checkoutUrl }}"
-                                    variant="outline"
-                                    class="w-full !py-4 font-bold border-slate-300 text-slate-800 hover:bg-slate-50 hover:border-slate-400 transition"
-                                >
-                                    {{ $slot['button_text'] }}
-                                </x-button>
+                                <!-- Tombol Action -->
+                                <div class="mt-4 pt-2">
+                                    <a
+                                        href="{{ $checkoutUrl }}"
+                                        class="block w-full text-center py-3.5 rounded-full font-bold transition-all shadow-md"
+                                        :class="activeSlide === {{ $loop->iteration }} ? 'bg-[#BA0030] text-white hover:bg-red-800 shadow-[#BA0030]/30 hover:scale-[1.02]' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'"
+                                    >
+                                        <span x-text="activeSlide === {{ $loop->iteration }} ? 'Gabung Elite Sekarang' : 'Pilih Paket Ini'">Pilih Paket Ini</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    @endif
-                @endforeach
+                    @empty
+                        <div class="w-full py-16 text-center">
+                            <p class="font-heading text-lg font-bold text-slate-700">Belum ada paket membership aktif</p>
+                            <p class="mt-2 text-sm text-slate-500">Silakan hubungi administrator gym untuk info paket terbaru.</p>
+                        </div>
+                    @endforelse
+                </div>
+
+                <!-- Tombol Panah Kanan (Ubah posisinya agar lebih keluar) -->
+                <button
+                    type="button"
+                    @click="scrollNext()"
+                    aria-label="Geser ke paket berikutnya"
+                    class="absolute -right-4 md:right-2 top-1/2 z-30 -translate-y-1/2 bg-white text-gray-800 shadow-xl rounded-full p-4 hover:bg-gray-50 focus:outline-none transition-transform hover:scale-110 border border-gray-100"
+                >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
             </div>
         </div>
     </section>
@@ -305,10 +313,10 @@
     <footer class="border-t border-slate-800 bg-[#0B0F17] text-slate-400 text-xs py-14 px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-10">
             <div class="space-y-3.5 md:col-span-2">
-                <div class="flex items-center gap-3">
-                    <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#BA0030] font-heading font-black text-white text-sm shadow-md shadow-[#BA0030]/30">
-                        FC
-                    </span>
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 shadow-md shadow-[#BA0030]/30 rounded-full">
+                        <rect width="36" height="36" rx="18" fill="#BA0030"/>
+                        <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="white"/>
+                    </svg>
                     <div>
                         <span class="font-heading font-extrabold text-white text-base tracking-wider">FITCORE <span class="text-[#BA0030]">ATHLETIC</span></span>
                         <p class="text-[9px] uppercase tracking-widest text-slate-400">Gym &amp; Performance Center</p>

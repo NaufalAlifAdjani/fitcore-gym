@@ -71,16 +71,17 @@
                         <button type="submit" class="sr-only">Cari</button>
                     </form>
 
-                    <button
+                    <x-button
                         type="button"
+                        variant="primary"
                         x-on:click="openCreateModal()"
-                        class="inline-flex items-center justify-center gap-2 rounded-full bg-[#BA0030] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#970027] focus:outline-none focus:ring-2 focus:ring-[#BA0030] focus:ring-offset-2"
+                        class="shadow-sm"
                     >
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                         </svg>
                         Tambah Paket
-                    </button>
+                    </x-button>
                 </div>
             </header>
 
@@ -91,7 +92,7 @@
             @endif
 
             <section aria-label="Ringkasan paket membership" class="mb-8 grid grid-cols-1 gap-5 md:grid-cols-3">
-                <article class="flex min-h-40 items-start justify-between rounded-[20px] bg-white p-6 shadow-[0px_1px_2px_rgba(0,0,0,0.05)]">
+                <x-card :padding="false" class="flex min-h-40 items-start justify-between p-6">
                     <div>
                         <p class="text-xs font-semibold uppercase tracking-[0.12em] text-[#858894]">Total Paket Gym</p>
                         <p class="mt-4 font-heading text-4xl font-extrabold leading-none text-[#16151A] sm:text-5xl">{{ $totalPackages }}</p>
@@ -103,9 +104,9 @@
                             <path d="M14 4v4h4M8.5 13h7M8.5 16.5h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                         </svg>
                     </span>
-                </article>
+                </x-card>
 
-                <article class="flex min-h-40 items-start justify-between rounded-[20px] bg-white p-6 shadow-[0px_1px_2px_rgba(0,0,0,0.05)]">
+                <x-card :padding="false" class="flex min-h-40 items-start justify-between p-6">
                     <div>
                         <p class="text-xs font-semibold uppercase tracking-[0.12em] text-[#858894]">Rata-rata Harga Paket Aktif</p>
                         <p class="mt-4 font-heading text-3xl font-extrabold leading-tight text-[#16151A] sm:text-[38px]">{{ $formattedAvgPrice }}</p>
@@ -117,9 +118,9 @@
                             <path d="M3.5 9h17M7.5 14h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                         </svg>
                     </span>
-                </article>
+                </x-card>
 
-                <article class="flex min-h-40 items-start justify-between rounded-[20px] bg-white p-6 shadow-[0px_1px_2px_rgba(0,0,0,0.05)]">
+                <x-card :padding="false" class="flex min-h-40 items-start justify-between p-6">
                     <div>
                         <p class="text-xs font-semibold uppercase tracking-[0.12em] text-[#858894]">Paket Aktif</p>
                         <p class="mt-4 font-heading text-4xl font-extrabold leading-none text-[#16151A] sm:text-5xl">{{ $activePackages }}</p>
@@ -131,10 +132,10 @@
                             <path d="M3.75 19v-1.2A4.8 4.8 0 0 1 8.55 13h.9a4.8 4.8 0 0 1 4.8 4.8V19M16 5.3a3.25 3.25 0 0 1 0 6.2m1.2 2a4.8 4.8 0 0 1 3.05 4.5V19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                         </svg>
                     </span>
-                </article>
+                </x-card>
             </section>
 
-            <section class="overflow-hidden rounded-[20px] bg-white shadow-[0px_1px_2px_rgba(0,0,0,0.05)]" aria-label="Daftar paket membership">
+            <x-card :padding="false" aria-label="Daftar paket membership">
                 <div class="flex flex-col gap-4 border-b border-[#F0F0F1] px-5 py-5 sm:px-7">
                     <div class="flex w-fit max-w-full flex-wrap items-center gap-1 rounded-full bg-[#EEEEEF] p-1">
                         @php
@@ -225,9 +226,9 @@
                                             </span>
                                             <div class="min-w-0">
                                                 @if ($pkg->badge)
-                                                    <span class="mb-1 inline-flex rounded-full px-2.5 py-1 text-[9px] font-extrabold tracking-[0.1em] {{ $badgeStyle }}">
+                                                    <x-badge :variant="strtolower($pkg->badge)" :dot="false" class="mb-1 text-[9px]">
                                                         {{ $pkg->badge }}
-                                                    </span>
+                                                    </x-badge>
                                                 @endif
                                                 <h2 class="font-heading text-[15px] font-bold leading-5 text-[#16151A]">{{ $pkg->name }}</h2>
                                                 @if ($pkg->description)
@@ -301,17 +302,19 @@
                                     </td>
 
                                     <td class="px-5 py-5 text-center">
-                                        <button
+                                        <x-button
                                             type="button"
+                                            variant="ghost"
+                                            size="xs"
                                             data-package="{{ json_encode($pkg->only(['id', 'name', 'badge', 'tier', 'description', 'price', 'promo_price', 'duration_value', 'duration_unit', 'duration_in_days', 'facilities', 'pt_sessions', 'is_active']), JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP) }}"
                                             x-on:click="openEditModal(JSON.parse($el.dataset.package))"
                                             aria-label="Edit paket {{ $pkg->name }}"
-                                            class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#F4F4F5] text-[#565A66] transition hover:bg-[#EEEEEF] hover:text-[#BA0030] focus:outline-none focus:ring-2 focus:ring-[#BA0030]"
+                                            class="!h-10 !w-10 !p-0 !rounded-full bg-[#F4F4F5] text-[#565A66] hover:bg-[#EEEEEF] hover:text-[#BA0030]"
                                         >
                                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                                 <path d="m14.5 6.5 3 3M4 20l4.3-.9L19 8.4a2.12 2.12 0 0 0-3-3L5.3 16.1 4 20Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
-                                        </button>
+                                        </x-button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -348,7 +351,7 @@
                         </nav>
                     </footer>
                 @endif
-            </section>
+            </x-card>
         </div>
 
         @include('admin.packages.partials.modal')

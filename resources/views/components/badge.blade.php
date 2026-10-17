@@ -1,24 +1,25 @@
 @props([
-    'variant' => 'neutral',
+    'type' => null,
+    'variant' => null,
     'status' => null,
     'size' => 'md',
     'dot' => true,
 ])
 
 @php
-    $effectiveVariant = strtolower($status ?? $variant);
+    $effectiveType = strtolower($type ?? $status ?? $variant ?? 'default');
 
-    $variantClasses = match ($effectiveVariant) {
-        'pending', 'warning', 'menunggu' => 'bg-amber-50 text-amber-700 ring-amber-200',
-        'verified', 'terverifikasi', 'active', 'aktif', 'success' => 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-        'rejected', 'ditolak', 'inactive', 'nonaktif', 'danger' => 'bg-rose-50 text-rose-700 ring-rose-200',
+    $typeClasses = match ($effectiveType) {
+        'success', 'verified', 'terverifikasi', 'active', 'aktif' => 'bg-green-100 text-green-800 ring-green-200',
+        'warning', 'pending', 'menunggu' => 'bg-yellow-100 text-yellow-800 ring-yellow-200',
+        'danger', 'rejected', 'ditolak', 'inactive', 'nonaktif' => 'bg-red-100 text-red-800 ring-red-200',
         'best seller' => 'bg-[#BA0030] text-white ring-transparent',
         'platinum vip' => 'bg-[#1E1E1E] text-white ring-transparent',
         'gold standard' => 'bg-amber-100 text-amber-800 ring-amber-300',
         'silver' => 'bg-[#E5E2E1] text-[#565A66] ring-gray-300',
         'student tier' => 'bg-sky-100 text-sky-800 ring-sky-200',
         'primary' => 'bg-[#BA0030]/10 text-[#BA0030] ring-[#BA0030]/20',
-        default => 'bg-[#EEEEEF] text-[#565A66] ring-gray-200',
+        default => 'bg-gray-100 text-gray-800 ring-gray-200',
     };
 
     $sizeClasses = match ($size) {
@@ -30,10 +31,11 @@
 @endphp
 
 <span {{ $attributes->merge([
-    'class' => "inline-flex items-center gap-1.5 rounded-full font-bold uppercase tracking-wide ring-1 ring-inset transition-colors {$sizeClasses} {$variantClasses}"
+    'class' => "inline-flex items-center gap-1.5 rounded-full font-bold uppercase tracking-wide ring-1 ring-inset transition-colors {$sizeClasses} {$typeClasses}"
 ]) }}>
     @if ($dot)
         <span class="h-1.5 w-1.5 rounded-full bg-current shrink-0" aria-hidden="true"></span>
     @endif
-    <span>{{ $slot->isEmpty() ? ($status ? ucfirst($status) : '') : $slot }}</span>
+    <span>{{ $slot->isEmpty() ? ($status ? strtoupper($status) : ($type && $type !== 'default' ? strtoupper($type) : '')) : $slot }}</span>
 </span>
+

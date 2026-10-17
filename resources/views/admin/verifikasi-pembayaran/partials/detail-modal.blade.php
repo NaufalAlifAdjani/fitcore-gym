@@ -81,12 +81,13 @@
                                 <dd>
                                     <x-badge
                                         x-bind:class="{
-                                            'bg-amber-50 text-amber-700 ring-amber-200': selectedPayment.status === 'pending',
-                                            'bg-emerald-50 text-emerald-700 ring-emerald-200': selectedPayment.status === 'verified',
-                                            'bg-rose-50 text-rose-700 ring-rose-200': selectedPayment.status === 'rejected'
+                                            'bg-yellow-100 text-yellow-800 ring-yellow-200': selectedPayment.status === 'pending',
+                                            'bg-green-100 text-green-800 ring-green-200': selectedPayment.status === 'verified',
+                                            'bg-red-100 text-red-800 ring-red-200': selectedPayment.status === 'rejected'
                                         }"
-                                        x-text="{pending: 'Menunggu verifikasi', verified: 'Terverifikasi', rejected: 'Ditolak'}[selectedPayment.status]"
-                                    ></x-badge>
+                                    >
+                                        <span x-text="{pending: 'Menunggu verifikasi', verified: 'Terverifikasi', rejected: 'Ditolak'}[selectedPayment.status]"></span>
+                                    </x-badge>
                                 </dd>
                             </div>
                         </dl>

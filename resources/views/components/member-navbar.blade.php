@@ -6,11 +6,10 @@
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
         <!-- Logo -->
         <a href="{{ route('member.dashboard') }}" class="flex items-center gap-3 group">
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#BA0030] text-white shadow-[0_0_15px_rgba(186,0,48,0.5)] transition group-hover:scale-105">
-                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M6.5 6.5h11M6.5 17.5h11M4 9.5h16M4 14.5h16M8.5 4.5v15M15.5 4.5v15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-            </span>
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 rounded-full shadow-[0_0_15px_rgba(186,0,48,0.5)] transition group-hover:scale-105">
+                <rect width="36" height="36" rx="18" fill="#BA0030"/>
+                <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="white"/>
+            </svg>
             <div class="flex flex-col">
                 <span class="font-heading text-lg font-extrabold tracking-wider text-white">
                     FITCORE <span class="text-[#BA0030]">ATHLETIC</span>

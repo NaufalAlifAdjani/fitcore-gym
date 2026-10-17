@@ -2,8 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\PtSession;
 use App\Models\MemberProfile;
+use App\Models\MemberPtQuota;
+use App\Models\PtSession;
 use App\Models\TrainerProfile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -14,8 +15,9 @@ class PtSessionFactory extends Factory
     public function definition(): array
     {
         $startTime = fake()->numberBetween(8, 20);
+
         return [
-            'member_pt_quota_id' => \App\Models\MemberPtQuota::factory(),
+            'member_pt_quota_id' => MemberPtQuota::factory(),
             'member_id' => MemberProfile::factory(),
             'trainer_id' => TrainerProfile::factory(),
             'session_date' => fake()->dateTimeBetween('-1 month', '+1 month')->format('Y-m-d'),
