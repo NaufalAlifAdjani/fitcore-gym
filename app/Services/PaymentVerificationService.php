@@ -122,7 +122,7 @@ class PaymentVerificationService
             ->whereDate('end_date', '<', $startDate)
             ->update(['status' => 'expired']);
 
-        Membership::query()->create([
+        $membership = Membership::query()->create([
             'member_id' => $payment->member_id,
             'membership_package_id' => $package->id,
             'payment_id' => $payment->id,
@@ -130,6 +130,20 @@ class PaymentVerificationService
             'end_date' => $endDate,
             'status' => 'active',
         ]);
+
+        if ($package->pt_session_count > 0) {
+            MemberPtQuota::create([
+                'member_id' => $payment->member_id,
+                'membership_id' => $membership->id,
+                'source' => 'bundling',
+                'total_sessions' => $package->pt_session_count,
+                'remaining_sessions' => $package->pt_session_count,
+                'used_sessions' => 0,
+                'start_date' => $membership->start_date,
+                'end_date' => $membership->end_date,
+                'status' => 'active',
+            ]);
+        }
     }
 
     private function activatePtPackage(Payment $payment): void
