@@ -22,7 +22,9 @@ class PaymentVerificationControllerTest extends TestCase
     {
         $this->actingAs(User::factory()->create(['role' => 'admin']));
         $member = User::factory()->create(['role' => 'member', 'name' => 'Ayu Member']);
-        $payment = $this->createPayment($member);
+        $payment = $this->createPayment($member, ['status' => 'pending']);
+        $verifiedPayment = $this->createPayment($member, ['status' => 'verified']);
+        $rejectedPayment = $this->createPayment($member, ['status' => 'rejected']);
 
         $this->get(route('admin.payments.index'))
             ->assertOk()
@@ -30,6 +32,14 @@ class PaymentVerificationControllerTest extends TestCase
             ->assertSee('Invoice ID')
             ->assertSee('Ayu Member')
             ->assertSee($payment->invoice_id)
+            ->assertSee($verifiedPayment->invoice_id)
+            ->assertSee($rejectedPayment->invoice_id)
+            ->assertSee('PENDING')
+            ->assertSee('TERVERIFIKASI')
+            ->assertSee('DITOLAK')
+            ->assertSee('bg-yellow-100 text-yellow-800', false)
+            ->assertSee('bg-green-100 text-green-800', false)
+            ->assertSee('bg-red-100 text-red-800', false)
             ->assertSee('Detail / Verifikasi')
             ->assertSee('paymentVerification', false);
     }
@@ -213,6 +223,45 @@ class PaymentVerificationControllerTest extends TestCase
         $this->actingAs(User::factory()->create(['role' => 'member']))
             ->postJson(route('admin.payments.approve', $payment))
             ->assertForbidden();
+    }
+
+    public function test_approving_membership_with_pt_sessions_creates_member_pt_quota_record(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $member = User::factory()->create(['role' => 'member']);
+        $package = MembershipPackage::create([
+            'name' => 'VIP Bundling PT',
+            'badge' => 'VIP',
+            'tier' => 'VIP',
+            'description' => 'Paket membership dengan jatah 4 sesi PT',
+            'price' => 1200000,
+            'duration_days' => 30,
+            'duration_in_days' => 30,
+            'facilities' => ['All Access'],
+            'pt_session_count' => 4,
+            'is_active' => true,
+        ]);
+        $payment = $this->createPayment($member, [
+            'package_id' => $package->id,
+            'amount' => 1200000,
+        ]);
+        $this->actingAs($admin);
+
+        $this->postJson(route('admin.payments.approve', $payment))
+            ->assertOk()
+            ->assertJsonPath('success', true);
+
+        $membership = Membership::query()->where('payment_id', $payment->id)->firstOrFail();
+
+        $this->assertDatabaseHas('member_pt_quotas', [
+            'member_id' => $member->id,
+            'membership_id' => $membership->id,
+            'source' => 'bundling',
+            'total_sessions' => 4,
+            'remaining_sessions' => 4,
+            'used_sessions' => 0,
+            'status' => 'active',
+        ]);
     }
 
     private function createPayment(User $member, array $overrides = []): Payment
