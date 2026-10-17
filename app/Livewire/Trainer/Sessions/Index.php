@@ -295,6 +295,7 @@ class Index extends Component
             unset($this->sessions, $this->tasksList, $this->monthSessions, $this->taskStatusCounts);
 
             session()->flash('success', 'Sesi berhasil diterima dan status diubah menjadi terkonfirmasi.');
+            $this->dispatch('toast', type: 'success', message: 'Sesi berhasil diterima dan status diubah menjadi terkonfirmasi.');
         }
     }
 
@@ -327,6 +328,7 @@ class Index extends Component
             unset($this->sessions, $this->tasksList, $this->monthSessions, $this->taskStatusCounts);
 
             session()->flash('success', 'Sesi ditolak dan status diubah menjadi dibatalkan.');
+            $this->dispatch('toast', type: 'success', message: 'Sesi ditolak dan status diubah menjadi dibatalkan.');
         }
     }
 

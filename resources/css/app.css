@@ -9,3 +9,7 @@
     background: #ED1B45 !important;
     border-color: #ED1B45 !important;
 }
+
+[x-cloak] {
+    display: none !important;
+}

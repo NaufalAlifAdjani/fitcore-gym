@@ -48,7 +48,7 @@ class PtSessionSlotController extends Controller
         $validated = $request->validate([
             'trainer_id' => ['required', 'integer', 'exists:users,id'],
             'start_date' => ['nullable', 'date'],
-            'days' => ['nullable', 'integer', 'min:1', 'max:30'],
+            'days' => ['nullable', 'integer', 'min:1', 'max:42'],
         ]);
 
         $trainer = User::findOrFail($validated['trainer_id']);

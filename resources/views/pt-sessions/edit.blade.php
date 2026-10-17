@@ -59,48 +59,152 @@
                 <!-- Left Column (8 cols): Date & Slot Picker -->
                 <div class="lg:col-span-8 space-y-6">
 
-                    <!-- Card 1: Pilih Tanggal Sesi -->
-                    <div class="bg-white rounded-2xl border border-[#E5E7EB] p-6 shadow-sm space-y-5">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-base font-bold text-[#16151A] font-heading">
-                                Pilih Tanggal Baru
-                            </h2>
-
-                            <!-- Month Navigation -->
-                            <div class="flex items-center gap-3 text-xs font-bold text-[#16151A]">
-                                <button type="button" @click="changeWeek(-7)"
-                                    class="p-1 hover:text-[#ED1B45] transition-colors">
-                                    &lsaquo;
+                    <!-- Card 1: Pilih Tanggal Sesi (Google Calendar Month Grid) -->
+                    <div class="bg-white rounded-2xl border border-[#E5E7EB] p-5 sm:p-6 shadow-sm space-y-4">
+                        <!-- Calendar Header Toolbar -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#E5E7EB]">
+                            <div class="flex items-center gap-2">
+                                <!-- Today Button -->
+                                <button 
+                                    type="button" 
+                                    @click="goToToday()"
+                                    class="px-3 py-1.5 rounded-full border border-[#E5E7EB] text-xs font-semibold text-[#16151A] hover:bg-gray-50 transition cursor-pointer"
+                                >
+                                    Hari Ini
                                 </button>
-                                <span x-text="currentMonthYear">Oktober 2026</span>
-                                <button type="button" @click="changeWeek(7)"
-                                    class="p-1 hover:text-[#ED1B45] transition-colors">
-                                    &rsaquo;
+
+                                <!-- Month Navigation Arrows -->
+                                <button 
+                                    type="button" 
+                                    @click="prevMonth()"
+                                    class="w-8 h-8 rounded-full flex items-center justify-center text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 transition cursor-pointer"
+                                    aria-label="Bulan Sebelumnya"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                    </svg>
+                                </button>
+                                <button 
+                                    type="button" 
+                                    @click="nextMonth()"
+                                    class="w-8 h-8 rounded-full flex items-center justify-center text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 transition cursor-pointer"
+                                    aria-label="Bulan Berikutnya"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </button>
+
+                                <!-- Month Title -->
+                                <h2 class="text-base sm:text-xl font-bold text-[#16151A] tracking-tight ml-1 font-['Poppins']" x-text="currentMonthYear">
+                                    Oktober 2026
+                                </h2>
+                            </div>
+
+                            <!-- Right: View Segmented Switcher (Bulan / 7 Hari) -->
+                            <div class="inline-flex rounded-full border border-[#E5E7EB] p-0.5 bg-gray-100 shadow-2xs self-start sm:self-auto">
+                                <button 
+                                    type="button" 
+                                    @click="calendarView = 'month'"
+                                    class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+                                    :class="calendarView === 'month' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]'"
+                                >
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <span>Kalender Bulan</span>
+                                </button>
+                                <button 
+                                    type="button" 
+                                    @click="calendarView = 'week'"
+                                    class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
+                                    :class="calendarView === 'week' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]'"
+                                >
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                                    <span>Strip 7 Hari</span>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- 7 Days Strip -->
-                        <div class="grid grid-cols-7 gap-2.5 sm:gap-3">
-                            <template x-for="day in dateStrip" :key="day.date">
-                                <button type="button" @click="selectDate(day.date)" :disabled="!day.has_slots" :class="{
+                        <!-- Tampilan Kalender Bulan (Default - Sama seperti Trainer Dashboard) -->
+                        <div x-show="calendarView === 'month'" class="rounded-2xl border border-[#E5E7EB] overflow-hidden bg-white">
+                            <!-- Day Names Header Row (SUN, MON, TUE, WED, THU, FRI, SAT) -->
+                            <div class="grid grid-cols-7 border-b border-[#E5E7EB] bg-white text-center">
+                                <template x-for="header in ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']" :key="header">
+                                    <div class="text-[11px] font-semibold text-[#565A66] uppercase tracking-wider py-2.5" x-text="header"></div>
+                                </template>
+                            </div>
+
+                            <!-- 7 Columns Calendar Body Grid -->
+                            <div class="grid grid-cols-7 border-t border-[#E5E7EB] divide-x divide-[#E5E7EB]">
+                                <template x-for="day in monthDays" :key="day.date">
+                                    <div 
+                                        @click="!day.isPast && selectDate(day.date)"
+                                        :class="{
+                                            'bg-[#ED1B45]/10 ring-2 ring-inset ring-[#ED1B45] font-bold': selectedDate === day.date,
+                                            'bg-white hover:bg-gray-50/80 cursor-pointer': selectedDate !== day.date && !day.isPast && day.isCurrentMonth,
+                                            'bg-gray-50/50 hover:bg-gray-100/70 cursor-pointer': selectedDate !== day.date && !day.isPast && !day.isCurrentMonth,
+                                            'bg-gray-50/70 opacity-40 cursor-not-allowed': day.isPast
+                                        }"
+                                        class="min-h-[68px] sm:min-h-[80px] p-1.5 border-b border-[#E5E7EB] flex flex-col items-center justify-between transition select-none"
+                                    >
+                                        <!-- Day Number Header -->
+                                        <div class="flex items-center justify-center mt-0.5">
+                                            <template x-if="selectedDate === day.date">
+                                                <div class="w-7 h-7 rounded-full bg-[#ED1B45] text-white font-bold text-xs sm:text-sm flex items-center justify-center shadow-xs" x-text="day.dayNum"></div>
+                                            </template>
+                                            <template x-if="selectedDate !== day.date && day.isToday">
+                                                <div class="w-7 h-7 rounded-full bg-white border-2 border-[#ED1B45] text-[#ED1B45] font-bold text-xs sm:text-sm flex items-center justify-center shadow-2xs" x-text="day.dayNum"></div>
+                                            </template>
+                                            <template x-if="selectedDate !== day.date && !day.isToday">
+                                                <span class="text-xs sm:text-sm font-medium" :class="day.isCurrentMonth ? 'text-[#16151A]' : 'text-gray-400'" x-text="day.dayNum"></span>
+                                            </template>
+                                        </div>
+
+                                        <!-- Slot Availability Indicator -->
+                                        <div class="mt-1 flex items-center justify-center">
+                                            <template x-if="!day.isPast && availabilityMap[day.date] === true">
+                                                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
+                                                      :class="selectedDate === day.date ? 'bg-[#ED1B45] text-white' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'">
+                                                    <span class="w-1.5 h-1.5 rounded-full" :class="selectedDate === day.date ? 'bg-white' : 'bg-emerald-500'"></span>
+                                                    <span class="hidden sm:inline">Ada slot</span>
+                                                </span>
+                                            </template>
+                                            <template x-if="!day.isPast && availabilityMap[day.date] === false">
+                                                <span class="text-[9px] text-zinc-400 font-medium">Penuh</span>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Tampilan Strip 7 Hari (Opsional) -->
+                        <div x-show="calendarView === 'week'" class="space-y-3">
+                            <div class="grid grid-cols-7 gap-2 sm:gap-3">
+                                <template x-for="day in dateStrip" :key="day.date">
+                                    <button 
+                                        type="button" 
+                                        @click="selectDate(day.date)" 
+                                        :disabled="!day.has_slots" 
+                                        :class="{
                                             'bg-[#ED1B45] text-white shadow-lg shadow-[#ED1B45]/30 ring-2 ring-[#ED1B45] scale-102': selectedDate === day.date,
                                             'bg-white hover:bg-zinc-50 text-[#16151A] border border-[#E5E7EB]': selectedDate !== day.date && day.has_slots,
                                             'bg-zinc-50 text-zinc-400 border border-zinc-200 cursor-not-allowed opacity-60': !day.has_slots
                                         }"
-                                    class="flex flex-col items-center justify-center py-4 px-1 rounded-2xl transition-all duration-200 text-center">
-                                    <span class="text-xs font-semibold" :class="{
+                                        class="flex flex-col items-center justify-center py-4 px-1 rounded-2xl transition-all duration-200 text-center cursor-pointer"
+                                    >
+                                        <span class="text-xs font-semibold" :class="{
                                             'text-white': selectedDate === day.date && day.has_slots,
                                             'text-[#565A66]': selectedDate !== day.date && day.has_slots,
                                             'text-zinc-400': !day.has_slots
                                         }" x-text="day.day_name"></span>
-                                    <span class="text-xl font-extrabold my-1 font-heading" :class="{
+                                        <span class="text-xl font-extrabold my-1 font-heading" :class="{
                                             'text-white': selectedDate === day.date && day.has_slots,
                                             'text-[#16151A]': selectedDate !== day.date && day.has_slots,
                                             'text-zinc-400': !day.has_slots
                                         }" x-text="day.day_num"></span>
-                                </button>
-                            </template>
+                                    </button>
+                                </template>
+                            </div>
                         </div>
                     </div>
 
@@ -296,6 +400,22 @@
 
     <!-- Alpine Reschedule Script -->
     <script>
+        function formatLocalDate(dateObj) {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function parseLocalDate(dateStr) {
+            if (!dateStr) return new Date();
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+            }
+            return new Date(dateStr);
+        }
+
         function ptReschedule(config) {
             return {
                 sessionId: config.sessionId,
@@ -303,39 +423,110 @@
                 selectedDate: config.initialDate,
                 selectedSlot: config.currentSlot,
                 isLoadingSlots: false,
+                calendarView: 'month',
+                currentViewDate: parseLocalDate(config.initialDate),
+                monthDays: [],
+                availabilityMap: {},
                 dateStrip: [],
                 slots: { morning: [], afternoon: [], evening: [] },
                 formattedSelectedDate: '',
                 endSlotTime: '',
-                currentMonthYear: 'Oktober 2026',
+                currentMonthYear: '',
 
                 async init() {
                     this.computeEndTime(this.selectedSlot);
-                    await this.fetchAvailability();
+                    this.generateMonthGrid();
+                    await Promise.all([
+                        this.fetchMonthAvailability(),
+                        this.fetchAvailability(this.selectedDate)
+                    ]);
 
-                    const initialDay = this.dateStrip.find(d => d.date === this.selectedDate);
-                    if (!initialDay || !initialDay.has_slots) {
-                        const firstAvailable = this.dateStrip.find(d => d.has_slots);
-                        if (firstAvailable) {
-                            this.selectedDate = firstAvailable.date;
-                        }
+                    if (this.selectedDate) {
+                        await this.fetchSlots(this.selectedDate);
                     }
-
-                    await this.fetchSlots(this.selectedDate);
                 },
 
-                async fetchAvailability() {
+                generateMonthGrid() {
+                    const year = this.currentViewDate.getFullYear();
+                    const month = this.currentViewDate.getMonth();
+
+                    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                    this.currentMonthYear = `${months[month]} ${year}`;
+
+                    const startOfMonth = new Date(year, month, 1);
+                    const startDayOfWeek = startOfMonth.getDay(); // 0 is Sun
+
+                    const endOfMonth = new Date(year, month + 1, 0);
+
+                    const totalCells = (startDayOfWeek + endOfMonth.getDate() <= 35) ? 35 : 42;
+                    const days = [];
+                    const todayStr = formatLocalDate(new Date());
+
+                    for (let i = 0; i < totalCells; i++) {
+                        const d = new Date(year, month, (1 - startDayOfWeek) + i);
+                        const dateStr = formatLocalDate(d);
+                        const isCurrentMonth = d.getMonth() === month;
+                        const isToday = dateStr === todayStr;
+                        const isPast = dateStr < todayStr;
+
+                        days.push({
+                            date: dateStr,
+                            dayNum: d.getDate(),
+                            isCurrentMonth,
+                            isToday,
+                            isPast,
+                        });
+                    }
+                    this.monthDays = days;
+                },
+
+                async fetchMonthAvailability() {
+                    if (!this.monthDays.length) return;
+                    const startDateStr = this.monthDays[0].date;
                     try {
-                        const url = `${config.availabilityUrl}?trainer_id=${this.trainerId}&start_date=${this.selectedDate}&days=7`;
+                        const url = `${config.availabilityUrl}?trainer_id=${this.trainerId}&start_date=${startDateStr}&days=42`;
+                        const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                        if (res.ok) {
+                            const data = await res.json();
+                            const map = {};
+                            (data.days || []).forEach(d => {
+                                map[d.date] = d.has_slots;
+                            });
+                            this.availabilityMap = map;
+                        }
+                    } catch (e) {
+                        console.error('Failed fetching month availability', e);
+                    }
+                },
+
+                async prevMonth() {
+                    this.currentViewDate = new Date(this.currentViewDate.getFullYear(), this.currentViewDate.getMonth() - 1, 1);
+                    this.generateMonthGrid();
+                    await this.fetchMonthAvailability();
+                },
+
+                async nextMonth() {
+                    this.currentViewDate = new Date(this.currentViewDate.getFullYear(), this.currentViewDate.getMonth() + 1, 1);
+                    this.generateMonthGrid();
+                    await this.fetchMonthAvailability();
+                },
+
+                async goToToday() {
+                    this.currentViewDate = new Date();
+                    this.generateMonthGrid();
+                    await this.fetchMonthAvailability();
+                    const todayStr = formatLocalDate(new Date());
+                    this.selectDate(todayStr);
+                },
+
+                async fetchAvailability(startDate) {
+                    const dateToUse = startDate || config.initialDate;
+                    try {
+                        const url = `${config.availabilityUrl}?trainer_id=${this.trainerId}&start_date=${dateToUse}&days=7`;
                         const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
                         if (res.ok) {
                             const data = await res.json();
                             this.dateStrip = data.days || [];
-                            if (this.dateStrip.length > 0) {
-                                const d = new Date(this.selectedDate);
-                                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                                this.currentMonthYear = `${months[d.getMonth()]} ${d.getFullYear()}`;
-                            }
                         }
                     } catch (e) {
                         console.error('Failed fetching availability', e);
@@ -364,9 +555,6 @@
                     this.selectedDate = date;
                     this.selectedSlot = '';
                     this.endSlotTime = '';
-                    const d = new Date(date);
-                    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                    this.currentMonthYear = `${months[d.getMonth()]} ${d.getFullYear()}`;
                     this.fetchSlots(date);
                 },
 
@@ -380,34 +568,6 @@
                     const [h, m] = time.split(':').map(Number);
                     const endH = String((h + 1) % 24).padStart(2, '0');
                     this.endSlotTime = `${endH}:${String(m).padStart(2, '0')}`;
-                },
-
-                async changeWeek(offsetDays) {
-                    const current = new Date(this.selectedDate);
-                    current.setDate(current.getDate() + offsetDays);
-
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-
-                    if (current < today && offsetDays < 0) {
-                        current.setTime(today.getTime());
-                    }
-
-                    this.selectedDate = current.toISOString().split('T')[0];
-                    this.selectedSlot = '';
-                    this.endSlotTime = '';
-
-                    await this.fetchAvailability();
-
-                    const initialDay = this.dateStrip.find(d => d.date === this.selectedDate);
-                    if (!initialDay || !initialDay.has_slots) {
-                        const firstAvailable = this.dateStrip.find(d => d.has_slots);
-                        if (firstAvailable) {
-                            this.selectedDate = firstAvailable.date;
-                        }
-                    }
-
-                    await this.fetchSlots(this.selectedDate);
                 }
             };
         }
