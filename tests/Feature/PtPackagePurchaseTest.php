@@ -11,6 +11,8 @@ use App\Models\Payment;
 use App\Models\PtPackage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PtPackagePurchaseTest extends TestCase
@@ -24,37 +26,47 @@ class PtPackagePurchaseTest extends TestCase
     {
         $member = User::factory()->create(array_merge(['role' => 'member'], $attributes));
         MemberProfile::factory()->create(['user_id' => $member->id]);
+
         return $member;
+    }
+
+    /** Create an admin user */
+    private function createAdmin(array $attributes = []): User
+    {
+        /** @var User $admin */
+        $admin = User::factory()->create(array_merge(['role' => 'admin'], $attributes));
+
+        return $admin;
     }
 
     /** Create an active membership for a member with specific remaining days */
     private function createActiveMembership(User $member, int $remainingDays = 30): Membership
     {
         $pkg = MembershipPackage::factory()->create([
-            'name'          => 'Gold Membership',
+            'name' => 'Gold Membership',
             'duration_days' => 90,
-            'price'         => 500000,
+            'price' => 500000,
         ]);
 
         $today = now('Asia/Jakarta')->startOfDay();
 
         $membership = Membership::factory()->create([
-            'member_id'             => $member->id,
+            'member_id' => $member->id,
             'membership_package_id' => $pkg->id,
-            'start_date'            => $today->copy()->subDays(10)->toDateString(),
-            'end_date'              => $today->copy()->addDays($remainingDays)->toDateString(),
-            'status'                => 'active',
+            'start_date' => $today->copy()->subDays(10)->toDateString(),
+            'end_date' => $today->copy()->addDays($remainingDays)->toDateString(),
+            'status' => 'active',
         ]);
 
         $bank = Bank::factory()->create(['status' => 'active']);
 
         Payment::factory()->create([
-            'member_id'     => $member->id,
+            'member_id' => $member->id,
             'membership_id' => $membership->id,
-            'payment_type'  => 'membership',
-            'amount'        => 500000,
-            'bank_id'       => $bank->id,
-            'status'        => 'verified',
+            'payment_type' => 'membership',
+            'amount' => 500000,
+            'bank_id' => $bank->id,
+            'status' => 'verified',
         ]);
 
         return $membership;
@@ -69,11 +81,11 @@ class PtPackagePurchaseTest extends TestCase
         $this->createActiveMembership($member, 45);
 
         PtPackage::factory()->create([
-            'name'                => 'PT 10 Sesi',
-            'pt_session_count'    => 10,
-            'price'               => 900000,
+            'name' => 'PT 10 Sesi',
+            'pt_session_count' => 10,
+            'price' => 900000,
             'min_membership_days' => 30,
-            'status'              => 'active',
+            'status' => 'active',
         ]);
 
         $response = $this->actingAs($member)->get(route('member.pt-packages.index'));
@@ -93,14 +105,14 @@ class PtPackagePurchaseTest extends TestCase
     /** Test 3: Admin or Trainer cannot access member purchase endpoint */
     public function test_non_member_cannot_access_member_pt_packages(): void
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        $admin = $this->createAdmin();
 
         $response = $this->actingAs($admin)->get(route('member.pt-packages.index'));
         $response->assertStatus(403);
 
         $postResponse = $this->actingAs($admin)->post(route('member.pt-packages.buy'), [
             'pt_package_id' => 1,
-            'bank_id'       => 1,
+            'bank_id' => 1,
         ]);
         $postResponse->assertStatus(403);
     }
@@ -112,12 +124,12 @@ class PtPackagePurchaseTest extends TestCase
         $membership = $this->createActiveMembership($member, 40); // 40 days remaining
 
         $package = PtPackage::factory()->create([
-            'name'                => 'PT 10 Sesi',
-            'pt_session_count'    => 10,
-            'price'               => 900000,
+            'name' => 'PT 10 Sesi',
+            'pt_session_count' => 10,
+            'price' => 900000,
             'min_membership_days' => 30, // Requires 30 days (40 >= 30, OK)
-            'validity_days'       => 90,
-            'status'              => 'active',
+            'validity_days' => 90,
+            'status' => 'active',
         ]);
 
         $bank = Bank::factory()->create(['status' => 'active']);
@@ -125,7 +137,7 @@ class PtPackagePurchaseTest extends TestCase
         $response = $this->actingAs($member)
             ->postJson(route('member.pt-packages.buy'), [
                 'pt_package_id' => $package->id,
-                'bank_id'       => $bank->id,
+                'bank_id' => $bank->id,
             ]);
 
         $response->assertStatus(201);
@@ -135,25 +147,25 @@ class PtPackagePurchaseTest extends TestCase
 
         // Verify Payment is stored
         $this->assertDatabaseHas('payments', [
-            'member_id'     => $member->id,
+            'member_id' => $member->id,
             'membership_id' => $membership->id,
             'pt_package_id' => $package->id,
-            'bank_id'       => $bank->id,
-            'payment_type'  => 'pt_package',
-            'amount'        => 900000,
-            'status'        => 'pending',
+            'bank_id' => $bank->id,
+            'payment_type' => 'pt_package',
+            'amount' => 900000,
+            'status' => 'pending',
         ]);
 
         // Verify MemberPtQuota is stored
         $this->assertDatabaseHas('member_pt_quotas', [
-            'member_id'          => $member->id,
-            'membership_id'      => $membership->id,
-            'pt_package_id'      => $package->id,
-            'source'             => 'purchase',
-            'total_sessions'     => 10,
-            'used_sessions'      => 0,
+            'member_id' => $member->id,
+            'membership_id' => $membership->id,
+            'pt_package_id' => $package->id,
+            'source' => 'purchase',
+            'total_sessions' => 10,
+            'used_sessions' => 0,
             'remaining_sessions' => 10,
-            'status'             => 'active',
+            'status' => 'active',
         ]);
     }
 
@@ -164,11 +176,11 @@ class PtPackagePurchaseTest extends TestCase
         $this->createActiveMembership($member, 15); // Only 15 days remaining
 
         $package = PtPackage::factory()->create([
-            'name'                => 'PT 10 Sesi',
-            'pt_session_count'    => 10,
-            'price'               => 900000,
+            'name' => 'PT 10 Sesi',
+            'pt_session_count' => 10,
+            'price' => 900000,
             'min_membership_days' => 30, // Requires 30 days (15 < 30, REJECT)
-            'status'              => 'active',
+            'status' => 'active',
         ]);
 
         $bank = Bank::factory()->create(['status' => 'active']);
@@ -176,24 +188,24 @@ class PtPackagePurchaseTest extends TestCase
         $response = $this->actingAs($member)
             ->postJson(route('member.pt-packages.buy'), [
                 'pt_package_id' => $package->id,
-                'bank_id'       => $bank->id,
+                'bank_id' => $bank->id,
             ]);
 
         $response->assertStatus(422);
         $response->assertJson([
-            'success'        => false,
-            'required_days'  => 30,
+            'success' => false,
+            'required_days' => 30,
             'remaining_days' => 15,
         ]);
         $this->assertStringContainsString('kurang dari syarat minimum', $response->json('message'));
 
         // Ensure no payment or quota was created
         $this->assertDatabaseMissing('payments', [
-            'member_id'     => $member->id,
+            'member_id' => $member->id,
             'pt_package_id' => $package->id,
         ]);
         $this->assertDatabaseMissing('member_pt_quotas', [
-            'member_id'     => $member->id,
+            'member_id' => $member->id,
             'pt_package_id' => $package->id,
         ]);
     }
@@ -204,11 +216,11 @@ class PtPackagePurchaseTest extends TestCase
         $member = $this->createMember(); // No active membership
 
         $package = PtPackage::factory()->create([
-            'name'                => 'PT 5 Sesi',
-            'pt_session_count'    => 5,
-            'price'               => 500000,
+            'name' => 'PT 5 Sesi',
+            'pt_session_count' => 5,
+            'price' => 500000,
             'min_membership_days' => 30,
-            'status'              => 'active',
+            'status' => 'active',
         ]);
 
         $bank = Bank::factory()->create(['status' => 'active']);
@@ -216,19 +228,19 @@ class PtPackagePurchaseTest extends TestCase
         $response = $this->actingAs($member)
             ->postJson(route('member.pt-packages.buy'), [
                 'pt_package_id' => $package->id,
-                'bank_id'       => $bank->id,
+                'bank_id' => $bank->id,
             ]);
 
         $response->assertStatus(422);
         $response->assertJson([
-            'success'        => false,
-            'required_days'  => 30,
+            'success' => false,
+            'required_days' => 30,
             'remaining_days' => 0,
         ]);
         $this->assertStringContainsString('belum memiliki membership aktif', $response->json('message'));
 
         $this->assertDatabaseMissing('member_pt_quotas', [
-            'member_id'     => $member->id,
+            'member_id' => $member->id,
             'pt_package_id' => $package->id,
         ]);
     }
@@ -239,12 +251,12 @@ class PtPackagePurchaseTest extends TestCase
         $member = $this->createMember();
 
         $package = PtPackage::factory()->create([
-            'name'                => 'PT Trial Session',
-            'pt_session_count'    => 1,
-            'price'               => 100000,
+            'name' => 'PT Trial Session',
+            'pt_session_count' => 1,
+            'price' => 100000,
             'min_membership_days' => 0, // No minimum days requirement
-            'validity_days'       => 14,
-            'status'              => 'active',
+            'validity_days' => 14,
+            'status' => 'active',
         ]);
 
         $bank = Bank::factory()->create(['status' => 'active']);
@@ -252,16 +264,16 @@ class PtPackagePurchaseTest extends TestCase
         $response = $this->actingAs($member)
             ->postJson(route('member.pt-packages.buy'), [
                 'pt_package_id' => $package->id,
-                'bank_id'       => $bank->id,
+                'bank_id' => $bank->id,
             ]);
 
         $response->assertStatus(201);
         $response->assertJson(['success' => true]);
 
         $this->assertDatabaseHas('member_pt_quotas', [
-            'member_id'          => $member->id,
-            'pt_package_id'      => $package->id,
-            'total_sessions'     => 1,
+            'member_id' => $member->id,
+            'pt_package_id' => $package->id,
+            'total_sessions' => 1,
             'remaining_sessions' => 1,
         ]);
     }
@@ -281,9 +293,96 @@ class PtPackagePurchaseTest extends TestCase
         $response = $this->actingAs($member)
             ->postJson(route('member.pt-packages.buy'), [
                 'pt_package_id' => $package->id,
-                'bank_id'       => $bank->id,
+                'bank_id' => $bank->id,
             ]);
 
         $response->assertStatus(404);
+    }
+
+    /** Test 9: Packages requiring more days than remaining are hidden from catalog */
+    public function test_ineligible_packages_are_hidden_from_catalog(): void
+    {
+        $member = $this->createMember();
+        $this->createActiveMembership($member, 20); // 20 days remaining
+
+        // Eligible package (requires 15 days <= 20)
+        PtPackage::factory()->create([
+            'name' => 'PT 8 Sesi',
+            'pt_session_count' => 8,
+            'price' => 700000,
+            'min_membership_days' => 15,
+            'status' => 'active',
+        ]);
+
+        // Ineligible package (requires 30 days > 20)
+        PtPackage::factory()->create([
+            'name' => 'PT 20 Sesi',
+            'pt_session_count' => 20,
+            'price' => 1500000,
+            'min_membership_days' => 30,
+            'status' => 'active',
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.pt-packages.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('PT 8 Sesi');
+        $response->assertDontSee('PT 20 Sesi');
+    }
+
+    /** Test 10: Message and renewal link shown when no packages are eligible */
+    public function test_message_and_renewal_link_shown_when_no_packages_eligible(): void
+    {
+        $member = $this->createMember();
+        $this->createActiveMembership($member, 5); // Only 5 days remaining
+
+        PtPackage::factory()->create([
+            'name' => 'PT 10 Sesi',
+            'pt_session_count' => 10,
+            'price' => 900000,
+            'min_membership_days' => 30,
+            'status' => 'active',
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.pt-packages.index'));
+
+        $response->assertStatus(200);
+        $response->assertDontSee('PT 10 Sesi');
+        $response->assertSee('Sisa Masa Aktif Membership Tidak Mencukupi');
+        $response->assertSee('Perpanjang Membership Sekarang');
+    }
+
+    /** Test 11: Member can purchase package with proof image upload */
+    public function test_member_can_purchase_pt_package_with_proof_image(): void
+    {
+        $storage = Storage::fake('public');
+
+        $member = $this->createMember();
+        $membership = $this->createActiveMembership($member, 40);
+
+        $package = PtPackage::factory()->create([
+            'pt_session_count' => 10,
+            'price' => 900000,
+            'min_membership_days' => 30,
+            'validity_days' => 90,
+            'status' => 'active',
+        ]);
+
+        $bank = Bank::factory()->create(['status' => 'active']);
+        $file = UploadedFile::fake()->image('transfer_proof.jpg');
+
+        $response = $this->actingAs($member)
+            ->post(route('member.pt-packages.buy'), [
+                'pt_package_id' => $package->id,
+                'bank_id' => $bank->id,
+                'proof_image' => $file,
+            ]);
+
+        $response->assertSessionHas('success');
+
+        $payment = Payment::where('member_id', $member->id)->where('pt_package_id', $package->id)->latest()->first();
+        $this->assertNotNull($payment);
+        $this->assertNotNull($payment->proof_image_path);
+        $storage->assertExists($payment->proof_image_path);
     }
 }
