@@ -6,8 +6,10 @@ use App\Models\Bank;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\User;
+use App\Notifications\AdminNewPaymentNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -316,5 +318,44 @@ class MembershipCheckoutTest extends TestCase
         $this->assertNotNull($payment);
         $this->assertEquals(450421, $payment->amount);
         $response->assertRedirect(route('member.membership.payment-status', $payment));
+    }
+
+    public function test_processing_payment_sends_notification_to_admins(): void
+    {
+        Notification::fake();
+        Storage::fake('public');
+
+        $admin = User::factory()->create(['role' => 'admin']);
+        $otherAdmin = User::factory()->create(['role' => 'admin']);
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Starter Pass',
+            'tier' => 'Basic',
+            'price' => 450000,
+            'duration_in_days' => 30,
+            'facilities' => ['Akses Gym'],
+            'is_active' => true,
+        ]);
+
+        $fakeReceipt = UploadedFile::fake()->image('bukti.png', 400, 400);
+
+        $this->actingAs($member)
+            ->post(route('member.membership.upload-proof.store', $package), [
+                'bank_id' => $bank->id,
+                'sender_name' => 'Member Test',
+                'proof_image' => $fakeReceipt,
+            ])
+            ->assertRedirect();
+
+        Notification::assertSentTo(
+            [$admin, $otherAdmin],
+            AdminNewPaymentNotification::class
+        );
     }
 }
