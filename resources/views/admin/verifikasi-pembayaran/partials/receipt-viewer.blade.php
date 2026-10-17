@@ -1,14 +1,22 @@
 <div class="receipt-print-area overflow-hidden rounded-2xl border border-[#EEEEEF] bg-[#F9F9FA]">
-    <template x-if="selectedPayment?.proof_image_url">
+    @if (isset($payment) && ($payment->proof_image_path || $payment->proof_image))
         <img
-            x-bind:src="selectedPayment.proof_image_url"
-            x-bind:alt="`Bukti transfer ${selectedPayment.invoice_id}`"
-            class="max-h-[390px] min-h-52 w-full object-contain"
+            src="{{ Storage::url($payment->proof_image_path ?? $payment->proof_image) }}"
+            alt="Bukti transfer {{ $payment->invoice_id }}"
+            class="w-full h-auto rounded-lg object-contain bg-gray-50 border border-gray-200"
         >
-    </template>
-    <div x-show="!selectedPayment?.proof_image_url" class="flex min-h-52 items-center justify-center px-6 text-center text-sm text-[#858894]">
-        Bukti transfer tidak tersedia.
-    </div>
+    @else
+        <template x-if="selectedPayment?.proof_image_url">
+            <img
+                x-bind:src="selectedPayment.proof_image_url"
+                x-bind:alt="`Bukti transfer ${selectedPayment.invoice_id}`"
+                class="w-full h-auto max-h-[390px] min-h-52 rounded-lg object-contain bg-gray-50 border border-gray-200"
+            >
+        </template>
+        <div x-show="!selectedPayment?.proof_image_url" class="flex min-h-52 items-center justify-center px-6 text-center text-sm text-[#858894]">
+            Bukti transfer tidak tersedia.
+        </div>
+    @endif
 </div>
 
 <div class="flex flex-wrap gap-2">

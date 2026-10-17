@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Storage;
 
 #[Fillable([
     'invoice_id',
@@ -90,5 +91,25 @@ class Payment extends Model
     public function membershipPackage(): BelongsTo
     {
         return $this->belongsTo(MembershipPackage::class, 'package_id');
+    }
+
+    public function getProofImageAttribute(): ?string
+    {
+        return $this->proof_image_path;
+    }
+
+    public function getProofImageUrlAttribute(?string $value): ?string
+    {
+        if ($this->proof_image_path) {
+            return Storage::url($this->proof_image_path);
+        }
+
+        if ($value) {
+            return (str_starts_with($value, 'http') || str_starts_with($value, '/storage'))
+                ? $value
+                : Storage::url($value);
+        }
+
+        return null;
     }
 }

@@ -50,7 +50,7 @@
                         </td>
                         <td class="whitespace-nowrap px-5 py-5 text-xs text-[#565A66]">
                             <div>{{ $payment->transfer_date?->timezone(config('app.timezone'))->format('d M Y, H:i') ?? '-' }}</div>
-                            @if ($payment->proof_image_url)
+                            @if ($payment->proof_image_path || $payment->proof_image || $payment->proof_image_url)
                                 <!-- Modal Pratinjau Bukti Transfer (Lightbox) Terisolasi per Baris -->
                                 <div x-data="{ open: false }" class="mt-1.5 inline-block">
                                     <button
@@ -89,7 +89,9 @@
                                                 </button>
                                             </div>
                                             <div class="max-h-[65vh] overflow-auto rounded-xl bg-slate-100 p-2 flex items-center justify-center">
-                                                <img src="{{ $payment->proof_image_url }}" alt="Bukti transfer {{ $payment->invoice_id }}" class="max-h-[60vh] w-auto object-contain rounded-lg shadow-sm">
+                                                <img src="{{ Storage::url($payment->proof_image_path ?? $payment->proof_image) }}" 
+                                                     alt="Bukti transfer {{ $payment->invoice_id }}"
+                                                     class="w-full h-auto rounded-lg object-contain bg-gray-50 border border-gray-200">
                                             </div>
                                             <div class="mt-4 flex items-center justify-between text-xs text-[#565A66]">
                                                 <span>Nominal: <strong class="text-[#BA0030]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</strong> ({{ $payment->bank_sender }})</span>
