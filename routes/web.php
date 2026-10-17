@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
@@ -47,7 +48,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->name('admin.')->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/packages', [MembershipPackageController::class, 'index'])->name('packages.index');
     Route::post('/packages', [MembershipPackageController::class, 'store'])->name('packages.store');
     Route::put('/packages/{package}', [MembershipPackageController::class, 'update'])->name('packages.update');
