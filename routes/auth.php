@@ -48,12 +48,6 @@ Route::middleware('guest')->group(function () {
 
     Route::get('auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])
         ->name('auth.google.callback');
-
-    Route::get('auth/google/select', [GoogleAuthController::class, 'selectAccount'])
-        ->name('auth.google.select');
-
-    Route::post('auth/google/mock-login', [GoogleAuthController::class, 'mockLogin'])
-        ->name('auth.google.mock-login');
 });
 
 Route::middleware('auth')->group(function () {
