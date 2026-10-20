@@ -29,6 +29,11 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:member'])->name('member.')->group(function () {
     Route::get('/member/card', [MemberCardController::class, 'show'])->name('card');
     Route::get('/member/pt-packages', [PtPackagePurchaseController::class, 'index'])->name('pt-packages.index');
+    Route::get('/member/pt-packages/select-trainer', [PtPackagePurchaseController::class, 'selectTrainer'])->name('pt-packages.select-trainer');
+    Route::get('/member/pt-packages/checkout', [PtPackagePurchaseController::class, 'checkout'])->name('pt-packages.checkout');
+    Route::post('/member/pt-packages/checkout', [PtPackagePurchaseController::class, 'processCheckout'])->name('pt-packages.process-checkout');
+    Route::get('/member/pt-packages/upload-payment/{payment?}', [PtPackagePurchaseController::class, 'uploadPayment'])->name('pt-packages.upload-payment');
+    Route::post('/member/pt-packages/upload-payment/{payment?}', [PtPackagePurchaseController::class, 'submitPaymentProof'])->name('pt-packages.submit-proof');
     Route::post('/member/pt-packages/buy', [PtPackagePurchaseController::class, 'buy'])->name('pt-packages.buy');
 });
 
