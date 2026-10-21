@@ -385,4 +385,73 @@ class PtPackagePurchaseTest extends TestCase
         $this->assertNotNull($payment->proof_image_path);
         $storage->assertExists($payment->proof_image_path);
     }
+
+    /** Test 12: Select trainer page renders with back button and real-time search */
+    public function test_select_trainer_page_renders_with_back_button(): void
+    {
+        $member = $this->createMember();
+        $response = $this->actingAs($member)->get(route('member.pt-packages.select-trainer'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Kembali ke Pilih Paket Sesi');
+        $response->assertSee('Cari nama atau spesialis...');
+        $response->assertDontSee('Rating Tertinggi');
+    }
+
+    /** Test 13: Checkout page renders without promo/voucher and has back button */
+    public function test_checkout_page_renders_without_promo_and_has_back_button(): void
+    {
+        $member = $this->createMember();
+        $response = $this->actingAs($member)->get(route('member.pt-packages.checkout'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Kembali ke Pilih Pelatih');
+        $response->assertDontSee('PUNYA KODE PROMO ATAU REFERRAL?');
+        $response->assertDontSee('Diskon Voucher');
+    }
+
+    /** Test 14: Submit payment proof requires proof image, sender name, and sender bank */
+    public function test_submit_payment_proof_validation_rules(): void
+    {
+        $member = $this->createMember();
+        $response = $this->actingAs($member)
+            ->post(route('member.pt-packages.submit-proof'), [
+                'proof_image' => null,
+                'sender_name' => '',
+                'sender_bank' => '',
+            ]);
+
+        $response->assertSessionHasErrors(['proof_image', 'sender_name', 'sender_bank']);
+    }
+
+    /** Test 15: Member can submit payment proof successfully */
+    public function test_member_can_submit_payment_proof_successfully(): void
+    {
+        $storage = Storage::fake('public');
+        $member = $this->createMember();
+        $bank = Bank::factory()->create(['status' => 'active']);
+        $payment = Payment::factory()->create([
+            'member_id' => $member->id,
+            'bank_id' => $bank->id,
+            'payment_type' => 'pt_package',
+            'amount' => 3000421,
+            'status' => 'pending',
+        ]);
+
+        $file = UploadedFile::fake()->image('my_proof.jpg');
+
+        $response = $this->actingAs($member)
+            ->post(route('member.pt-packages.submit-proof', ['payment' => $payment->id]), [
+                'proof_image' => $file,
+                'sender_name' => 'John Doe',
+                'sender_bank' => 'BCA',
+            ]);
+
+        $response->assertRedirect(route('member.pt-packages.index'));
+        $response->assertSessionHas('success');
+
+        $payment->refresh();
+        $this->assertNotNull($payment->proof_image_path);
+        $storage->assertExists($payment->proof_image_path);
+    }
 }
