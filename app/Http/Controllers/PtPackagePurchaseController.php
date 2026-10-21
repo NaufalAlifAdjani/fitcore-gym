@@ -184,10 +184,8 @@ class PtPackagePurchaseController extends Controller
         $sessionCount = $selectedPackage?->pt_session_count ?? 12;
         $subtotal = $selectedPackage ? (float) $selectedPackage->price : 3000000;
         
-        $promoCode = 'FITYUK';
-        $discountAmount = 150000;
         $uniqueCode = 421;
-        $totalAmount = max(0, $subtotal - $discountAmount + $uniqueCode);
+        $totalAmount = (int) ($subtotal + $uniqueCode);
 
         $banks = Bank::where('status', 'active')->orderBy('id')->get();
         if ($banks->isEmpty()) {
@@ -205,8 +203,6 @@ class PtPackagePurchaseController extends Controller
             'packageName',
             'sessionCount',
             'subtotal',
-            'promoCode',
-            'discountAmount',
             'uniqueCode',
             'totalAmount',
             'banks'
@@ -218,16 +214,23 @@ class PtPackagePurchaseController extends Controller
      */
     public function processCheckout(Request $request): RedirectResponse
     {
+        $request->validate([
+            'bank_id' => ['required'],
+        ]);
+
         $user = $request->user();
         $packageId = $request->input('package_id');
         $trainerId = $request->input('trainer_id', 1);
-        $bankId = $request->input('bank_id', 1);
-        $totalAmount = $request->input('total_amount', 2850421);
+        $bankId = $request->input('bank_id');
 
         $ptPackage = null;
         if ($packageId && is_numeric($packageId)) {
             $ptPackage = PtPackage::find($packageId);
         }
+
+        $uniqueCode = 421;
+        $subtotal = $ptPackage ? (float) $ptPackage->price : 3000000;
+        $totalAmount = (int) $request->input('total_amount', $subtotal + $uniqueCode);
 
         $bank = Bank::find($bankId) ?? Bank::first();
         if (! $bank) {
@@ -279,9 +282,9 @@ class PtPackagePurchaseController extends Controller
 
         $packageName = $payment?->ptPackage?->name ?? 'Paket Performance Pro';
         $packageSubtext = '12 Sesi Pelatihan Terstruktur + Monitoring InBody Bulanan';
-        $packagePrice = $payment ? ($payment->amount - 421) : 2850000;
         $uniqueCode = 421;
-        $totalAmount = $payment ? $payment->amount : 2850421;
+        $totalAmount = $payment ? $payment->amount : 3000421;
+        $packagePrice = $payment ? max(0, $payment->amount - $uniqueCode) : 3000000;
 
         $bank = $payment?->bank ?? (object)[
             'name' => 'BANK CENTRAL ASIA (BCA)',
@@ -309,9 +312,9 @@ class PtPackagePurchaseController extends Controller
     public function submitPaymentProof(Request $request, $paymentId = null): RedirectResponse
     {
         $request->validate([
-            'proof_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,pdf', 'max:5120'],
-            'sender_name' => ['nullable', 'string', 'max:255'],
-            'sender_bank' => ['nullable', 'string', 'max:255'],
+            'proof_image' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+            'sender_name' => ['required', 'string', 'max:255'],
+            'sender_bank' => ['required', 'string', 'max:255'],
         ]);
 
         $proofPath = null;
