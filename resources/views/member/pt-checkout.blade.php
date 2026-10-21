@@ -1,24 +1,40 @@
 <x-fitcore-layout :title="'Rincian Pesanan & Pembayaran | FITCORE ATHLETIC'">
 
     {{-- BANNER HEADER GELAP --}}
-    <section class="bg-[#18181B] py-14">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="bg-[#18181B] py-10 md:py-12 border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            
+            {{-- TOMBOL KEMBALI KE LANGKAH 2 --}}
+            <div class="mb-5">
+                <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $packageId, 'sessions' => $sessionCount]) }}" 
+                   class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-zinc-300 hover:text-white bg-zinc-800/80 hover:bg-zinc-800 border border-zinc-700 rounded-full shadow-sm transition active:scale-95 group">
+                    <svg class="w-4 h-4 text-zinc-400 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    <span>&larr; Kembali ke Pilih Pelatih</span>
+                </a>
+            </div>
+
             <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight">
                 Rincian Pesanan &amp; Pembayaran
             </h1>
+            <p class="text-xs sm:text-sm text-zinc-400 mt-2">
+                Periksa kembali paket latihan dan metode pembayaran transfer bank Anda.
+            </p>
         </div>
     </section>
 
     {{-- KONTEN UTAMA --}}
-    <section class="bg-[#F8F9FA] py-12" x-data="{
-        selectedBank: 'bca',
-        appliedPromo: '{{ $promoCode }}',
-        discount: {{ $discountAmount }},
+    <section class="bg-[#F8F9FA] min-h-[calc(100vh-80px-350px)]" x-data="{
+        selectedBank: '',
         subtotal: {{ $subtotal }},
         uniqueCode: {{ $uniqueCode }},
-        agreed: true
+        agreed: false,
+        get isReadyToCheckout() {
+            return this.selectedBank !== '' && this.agreed;
+        }
     }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-14">
 
             <form action="{{ route('member.pt-packages.process-checkout') }}" method="POST">
                 @csrf
@@ -32,66 +48,45 @@
                     <div class="lg:col-span-5">
                         <div class="bg-white rounded-2xl p-6 sm:p-7 shadow-sm border border-gray-100">
                             
-                            <h2 class="text-xs font-black text-zinc-900 tracking-wider uppercase mb-5">
-                                REKENING TRANSFER :
-                            </h2>
+                            <div class="flex items-center justify-between mb-2">
+                                <h2 class="text-xs font-black text-zinc-900 tracking-wider uppercase">
+                                    REKENING TRANSFER :
+                                </h2>
+                                <span class="text-[11px] font-bold text-rose-600" x-show="!selectedBank">* Pilih salah satu</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-5">
+                                Klik salah satu bank tujuan transfer di bawah ini:
+                            </p>
 
                             <div class="space-y-3.5">
-                                
-                                {{-- Bank BCA (Selected by default) --}}
-                                <label class="block rounded-2xl p-4 cursor-pointer transition border relative"
-                                       :class="selectedBank === 'bca' ? 'bg-[#F4F6FF] border-[#C7D2FE]' : 'bg-white border-gray-200 hover:border-gray-300'">
-                                    <div class="flex items-start gap-3.5">
-                                        <div class="mt-0.5 shrink-0">
-                                            <input type="radio" name="bank_id" value="1" x-model="selectedBank" class="hidden">
-                                            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition"
-                                                 :class="selectedBank === 'bca' ? 'border-[#E11D48]' : 'border-gray-300'">
-                                                <div class="w-2.5 h-2.5 rounded-full bg-[#E11D48]" x-show="selectedBank === 'bca'"></div>
+                                @foreach($banks as $bank)
+                                    <label class="block rounded-2xl p-4 cursor-pointer transition border relative"
+                                           :class="selectedBank === '{{ $bank->id }}' ? 'bg-[#F4F6FF] border-[#E11D48] ring-1 ring-[#E11D48]' : 'bg-white border-gray-200 hover:border-gray-300'">
+                                        <div class="flex items-start gap-3.5">
+                                            <div class="mt-0.5 shrink-0">
+                                                <input type="radio" 
+                                                       name="bank_id" 
+                                                       value="{{ $bank->id }}" 
+                                                       x-model="selectedBank" 
+                                                       class="hidden">
+                                                <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition"
+                                                     :class="selectedBank === '{{ $bank->id }}' ? 'border-[#E11D48]' : 'border-gray-300'">
+                                                    <div class="w-2.5 h-2.5 rounded-full bg-[#E11D48]" x-show="selectedBank === '{{ $bank->id }}'"></div>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1">
+                                                <div class="flex items-center justify-between">
+                                                    <h3 class="font-black text-zinc-900 text-sm">{{ $bank->name }}</h3>
+                                                    <span class="text-[10px] font-black px-2 py-0.5 rounded-md"
+                                                          :class="selectedBank === '{{ $bank->id }}' ? 'bg-rose-100 text-[#E11D48]' : 'bg-gray-100 text-gray-500'">
+                                                        Transfer Bank
+                                                    </span>
+                                                </div>
+                                                <p class="text-xs text-gray-500 mt-1">Transfer via ATM / Mobile Banking / Internet Banking</p>
                                             </div>
                                         </div>
-                                        <div>
-                                            <h3 class="font-black text-zinc-900 text-sm">Bank BCA</h3>
-                                            <p class="text-xs text-gray-500 mt-0.5">Transfer via ATM / M Banking / Internet Banking</p>
-                                        </div>
-                                    </div>
-                                </label>
-
-                                {{-- Bank Mandiri --}}
-                                <label class="block rounded-2xl p-4 cursor-pointer transition border relative"
-                                       :class="selectedBank === 'mandiri' ? 'bg-[#F4F6FF] border-[#C7D2FE]' : 'bg-white border-gray-200 hover:border-gray-300'">
-                                    <div class="flex items-start gap-3.5">
-                                        <div class="mt-0.5 shrink-0">
-                                            <input type="radio" name="bank_id" value="2" x-model="selectedBank" class="hidden">
-                                            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition"
-                                                 :class="selectedBank === 'mandiri' ? 'border-[#E11D48]' : 'border-gray-300'">
-                                                <div class="w-2.5 h-2.5 rounded-full bg-[#E11D48]" x-show="selectedBank === 'mandiri'"></div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-black text-zinc-900 text-sm">Bank Mandiri</h3>
-                                            <p class="text-xs text-gray-500 mt-0.5">Transfer via Livin' / ATM / E-Banking</p>
-                                        </div>
-                                    </div>
-                                </label>
-
-                                {{-- Bank BNI --}}
-                                <label class="block rounded-2xl p-4 cursor-pointer transition border relative"
-                                       :class="selectedBank === 'bni' ? 'bg-[#F4F6FF] border-[#C7D2FE]' : 'bg-white border-gray-200 hover:border-gray-300'">
-                                    <div class="flex items-start gap-3.5">
-                                        <div class="mt-0.5 shrink-0">
-                                            <input type="radio" name="bank_id" value="3" x-model="selectedBank" class="hidden">
-                                            <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center transition"
-                                                 :class="selectedBank === 'bni' ? 'border-[#E11D48]' : 'border-gray-300'">
-                                                <div class="w-2.5 h-2.5 rounded-full bg-[#E11D48]" x-show="selectedBank === 'bni'"></div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h3 class="font-black text-zinc-900 text-sm">Bank BNI</h3>
-                                            <p class="text-xs text-gray-500 mt-0.5">Transfer via BNI Mobile / ATM / SMS Banking</p>
-                                        </div>
-                                    </div>
-                                </label>
-
+                                    </label>
+                                @endforeach
                             </div>
 
                         </div>
@@ -132,41 +127,18 @@
                                 </div>
                             </div>
 
-                            {{-- Form Kode Promo / Referral --}}
-                            <div class="mb-6">
-                                <label class="text-[10px] font-black text-zinc-900 tracking-wider uppercase block mb-2">
-                                    PUNYA KODE PROMO ATAU REFERRAL?
-                                </label>
-                                <div class="flex gap-2.5">
-                                    <input type="text" 
-                                           x-model="appliedPromo" 
-                                           class="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-xs font-bold text-zinc-800 flex-1 focus:ring-2 focus:ring-[#E11D48] focus:border-transparent outline-none">
-                                    <button type="button" 
-                                            class="bg-[#EEF2FF] hover:bg-indigo-100 text-zinc-800 font-bold text-xs rounded-xl px-5 py-2.5 transition active:scale-95">
-                                        Terapkan
-                                    </button>
-                                </div>
-                            </div>
-
-                            {{-- Rincian Biaya --}}
+                            {{-- Rincian Biaya (Tanpa Promo/Diskon Voucher) --}}
                             <div class="space-y-3 pt-2 text-xs sm:text-sm">
                                 <div class="flex items-center justify-between">
                                     <span class="text-zinc-700 font-medium">Subtotal Paket PT ({{ $sessionCount }} Sesi)</span>
                                     <span class="font-black text-zinc-900">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                                 </div>
-                                <div class="flex items-center justify-between text-[#10B981]">
-                                    <span class="font-bold flex items-center gap-1.5">
-                                        <span>Diskon Voucher ({{ $promoCode }})</span>
-                                        <span class="text-xs">✓</span>
-                                    </span>
-                                    <span class="font-black">-Rp {{ number_format($discountAmount, 0, ',', '.') }}</span>
-                                </div>
                                 <div class="flex items-center justify-between">
                                     <span class="text-zinc-700 font-medium flex items-center gap-1">
                                         <span>Kode Unik Verifikasi</span>
-                                        <span class="w-3.5 h-3.5 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-[9px] font-bold">?</span>
+                                        <span class="w-3.5 h-3.5 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-[9px] font-bold" title="Kode unik untuk mempercepat verifikasi otomatis">?</span>
                                     </span>
-                                    <span class="font-black text-[#E11D48]">+RP {{ $uniqueCode }}</span>
+                                    <span class="font-black text-[#E11D48]">+Rp {{ $uniqueCode }}</span>
                                 </div>
                             </div>
 
@@ -182,24 +154,31 @@
                                 </div>
                             </div>
 
-                            {{-- Checkbox Persetujuan --}}
+                            {{-- Checkbox Persetujuan (Tidak tercentang otomatis) --}}
                             <div class="flex items-start gap-3 mt-4">
                                 <input type="checkbox" 
                                        id="agree_terms" 
                                        x-model="agreed"
-                                       required
                                        class="mt-1 w-4 h-4 rounded border-gray-300 text-[#E11D48] focus:ring-[#E11D48] cursor-pointer">
-                                <label for="agree_terms" class="text-xs text-gray-600 leading-relaxed cursor-pointer">
+                                <label for="agree_terms" class="text-xs text-gray-600 leading-relaxed cursor-pointer select-none">
                                     Saya menyetujui <span class="text-[#C80036] font-bold">Syarat &amp; Ketentuan Keanggotaan</span> serta aturan keselamatan Maxfit Fitness Studio.
                                 </label>
                             </div>
 
-                            {{-- Tombol Beli Sekarang --}}
+                            {{-- Tombol Beli Sekarang (Disabled secara default / Warna Pudar) --}}
                             <button type="submit" 
-                                    :disabled="!agreed"
-                                    class="w-full bg-[#C80036] hover:bg-[#A8002C] text-white rounded-full py-4 font-black text-sm sm:text-base shadow-lg shadow-rose-900/20 active:scale-[0.99] transition block text-center mt-6 uppercase tracking-wide cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                                    :disabled="!isReadyToCheckout"
+                                    :class="!isReadyToCheckout ? 'opacity-40 cursor-not-allowed shadow-none' : 'hover:bg-[#A8002C] cursor-pointer shadow-lg shadow-rose-900/20 active:scale-[0.99]'"
+                                    :style="!isReadyToCheckout ? 'opacity: 0.45; cursor: not-allowed;' : 'opacity: 1; cursor: pointer;'"
+                                    class="w-full bg-[#C80036] text-white rounded-full py-4 font-black text-sm sm:text-base transition-all duration-200 block text-center mt-6 uppercase tracking-wide">
                                 Beli Sekarang &rarr;
                             </button>
+
+                            <p x-show="!isReadyToCheckout" class="text-[11px] text-gray-400 text-center mt-2.5 font-medium">
+                                <span x-show="!selectedBank && !agreed">Silakan pilih rekening transfer dan setujui syarat &amp; ketentuan.</span>
+                                <span x-show="!selectedBank && agreed">Silakan pilih salah satu rekening bank transfer terlebih dahulu.</span>
+                                <span x-show="selectedBank && !agreed">Centang persetujuan syarat &amp; ketentuan untuk melanjutkan.</span>
+                            </p>
 
                         </div>
 
