@@ -1,8 +1,8 @@
 <x-fitcore-layout :title="'Booking Sesi Personal Trainer | FITCORE ATHLETIC'">
 
     {{-- HERO SECTION (Background Putih) --}}
-    <section class="bg-white border-b border-gray-100 pt-14 pb-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="bg-white border-b border-gray-100 py-12 md:py-16">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-zinc-950 tracking-tight leading-tight">
                 Booking Sesi <span style="color: #C80036;">Personal</span><br>
                 <span style="color: #C80036;">Trainer</span>
@@ -11,8 +11,8 @@
     </section>
 
     {{-- MAIN SECTION (Background #F8F9FA) --}}
-    <section class="bg-[#F8F9FA] py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="bg-[#F8F9FA] py-12 md:py-16">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
 
             {{-- Flash Messages --}}
             @if(session('success'))
