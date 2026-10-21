@@ -1,7 +1,18 @@
 <x-fitcore-layout :title="'Upload Bukti Pembayaran | FITCORE ATHLETIC'">
 
-    <div class="relative overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-rose-100/60 via-transparent to-transparent py-12 min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="relative overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-rose-100/60 via-transparent to-transparent min-h-screen">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-14">
+
+            {{-- TOMBOL KEMBALI KE LANGKAH 3 --}}
+            <div class="mb-6">
+                <a href="{{ route('member.pt-packages.checkout', ['package_id' => $payment?->pt_package_id ?? request('package_id'), 'trainer_id' => request('trainer_id', 1)]) }}" 
+                   class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-zinc-700 bg-white hover:bg-zinc-100 hover:text-zinc-900 border border-gray-200 rounded-full shadow-sm transition active:scale-95 group">
+                    <svg class="w-4 h-4 text-zinc-500 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    <span>&larr; Kembali ke Rincian Pesanan</span>
+                </a>
+            </div>
 
             {{-- HEADER AREA (Judul + Countdown Timer) --}}
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
@@ -52,6 +63,23 @@
                     </div>
                 </div>
             </div>
+
+            {{-- ERROR VALIDATION ALERT --}}
+            @if($errors->any())
+                <div class="mb-8 p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-start gap-3 text-rose-800 text-sm font-semibold shadow-sm">
+                    <svg class="w-5 h-5 text-rose-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <div>
+                        <span class="font-bold block mb-1">Gagal mengirim bukti pembayaran:</span>
+                        <ul class="list-disc list-inside space-y-0.5 text-xs text-rose-700">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
 
             {{-- KONTEN 2 KOLOM --}}
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -140,7 +168,7 @@
                                     </span>
                                 </div>
                                 <span class="bg-white/10 text-white text-[11px] font-black px-2.5 py-1 rounded-lg border border-white/10 tracking-wider">
-                                    BCA 014
+                                    {{ $bank->code ?? 'BCA 014' }}
                                 </span>
                             </div>
 
@@ -171,7 +199,7 @@
                                 !
                             </div>
                             <p>
-                                Harap pastikan nominal transfer <strong class="text-zinc-800">sesuai persis hingga 3 angka terakhir</strong> agar sistem reconciliation Maxfit langsung mengenali mutasi secara otomatis tanpa delay.
+                                Harap pastikan nominal transfer <strong class="text-zinc-800">sesuai persis hingga 3 angka terakhir</strong> agar sistem verifikasi Maxfit langsung mengenali mutasi secara cepat.
                             </p>
                         </div>
 
@@ -183,21 +211,36 @@
                 <div class="lg:col-span-7">
                     <div class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100" 
                          x-data="{ 
-                             fileName: 'bukti_transfer_bca_250k.png', 
-                             fileSize: '1.4 MB', 
-                             hasFile: true,
+                             fileName: '', 
+                             fileSize: '', 
+                             hasFile: false,
+                             senderName: '',
+                             senderBank: 'BCA',
+                             confirmValid: false,
                              handleFileSelect(e) {
                                  const file = e.target.files[0];
                                  if (file) {
                                      this.fileName = file.name;
-                                     this.fileSize = (file.size / (1024*1024)).toFixed(1) + ' MB';
+                                     const sizeInMB = file.size / (1024 * 1024);
+                                     this.fileSize = sizeInMB >= 1 
+                                         ? sizeInMB.toFixed(1) + ' MB' 
+                                         : Math.round(file.size / 1024) + ' KB';
                                      this.hasFile = true;
                                  }
                              },
                              removeFile() {
                                  this.hasFile = false;
                                  this.fileName = '';
-                                 this.$refs.fileInput.value = '';
+                                 this.fileSize = '';
+                                 if (this.$refs.fileInput) {
+                                     this.$refs.fileInput.value = '';
+                                 }
+                             },
+                             get isFormComplete() {
+                                 return this.hasFile && 
+                                        this.senderName.trim().length > 0 && 
+                                        this.senderBank.trim().length > 0 && 
+                                        this.confirmValid;
                              }
                          }">
                         
@@ -232,6 +275,7 @@
                                            x-ref="fileInput" 
                                            @change="handleFileSelect"
                                            class="hidden" 
+                                           required
                                            accept="image/png,image/jpeg,image/jpg,application/pdf">
 
                                     <div class="w-12 h-12 rounded-full bg-white shadow-sm mx-auto flex items-center justify-center text-[#E11D48] mb-3">
@@ -249,7 +293,7 @@
                                 </div>
                             </div>
 
-                            {{-- Preview File Terunggah --}}
+                            {{-- Preview File Terunggah (Hanya muncul dinamis jika user sudah memilih file asli) --}}
                             <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 my-4 flex items-center justify-between"
                                  x-show="hasFile"
                                  x-cloak>
@@ -260,15 +304,16 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <h4 class="text-xs font-bold text-zinc-900" x-text="fileName">bukti_transfer_bca_250k.png</h4>
+                                        <h4 class="text-xs font-bold text-zinc-900" x-text="fileName"></h4>
                                         <p class="text-[10px] text-emerald-600 font-semibold mt-0.5">
-                                            <span x-text="fileSize">1.4 MB</span> &bull; Berhasil dimuat dan siap dikirim
+                                            <span x-text="fileSize"></span> &bull; File dipilih dan siap dikirim
                                         </p>
                                     </div>
                                 </div>
                                 <button type="button" 
                                         @click="removeFile"
-                                        class="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-emerald-100/50 transition">
+                                        title="Hapus file"
+                                        class="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-emerald-100/50 transition cursor-pointer">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                     </svg>
@@ -283,15 +328,17 @@
                                 <div class="relative">
                                     <input type="text" 
                                            name="sender_name" 
-                                           value="David Pratama" 
-                                           class="bg-[#F4F6FF] border-0 rounded-xl px-4 py-3 text-xs sm:text-sm font-bold text-zinc-900 w-full focus:ring-2 focus:ring-[#E11D48] outline-none">
+                                           x-model="senderName"
+                                           placeholder="Contoh: Budi Santoso"
+                                           required
+                                           class="bg-[#F4F6FF] border border-transparent focus:border-indigo-300 rounded-xl px-4 py-3 text-xs sm:text-sm font-bold text-zinc-900 w-full focus:ring-2 focus:ring-[#E11D48] outline-none transition">
                                     <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                         </svg>
                                     </div>
                                 </div>
-                                <p class="text-[10px] text-gray-400 mt-1">Sesuai nama yang tertera pada buku tabungan.</p>
+                                <p class="text-[10px] text-gray-400 mt-1">Sesuai nama yang tertera pada buku tabungan atau akun bank.</p>
                             </div>
 
                             {{-- Input 2: Bank Asal Pengirim --}}
@@ -301,12 +348,16 @@
                                 </label>
                                 <div class="relative">
                                     <select name="sender_bank" 
-                                            class="bg-[#F4F6FF] border-0 rounded-xl px-4 py-3 text-xs sm:text-sm font-bold text-zinc-900 w-full focus:ring-2 focus:ring-[#E11D48] outline-none appearance-none cursor-pointer">
-                                        <option value="BCA" selected>BCA - Bank Central Asia</option>
+                                            x-model="senderBank"
+                                            required
+                                            class="bg-[#F4F6FF] border border-transparent focus:border-indigo-300 rounded-xl px-4 py-3 text-xs sm:text-sm font-bold text-zinc-900 w-full focus:ring-2 focus:ring-[#E11D48] outline-none appearance-none cursor-pointer transition">
+                                        <option value="BCA">BCA - Bank Central Asia</option>
                                         <option value="Mandiri">Mandiri - Bank Mandiri</option>
                                         <option value="BNI">BNI - Bank Negara Indonesia</option>
                                         <option value="BRI">BRI - Bank Rakyat Indonesia</option>
                                         <option value="CIMB">CIMB Niaga</option>
+                                        <option value="Permata">Bank Permata</option>
+                                        <option value="BSI">BSI - Bank Syariah Indonesia</option>
                                         <option value="Lainnya">Bank Lainnya</option>
                                     </select>
                                     <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-500">
@@ -317,23 +368,31 @@
                                 </div>
                             </div>
 
-                            {{-- Checkbox Pernyataan --}}
+                            {{-- Checkbox Pernyataan (Tidak tercentang secara default) --}}
                             <div class="flex items-start gap-3 mt-5">
                                 <input type="checkbox" 
                                        id="confirm_valid" 
-                                       checked
-                                       required
+                                       x-model="confirmValid"
                                        class="mt-1 w-4 h-4 rounded border-gray-300 text-[#E11D48] focus:ring-[#E11D48] cursor-pointer">
-                                <label for="confirm_valid" class="text-xs text-gray-600 leading-relaxed cursor-pointer">
+                                <label for="confirm_valid" class="text-xs text-gray-600 leading-relaxed cursor-pointer select-none">
                                     Saya menyatakan bahwa bukti pembayaran yang diunggah adalah sah dan sesuai dengan rekening tujuan PT MAXFIT KINERJA INDONESIA.
                                 </label>
                             </div>
 
-                            {{-- Tombol Submit --}}
+                            {{-- Tombol Submit (Disabled by default / Warna Pudar) --}}
                             <button type="submit" 
-                                    class="w-full bg-[#E11D48] hover:bg-rose-700 text-white font-black text-xs sm:text-sm py-4 rounded-full mt-6 shadow-md shadow-rose-900/30 transition text-center uppercase tracking-wider cursor-pointer active:scale-[0.99]">
+                                    :disabled="!isFormComplete"
+                                    :class="!isFormComplete ? 'opacity-40 cursor-not-allowed shadow-none' : 'hover:bg-rose-700 cursor-pointer active:scale-[0.99] shadow-md shadow-rose-900/30'"
+                                    :style="!isFormComplete ? 'opacity: 0.45; cursor: not-allowed;' : 'opacity: 1; cursor: pointer;'"
+                                    class="w-full bg-[#E11D48] text-white font-black text-xs sm:text-sm py-4 rounded-full mt-6 transition-all duration-200 text-center uppercase tracking-wider">
                                 KIRIM BUKTI PEMBAYARAN &rarr;
                             </button>
+
+                            <p x-show="!isFormComplete" class="text-[11px] text-gray-400 text-center mt-2.5 font-medium">
+                                <span x-show="!hasFile">Pilih file bukti transfer terlebih dahulu.</span>
+                                <span x-show="hasFile && senderName.trim().length === 0">Isi nama pemilik rekening pengirim.</span>
+                                <span x-show="hasFile && senderName.trim().length > 0 && !confirmValid">Centang pernyataan keabsahan bukti pembayaran.</span>
+                            </p>
 
                         </form>
 
