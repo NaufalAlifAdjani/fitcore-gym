@@ -47,6 +47,9 @@ class DatabaseSeeder extends Seeder
             ['member_code' => 'FC-'.str_pad((string) $member->id, 6, '0', STR_PAD_LEFT)],
         );
 
-        $this->call(PaymentSeeder::class);
+        $this->call([
+            PaymentSeeder::class,
+            PtBookingDemoSeeder::class,
+        ]);
     }
 }

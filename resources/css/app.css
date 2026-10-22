@@ -28,3 +28,11 @@
         object-fit: contain;
     }
 }
+
+.flatpickr-calendar {
+    font-family: inherit;
+}
+.flatpickr-day.selected {
+    background: #ED1B45 !important;
+    border-color: #ED1B45 !important;
+}

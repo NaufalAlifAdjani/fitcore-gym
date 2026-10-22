@@ -332,6 +332,6 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.trainer.sessions.index')->layout('layouts.trainer');
+        return view('livewire.trainer.sessions.index')->layout('layouts.app');
     }
 }
