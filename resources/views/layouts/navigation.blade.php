@@ -175,6 +175,17 @@
                     </svg>
                     <span>Paket Membership</span>
                 </a>
+                <a href="{{ route('member.pt-packages.index') }}" @class([
+                    'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
+                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('member.pt-packages.*'),
+                    'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('member.pt-packages.*'),
+                ]) x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <circle cx="12" cy="7" r="4"/>
+                        <path d="M5.5 21v-2a6.5 6.5 0 0 1 13 0v2"/>
+                    </svg>
+                    <span>Sewa PT</span>
+                </a>
                 <a href="{{ route('profile.edit') }}" @class([
                     'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
                     'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('profile.*'),

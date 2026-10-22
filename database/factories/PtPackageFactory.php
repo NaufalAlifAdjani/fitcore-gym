@@ -17,6 +17,7 @@ class PtPackageFactory extends Factory
             'name' => $sessions.' PT Sessions',
             'pt_session_count' => $sessions,
             'price' => $sessions * 100000,
+            'min_membership_days' => 0,
             'validity_days' => $sessions * 7, // 1 week per session
             'status' => 'active',
         ];

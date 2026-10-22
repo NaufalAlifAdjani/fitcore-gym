@@ -9,6 +9,7 @@ use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipP
 use App\Http\Controllers\MemberCardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
+use App\Http\Controllers\PtPackagePurchaseController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -82,11 +83,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 |--------------------------------------------------------------------------
 | Member Routes
 |--------------------------------------------------------------------------
-| The Digital Member Card is accessible by any authenticated user with
-| a member profile (role: member). It shows the QR Code for check-in.
+| The Digital Member Card and PT Package Purchase are accessible by members.
 */
 Route::middleware(['auth', 'role:member'])->name('member.')->group(function () {
     Route::get('/member/card', [MemberCardController::class, 'show'])->name('card');
+    Route::get('/member/pt-packages', [PtPackagePurchaseController::class, 'index'])->name('pt-packages.index');
+    Route::get('/member/pt-packages/select-trainer', [PtPackagePurchaseController::class, 'selectTrainer'])->name('pt-packages.select-trainer');
+    Route::get('/member/pt-packages/checkout', [PtPackagePurchaseController::class, 'checkout'])->name('pt-packages.checkout');
+    Route::post('/member/pt-packages/checkout', [PtPackagePurchaseController::class, 'processCheckout'])->name('pt-packages.process-checkout');
+    Route::get('/member/pt-packages/upload-payment/{payment?}', [PtPackagePurchaseController::class, 'uploadPayment'])->name('pt-packages.upload-payment');
+    Route::post('/member/pt-packages/upload-payment/{payment?}', [PtPackagePurchaseController::class, 'submitPaymentProof'])->name('pt-packages.submit-proof');
+    Route::post('/member/pt-packages/buy', [PtPackagePurchaseController::class, 'buy'])->name('pt-packages.buy');
 });
 
 /*

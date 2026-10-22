@@ -23,7 +23,7 @@ class PtPackage extends Model
     {
         return [
             'pt_session_count' => 'integer',
-            'price' => 'integer',
+            'price' => 'decimal:2',
             'min_membership_days' => 'integer',
             'validity_days' => 'integer',
         ];
