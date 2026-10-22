@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\MemberPtQuota;
-use App\Models\MemberProfile;
 use App\Models\PtPackage;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MemberPtQuotaFactory extends Factory
@@ -18,7 +18,7 @@ class MemberPtQuotaFactory extends Factory
         $startDate = fake()->dateTimeBetween('-3 months', 'now');
 
         return [
-            'member_id' => MemberProfile::factory(),
+            'member_id' => User::factory(),
             'membership_id' => null,
             'pt_package_id' => PtPackage::factory(),
             'source' => 'package',
