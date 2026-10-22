@@ -10,6 +10,7 @@
     ];
 @endphp
 
+<!-- Mobile Backdrop Overlay -->
 <div
     x-show="sidebarOpen"
     x-transition.opacity
@@ -18,33 +19,37 @@
     aria-hidden="true"
 ></div>
 
+<!-- 1. Sidebar (Navigasi Kiri) -->
 <aside
     x-bind:class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-    class="fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-[#EEEEEF] bg-white transition-transform duration-200 lg:translate-x-0"
+    class="fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-[#E5E7EB] bg-white transition-transform duration-200 lg:translate-x-0"
     aria-label="Navigasi utama"
 >
-    <a href="{{ route('admin.dashboard') }}" class="flex h-16 shrink-0 items-center gap-3 border-b border-[#EEEEEF] px-6">
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
-            <rect width="36" height="36" rx="18" fill="#BA0030"/>
-            <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="white"/>
-        </svg>
-        <span class="font-heading text-sm font-extrabold leading-tight tracking-wide text-[#16151A]">
-            FITCORE
-            <span class="block text-[10px] font-semibold tracking-[0.2em] text-[#565A66]">MAXFIT GYM</span>
+    <!-- Brand Logo / Teks -->
+    <a href="{{ route('admin.dashboard') }}" class="flex h-16 shrink-0 items-center gap-3 border-b border-[#E5E7EB] px-6">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ED1B45] text-white shadow-sm">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 012.25 13.5v-3A1.5 1.5 0 013.75 9zm15 0h1.5A1.5 1.5 0 0121.75 10.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 0117.25 13.5v-3a1.5 1.5 0 011.5-1.5zM6.75 12h10.5M5.25 7.5v9M18.75 7.5v9" />
+            </svg>
+        </span>
+        <span class="font-poppins font-extrabold text-2xl text-[#16151A] tracking-tight">
+            FIT<span class="text-[#ED1B45]">CORE</span>
         </span>
     </a>
 
+    <!-- Menu Navigation Items -->
     <div class="flex-1 overflow-y-auto px-4 py-6">
-        <p class="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#565A66]">Navigasi Portal</p>
+        <!-- Kategori Menu -->
+        <p class="font-inter text-[11px] font-bold text-[#565A66] uppercase tracking-wider mb-2 px-4">Navigasi Portal</p>
         <nav class="space-y-1">
             @if (Auth::user()->role === 'admin')
                 @foreach ($navigationItems as $item)
                     <a
                         href="{{ route($item['route']) }}"
                         @class([
-                            'flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition',
-                            'bg-[#BA0030] text-white shadow-sm' => $item['active'],
-                            'text-[#565A66] hover:bg-[#F9F9FA] hover:text-[#16151A]' => ! $item['active'],
+                            'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
+                            'bg-[#ED1B45] text-white font-semibold shadow-sm' => $item['active'],
+                            'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => ! $item['active'],
                         ])
                         aria-current="{{ $item['active'] ? 'page' : 'false' }}"
                         x-on:click="sidebarOpen = false"
@@ -98,114 +103,135 @@
                     </a>
                 @endforeach
             @else
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-[#565A66] transition hover:bg-[#F9F9FA] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
+                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm font-medium text-[#565A66] transition duration-200 hover:bg-[#F6F6F7] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8" />
                         <rect x="13" y="3" width="8" height="5" rx="2" stroke="currentColor" stroke-width="1.8" />
                         <rect x="13" y="10" width="8" height="11" rx="2" stroke="currentColor" stroke-width="1.8" />
                         <rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8" />
                     </svg>
-                    Dashboard
+                    <span>Dashboard</span>
                 </a>
-                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-[#565A66] transition hover:bg-[#F9F9FA] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
+                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm font-medium text-[#565A66] transition duration-200 hover:bg-[#F6F6F7] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8" />
                         <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                     </svg>
-                    Profil
+                    <span>Profil</span>
                 </a>
             @endif
         </nav>
 
         @if (Auth::user()->role === 'admin')
-            <div class="mt-8 border-t border-[#EEEEEF] pt-5">
-                <p class="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-[#565A66]">Bantuan</p>
-                <a href="{{ route('admin.help.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-[#565A66] transition hover:bg-[#F9F9FA] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
+            <div class="mt-8 border-t border-[#E5E7EB] pt-5">
+                <p class="font-inter text-[11px] font-bold text-[#565A66] uppercase tracking-wider mb-2 px-4">Bantuan</p>
+                <a href="{{ route('admin.help.index') }}" class="flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm font-medium text-[#565A66] transition duration-200 hover:bg-[#F6F6F7] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
                         <path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1.1 1-1.8 1.3-1.8 2.7M12 17h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                     </svg>
-                    Bantuan &amp; SOP
+                    <span>Bantuan &amp; SOP</span>
                 </a>
             </div>
         @endif
     </div>
 
-    <div class="border-t border-[#EEEEEF] p-4">
+    <!-- Tombol Keluar Sidebar -->
+    <div class="border-t border-[#E5E7EB] p-4">
         <button
             type="button"
             x-on:click="showLogoutModal = true"
-            class="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold text-[#BA0030] transition hover:bg-rose-50"
+            class="flex w-full items-center gap-3 rounded-full px-4 py-3 text-left font-inter text-sm font-semibold text-[#ED1B45] transition hover:bg-[#ED1B45]/10 cursor-pointer"
         >
             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M10 17l5-5-5-5m5 5H3m9-9h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            Keluar
+            <span>Keluar</span>
         </button>
     </div>
 </aside>
 
-<header class="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-[#EEEEEF] bg-white px-4 sm:px-6 lg:left-72 lg:px-8">
-    <div class="flex min-w-0 flex-1 items-center gap-3">
+<!-- 2. Topbar (Navigasi Atas) -->
+<header class="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between gap-4 border-b border-[#E5E7EB] bg-white px-6 sm:px-8 lg:left-72">
+    <!-- Kiri: Mobile Hamburger + Judul Halaman -->
+    <div class="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
+        <!-- 3. Tombol Hamburger Menu Mobile -->
         <button
             type="button"
             x-on:click="sidebarOpen = true"
             aria-label="Buka navigasi"
-            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[#565A66] hover:bg-[#F4F4F5] lg:hidden"
+            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-[#F6F6F7] focus:text-[#16151A] transition lg:hidden"
         >
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
             </svg>
         </button>
 
-        <p class="truncate font-heading text-sm font-bold text-[#16151A] sm:text-base">
+        <!-- Judul Halaman di Topbar -->
+        <p class="truncate font-poppins font-bold text-lg text-[#16151A]">
             {{ Auth::user()->role === 'admin' ? 'Portal Admin' : 'Portal FitCore' }}
         </p>
     </div>
 
+    <!-- Kanan: Notifikasi + User Profile Dropdown -->
     <div class="flex shrink-0 items-center gap-2 sm:gap-4">
-        <button type="button" aria-label="Notifikasi" class="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-[#565A66] transition hover:bg-[#F4F4F5]">
+        <!-- Ikon Notifikasi -->
+        <button
+            type="button"
+            aria-label="Notifikasi"
+            class="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-[#F6F6F7] transition cursor-pointer"
+        >
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <span class="absolute right-2 top-2 h-2 w-2 rounded-full border-2 border-white bg-[#E61241]"></span>
+            <!-- Red Dot Indicator -->
+            <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#ED1B45] ring-2 ring-white"></span>
         </button>
 
+        <!-- User Profile Dropdown -->
         <div class="relative" x-on:click.outside="profileOpen = false">
             <button
                 type="button"
                 x-on:click="profileOpen = !profileOpen"
                 x-bind:aria-expanded="profileOpen"
                 aria-label="Menu profil"
-                class="flex items-center gap-2 rounded-full p-1.5 transition hover:bg-[#F4F4F5] sm:gap-3 sm:pl-2"
+                class="flex items-center gap-2 rounded-full p-1.5 transition hover:bg-[#F6F6F7] sm:gap-3 sm:pl-2 cursor-pointer"
             >
-                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#BA0030] text-xs font-bold uppercase text-white">
+                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#ED1B45] font-inter text-xs font-bold uppercase text-white shadow-sm">
                     {{ \Illuminate\Support\Str::of(Auth::user()->name)->explode(' ')->map(fn ($part) => \Illuminate\Support\Str::substr($part, 0, 1))->take(2)->implode('') }}
                 </span>
                 <span class="hidden text-left sm:block">
-                    <span class="block max-w-36 truncate text-xs font-semibold text-[#16151A]">{{ Auth::user()->name }}</span>
-                    <span class="block max-w-36 truncate text-[10px] text-[#858894]">{{ Auth::user()->email ?: 'admin@fitcore.id' }}</span>
+                    <!-- User Profile Dropdown Teks -->
+                    <span class="block max-w-36 truncate font-inter text-sm font-semibold text-[#16151A]">{{ Auth::user()->name }}</span>
+                    <!-- User Profile Role / Email -->
+                    <span class="block max-w-36 truncate font-inter text-xs text-[#565A66]">{{ Auth::user()->email ?: 'admin@fitcore.id' }}</span>
                 </span>
-                <svg class="hidden h-4 w-4 text-[#858894] sm:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <svg class="hidden h-4 w-4 text-[#565A66] sm:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </button>
 
+            <!-- Dropdown Menu Box -->
             <div
                 x-cloak
                 x-show="profileOpen"
                 x-transition
-                class="absolute right-0 top-12 z-40 w-56 rounded-2xl border border-[#EEEEEF] bg-white p-2 shadow-lg"
+                class="absolute right-0 top-12 z-40 w-56 rounded-[16px] border border-[#E5E7EB] bg-white p-2 shadow-lg"
             >
-                <div class="border-b border-[#EEEEEF] px-3 py-2 sm:hidden">
-                    <p class="truncate text-xs font-semibold text-[#16151A]">{{ Auth::user()->name }}</p>
-                    <p class="truncate text-[10px] text-[#858894]">{{ Auth::user()->email ?: 'admin@fitcore.id' }}</p>
+                <div class="border-b border-[#E5E7EB] px-3 py-2 sm:hidden">
+                    <p class="truncate font-inter text-sm font-semibold text-[#16151A]">{{ Auth::user()->name }}</p>
+                    <p class="truncate font-inter text-xs text-[#565A66]">{{ Auth::user()->email ?: 'admin@fitcore.id' }}</p>
                 </div>
-                <a href="{{ route('profile.edit') }}" class="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#565A66] hover:bg-[#F9F9FA] hover:text-[#16151A]">Profil</a>
+                <a
+                    href="{{ route('profile.edit') }}"
+                    class="block rounded-full px-4 py-2.5 font-inter text-sm font-medium text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] transition"
+                >
+                    Profil
+                </a>
                 <button
                     type="button"
                     x-on:click="profileOpen = false; showLogoutModal = true"
-                    class="w-full rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-[#BA0030] hover:bg-rose-50"
+                    class="w-full rounded-full px-4 py-2.5 text-left font-inter text-sm font-semibold text-[#ED1B45] hover:bg-[#ED1B45]/10 transition cursor-pointer"
                 >
                     Keluar
                 </button>

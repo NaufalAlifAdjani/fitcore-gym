@@ -49,16 +49,14 @@ class PaymentVerificationControllerTest extends TestCase
         $this->actingAs(User::factory()->create(['role' => 'admin']));
 
         $this->get(route('admin.payments.index', [
-            'start_date' => '2026-10-01',
-            'end_date' => '2026-10-09',
+            'search' => 'INV-2026-001',
+            'status' => 'pending',
         ]))
             ->assertOk()
-            ->assertSee('Dari Tanggal')
-            ->assertSee('Sampai Tanggal')
-            ->assertSee('name="start_date"', false)
-            ->assertSee('value="2026-10-01"', false)
-            ->assertSee('name="end_date"', false)
-            ->assertSee('value="2026-10-09"', false);
+            ->assertSee('name="search"', false)
+            ->assertSee('value="INV-2026-001"', false)
+            ->assertSee('name="status"', false)
+            ->assertSee('value="pending"', false);
     }
 
     public function test_admin_can_list_payments_using_search_status_and_date_filters(): void

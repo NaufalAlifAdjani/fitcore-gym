@@ -5,13 +5,13 @@
             rejectUrlTemplate: @js(route('admin.payments.reject', ['id' => '__PAYMENT_ID__'])),
         })"
         x-on:keydown.escape.window="closeModals()"
-        class="min-h-screen bg-[#F9F9FA] px-4 py-8 text-[#16151A] sm:px-6 lg:px-10"
+        class="min-h-screen bg-[#F6F6F7] px-4 py-8 text-[#16151A] sm:px-6 lg:px-10"
     >
-        <div class="mx-auto max-w-[1600px]">
-            <header class="mb-8">
-                <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#BA0030]">Administrasi Gym</p>
-                <h1 class="mt-2 font-heading text-3xl font-bold text-[#16151A] sm:text-[36px]">Verifikasi Pembayaran</h1>
-                <p class="mt-2 max-w-3xl text-sm leading-6 text-[#565A66]">
+        <div class="mx-auto max-w-[1600px] space-y-6">
+            <header>
+                <p class="font-inter text-xs font-bold text-[#ED1B45] tracking-wider uppercase">ADMINISTRASI GYM</p>
+                <h1 class="mt-2 text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">Verifikasi Pembayaran</h1>
+                <p class="mt-1 font-inter text-sm text-[#565A66]">
                     Tinjau bukti transfer dan konfirmasi pembayaran membership maupun sesi personal trainer.
                 </p>
             </header>

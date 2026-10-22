@@ -1,29 +1,25 @@
 @props([
     'title' => null,
     'subtitle' => null,
-    'padding' => true,
+    'padding' => false,
 ])
 
-<div {{ $attributes->merge(['class' => 'rounded-[20px] bg-white border border-[#EEEEEF] shadow-sm overflow-hidden']) }}>
-    @if (isset($header) || $title || $subtitle)
-        <div class="flex flex-col gap-1 border-b border-[#F0F0F1] px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-7">
-            @if (isset($header))
-                {{ $header }}
-            @else
-                <div>
-                    @if ($title)
-                        <h2 class="font-heading text-base font-bold text-[#16151A]">{{ $title }}</h2>
-                    @endif
-                    @if ($subtitle)
-                        <p class="mt-0.5 text-xs text-[#858894]">{{ $subtitle }}</p>
-                    @endif
-                </div>
+<div {{ $attributes->merge(['class' => 'bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)]']) }}>
+    @if (isset($header))
+        {{ $header }}
+    @elseif ($title || $subtitle)
+        <div class="border-b border-[#E5E7EB] px-6 py-4">
+            @if ($title)
+                <h2 class="font-poppins text-lg font-bold text-[#16151A]">{{ $title }}</h2>
+            @endif
+            @if ($subtitle)
+                <p class="mt-0.5 font-inter text-xs text-[#565A66]">{{ $subtitle }}</p>
             @endif
         </div>
     @endif
 
     @if ($padding)
-        <div class="p-5 sm:p-7">
+        <div class="p-6">
             {{ $slot }}
         </div>
     @else
@@ -31,8 +27,8 @@
     @endif
 
     @if (isset($footer))
-        <footer class="border-t border-[#F0F0F1] bg-[#FCFCFC] px-5 py-4 sm:px-7">
+        <div class="border-t border-[#E5E7EB] bg-white px-6 py-4 rounded-b-[16px]">
             {{ $footer }}
-        </footer>
+        </div>
     @endif
 </div>

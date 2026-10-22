@@ -1,66 +1,66 @@
 <form
     method="GET"
     action="{{ route('admin.payments.index') }}"
-    class="mb-6 flex w-full flex-col items-stretch gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm lg:flex-row lg:items-end"
+    class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] p-6 mb-6 flex w-full flex-col gap-4 md:flex-row md:items-center"
 >
-    <div class="flex min-w-0 flex-1 flex-col gap-1.5 lg:min-w-[220px]">
+    <!-- Input Search (flex-1) -->
+    <div class="relative flex-1 min-w-0">
         <label for="payment-search" class="sr-only">Cari invoice atau nama/email member</label>
         <div class="relative">
-            <svg class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
-                <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-            </svg>
-            <x-text-input
+            <span class="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#565A66]">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
+                    <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+            </span>
+            <input
                 id="payment-search"
                 type="search"
                 name="search"
                 value="{{ request('search') }}"
                 placeholder="Cari invoice / nama member..."
-                class="h-[42px] pl-10 pr-3.5"
+                class="w-full rounded-full border border-[#E5E7EB] bg-white pl-10 pr-4 py-2.5 text-sm font-inter text-[#16151A] placeholder-[#565A66] focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
             />
         </div>
     </div>
 
-    <div class="flex flex-col gap-1.5 lg:w-48 lg:shrink-0">
+    <!-- Dropdown Status -->
+    <div class="relative w-full md:w-48 shrink-0">
         <label for="payment-status" class="sr-only">Filter status</label>
-        <x-select-input id="payment-status" name="status" class="h-[42px]">
-            <option value="">Semua Status</option>
-            <option value="pending" @selected(request('status') === 'pending')>Menunggu Verifikasi</option>
-            <option value="verified" @selected(request('status') === 'verified')>Terverifikasi</option>
-            <option value="rejected" @selected(request('status') === 'rejected')>Ditolak</option>
-        </x-select-input>
+        <div class="relative">
+            <select
+                id="payment-status"
+                name="status"
+                class="w-full appearance-none rounded-full border border-[#E5E7EB] bg-white pl-4 pr-10 py-2.5 text-sm font-inter font-medium text-[#16151A] shadow-sm hover:border-[#ED1B45]/40 focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer transition"
+            >
+                <option value="">Semua Status</option>
+                <option value="pending" @selected(request('status') === 'pending')>Menunggu Verifikasi</option>
+                <option value="verified" @selected(request('status') === 'verified')>Terverifikasi</option>
+                <option value="rejected" @selected(request('status') === 'rejected')>Ditolak</option>
+            </select>
+            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-[#565A66]">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+            </span>
+        </div>
     </div>
 
-    <div class="flex flex-col gap-1.5 lg:w-40 lg:shrink-0">
-        <x-input-label for="payment-start-date" value="Dari Tanggal" class="px-1 !text-[10px] font-bold uppercase tracking-wider text-gray-500 !mb-0" />
-        <x-text-input
-            id="payment-start-date"
-            type="date"
-            name="start_date"
-            value="{{ request('start_date') }}"
-            class="h-[42px]"
-        />
-    </div>
-
-    <div class="flex flex-col gap-1.5 lg:w-40 lg:shrink-0">
-        <x-input-label for="payment-end-date" value="Sampai Tanggal" class="px-1 !text-[10px] font-bold uppercase tracking-wider text-gray-500 !mb-0" />
-        <x-text-input
-            id="payment-end-date"
-            type="date"
-            name="end_date"
-            value="{{ request('end_date') }}"
-            class="h-[42px]"
-        />
-    </div>
-
-    <div class="flex gap-2 lg:shrink-0">
-        <x-button type="submit" variant="primary" class="h-[42px] flex-1 rounded-xl px-5 lg:flex-none">
+    <!-- Tombol Aksi -->
+    <div class="flex items-center gap-2 shrink-0">
+        <button
+            type="submit"
+            class="bg-[#ED1B45] text-white px-6 py-2.5 rounded-full font-inter font-semibold shadow-sm hover:bg-[#D1123D] transition shrink-0 cursor-pointer"
+        >
             Terapkan
-        </x-button>
-        @if (request()->hasAny(['search', 'status', 'start_date', 'end_date']))
-            <x-button href="{{ route('admin.payments.index') }}" variant="secondary" class="h-[42px] rounded-xl px-4">
+        </button>
+        @if (request()->hasAny(['search', 'status']))
+            <a
+                href="{{ route('admin.payments.index') }}"
+                class="rounded-full border border-[#E5E7EB] bg-white px-5 py-2.5 font-inter text-sm font-semibold text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] transition shrink-0 inline-flex items-center justify-center cursor-pointer"
+            >
                 Reset
-            </x-button>
+            </a>
         @endif
     </div>
 </form>

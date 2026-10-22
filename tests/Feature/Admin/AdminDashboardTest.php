@@ -88,9 +88,79 @@ class AdminDashboardTest extends TestCase
             ->assertViewHas('totalCheckIns', 1)
             ->assertViewHas('chartLabels')
             ->assertViewHas('chartData')
-            ->assertSee('Dashboard Utama')
+            ->assertViewHas('pendingPayments')
+            ->assertViewHas('recentActivities')
+            ->assertViewHas('pendingVerificationsCount', 1)
+            ->assertSee('Dashboard Performa Gym')
+            ->assertSee('TOTAL MEMBER AKTIF')
+            ->assertSee('Antrean Menunggu Verifikasi')
+            ->assertSee('INV-TEST-002')
+            ->assertSee('Perhatian: Ada 1 pembayaran baru menunggu verifikasi!')
             ->assertSee('adminRevenueChart')
             ->assertSee('https://cdn.jsdelivr.net/npm/chart.js', false);
+    }
+
+    public function test_dashboard_pending_payments_queue_only_contains_pending_payments(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $member = User::factory()->create(['role' => 'member', 'name' => 'John Doe', 'email' => 'john@example.com']);
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_holder' => 'FitCore Gym',
+            'status' => 'active',
+        ]);
+
+        $package = MembershipPackage::create([
+            'name' => 'Platinum Pass',
+            'tier' => 'Platinum',
+            'price' => 750000,
+            'duration_in_days' => 60,
+            'facilities' => ['All access'],
+            'is_active' => true,
+        ]);
+
+        $pendingPayment = Payment::create([
+            'invoice_id' => 'INV-PENDING-999',
+            'member_id' => $member->id,
+            'bank_id' => $bank->id,
+            'package_id' => $package->id,
+            'package_type' => 'membership',
+            'payment_type' => 'membership',
+            'amount' => 750000,
+            'bank_sender' => 'BNI',
+            'bank_destination' => 'Mandiri FitCore',
+            'status' => 'pending',
+            'created_at' => now(),
+        ]);
+
+        $verifiedPayment = Payment::create([
+            'invoice_id' => 'INV-VERIFIED-888',
+            'member_id' => $member->id,
+            'bank_id' => $bank->id,
+            'package_id' => $package->id,
+            'package_type' => 'membership',
+            'payment_type' => 'membership',
+            'amount' => 500000,
+            'status' => 'verified',
+            'verified_at' => now(),
+            'created_at' => now()->subDay(),
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.dashboard'));
+
+        $response->assertOk()
+            ->assertSee('Antrean Menunggu Verifikasi')
+            ->assertSee('INV-PENDING-999')
+            ->assertSee('John Doe')
+            ->assertSee('john@example.com')
+            ->assertSee('Platinum Pass')
+            ->assertSee('MEMBERSHIP')
+            ->assertSee('Rp 750.000')
+            ->assertSee('BNI')
+            ->assertSee('ke Mandiri FitCore')
+            ->assertSee('PENDING')
+            ->assertDontSee('INV-VERIFIED-888');
     }
 
     public function test_non_admin_cannot_access_admin_dashboard(): void

@@ -10,7 +10,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <style>
             [x-cloak] {
                 display: none !important;
@@ -24,7 +24,7 @@
         <div
             x-data="{ sidebarOpen: false, profileOpen: false, showLogoutModal: false }"
             x-on:keydown.escape.window="showLogoutModal = false"
-            class="min-h-screen bg-[#F9F9FA]"
+            class="min-h-screen bg-[#F6F6F7]"
         >
             @include('layouts.navigation')
 
@@ -49,9 +49,9 @@
             >
                 <section
                     x-transition
-                    class="w-full max-w-md rounded-2xl border-t-4 border-[#BA0030] bg-white p-6 shadow-2xl sm:p-8"
+                    class="w-full max-w-md rounded-[16px] border-t-4 border-[#ED1B45] bg-white p-6 shadow-2xl sm:p-8"
                 >
-                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-50 text-[#BA0030]">
+                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#ED1B45]/10 text-[#ED1B45]">
                         <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M12 3.5 2.9 19.25a1.5 1.5 0 0 0 1.3 2.25h15.6a1.5 1.5 0 0 0 1.3-2.25L12 3.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
                             <path d="M12 9v5m0 3h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -59,8 +59,8 @@
                     </div>
 
                     <div class="mt-5 text-center">
-                        <h2 id="logout-modal-title" class="font-heading text-xl font-bold text-[#16151A]">Konfirmasi Keluar</h2>
-                        <p class="mt-2 text-sm leading-6 text-[#565A66]">
+                        <h2 id="logout-modal-title" class="font-poppins text-xl font-bold text-[#16151A]">Konfirmasi Keluar</h2>
+                        <p class="mt-2 font-inter text-sm leading-6 text-[#565A66]">
                             Apakah Anda yakin ingin keluar dari akun ini? Sesi Anda saat ini akan diakhiri.
                         </p>
                     </div>
@@ -69,7 +69,7 @@
                         <button
                             type="button"
                             x-on:click="showLogoutModal = false"
-                            class="rounded-full bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+                            class="rounded-full bg-[#F6F6F7] px-5 py-3 font-inter text-sm font-semibold text-[#565A66] transition hover:bg-[#E5E7EB] hover:text-[#16151A] focus:outline-none cursor-pointer"
                         >
                             Batal
                         </button>
@@ -77,7 +77,7 @@
                             @csrf
                             <button
                                 type="submit"
-                                class="w-full rounded-full bg-[#BA0030] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#970027] focus:outline-none focus:ring-2 focus:ring-[#BA0030] focus:ring-offset-2"
+                                class="w-full rounded-full bg-[#ED1B45] px-5 py-3 font-inter text-sm font-semibold text-white transition hover:bg-[#D1123D] focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:ring-offset-2 cursor-pointer"
                             >
                                 Ya, Keluar
                             </button>
