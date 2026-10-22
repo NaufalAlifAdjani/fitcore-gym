@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'FitCore Gym') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased text-[#16151A] bg-[#F6F6F7]">
         <div
             x-data="{ sidebarOpen: false, profileOpen: false, showLogoutModal: false }"
             x-on:keydown.escape.window="showLogoutModal = false"
@@ -28,9 +28,11 @@
         >
             @include('layouts.navigation')
 
+            <x-fitcore.toast />
+
             <main class="min-h-screen pt-16 lg:pl-72">
                 @isset($header)
-                    <header class="bg-white px-4 py-5 shadow-sm sm:px-6 lg:px-8">
+                    <header class="bg-white px-4 py-5 shadow-sm sm:px-6 lg:px-8 border-b border-[#E5E7EB]">
                         {{ $header }}
                     </header>
                 @endisset

@@ -8,8 +8,10 @@ use App\Http\Controllers\Member\DashboardController as MemberDashboardController
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
 use App\Http\Controllers\MemberCardController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Http\Controllers\PtPackagePurchaseController;
+use App\Http\Controllers\PtSessionController;
+use App\Http\Controllers\PtSessionSlotController;
+use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -49,6 +51,26 @@ Route::middleware('auth')->group(function () {
         Route::post('/checkout/{package}', 'processPayment')->name('process-payment');
         Route::get('/payment-status/{payment}', 'paymentStatus')->name('payment-status');
     });
+
+    // PT Session Booking routes
+    Route::get('/pt-sessions/slots', [PtSessionSlotController::class, 'slots'])
+        ->name('pt-sessions.slots');
+    Route::get('/pt-sessions/availability', [PtSessionSlotController::class, 'availability'])
+        ->name('pt-sessions.availability');
+
+    Route::get('/pt-sessions', [PtSessionController::class, 'index'])
+        ->name('pt-sessions.index');
+    Route::get('/pt-sessions/create', [PtSessionController::class, 'create'])
+        ->name('pt-sessions.create');
+    Route::post('/pt-sessions', [PtSessionController::class, 'store'])
+        ->name('pt-sessions.store');
+
+    Route::get('/pt-sessions/{ptSession}/edit', [PtSessionController::class, 'edit'])
+        ->name('pt-sessions.edit');
+    Route::put('/pt-sessions/{ptSession}', [PtSessionController::class, 'update'])
+        ->name('pt-sessions.update');
+    Route::patch('/pt-sessions/{ptSession}/cancel', [PtSessionController::class, 'cancel'])
+        ->name('pt-sessions.cancel');
 });
 
 Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {

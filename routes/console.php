@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command(SystemUpdateMembershipStatus::class)->daily();
+Schedule::command('pt:cancel-expired-pending')->everyFifteenMinutes();

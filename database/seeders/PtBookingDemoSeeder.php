@@ -33,11 +33,6 @@ class PtBookingDemoSeeder extends Seeder
                 'specialization' => 'Hypertrophy & Strength Conditioning',
                 'bio' => 'Head Coach di Fitcore dengan sertifikasi NSCA CSCS. Membimbing 100+ atlet dan member.',
                 'experience' => 8,
-                'tier' => 'Senior PT Tier III',
-                'studio' => 'SCBD Studio',
-                'rating' => 4.98,
-                'review_count' => 184,
-                'photo_path' => null,
                 'status' => 'active',
             ]
         );
@@ -72,7 +67,7 @@ class PtBookingDemoSeeder extends Seeder
         );
 
         // 4. Sesi Contoh
-        // Sesi Mendatang 1 (Besok jam 14:00)
+        // Sesi Menunggu Konfirmasi PT (Besok jam 14:00)
         PtSession::updateOrCreate(
             [
                 'member_id' => $member->id,
@@ -83,11 +78,11 @@ class PtBookingDemoSeeder extends Seeder
             [
                 'member_pt_quota_id' => $quota->id,
                 'end_time' => '15:00:00',
-                'status' => 'scheduled',
+                'status' => 'pending',
             ]
         );
 
-        // Sesi Mendatang 2 (3 hari lagi jam 10:00)
+        // Sesi Terkonfirmasi (3 hari lagi jam 10:00)
         PtSession::updateOrCreate(
             [
                 'member_id' => $member->id,
