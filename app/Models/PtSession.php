@@ -20,6 +20,11 @@ class PtSession extends Model
         return $this->belongsTo(MemberPtQuota::class, 'member_pt_quota_id');
     }
 
+    public function memberPtQuota()
+    {
+        return $this->belongsTo(MemberPtQuota::class, 'member_pt_quota_id');
+    }
+
     public function member()
     {
         return $this->belongsTo(User::class, 'member_id');

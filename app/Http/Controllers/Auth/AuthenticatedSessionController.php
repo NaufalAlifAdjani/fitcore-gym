@@ -24,19 +24,47 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Jika ada sesi pengguna aktif sebelumnya, bersihkan sesi lama terlebih dahulu
+        if (Auth::check()) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
         // Validasi input
         $credentials = $request->validated();
 
         // Coba lakukan autentikasi
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            $user = Auth::user();
+            $requestedRole = $request->input('role');
+
+            // 1. Jika login via form Admin Login tetapi akun bukan Admin
+            if ($requestedRole === 'admin' && ! $user->isAdmin()) {
+                $request->session()->regenerate();
+                abort(403, 'Akses Ditolak. Akun Anda (Role: '.$user->role.') tidak memiliki hak akses Administrator untuk masuk ke Portal Admin.');
+            }
+
+            // 2. Jika login via tab Trainer tetapi akun bukan Trainer
+            if ($requestedRole === 'trainer' && ! $user->isTrainer()) {
+                $request->session()->regenerate();
+                abort(403, 'Akses Ditolak. Akun Anda (Role: '.$user->role.') bukan akun Personal Trainer dan tidak memiliki izin masuk melalui Portal Pelatih.');
+            }
+
+            // 3. Jika login via tab Member tetapi akun bukan Member
+            if ($requestedRole === 'member' && ! $user->isMember()) {
+                $request->session()->regenerate();
+                abort(403, 'Akses Ditolak. Akun Anda (Role: '.$user->role.') bukan akun Member dan tidak memiliki izin masuk melalui Portal Member.');
+            }
+
             $request->session()->regenerate();
 
             // Redirect berdasarkan Role User
-            $role = Auth::user()->role;
+            $role = $user->role;
             if ($role === 'admin') {
                 return redirect()->intended(route('admin.dashboard', absolute: false));
             } elseif ($role === 'trainer') {
-                return redirect()->intended('/trainer/dashboard');
+                return redirect()->intended(route('trainer.dashboard', absolute: false));
             } elseif ($role === 'member') {
                 return redirect()->route('member.dashboard');
             }

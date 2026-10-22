@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -20,7 +21,7 @@ Route::get('/dashboard', function () {
     }
 
     if ($role === 'trainer') {
-        return redirect('/trainer/dashboard');
+        return redirect()->route('trainer.dashboard');
     }
 
     return redirect()->route('member.dashboard');
@@ -33,11 +34,11 @@ Route::middleware('auth')->group(function () {
 
     // Member Dashboard
     Route::get('/member/dashboard', [MemberDashboardController::class, 'index'])
-        ->middleware('can:access-member-dashboard')
+        ->middleware('role:member')
         ->name('member.dashboard');
 
     // Member Membership Package, Checkout, Upload Proof, and Payment Status routes
-    Route::prefix('membership')->name('member.membership.')->controller(MemberMembershipPackageController::class)->group(function () {
+    Route::prefix('membership')->name('member.membership.')->middleware('role:member')->controller(MemberMembershipPackageController::class)->group(function () {
         Route::get('/packages', 'index')->name('packages');
         Route::get('/checkout/{package}', 'checkout')->name('checkout');
         Route::get('/upload-proof/{package}', 'uploadProof')->name('upload-proof');
@@ -47,7 +48,11 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
+    Route::get('/dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
+});
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/packages', [MembershipPackageController::class, 'index'])->name('packages.index');
     Route::post('/packages', [MembershipPackageController::class, 'store'])->name('packages.store');
