@@ -223,7 +223,7 @@
                         <div class="flex items-center gap-3">
                             <div class="text-right hidden sm:block">
                                 <p class="font-poppins font-bold text-sm text-gray-900 leading-tight">
-                                    Coach {{ Auth::user()->name }}
+                                    {{ str_starts_with(Auth::user()->name, 'Coach') ? Auth::user()->name : 'Coach ' . Auth::user()->name }}
                                 </p>
                                 <p class="font-inter text-xs text-gray-400">
                                     {{ Auth::user()->trainerProfile?->specialization ?: 'Master Trainer' }}
@@ -238,6 +238,8 @@
                         </div>
                     </div>
                 </header>
+
+                <x-fitcore.toast />
 
                 <!-- Page Body -->
                 <main class="flex-1 px-6 py-8 sm:px-10 max-w-7xl w-full mx-auto">

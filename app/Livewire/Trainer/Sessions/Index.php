@@ -16,7 +16,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
-#[Layout('layouts.app')]
+#[Layout('layouts.trainer')]
 class Index extends Component
 {
     #[Url(as: 'd')]
