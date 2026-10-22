@@ -177,4 +177,52 @@ class AdminDashboardTest extends TestCase
         $this->get(route('admin.dashboard'))
             ->assertRedirect(route('login'));
     }
+
+    public function test_revenue_chart_supports_contextual_ranges_7_days_30_days_and_this_year(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        // 1. Default / 7_days
+        $response7 = $this->actingAs($admin)->get(route('admin.dashboard', ['range' => '7_days']));
+        $response7->assertOk()
+            ->assertViewHas('currentRange', '7_days')
+            ->assertViewHas('chartTitle', 'Pendapatan 7 Hari Terakhir')
+            ->assertSee('Pendapatan 7 Hari Terakhir')
+            ->assertSee('onchange="window.location.href=\'?range=\' + this.value"', false);
+
+        $labels7 = $response7->viewData('chartLabels');
+        $data7 = $response7->viewData('chartData');
+        $this->assertCount(7, $labels7);
+        $this->assertCount(7, $data7);
+
+        // 2. 30_days
+        $response30 = $this->actingAs($admin)->get(route('admin.dashboard', ['range' => '30_days']));
+        $response30->assertOk()
+            ->assertViewHas('currentRange', '30_days')
+            ->assertViewHas('chartTitle', 'Pendapatan 30 Hari Terakhir')
+            ->assertSee('Pendapatan 30 Hari Terakhir');
+
+        $labels30 = $response30->viewData('chartLabels');
+        $data30 = $response30->viewData('chartData');
+        $this->assertCount(30, $labels30);
+        $this->assertCount(30, $data30);
+
+        // 3. this_year
+        $responseYear = $this->actingAs($admin)->get(route('admin.dashboard', ['range' => 'this_year']));
+        $responseYear->assertOk()
+            ->assertViewHas('currentRange', 'this_year')
+            ->assertViewHas('chartTitle', 'Pendapatan Tahun Ini')
+            ->assertSee('Pendapatan Tahun Ini');
+
+        $labelsYear = $responseYear->viewData('chartLabels');
+        $dataYear = $responseYear->viewData('chartData');
+        $this->assertCount(12, $labelsYear);
+        $this->assertCount(12, $dataYear);
+
+        // 4. Fallback on invalid range
+        $responseInvalid = $this->actingAs($admin)->get(route('admin.dashboard', ['range' => 'invalid_range']));
+        $responseInvalid->assertOk()
+            ->assertViewHas('currentRange', '7_days')
+            ->assertViewHas('chartTitle', 'Pendapatan 7 Hari Terakhir');
+    }
 }

@@ -107,22 +107,27 @@
                 </x-stat-card>
             </div>
 
-            <!-- 2. Grafik Pendapatan 7 Hari Terakhir (Chart.js) -->
+            <!-- 2. Grafik Pendapatan (Chart.js) -->
             <x-card class="p-6">
-                <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-[#F0F0F1] pb-4">
+                <div class="flex justify-between items-center mb-4">
                     <div>
-                        <h2 class="font-poppins text-lg font-bold text-[#16151A]">
-                            Pendapatan 7 Hari Terakhir
+                        <h2 class="font-poppins font-bold text-lg text-[#16151A]">
+                            {{ $chartTitle }}
                         </h2>
                         <p class="font-inter text-xs text-[#565A66]">
-                            Grafik nominal pendapatan harian dari paket membership dan personal trainer terverifikasi.
+                            Grafik nominal pendapatan dari paket membership dan personal trainer terverifikasi.
                         </p>
                     </div>
-                    <div class="text-left sm:text-right">
-                        <span class="font-inter text-xs font-semibold text-[#565A66]">Total 7 Hari:</span>
-                        <span class="ml-1 font-poppins text-base font-extrabold text-[#ED1B45]">
-                            Rp {{ number_format(array_sum($chartData ?? []), 0, ',', '.') }}
-                        </span>
+                    <div>
+                        <select
+                            name="range"
+                            onchange="window.location.href='?range=' + this.value"
+                            class="border border-[#E5E7EB] rounded-full px-4 py-1.5 text-xs font-inter text-[#565A66] hover:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer transition bg-white"
+                        >
+                            <option value="7_days" @selected(($currentRange ?? '7_days') === '7_days')>7 Hari Terakhir</option>
+                            <option value="30_days" @selected(($currentRange ?? '') === '30_days')>30 Hari Terakhir</option>
+                            <option value="this_year" @selected(($currentRange ?? '') === 'this_year')>Tahun Ini</option>
+                        </select>
                     </div>
                 </div>
 

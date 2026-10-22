@@ -7,6 +7,7 @@ use App\Models\CheckIn;
 use App\Models\Membership;
 use App\Models\Payment;
 use App\Models\PtSession;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -71,28 +72,79 @@ class AdminDashboardController extends Controller
             ->count();
         $formattedPtSessions = $activePtSessions.' Sesi';
 
-        // 5. Chart Data: 7-day verified revenue aggregation
+        // 5. Chart Data: Contextual verified revenue aggregation
+        $currentRange = (string) $request->query('range', '7_days');
+        if (! in_array($currentRange, ['7_days', '30_days', 'this_year'], true)) {
+            $currentRange = '7_days';
+        }
+
+        $intervals = [];
+
+        switch ($currentRange) {
+            case '30_days':
+                $chartTitle = 'Pendapatan 30 Hari Terakhir';
+                for ($i = 29; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $intervals[] = [
+                        'label' => $date->format('d M'),
+                        'start' => $date->copy()->startOfDay(),
+                        'end' => $date->copy()->endOfDay(),
+                    ];
+                }
+                break;
+
+            case 'this_year':
+                $chartTitle = 'Pendapatan Tahun Ini';
+                $currentYear = now()->year;
+                for ($month = 1; $month <= 12; $month++) {
+                    $monthCarbon = Carbon::create($currentYear, $month, 1);
+                    $intervals[] = [
+                        'label' => $monthCarbon->translatedFormat('M') ?: $monthCarbon->format('M'),
+                        'start' => $monthCarbon->copy()->startOfMonth(),
+                        'end' => $monthCarbon->copy()->endOfMonth(),
+                    ];
+                }
+                break;
+
+            case '7_days':
+            default:
+                $currentRange = '7_days';
+                $chartTitle = 'Pendapatan 7 Hari Terakhir';
+                for ($i = 6; $i >= 0; $i--) {
+                    $date = now()->subDays($i);
+                    $intervals[] = [
+                        'label' => $date->format('d M'),
+                        'start' => $date->copy()->startOfDay(),
+                        'end' => $date->copy()->endOfDay(),
+                    ];
+                }
+                break;
+        }
+
+        $overallStartDate = $intervals[0]['start'];
+        $overallEndDate = end($intervals)['end'];
+
+        $payments = Payment::query()
+            ->where('status', 'verified')
+            ->where(function ($query) use ($overallStartDate, $overallEndDate) {
+                $query->whereBetween('verified_at', [$overallStartDate, $overallEndDate])
+                    ->orWhere(function ($q) use ($overallStartDate, $overallEndDate) {
+                        $q->whereNull('verified_at')
+                            ->whereBetween('created_at', [$overallStartDate, $overallEndDate]);
+                    });
+            })
+            ->get(['amount', 'verified_at', 'created_at']);
+
         $chartLabels = [];
         $chartData = [];
 
-        for ($i = 6; $i >= 0; $i--) {
-            $date = now()->subDays($i);
-            $startOfDay = $date->copy()->startOfDay();
-            $endOfDay = $date->copy()->endOfDay();
+        foreach ($intervals as $interval) {
+            $chartLabels[] = $interval['label'];
+            $chartData[] = (float) $payments->filter(function ($payment) use ($interval) {
+                $effectiveDate = $payment->verified_at ? Carbon::parse($payment->verified_at) : ($payment->created_at ? Carbon::parse($payment->created_at) : null);
 
-            $dailyRevenue = (float) Payment::query()
-                ->where('status', 'verified')
-                ->where(function ($query) use ($startOfDay, $endOfDay) {
-                    $query->whereBetween('verified_at', [$startOfDay, $endOfDay])
-                        ->orWhere(function ($q) use ($startOfDay, $endOfDay) {
-                            $q->whereNull('verified_at')
-                                ->whereBetween('created_at', [$startOfDay, $endOfDay]);
-                        });
-                })
-                ->sum('amount');
-
-            $chartLabels[] = $date->format('d M');
-            $chartData[] = $dailyRevenue;
+                return $effectiveDate && $effectiveDate->between($interval['start'], $interval['end']);
+            })->sum('amount');
         }
 
         // 6. Pending payments verification queue (paginate(5))
@@ -124,6 +176,8 @@ class AdminDashboardController extends Controller
             'formattedPtSessions',
             'chartLabels',
             'chartData',
+            'chartTitle',
+            'currentRange',
             'pendingPayments',
             'recentActivities',
             'pendingVerificationsCount',
