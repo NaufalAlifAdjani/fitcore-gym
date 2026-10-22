@@ -87,57 +87,68 @@
                         </div>
                     </div>
 
-                    <!-- Menu Links -->
-                    <nav class="space-y-1.5 px-3">
-                        <!-- Dashboard -->
+                    <!-- Main Menu Header -->
+                    <div class="px-5 mb-2.5">
+                        <span class="text-[11px] font-bold text-[#565A66] tracking-wider uppercase font-inter">
+                            MAIN MENU
+                        </span>
+                    </div>
+
+                    <!-- Navigation Items List -->
+                    <nav class="space-y-1 px-3">
+                        <!-- 1. Dashboard -->
                         <a
                             href="{{ route('trainer.dashboard') }}"
-                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-medium transition duration-150 {{ request()->routeIs('trainer.dashboard') ? 'bg-[#ED1B45] text-white font-semibold shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}"
+                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.dashboard') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#ED1B45]' }}"
                         >
-                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <rect x="3" y="3" width="7" height="7" rx="1.5" />
-                                <rect x="14" y="3" width="7" height="7" rx="1.5" />
-                                <rect x="14" y="14" width="7" height="7" rx="1.5" />
-                                <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                            <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.dashboard') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
                             </svg>
                             <span>Dashboard</span>
                         </a>
 
-                        <!-- Jadwal -->
+                        <!-- 2. Jadwal Sesi PT -->
                         <a
-                            href="{{ route('trainer.dashboard') }}"
-                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-medium text-gray-600 transition duration-150 hover:bg-gray-50 hover:text-gray-900"
+                            href="{{ route('trainer.sessions.index') }}"
+                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.sessions.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#ED1B45]' }}"
                         >
-                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <rect x="3.5" y="4.5" width="17" height="16" rx="2" />
-                                <path d="M8 2.5v4M16 2.5v4M3.5 9h17" stroke-linecap="round" />
+                            <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.sessions.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
-                            <span>Jadwal</span>
+                            <span>Jadwal Sesi PT</span>
                         </a>
 
-                        <!-- Member Saya -->
+                        <!-- 3. Klien Saya -->
                         <a
-                            href="{{ route('trainer.dashboard') }}"
-                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-medium text-gray-600 transition duration-150 hover:bg-gray-50 hover:text-gray-900"
+                            href="{{ route('trainer.clients.index') }}"
+                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.clients.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#ED1B45]' }}"
                         >
-                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.clients.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                             </svg>
-                            <span>Member Saya</span>
+                            <span>Klien Saya</span>
                         </a>
 
-                        <!-- Performa -->
+                        <!-- 4. Ketersediaan Waktu -->
                         <a
-                            href="{{ route('trainer.dashboard') }}"
-                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-medium text-gray-600 transition duration-150 hover:bg-gray-50 hover:text-gray-900"
+                            href="{{ route('trainer.availability.index') }}"
+                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.availability.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#ED1B45]' }}"
                         >
-                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-linecap="round" stroke-linejoin="round" />
+                            <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.availability.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            <span>Performa</span>
+                            <span>Ketersediaan Waktu</span>
+                        </a>
+
+                        <!-- 5. Pendapatan / Komisi -->
+                        <a
+                            href="{{ route('trainer.commissions.index') }}"
+                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.commissions.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#ED1B45]' }}"
+                        >
+                            <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.commissions.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            <span>Pendapatan / Komisi</span>
                         </a>
                     </nav>
                 </div>

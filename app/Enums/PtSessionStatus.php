@@ -6,6 +6,8 @@ enum PtSessionStatus: string
 {
     case Pending = 'pending';
     case Confirmed = 'confirmed';
+    case InProgress = 'in_progress';
+    case Completed = 'completed';
     case Cancelled = 'cancelled';
 
     public function label(): string
@@ -13,6 +15,8 @@ enum PtSessionStatus: string
         return match ($this) {
             self::Pending => 'Menunggu',
             self::Confirmed => 'Terkonfirmasi',
+            self::InProgress => 'Berlangsung',
+            self::Completed => 'Selesai',
             self::Cancelled => 'Dibatalkan',
         };
     }
@@ -22,6 +26,8 @@ enum PtSessionStatus: string
         return match ($this) {
             self::Pending => 'amber',
             self::Confirmed => 'emerald',
+            self::InProgress => 'blue',
+            self::Completed => 'emerald',
             self::Cancelled => 'zinc',
         };
     }
@@ -36,6 +42,8 @@ enum PtSessionStatus: string
         return match ($this) {
             self::Pending => 'bg-amber-500/10 text-amber-500 border border-amber-500/20',
             self::Confirmed => 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20',
+            self::InProgress => 'bg-blue-500/10 text-blue-600 border border-blue-500/20',
+            self::Completed => 'bg-emerald-50 text-emerald-700 border border-emerald-600/20',
             self::Cancelled => 'bg-zinc-800 text-zinc-300 border border-zinc-700',
         };
     }

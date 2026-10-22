@@ -208,4 +208,54 @@ class TrainerDashboardTest extends TestCase
         $res4->assertSee('Bagus bintang empat.');
         $res4->assertDontSee('Luar biasa bintang lima!');
     }
+
+    public function test_trainer_dashboard_displays_all_main_menu_items(): void
+    {
+        $trainer = User::factory()->create(['role' => 'trainer']);
+
+        $response = $this->actingAs($trainer)->get('/trainer/dashboard');
+
+        $response->assertOk();
+        $response->assertSee('MAIN MENU');
+        $response->assertSee('Dashboard');
+        $response->assertSee('Jadwal Sesi PT');
+        $response->assertSee('Klien Saya');
+        $response->assertSee('Ketersediaan Waktu');
+        $response->assertSee('Pendapatan / Komisi');
+    }
+
+    public function test_trainer_can_access_submenu_routes(): void
+    {
+        $trainer = User::factory()->create(['role' => 'trainer']);
+
+        $routes = [
+            '/trainer/jadwal-sesi' => 'Jadwal Sesi PT',
+            '/trainer/klien-saya' => 'Klien Saya',
+            '/trainer/ketersediaan-waktu' => 'Ketersediaan Waktu',
+            '/trainer/pendapatan-komisi' => 'Pendapatan / Komisi',
+        ];
+
+        foreach ($routes as $url => $title) {
+            $response = $this->actingAs($trainer)->get($url);
+            $response->assertOk();
+            $response->assertSee($title);
+        }
+    }
+
+    public function test_member_cannot_access_trainer_submenu_routes(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+
+        $urls = [
+            '/trainer/jadwal-sesi',
+            '/trainer/klien-saya',
+            '/trainer/ketersediaan-waktu',
+            '/trainer/pendapatan-komisi',
+        ];
+
+        foreach ($urls as $url) {
+            $response = $this->actingAs($member)->get($url);
+            $response->assertStatus(403);
+        }
+    }
 }

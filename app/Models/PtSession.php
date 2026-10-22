@@ -82,7 +82,7 @@ class PtSession extends Model
 
     public function getCanBeChangedAttribute(): bool
     {
-        if (! in_array($this->status, [PtSessionStatus::Confirmed, PtSessionStatus::Pending])) {
+        if (! in_array($this->status, [PtSessionStatus::Confirmed, PtSessionStatus::Pending], true)) {
             return false;
         }
 
@@ -111,7 +111,6 @@ class PtSession extends Model
 
         return now()->greaterThanOrEqualTo($startsAt->copy()->subHours($cutoffHours));
     }
-
     public function getTimeRangeAttribute(): string
     {
         $start = substr((string) $this->start_time, 0, 5);
