@@ -79,7 +79,7 @@ class RolePermissionMiddlewareTest extends TestCase
 
         $response->assertOk()
             ->assertViewIs('trainer.dashboard')
-            ->assertSee('Dashboard Personal Trainer')
+            ->assertSee('Performa Saya')
             ->assertSee($trainer->name);
     }
 
