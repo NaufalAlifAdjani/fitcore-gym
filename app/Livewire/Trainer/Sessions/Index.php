@@ -12,9 +12,11 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
+#[Layout('layouts.app')]
 class Index extends Component
 {
     #[Url(as: 'd')]
@@ -332,6 +334,6 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.trainer.sessions.index')->layout('layouts.app');
+        return view('livewire.trainer.sessions.index');
     }
 }
