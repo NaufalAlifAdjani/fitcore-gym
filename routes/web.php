@@ -3,8 +3,10 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
+use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
+use App\Http\Controllers\MemberCardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use Illuminate\Support\Facades\Route;
@@ -70,10 +72,33 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         });
 
     Route::view('/pt-sessions', 'admin.placeholder', ['title' => 'Paket Sesi & Jadwal PT'])->name('pt-sessions.index');
-    Route::view('/check-in', 'admin.placeholder', ['title' => 'Scanner Check-in'])->name('check-in.index');
+    Route::redirect('/check-in', '/admin/checkin')->name('check-in.index');
     Route::view('/members', 'admin.placeholder', ['title' => 'Manajemen Member'])->name('members.index');
     Route::view('/settings', 'admin.placeholder', ['title' => 'Pengaturan'])->name('settings.index');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Member Routes
+|--------------------------------------------------------------------------
+| The Digital Member Card is accessible by any authenticated user with
+| a member profile (role: member). It shows the QR Code for check-in.
+*/
+Route::middleware(['auth', 'role:member'])->name('member.')->group(function () {
+    Route::get('/member/card', [MemberCardController::class, 'show'])->name('card');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin / Staff Routes
+|--------------------------------------------------------------------------
+| Protected by auth + role middleware. Only admin and trainer (petugas)
+| can access the QR scanner page and submit check-in requests.
+*/
+Route::middleware(['auth', 'role:admin,trainer'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/checkin', [CheckInController::class, 'index'])->name('checkin.index');
+    Route::post('/checkin', [CheckInController::class, 'store'])->name('checkin.store');
 });
 
 require __DIR__.'/auth.php';
