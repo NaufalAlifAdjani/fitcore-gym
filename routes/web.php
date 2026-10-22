@@ -50,6 +50,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
     Route::get('/dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
+    Route::view('/jadwal-sesi', 'trainer.placeholder', ['title' => 'Jadwal Sesi PT'])->name('sessions.index');
+    Route::view('/klien-saya', 'trainer.placeholder', ['title' => 'Klien Saya'])->name('clients.index');
+    Route::view('/ketersediaan-waktu', 'trainer.placeholder', ['title' => 'Ketersediaan Waktu'])->name('availability.index');
+    Route::view('/pendapatan-komisi', 'trainer.placeholder', ['title' => 'Pendapatan / Komisi'])->name('commissions.index');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
