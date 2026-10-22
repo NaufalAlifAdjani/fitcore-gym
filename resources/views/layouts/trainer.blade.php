@@ -20,6 +20,7 @@
 
         <!-- Scripts & Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
     </head>
     <body class="font-sans antialiased bg-[#FAFAFA] text-gray-900">
         <div
@@ -294,5 +295,6 @@
                 </div>
             </div>
         </div>
+        @livewireScripts
     </body>
 </html>

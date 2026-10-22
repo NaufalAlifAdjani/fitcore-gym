@@ -7,6 +7,7 @@ use App\Http\Controllers\Member\DashboardController as MemberDashboardController
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
+use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -50,7 +51,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
     Route::get('/dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
-    Route::view('/jadwal-sesi', 'trainer.placeholder', ['title' => 'Jadwal Sesi PT'])->name('sessions.index');
+    Route::get('/jadwal-sesi', TrainerSessionsIndex::class)->name('sessions.index');
     Route::view('/klien-saya', 'trainer.placeholder', ['title' => 'Klien Saya'])->name('clients.index');
     Route::view('/ketersediaan-waktu', 'trainer.placeholder', ['title' => 'Ketersediaan Waktu'])->name('availability.index');
     Route::view('/pendapatan-komisi', 'trainer.placeholder', ['title' => 'Pendapatan / Komisi'])->name('commissions.index');

@@ -11,6 +11,7 @@
         "laravel/framework": "^13.17",
         "laravel/socialite": "^5.31",
         "laravel/tinker": "^3.0",
+        "livewire/livewire": "^4.4",
         "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "require-dev": {
@@ -78,7 +79,7 @@
         }
     },
     "config": {
-        "optimize-autoloader": true,
+        "optimize-autoloader": false,
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
