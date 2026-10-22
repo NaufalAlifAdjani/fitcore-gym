@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\Rating;
 use App\Models\MemberProfile;
-use App\Models\TrainerProfile;
 use App\Models\PtSession;
+use App\Models\Rating;
+use App\Models\TrainerProfile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RatingFactory extends Factory

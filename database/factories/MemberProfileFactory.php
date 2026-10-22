@@ -14,7 +14,7 @@ class MemberProfileFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'member_code' => 'MEM' . fake()->unique()->numerify('######'),
+            'member_code' => 'MEM'.fake()->unique()->numerify('######'),
             'gender' => fake()->randomElement(['male', 'female']),
             'address' => fake()->address(),
         ];

@@ -25,26 +25,29 @@
 
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
+        <!-- Role login yang dipilih (member atau trainer) -->
+        <input type="hidden" name="role" :value="role">
 
         <!-- Email atau Nomor WhatsApp -->
-        <x-auth-input 
-            label="Email atau Nomor WhatsApp" 
+        <x-auth-input
+            label="Email atau Nomor WhatsApp"
             badge="Akun Terdaftar"
             icon="at"
-            type="text" 
-            name="email" 
-            :value="old('email')" 
-            placeholder="nama@email.com atau 081234567890" 
-            required autofocus />
+            type="text"
+            name="email"
+            :value="old('email')"
+            placeholder="nama@email.com atau 081234567890"
+            required
+            autofocus />
 
         <!-- Kata Sandi -->
-        <x-auth-input 
-            label="Kata Sandi" 
+        <x-auth-input
+            label="Kata Sandi"
             badge="Min. 8 karakter"
             icon="lock"
-            type="password" 
-            name="password" 
-            placeholder="Masukkan kata sandi akun Anda" 
+            type="password"
+            name="password"
+            placeholder="Masukkan kata sandi akun Anda"
             required />
 
         <!-- Remember Me & Forgot Password -->

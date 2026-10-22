@@ -15,8 +15,28 @@ class PtSession extends Model
         'session_date' => 'date',
     ];
 
-    public function quota()   { return $this->belongsTo(MemberPtQuota::class, 'member_pt_quota_id'); }
-    public function member()  { return $this->belongsTo(User::class, 'member_id'); }
-    public function trainer() { return $this->belongsTo(User::class, 'trainer_id'); }
-    public function rating()  { return $this->hasOne(Rating::class); }
+    public function quota()
+    {
+        return $this->belongsTo(MemberPtQuota::class, 'member_pt_quota_id');
+    }
+
+    public function memberPtQuota()
+    {
+        return $this->belongsTo(MemberPtQuota::class, 'member_pt_quota_id');
+    }
+
+    public function member()
+    {
+        return $this->belongsTo(User::class, 'member_id');
+    }
+
+    public function trainer()
+    {
+        return $this->belongsTo(User::class, 'trainer_id');
+    }
+
+    public function rating()
+    {
+        return $this->hasOne(Rating::class);
+    }
 }
