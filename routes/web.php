@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
+use App\Http\Controllers\Admin\PtPackageController;
 use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
@@ -99,8 +100,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
             Route::post('/{id}/reject', 'reject')->whereNumber('id')->name('reject');
         });
 
-    Route::view('/pt-sessions', 'admin.placeholder', ['title' => 'Paket Sesi & Jadwal PT'])->name('pt-sessions.index');
-    Route::redirect('/check-in', '/admin/checkin')->name('check-in.index');
+    Route::get('/pt-packages', [PtPackageController::class, 'index'])->name('pt-packages.index');
+    Route::post('/pt-packages', [PtPackageController::class, 'store'])->name('pt-packages.store');
+    Route::put('/pt-packages/{ptPackage}', [PtPackageController::class, 'update'])->name('pt-packages.update');
+    Route::patch('/pt-packages/{ptPackage}/toggle-status', [PtPackageController::class, 'toggleStatus'])->name('pt-packages.toggle-status');
+    Route::get('/pt-sessions', [PtPackageController::class, 'index'])->name('pt-sessions.index');
+    Route::get('/check-in', [CheckInController::class, 'index'])->name('check-in.index');
     Route::view('/members', 'admin.placeholder', ['title' => 'Manajemen Member'])->name('members.index');
     Route::view('/settings', 'admin.placeholder', ['title' => 'Pengaturan'])->name('settings.index');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');

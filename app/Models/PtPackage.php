@@ -29,6 +29,16 @@ class PtPackage extends Model
         ];
     }
 
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
     public function quotas(): HasMany
     {
         return $this->hasMany(MemberPtQuota::class);

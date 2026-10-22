@@ -55,6 +55,7 @@ class PtPackagePurchaseController extends Controller
             if ($minDays === 0) {
                 return true;
             }
+
             return $activeMembership && ($remainingDays >= $minDays);
         })->values();
 
@@ -72,13 +73,13 @@ class PtPackagePurchaseController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'success'             => true,
-                'active_membership'   => $activeMembership,
-                'remaining_days'      => $remainingDays,
-                'packages'            => $packages,
+                'success' => true,
+                'active_membership' => $activeMembership,
+                'remaining_days' => $remainingDays,
+                'packages' => $packages,
                 'has_hidden_packages' => $hasHiddenPackages,
-                'banks'               => $banks,
-                'my_quotas'           => $myQuotas,
+                'banks' => $banks,
+                'my_quotas' => $myQuotas,
             ]);
         }
 
@@ -109,7 +110,7 @@ class PtPackagePurchaseController extends Controller
     /**
      * Langkah 2: Pilih Personal Trainer
      */
-    public function selectTrainer(Request $request): View
+    public function selectTrainer(Request $request): View|RedirectResponse
     {
         $packageId = $request->query('package_id');
         $sessionCount = (int) $request->query('sessions', 12);
@@ -117,6 +118,10 @@ class PtPackagePurchaseController extends Controller
         $selectedPackage = null;
         if ($packageId && is_numeric($packageId)) {
             $selectedPackage = PtPackage::find($packageId);
+            if ($selectedPackage && $selectedPackage->status !== 'active') {
+                return redirect()->route('member.pt-packages.index')
+                    ->with('error', 'Paket PT yang dipilih sedang tidak aktif dan tidak dapat dipilih.');
+            }
         }
 
         // 4 Trainer sesuai Figma
@@ -161,7 +166,7 @@ class PtPackagePurchaseController extends Controller
     /**
      * Langkah 3: Rincian Pesanan & Pembayaran (Checkout)
      */
-    public function checkout(Request $request): View
+    public function checkout(Request $request): View|RedirectResponse
     {
         $packageId = $request->query('package_id');
         $trainerId = (int) $request->query('trainer_id', 1);
@@ -177,22 +182,26 @@ class PtPackagePurchaseController extends Controller
         $selectedPackage = null;
         if ($packageId && is_numeric($packageId)) {
             $selectedPackage = PtPackage::find($packageId);
+            if ($selectedPackage && $selectedPackage->status !== 'active') {
+                return redirect()->route('member.pt-packages.index')
+                    ->with('error', 'Paket PT yang dipilih sedang tidak aktif dan tidak dapat dibeli.');
+            }
         }
 
         // Nilai default sesuai Figma
         $packageName = $selectedPackage?->name ?? 'Paket Performance Pro (12 Sesi)';
         $sessionCount = $selectedPackage?->pt_session_count ?? 12;
         $subtotal = $selectedPackage ? (float) $selectedPackage->price : 3000000;
-        
+
         $uniqueCode = 421;
         $totalAmount = (int) ($subtotal + $uniqueCode);
 
         $banks = Bank::where('status', 'active')->orderBy('id')->get();
         if ($banks->isEmpty()) {
             $banks = collect([
-                (object)['id' => 1, 'name' => 'Bank BCA', 'account_number' => '8271 0812 3456 7890', 'account_holder' => 'PT MAXFIT INDONESIA PERFORMA'],
-                (object)['id' => 2, 'name' => 'Bank Mandiri', 'account_number' => '1370 0192 8374 6500', 'account_holder' => 'PT MAXFIT INDONESIA PERFORMA'],
-                (object)['id' => 3, 'name' => 'Bank BNI', 'account_number' => '0912 3847 5610 2938', 'account_holder' => 'PT MAXFIT INDONESIA PERFORMA'],
+                (object) ['id' => 1, 'name' => 'Bank BCA', 'account_number' => '8271 0812 3456 7890', 'account_holder' => 'PT MAXFIT INDONESIA PERFORMA'],
+                (object) ['id' => 2, 'name' => 'Bank Mandiri', 'account_number' => '1370 0192 8374 6500', 'account_holder' => 'PT MAXFIT INDONESIA PERFORMA'],
+                (object) ['id' => 3, 'name' => 'Bank BNI', 'account_number' => '0912 3847 5610 2938', 'account_holder' => 'PT MAXFIT INDONESIA PERFORMA'],
             ]);
         }
 
@@ -226,6 +235,10 @@ class PtPackagePurchaseController extends Controller
         $ptPackage = null;
         if ($packageId && is_numeric($packageId)) {
             $ptPackage = PtPackage::find($packageId);
+            if ($ptPackage && $ptPackage->status !== 'active') {
+                return redirect()->route('member.pt-packages.index')
+                    ->with('error', 'Paket PT yang dipilih sedang tidak aktif dan tidak dapat dibeli.');
+            }
         }
 
         $uniqueCode = 421;
@@ -244,17 +257,17 @@ class PtPackagePurchaseController extends Controller
 
         // Catat pembayaran sementara status pending
         $payment = Payment::create([
-            'member_id'        => $user->id,
-            'membership_id'    => $user->memberships()->where('status', 'active')->latest()->first()?->id,
-            'pt_package_id'    => $ptPackage?->id,
-            'bank_id'          => $bank->id,
-            'payment_type'     => 'pt_package',
-            'amount'           => $totalAmount,
-            'status'           => 'pending',
+            'member_id' => $user->id,
+            'membership_id' => $user->memberships()->where('status', 'active')->latest()->first()?->id,
+            'pt_package_id' => $ptPackage?->id,
+            'bank_id' => $bank->id,
+            'payment_type' => 'pt_package',
+            'amount' => $totalAmount,
+            'status' => 'pending',
         ]);
 
         return redirect()->route('member.pt-packages.upload-payment', [
-            'payment'    => $payment->id,
+            'payment' => $payment->id,
             'trainer_id' => $trainerId,
             'package_id' => $packageId,
         ])->with('success', 'Pesanan berhasil dibuat. Silakan transfer dan unggah bukti pembayaran.');
@@ -270,7 +283,7 @@ class PtPackagePurchaseController extends Controller
             $payment = Payment::with(['bank', 'ptPackage'])->find($paymentId);
         }
 
-        $orderNumber = $payment ? ('#PT-' . date('Y') . '-' . str_pad($payment->id, 4, '0', STR_PAD_LEFT)) : '#PT-2024-8849';
+        $orderNumber = $payment ? ('#PT-'.date('Y').'-'.str_pad($payment->id, 4, '0', STR_PAD_LEFT)) : '#PT-2024-8849';
         $trainerId = (int) $request->query('trainer_id', 1);
         $trainers = [
             1 => 'Coach Rama Prasetya',
@@ -286,7 +299,7 @@ class PtPackagePurchaseController extends Controller
         $totalAmount = $payment ? $payment->amount : 3000421;
         $packagePrice = $payment ? max(0, $payment->amount - $uniqueCode) : 3000000;
 
-        $bank = $payment?->bank ?? (object)[
+        $bank = $payment?->bank ?? (object) [
             'name' => 'BANK CENTRAL ASIA (BCA)',
             'account_number' => '8271 0812 3456 7890',
             'account_holder' => 'PT MAXFIT INDONESIA PERFORMA',
@@ -354,6 +367,7 @@ class PtPackagePurchaseController extends Controller
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => $msg], 404);
             }
+
             return back()->with('error', $msg);
         }
 
@@ -367,6 +381,7 @@ class PtPackagePurchaseController extends Controller
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => $msg], 422);
             }
+
             return back()->with('error', $msg);
         }
 
@@ -397,12 +412,13 @@ class PtPackagePurchaseController extends Controller
                 $message = "Pembelian gagal. Anda belum memiliki membership aktif. Paket {$ptPackage->name} memerlukan sisa masa aktif membership minimal {$minDays} hari.";
                 if ($request->expectsJson()) {
                     return response()->json([
-                        'success'        => false,
-                        'message'        => $message,
-                        'required_days'  => $minDays,
+                        'success' => false,
+                        'message' => $message,
+                        'required_days' => $minDays,
                         'remaining_days' => 0,
                     ], 422);
                 }
+
                 return back()->with('error', $message);
             }
 
@@ -410,12 +426,13 @@ class PtPackagePurchaseController extends Controller
                 $message = "Pembelian gagal. Sisa masa aktif membership Anda ({$remainingDays} hari) kurang dari syarat minimum ({$minDays} hari) untuk membeli paket {$ptPackage->name}.";
                 if ($request->expectsJson()) {
                     return response()->json([
-                        'success'        => false,
-                        'message'        => $message,
-                        'required_days'  => $minDays,
+                        'success' => false,
+                        'message' => $message,
+                        'required_days' => $minDays,
                         'remaining_days' => $remainingDays,
                     ], 422);
                 }
+
                 return back()->with('error', $message);
             }
         }
@@ -437,28 +454,28 @@ class PtPackagePurchaseController extends Controller
         ) {
             // Catat pembayaran
             $payment = Payment::create([
-                'member_id'        => $user->id,
-                'membership_id'    => $activeMembership?->id,
-                'pt_package_id'    => $ptPackage->id,
-                'bank_id'          => $bank->id,
-                'payment_type'     => 'pt_package',
-                'amount'           => $ptPackage->price,
+                'member_id' => $user->id,
+                'membership_id' => $activeMembership?->id,
+                'pt_package_id' => $ptPackage->id,
+                'bank_id' => $bank->id,
+                'payment_type' => 'pt_package',
+                'amount' => $ptPackage->price,
                 'proof_image_path' => $proofPath,
-                'status'           => 'pending',
+                'status' => 'pending',
             ]);
 
             // Buat kuota sesi PT
             $quota = MemberPtQuota::create([
-                'member_id'          => $user->id,
-                'membership_id'      => $activeMembership?->id,
-                'pt_package_id'      => $ptPackage->id,
-                'source'             => 'purchase',
-                'total_sessions'     => $ptPackage->pt_session_count,
-                'used_sessions'      => 0,
+                'member_id' => $user->id,
+                'membership_id' => $activeMembership?->id,
+                'pt_package_id' => $ptPackage->id,
+                'source' => 'purchase',
+                'total_sessions' => $ptPackage->pt_session_count,
+                'used_sessions' => 0,
                 'remaining_sessions' => $ptPackage->pt_session_count,
-                'start_date'         => $today->toDateString(),
-                'end_date'           => $today->copy()->addDays($ptPackage->validity_days)->toDateString(),
-                'status'             => 'active',
+                'start_date' => $today->toDateString(),
+                'end_date' => $today->copy()->addDays($ptPackage->validity_days)->toDateString(),
+                'status' => 'active',
             ]);
 
             return [$payment, $quota];
@@ -472,7 +489,7 @@ class PtPackagePurchaseController extends Controller
                 'success' => true,
                 'message' => $successMessage,
                 'payment' => $payment->load(['bank', 'ptPackage']),
-                'quota'   => $quota->load('ptPackage'),
+                'quota' => $quota->load('ptPackage'),
             ], 201);
         }
 

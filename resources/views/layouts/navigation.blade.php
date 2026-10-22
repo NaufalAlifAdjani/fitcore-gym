@@ -2,7 +2,7 @@
     $adminNavigationItems = [
         ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'active' => request()->routeIs('admin.dashboard'), 'icon' => 'dashboard'],
         ['label' => 'Paket & Harga', 'route' => 'admin.packages.index', 'active' => request()->routeIs('admin.packages.*'), 'icon' => 'packages'],
-        ['label' => 'Paket Sesi & Jadwal PT', 'route' => 'admin.pt-sessions.index', 'active' => request()->routeIs('admin.pt-sessions.*'), 'icon' => 'calendar'],
+        ['label' => 'Paket Sesi & Jadwal PT', 'route' => 'admin.pt-sessions.index', 'active' => request()->routeIs('admin.pt-sessions.*') || request()->routeIs('admin.pt-packages.*'), 'icon' => 'calendar'],
         ['label' => 'Verifikasi Pembayaran', 'route' => 'admin.payments.index', 'active' => request()->routeIs('admin.payments.*'), 'icon' => 'payments'],
         ['label' => 'Scanner Check-in', 'route' => 'admin.checkin.index', 'active' => request()->routeIs('admin.checkin.*') || request()->routeIs('admin.check-in.*'), 'icon' => 'scan'],
         ['label' => 'Manajemen Member', 'route' => 'admin.members.index', 'active' => request()->routeIs('admin.members.*'), 'icon' => 'members'],
