@@ -2,24 +2,51 @@
 
 namespace Database\Seeders;
 
+use App\Models\MemberProfile;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            UserSeeder::class,
+            BankSeeder::class,
+            MembershipPackageSeeder::class,
+            PtPackageSeeder::class,
         ]);
+
+        User::query()->updateOrCreate(
+            ['email' => 'admin@fitcore.test'],
+            [
+                'name' => 'Admin Utama',
+                'password' => Hash::make('password123'),
+                'role' => 'admin',
+                'phone' => '081200000001',
+                'status' => 'active',
+                'email_verified_at' => now(),
+            ],
+        );
+
+        $member = User::query()->updateOrCreate(
+            ['email' => 'member@fitcore.test'],
+            [
+                'name' => 'Member Utama',
+                'password' => Hash::make('password123'),
+                'role' => 'member',
+                'phone' => '081200000002',
+                'status' => 'active',
+                'email_verified_at' => now(),
+            ],
+        );
+
+        MemberProfile::query()->updateOrCreate(
+            ['user_id' => $member->id],
+            ['member_code' => 'FC-'.str_pad((string) $member->id, 6, '0', STR_PAD_LEFT)],
+        );
+
+        $this->call(PaymentSeeder::class);
     }
 }
