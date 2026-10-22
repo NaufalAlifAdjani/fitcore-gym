@@ -27,7 +27,7 @@ class PtSessionRescheduleTest extends TestCase
             'member_pt_quota_id' => $quota->id,
             'session_date' => now()->addDays(2)->toDateString(),
             'start_time' => '14:00:00',
-            'status' => 'scheduled',
+            'status' => 'confirmed',
         ]);
 
         $response = $this->actingAs($member)->get(route('pt-sessions.edit', $session));
@@ -50,7 +50,7 @@ class PtSessionRescheduleTest extends TestCase
             'member_pt_quota_id' => $quota->id,
             'session_date' => now()->toDateString(),
             'start_time' => now()->addHours(2)->format('H:i:00'),
-            'status' => 'scheduled',
+            'status' => 'confirmed',
         ]);
 
         $response = $this->actingAs($member)->get(route('pt-sessions.edit', $session));
@@ -76,7 +76,7 @@ class PtSessionRescheduleTest extends TestCase
             'session_date' => now()->addDays(3)->toDateString(),
             'start_time' => '10:00:00',
             'end_time' => '11:00:00',
-            'status' => 'scheduled',
+            'status' => 'confirmed',
         ]);
 
         $newDate = now()->addDays(4)->toDateString();
@@ -113,7 +113,7 @@ class PtSessionRescheduleTest extends TestCase
             'member_pt_quota_id' => $quota->id,
             'session_date' => now()->toDateString(),
             'start_time' => now()->addHours(2)->format('H:i:00'),
-            'status' => 'scheduled',
+            'status' => 'confirmed',
         ]);
 
         $newDate = now()->addDays(2)->toDateString();
@@ -141,7 +141,7 @@ class PtSessionRescheduleTest extends TestCase
             'member_pt_quota_id' => $quota1->id,
             'session_date' => now()->addDays(2)->toDateString(),
             'start_time' => '09:00:00',
-            'status' => 'scheduled',
+            'status' => 'confirmed',
         ]);
 
         // Busy slot by member2
@@ -152,7 +152,7 @@ class PtSessionRescheduleTest extends TestCase
             'member_pt_quota_id' => $quota2->id,
             'session_date' => $targetDate,
             'start_time' => '14:00:00',
-            'status' => 'scheduled',
+            'status' => 'confirmed',
         ]);
 
         // Member1 attempts to reschedule to member2's slot

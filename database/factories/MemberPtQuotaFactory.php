@@ -34,22 +34,15 @@ class MemberPtQuotaFactory extends Factory
     public function depleted(): static
     {
         return $this->state(fn (array $attributes) => [
-            'total_sessions' => 10,
-            'used_sessions' => 10,
             'remaining_sessions' => 0,
-            'status' => 'active',
-            'end_date' => now()->addMonth(),
+            'used_sessions' => $attributes['total_sessions'] ?? 10,
         ]);
     }
 
     public function expired(): static
     {
         return $this->state(fn (array $attributes) => [
-            'total_sessions' => 10,
-            'used_sessions' => 2,
-            'remaining_sessions' => 8,
-            'status' => 'expired',
-            'end_date' => now()->subDay(),
+            'end_date' => now()->subDay()->toDateString(),
         ]);
     }
 }

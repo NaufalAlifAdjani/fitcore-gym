@@ -103,6 +103,7 @@
 
             <!-- Mobile Menu Toggle Button -->
             <div class="flex lg:hidden items-center gap-2">
+
                 <button @click="open = !open" class="p-2 rounded-xl bg-[#262626] text-white focus:outline-none">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': !open}" stroke-linecap="round"

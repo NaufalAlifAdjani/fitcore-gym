@@ -82,7 +82,7 @@ class PtSession extends Model
 
     public function getCanBeChangedAttribute(): bool
     {
-        if (! in_array($this->status, [PtSessionStatus::Pending, PtSessionStatus::Scheduled, PtSessionStatus::Confirmed], true)) {
+        if (! in_array($this->status, [PtSessionStatus::Confirmed, PtSessionStatus::Pending])) {
             return false;
         }
 
@@ -120,10 +120,29 @@ class PtSession extends Model
         return "{$start} - {$end} WIB";
     }
 
+    public function getSessionInfoAttribute(): string
+    {
+        if (! $this->quota) {
+            return '';
+        }
+        $sesiKe = $this->quota->used_sessions + 1;
+        $totalSesi = $this->quota->total_sessions ?? $this->quota->remaining_sessions + $this->quota->used_sessions;
+
+        if ($sesiKe === 1) {
+            return "Paket {$totalSesi} Sesi (Sesi 1 / Orientasi)";
+        }
+
+        return "Paket {$totalSesi} Sesi (Sesi ke-{$sesiKe})";
+    }
+
     public function getRelativeTimeBadgeAttribute(): string
     {
         if ($this->status === PtSessionStatus::Cancelled) {
             return 'Dibatalkan';
+        }
+
+        if ($this->status === PtSessionStatus::Pending) {
+            return 'Menunggu';
         }
 
         $startsAt = $this->starts_at;
@@ -131,11 +150,20 @@ class PtSession extends Model
             return $this->status->label();
         }
 
-        if ($startsAt->isPast()) {
-            return 'Selesai';
+        $now = now();
+        $diffHours = (int) $now->diffInHours($startsAt);
+
+        if ($startsAt->isToday()) {
+            return "Hari Ini ({$diffHours} Jam Lagi)";
         }
 
-        return $this->status->label();
+        if ($startsAt->isTomorrow()) {
+            return "Besok ({$diffHours} Jam Lagi)";
+        }
+
+        $diffDays = (int) $now->diffInDays($startsAt);
+
+        return "Mendatang ({$diffDays} Hari Lagi)";
     }
 
     // Scopes
@@ -144,14 +172,14 @@ class PtSession extends Model
         return $query->where('status', PtSessionStatus::Pending->value);
     }
 
-    public function scopeScheduled(Builder $query): Builder
+    public function scopeConfirmed(Builder $query): Builder
     {
-        return $query->whereIn('status', [PtSessionStatus::Scheduled->value, PtSessionStatus::Confirmed->value]);
+        return $query->where('status', PtSessionStatus::Confirmed->value);
     }
 
-    public function scopeDone(Builder $query): Builder
+    public function scopeScheduled(Builder $query): Builder
     {
-        return $query->where('status', PtSessionStatus::Done->value);
+        return $this->scopeConfirmed($query);
     }
 
     public function scopeCancelled(Builder $query): Builder
@@ -161,7 +189,7 @@ class PtSession extends Model
 
     public function scopeUpcoming(Builder $query): Builder
     {
-        return $query->whereIn('status', [PtSessionStatus::Pending->value, PtSessionStatus::Scheduled->value, PtSessionStatus::Confirmed->value])
+        return $query->whereIn('status', [PtSessionStatus::Confirmed->value, PtSessionStatus::Pending->value])
             ->where(function (Builder $q) {
                 $q->where('session_date', '>', now()->toDateString())
                     ->orWhere(function (Builder $sub) {

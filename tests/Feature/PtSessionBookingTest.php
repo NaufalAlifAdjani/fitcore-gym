@@ -148,7 +148,7 @@ class PtSessionBookingTest extends TestCase
             'session_date' => $targetDate,
             'start_time' => '15:00:00',
             'end_time' => '16:00:00',
-            'status' => 'scheduled',
+            'status' => 'confirmed',
         ]);
 
         // Member2 tries to book the same slot
@@ -178,7 +178,7 @@ class PtSessionBookingTest extends TestCase
             'session_date' => $targetDate,
             'start_time' => '10:00:00',
             'end_time' => '11:00:00',
-            'status' => 'scheduled',
+            'status' => 'confirmed',
         ]);
 
         // Member tries to book same time with trainer2

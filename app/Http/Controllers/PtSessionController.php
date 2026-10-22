@@ -43,19 +43,23 @@ class PtSessionController extends Controller
         }
 
         if ($tab === 'pending') {
-            $query->where('status', PtSessionStatus::Pending->value);
-        } elseif ($tab === 'scheduled') {
-            $query->whereIn('status', [PtSessionStatus::Scheduled->value, PtSessionStatus::Confirmed->value]);
-        } elseif ($tab === 'done') {
-            $query->where('status', PtSessionStatus::Done->value);
+            $query->where('status', PtSessionStatus::Pending->value)
+                ->orderBy('session_date', 'asc')
+                ->orderBy('start_time', 'asc');
+        } elseif ($tab === 'confirmed' || $tab === 'scheduled') {
+            $query->where('status', PtSessionStatus::Confirmed->value)
+                ->orderBy('session_date', 'asc')
+                ->orderBy('start_time', 'asc');
         } elseif ($tab === 'cancelled') {
-            $query->where('status', PtSessionStatus::Cancelled->value);
+            $query->where('status', PtSessionStatus::Cancelled->value)
+                ->orderBy('session_date', 'desc')
+                ->orderBy('start_time', 'desc');
+        } else {
+            // Urutkan status pending & confirmed dahulu, lalu cancelled
+            $query->orderByRaw("CASE WHEN status = 'pending' THEN 0 WHEN status = 'confirmed' THEN 1 ELSE 2 END")
+                ->orderBy('session_date', 'desc')
+                ->orderBy('start_time', 'desc');
         }
-
-        // Tampilkan yang terbaru di setiap filter (berdasarkan tanggal sesi, jam sesi, dan waktu dibuat)
-        $query->orderBy('session_date', 'desc')
-            ->orderBy('start_time', 'desc')
-            ->orderBy('created_at', 'desc');
 
         $sessions = $query->paginate(10)->withQueryString();
 
@@ -69,8 +73,8 @@ class PtSessionController extends Controller
         $counts = [
             'all' => PtSession::where('member_id', $user->id)->count(),
             'pending' => PtSession::where('member_id', $user->id)->where('status', PtSessionStatus::Pending->value)->count(),
-            'scheduled' => PtSession::where('member_id', $user->id)->whereIn('status', [PtSessionStatus::Scheduled->value, PtSessionStatus::Confirmed->value])->count(),
-            'done' => PtSession::where('member_id', $user->id)->where('status', PtSessionStatus::Done->value)->count(),
+            'confirmed' => PtSession::where('member_id', $user->id)->where('status', PtSessionStatus::Confirmed->value)->count(),
+            'scheduled' => PtSession::where('member_id', $user->id)->where('status', PtSessionStatus::Confirmed->value)->count(),
             'cancelled' => PtSession::where('member_id', $user->id)->where('status', PtSessionStatus::Cancelled->value)->count(),
         ];
 

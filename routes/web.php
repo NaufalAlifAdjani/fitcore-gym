@@ -12,6 +12,7 @@ use App\Http\Controllers\PtPackagePurchaseController;
 use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
+use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -75,6 +76,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
     Route::get('/dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/jadwal-sesi', TrainerSessionsIndex::class)->name('sessions.index');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {

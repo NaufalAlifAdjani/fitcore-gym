@@ -5,8 +5,7 @@
     $trainerProfile = $trainer?->trainerProfile;
     $status = $session->status;
     $isPending = $status === \App\Enums\PtSessionStatus::Pending;
-    $isScheduled = $status === \App\Enums\PtSessionStatus::Scheduled || $status === \App\Enums\PtSessionStatus::Confirmed;
-    $isDone = $status === \App\Enums\PtSessionStatus::Done;
+    $isConfirmed = $status === \App\Enums\PtSessionStatus::Confirmed;
     $isCancelled = $status === \App\Enums\PtSessionStatus::Cancelled;
     $canChange = $session->can_be_changed;
     $dateFormatted = \Carbon\Carbon::parse($session->session_date)->locale('id')->translatedFormat('l, d F Y');
@@ -22,33 +21,26 @@
                 @if ($isPending)
                     <span
                         class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                        Menunggu Konfirmasi PT
+                        Menunggu Konfirmasi
                     </span>
-                @elseif ($isScheduled)
+
+                    <span
+                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                        <span>{{ $session->relative_time_badge }}</span>
+                    </span>
+                @elseif ($isConfirmed)
                     <span
                         class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                         Terkonfirmasi
                     </span>
-                @elseif ($isDone)
-                    <span
-                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-teal-50 text-teal-700 border border-teal-200">
-                        <span>Selesai</span>
-                    </span>
 
-                    @if ($session->id % 2 === 0)
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                            <span>5.0 Diberikan</span>
-                        </span>
-                    @else
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                            <span>Beri Ulasan Sesi</span>
-                        </span>
-                    @endif
+                    <span
+                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <span>{{ $session->relative_time_badge }}</span>
+                    </span>
                 @else
                     <span
-                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+                        class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-zinc-100 text-zinc-600 border border-zinc-200">
                         <span>Dibatalkan</span>
                     </span>
                 @endif
@@ -81,7 +73,7 @@
 
         <!-- Right: Actions Buttons -->
         <div class="flex flex-col sm:items-end justify-center gap-2 pt-2 sm:pt-0 shrink-0">
-            @if ($isPending)
+            @if ($isConfirmed || $isPending)
                 @if ($canChange)
                     <a href="{{ route('pt-sessions.edit', $session) }}"
                         class="inline-flex items-center justify-center px-5 py-2 rounded-full bg-white hover:bg-zinc-50 text-[#16151A] border border-[#D1D5DB] text-xs font-bold shadow-xs transition-colors">
@@ -89,19 +81,7 @@
                     </a>
                     <button type="button"
                         @click="$dispatch('open-cancel-modal', { id: {{ $session->id }}, date: '{{ $dateFormatted }}', time: '{{ $session->time_range }}' })"
-                        class="text-[#ED1B45] hover:underline text-xs font-bold text-center px-2 py-1">
-                        Batal Sesi
-                    </button>
-                @endif
-            @elseif ($isScheduled)
-                @if ($canChange)
-                    <a href="{{ route('pt-sessions.edit', $session) }}"
-                        class="inline-flex items-center justify-center px-5 py-2 rounded-full bg-white hover:bg-zinc-50 text-[#16151A] border border-[#D1D5DB] text-xs font-bold shadow-xs transition-colors">
-                        Ubah Jadwal
-                    </a>
-                    <button type="button"
-                        @click="$dispatch('open-cancel-modal', { id: {{ $session->id }}, date: '{{ $dateFormatted }}', time: '{{ $session->time_range }}' })"
-                        class="text-[#ED1B45] hover:underline text-xs font-bold text-center px-2 py-1">
+                        class="text-[#ED1B45] hover:underline text-xs font-bold text-center px-2 py-1 cursor-pointer">
                         Batal Sesi
                     </button>
                 @else
@@ -111,18 +91,6 @@
                     </button>
                     <span class="text-[11px] text-zinc-400 italic">Batas waktu lewat (&lt; 24 jam)</span>
                 @endif
-            @elseif ($isDone)
-                @if ($session->id % 2 !== 0)
-                    <button type="button" onclick="alert('Fitur Ulasan Sesi akan segera dibuka!')"
-                        class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-[#ED1B45] hover:bg-[#D1123D] text-white text-xs font-bold shadow-sm transition-colors">
-                        Beri Ulasan Sesi
-                    </button>
-                @endif
-                <button type="button"
-                    onclick="alert('Detail Latihan Sesi:\n\n• Fokus: Hypertrophy & Strength Conditioning\n• Rangkuman Coach: Sesi latihan selesai dengan intensitas optimal dan form stabil.\n\n• Log Latihan:\n- Barbell Back Squat 4x8 (100kg)\n- Romanian Deadlift 3x10 (80kg)\n- Walking Lunges 3x12 (20kg DB)\n- Core Plank 3x60s')"
-                    class="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#16151A] text-xs font-bold transition-colors">
-                    <span>Detail Latihan</span>
-                </button>
             @else
                 <div class="text-xs text-zinc-400 italic">
                     Sesi dibatalkan & kuota telah dikembalikan
