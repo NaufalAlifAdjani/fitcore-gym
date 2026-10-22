@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\SystemUpdateMembershipStatus;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -9,3 +10,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('pt:cancel-expired-pending')->everyFifteenMinutes();
+Schedule::command(SystemUpdateMembershipStatus::class)->daily();
