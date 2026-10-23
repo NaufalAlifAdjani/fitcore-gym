@@ -31,8 +31,8 @@
             <a href="{{ route('member.membership.packages') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30' => (request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && $active !== 'beranda' && $active !== 'riwayat',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => (!request()->routeIs('member.membership.*') && $active !== 'packages') || request()->routeIs('member.dashboard') || $active === 'beranda' || $active === 'riwayat',
+                    'bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30' => (request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && !request()->routeIs('pt-sessions.*') && $active !== 'beranda' && $active !== 'booking' && $active !== 'riwayat',
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => (!request()->routeIs('member.membership.*') && $active !== 'packages') || request()->routeIs('member.dashboard') || request()->routeIs('pt-sessions.*') || $active === 'beranda' || $active === 'booking' || $active === 'riwayat',
                 ])>
                 Paket Membership
             </a>
@@ -44,11 +44,11 @@
                 ])>
                 Personal Trainer
             </a>
-            <a href="#"
+            <a href="{{ route('pt-sessions.index') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md' => $active === 'booking',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => $active !== 'booking',
+                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('pt-sessions.*') || $active === 'booking',
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('pt-sessions.*') && $active !== 'booking',
                 ])>
                 Booking Sesi
             </a>

@@ -313,6 +313,6 @@ class Index extends Component
 
     public function render()
     {
-        return view('livewire.member.sessions.index');
+        return view('member.pt-sessions.calendar');
     }
 }

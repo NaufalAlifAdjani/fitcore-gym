@@ -5,7 +5,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 flatpickr.localize(Indonesian);
 window.flatpickr = flatpickr;
 
-import Alpine from 'alpinejs';
+import { Livewire, Alpine } from '../../vendor/livewire/livewire/dist/livewire.esm';
 import { membershipPackageStatus, membershipPackages } from './admin/membership-packages.js';
 import paymentVerification from './admin/payment-verification.js';
 
@@ -15,4 +15,4 @@ Alpine.data('membershipPackages', membershipPackages);
 Alpine.data('membershipPackageStatus', membershipPackageStatus);
 Alpine.data('paymentVerification', paymentVerification);
 
-Alpine.start();
+Livewire.start();

@@ -59,55 +59,56 @@
 
                 <!-- Right: View Dropdown, View Switcher -->
                 <div class="flex items-center gap-2 self-end md:self-auto">
-                    <!-- View Dropdown Button (Day / Week / Month) -->
-                    <div class="relative" @click.away="$wire.closeViewDropdown()">
+                <!-- View Dropdown Button (Day / Week / Month) -->
+                <div class="relative" x-data="{ open: @entangle('viewDropdownOpen') }" @click.outside="open = false">
+                    <button 
+                        type="button" 
+                        @click="open = !open"
+                        class="px-4 py-2 text-sm font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#ED1B45] flex items-center gap-2 shadow-2xs transition cursor-pointer"
+                    >
+                        <span class="capitalize">{{ $view === 'month' ? 'Month' : ($view === 'week' ? 'Week' : 'Day') }}</span>
+                        <svg class="w-4 h-4 text-[#565A66] transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div x-show="open" x-cloak class="absolute right-0 mt-2 w-36 bg-white rounded-2xl shadow-xl border border-[#E5E7EB] py-1.5 z-30">
                         <button 
                             type="button" 
-                            wire:click="toggleViewDropdown"
-                            class="px-4 py-2 text-sm font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#ED1B45] flex items-center gap-2 shadow-2xs transition cursor-pointer"
+                            wire:click="setView('day')" 
+                            @click="open = false"
+                            class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'day' ? 'text-[#ED1B45] font-bold bg-[#ED1B45]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
-                            <span class="capitalize">{{ $view === 'month' ? 'Month' : ($view === 'week' ? 'Week' : 'Day') }}</span>
-                            <svg class="w-4 h-4 text-[#565A66] transition-transform duration-200 {{ $viewDropdownOpen ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
+                            <span>Day</span>
+                            @if($view === 'day')
+                                <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                            @endif
                         </button>
-
-                        <!-- Dropdown Menu -->
-                        @if($viewDropdownOpen)
-                            <div class="absolute right-0 mt-2 w-36 bg-white rounded-2xl shadow-xl border border-[#E5E7EB] py-1.5 z-30">
-                                <button 
-                                    type="button" 
-                                    wire:click="setView('day')" 
-                                    class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'day' ? 'text-[#ED1B45] font-bold bg-[#ED1B45]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
-                                >
-                                    <span>Day</span>
-                                    @if($view === 'day')
-                                        <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                                    @endif
-                                </button>
-                                <button 
-                                    type="button" 
-                                    wire:click="setView('week')" 
-                                    class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'week' ? 'text-[#ED1B45] font-bold bg-[#ED1B45]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
-                                >
-                                    <span>Week</span>
-                                    @if($view === 'week')
-                                        <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                                    @endif
-                                </button>
-                                <button 
-                                    type="button" 
-                                    wire:click="setView('month')" 
-                                    class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'month' ? 'text-[#ED1B45] font-bold bg-[#ED1B45]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
-                                >
-                                    <span>Month</span>
-                                    @if($view === 'month')
-                                        <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                                    @endif
-                                </button>
-                            </div>
-                        @endif
+                        <button 
+                            type="button" 
+                            wire:click="setView('week')" 
+                            @click="open = false"
+                            class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'week' ? 'text-[#ED1B45] font-bold bg-[#ED1B45]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                        >
+                            <span>Week</span>
+                            @if($view === 'week')
+                                <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                            @endif
+                        </button>
+                        <button 
+                            type="button" 
+                            wire:click="setView('month')" 
+                            @click="open = false"
+                            class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'month' ? 'text-[#ED1B45] font-bold bg-[#ED1B45]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                        >
+                            <span>Month</span>
+                            @if($view === 'month')
+                                <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                            @endif
+                        </button>
                     </div>
+                </div>
 
                     <!-- View Segmented Switcher (Calendar / Task) -->
                     <div class="inline-flex rounded-full border border-[#E5E7EB] p-0.5 bg-gray-100 shadow-2xs">

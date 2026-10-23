@@ -78,7 +78,7 @@ class PtSessionController extends Controller
             'cancelled' => PtSession::where('member_id', $user->id)->where('status', PtSessionStatus::Cancelled->value)->count(),
         ];
 
-        return view('pt-sessions.index', [
+        return view('member.pt-sessions.index', [
             'sessions' => $sessions,
             'quota' => $quota,
             'counts' => $counts,
@@ -119,7 +119,7 @@ class PtSessionController extends Controller
             ->with('trainerProfile')
             ->get();
 
-        return view('pt-sessions.create', [
+        return view('member.pt-sessions.create', [
             'quota' => $quota,
             'trainer' => $trainer,
             'trainers' => $trainers,
@@ -162,7 +162,7 @@ class PtSessionController extends Controller
 
         $ptSession->load(['trainer.trainerProfile', 'quota']);
 
-        return view('pt-sessions.edit', [
+        return view('member.pt-sessions.edit', [
             'session' => $ptSession,
             'trainer' => $ptSession->trainer,
             'quota' => $ptSession->quota,
