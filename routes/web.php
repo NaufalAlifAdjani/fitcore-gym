@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
+use App\Http\Controllers\Member\TransactionHistoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
@@ -70,6 +71,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/upload-proof/{package}', 'processPayment')->name('upload-proof.store');
         Route::post('/checkout/{package}', 'processPayment')->name('process-payment');
         Route::get('/payment-status/{payment}', 'paymentStatus')->name('payment-status');
+    });
+
+    // Member Transaction History
+    Route::prefix('member/riwayat-transaksi')->name('member.riwayat-transaksi.')->controller(TransactionHistoryController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{payment}/invoice', 'invoice')->name('invoice');
     });
 });
 
