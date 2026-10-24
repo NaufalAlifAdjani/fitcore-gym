@@ -160,7 +160,7 @@
             type="button"
             x-on:click="sidebarOpen = true"
             aria-label="Buka navigasi"
-            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-[#F6F6F7] focus:text-[#16151A] transition lg:hidden"
+            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-[#F6F6F7] focus:text-[#16151A] transition lg:hidden cursor-pointer"
         >
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />

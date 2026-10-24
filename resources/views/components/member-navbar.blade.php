@@ -2,7 +2,7 @@
     'active' => 'packages',
 ])
 
-<header class="sticky top-0 z-40 w-full border-b border-slate-800 bg-[#0B0F17]/95 backdrop-blur-md">
+<header class="sticky top-0 z-40 w-full border-b border-slate-800 bg-[#0B0F17]/95 backdrop-blur-md" x-data="{ mobileMenuOpen: false }">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
         <!-- Logo -->
         <a href="{{ route('member.dashboard') }}" class="flex items-center gap-3 group">
@@ -111,6 +111,50 @@
                     </form>
                 </div>
             </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button
+                type="button"
+                x-on:click="mobileMenuOpen = !mobileMenuOpen"
+                class="inline-flex md:hidden items-center justify-center rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white transition"
+                aria-label="Toggle Navigation"
+            >
+                <svg x-show="!mobileMenuOpen" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <svg x-cloak x-show="mobileMenuOpen" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div
+        x-cloak
+        x-show="mobileMenuOpen"
+        x-transition
+        class="md:hidden border-t border-slate-800 bg-[#0B0F17]/98 px-4 pt-3 pb-5 space-y-2"
+    >
+        <a href="{{ route('member.dashboard') }}"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('member.dashboard') || $active === 'beranda') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            Beranda
+        </a>
+        <a href="{{ route('member.membership.packages') }}"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ ((request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && !request()->routeIs('pt-sessions.*') && $active !== 'beranda' && $active !== 'booking' && $active !== 'riwayat') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            Paket Membership
+        </a>
+        <a href="#"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $active === 'pt' ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            Personal Trainer
+        </a>
+        <a href="{{ route('pt-sessions.index') }}"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('pt-sessions.*') || $active === 'booking') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            Booking Sesi
+        </a>
+        <a href="#"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $active === 'riwayat' ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            Riwayat Transaksi
+        </a>
     </div>
 </header>

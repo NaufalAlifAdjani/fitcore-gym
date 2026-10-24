@@ -23,7 +23,7 @@
             <button 
                 type="button" 
                 @click="sidebarOpen = !sidebarOpen" 
-                class="lg:hidden p-2 rounded-xl text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 focus:outline-none transition-colors"
+                class="lg:hidden p-2 rounded-xl text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 focus:outline-none transition-colors cursor-pointer"
                 aria-label="Toggle sidebar"
             >
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,7 +182,7 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" 
-                                class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[#ED1B45] hover:bg-red-50 transition-colors text-left font-semibold">
+                                class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[#ED1B45] hover:bg-red-50 transition-colors text-left font-semibold cursor-pointer">
                             <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                             </svg>

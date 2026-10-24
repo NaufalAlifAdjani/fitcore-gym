@@ -28,6 +28,17 @@
                     </svg>
                 </button>
 
+                <!-- Month, Week, or Day Title (di tengah tombol next dan previous) -->
+                <h2 class="text-xl sm:text-2xl font-bold text-[#16151A] tracking-tight px-2 text-center font-['Poppins']">
+                    @if($view === 'week')
+                        {{ $this->weekDays[0]->format('M j') }} &ndash; {{ $this->weekDays[6]->format('M j, Y') }}
+                    @elseif($view === 'day')
+                        {{ \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('l, d F Y') }}
+                    @else
+                        {{ \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('F Y') }}
+                    @endif
+                </h2>
+
                 <!-- Next Arrow -->
                 <button 
                     type="button" 
@@ -39,17 +50,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </button>
-
-                <!-- Month, Week, or Day Title -->
-                <h2 class="text-xl sm:text-2xl font-bold text-[#16151A] tracking-tight ml-2 font-['Poppins']">
-                    @if($view === 'week')
-                        {{ $this->weekDays[0]->format('M j') }} &ndash; {{ $this->weekDays[6]->format('M j, Y') }}
-                    @elseif($view === 'day')
-                        {{ \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('l, d F Y') }}
-                    @else
-                        {{ \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('F Y') }}
-                    @endif
-                </h2>
             </div>
 
             <!-- Right: View Dropdown, View Switcher -->

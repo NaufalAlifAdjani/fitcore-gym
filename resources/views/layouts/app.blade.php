@@ -38,7 +38,7 @@
             class="min-h-screen bg-[#F6F6F7] flex flex-col flex-1"
         >
             @if($isAdmin)
-                @include('layouts.navigation')
+                <x-admin-navigation />
 
                 <main class="min-h-screen pt-16 lg:pl-72 flex-1">
                     @isset($header)
@@ -50,12 +50,12 @@
                 </main>
             @elseif($isTrainer)
                 <!-- Top Navbar for Trainer Portal -->
-                @include('layouts.navigation-trainer')
+                <x-trainer-navbar />
 
                 <div class="flex flex-1">
                     <!-- Desktop Sidebar -->
                     <div class="hidden lg:block shrink-0">
-                        @include('layouts.sidebar-trainer')
+                        <x-trainer-sidebar />
                     </div>
 
                     <!-- Mobile Off-Canvas Sidebar Drawer -->
@@ -99,20 +99,20 @@
                                 </button>
                             </div>
                             <div class="flex-1 overflow-y-auto">
-                                @include('layouts.sidebar-trainer')
+                                <x-trainer-sidebar />
                             </div>
                         </div>
                     </div>
 
                     <!-- Main Content Area -->
                     <main class="flex-1 min-w-0 flex flex-col">
-                        <x-fitcore.toast />
+                        <x-toast />
                         {{ $slot }}
                     </main>
                 </div>
             @else
-                <!-- Fitcore Navbar (Member) -->
-                @include('layouts.navigation-fitcore')
+                <!-- Member Navbar -->
+                <x-member-navbar />
 
                 <!-- Page Heading (Optional) -->
                 @isset($header)
@@ -124,15 +124,15 @@
                 @endisset
 
                 <!-- Toast Notifications -->
-                <x-fitcore.toast />
+                <x-toast />
 
                 <!-- Page Content -->
                 <main class="flex-grow">
                     {{ $slot }}
                 </main>
 
-                <!-- Fitcore Footer -->
-                <x-fitcore.footer />
+                <!-- Footer -->
+                <x-footer />
             @endif
 
             <!-- Modal Logout Konfirmasi -->

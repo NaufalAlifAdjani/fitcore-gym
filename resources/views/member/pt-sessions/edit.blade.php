@@ -62,17 +62,18 @@
                     <!-- Card 1: Pilih Tanggal Sesi (Google Calendar Month Grid) -->
                     <div class="bg-white rounded-2xl border border-[#E5E7EB] p-5 sm:p-6 shadow-sm space-y-4">
                         <!-- Calendar Header Toolbar -->
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[#E5E7EB]">
-                            <div class="flex items-center gap-2">
-                                <!-- Today Button -->
-                                <button 
-                                    type="button" 
-                                    @click="goToToday()"
-                                    class="px-3 py-1.5 rounded-full border border-[#E5E7EB] text-xs font-semibold text-[#16151A] hover:bg-gray-50 transition cursor-pointer"
-                                >
-                                    Hari Ini
-                                </button>
+                        <div class="flex items-center gap-2 sm:gap-4 pb-2 border-b border-[#E5E7EB]">
+                            <!-- Today Button -->
+                            <button 
+                                type="button" 
+                                @click="goToToday()"
+                                class="px-3 py-1.5 rounded-full border border-[#E5E7EB] text-xs font-semibold text-[#16151A] hover:bg-gray-50 transition cursor-pointer"
+                            >
+                                Hari Ini
+                            </button>
 
+                            <!-- Navigation with Month Title between Prev and Next -->
+                            <div class="flex items-center gap-1 sm:gap-2">
                                 <!-- Month Navigation Arrows -->
                                 <button 
                                     type="button" 
@@ -84,6 +85,12 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                                     </svg>
                                 </button>
+
+                                <!-- Month Title (di tengah tombol next dan previous) -->
+                                <h2 class="text-base sm:text-xl font-bold text-[#16151A] tracking-tight font-['Poppins'] px-1.5 text-center min-w-[130px]" x-text="currentMonthYear">
+                                    Oktober 2026
+                                </h2>
+
                                 <button 
                                     type="button" 
                                     @click="nextMonth()"
@@ -94,38 +101,11 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                     </svg>
                                 </button>
-
-                                <!-- Month Title -->
-                                <h2 class="text-base sm:text-xl font-bold text-[#16151A] tracking-tight ml-1 font-['Poppins']" x-text="currentMonthYear">
-                                    Oktober 2026
-                                </h2>
-                            </div>
-
-                            <!-- Right: View Segmented Switcher (Bulan / 7 Hari) -->
-                            <div class="inline-flex rounded-full border border-[#E5E7EB] p-0.5 bg-gray-100 shadow-2xs self-start sm:self-auto">
-                                <button 
-                                    type="button" 
-                                    @click="calendarView = 'month'"
-                                    class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
-                                    :class="calendarView === 'month' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]'"
-                                >
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                    <span>Kalender Bulan</span>
-                                </button>
-                                <button 
-                                    type="button" 
-                                    @click="calendarView = 'week'"
-                                    class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
-                                    :class="calendarView === 'week' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]'"
-                                >
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-                                    <span>Strip 7 Hari</span>
-                                </button>
                             </div>
                         </div>
 
-                        <!-- Tampilan Kalender Bulan (Default - Sama seperti Trainer Dashboard) -->
-                        <div x-show="calendarView === 'month'" class="rounded-2xl border border-[#E5E7EB] overflow-hidden bg-white">
+                        <!-- Tampilan Kalender Bulan -->
+                        <div class="rounded-2xl border border-[#E5E7EB] overflow-hidden bg-white">
                             <!-- Day Names Header Row (SUN, MON, TUE, WED, THU, FRI, SAT) -->
                             <div class="grid grid-cols-7 border-b border-[#E5E7EB] bg-white text-center">
                                 <template x-for="header in ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']" :key="header">
@@ -173,36 +153,6 @@
                                             </template>
                                         </div>
                                     </div>
-                                </template>
-                            </div>
-                        </div>
-
-                        <!-- Tampilan Strip 7 Hari (Opsional) -->
-                        <div x-show="calendarView === 'week'" class="space-y-3">
-                            <div class="grid grid-cols-7 gap-2 sm:gap-3">
-                                <template x-for="day in dateStrip" :key="day.date">
-                                    <button 
-                                        type="button" 
-                                        @click="selectDate(day.date)" 
-                                        :disabled="!day.has_slots" 
-                                        :class="{
-                                            'bg-[#ED1B45] text-white shadow-lg shadow-[#ED1B45]/30 ring-2 ring-[#ED1B45] scale-102': selectedDate === day.date,
-                                            'bg-white hover:bg-zinc-50 text-[#16151A] border border-[#E5E7EB]': selectedDate !== day.date && day.has_slots,
-                                            'bg-zinc-50 text-zinc-400 border border-zinc-200 cursor-not-allowed opacity-60': !day.has_slots
-                                        }"
-                                        class="flex flex-col items-center justify-center py-4 px-1 rounded-2xl transition-all duration-200 text-center cursor-pointer"
-                                    >
-                                        <span class="text-xs font-semibold" :class="{
-                                            'text-white': selectedDate === day.date && day.has_slots,
-                                            'text-[#565A66]': selectedDate !== day.date && day.has_slots,
-                                            'text-zinc-400': !day.has_slots
-                                        }" x-text="day.day_name"></span>
-                                        <span class="text-xl font-extrabold my-1 font-heading" :class="{
-                                            'text-white': selectedDate === day.date && day.has_slots,
-                                            'text-[#16151A]': selectedDate !== day.date && day.has_slots,
-                                            'text-zinc-400': !day.has_slots
-                                        }" x-text="day.day_num"></span>
-                                    </button>
                                 </template>
                             </div>
                         </div>
