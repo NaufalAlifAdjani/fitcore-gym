@@ -1,0 +1,361 @@
+<?php
+
+namespace Tests\Feature\Member;
+
+use App\Models\Bank;
+use App\Models\MembershipPackage;
+use App\Models\Payment;
+use App\Models\User;
+use App\Notifications\AdminNewPaymentNotification;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
+
+class MembershipCheckoutTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_authenticated_member_can_view_membership_package_catalog(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Starter Pass',
+            'badge' => 'SILVER',
+            'tier' => 'Basic',
+            'description' => 'Akses pemula hemat',
+            'price' => 450000,
+            'promo_price' => null,
+            'duration_value' => 1,
+            'duration_unit' => 'Bulan',
+            'duration_in_days' => 30,
+            'facilities' => ['Akses Gym'],
+            'pt_sessions' => 0,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.membership.packages'));
+
+        $response->assertOk()
+            ->assertSee('Pilih Paket Keanggotaan')
+            ->assertSee('FitCore Starter Pass')
+            ->assertSee('450.000');
+    }
+
+    public function test_member_can_access_checkout_form_for_active_package(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Elite Champion',
+            'badge' => 'BEST SELLER',
+            'tier' => 'Premium & VIP',
+            'description' => 'Akses lengkap',
+            'price' => 2400000,
+            'promo_price' => 1800000,
+            'duration_value' => 6,
+            'duration_unit' => 'Bulan',
+            'duration_in_days' => 180,
+            'facilities' => ['Akses Gym 24 jam'],
+            'pt_sessions' => 2,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.membership.checkout', $package));
+
+        $response->assertOk()
+            ->assertSee('FitCore Elite Champion')
+            ->assertSee('BCA')
+            ->assertSee('1234567890')
+            ->assertSee('Form Bukti Transfer');
+    }
+
+    public function test_validation_fails_if_proof_image_is_missing_or_invalid(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'Mandiri',
+            'account_number' => '9876543210',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'Basic Package',
+            'tier' => 'Basic',
+            'price' => 300000,
+            'duration_value' => 1,
+            'duration_unit' => 'Bulan',
+            'duration_in_days' => 30,
+            'facilities' => ['Gym access'],
+            'is_active' => true,
+        ]);
+
+        // Missing proof_image and sender_name
+        $response = $this->actingAs($member)
+            ->post(route('member.membership.process-payment', $package), [
+                'bank_id' => $bank->id,
+            ]);
+
+        $response->assertSessionHasErrors(['sender_name', 'proof_image']);
+
+        // Invalid file format (text file)
+        Storage::fake('public');
+        $textDocument = UploadedFile::fake()->create('document.pdf', 500, 'application/pdf');
+
+        $invalidResponse = $this->actingAs($member)
+            ->post(route('member.membership.process-payment', $package), [
+                'bank_id' => $bank->id,
+                'sender_name' => 'Ahmad Pengirim',
+                'proof_image' => $textDocument,
+            ]);
+
+        $invalidResponse->assertSessionHasErrors(['proof_image']);
+    }
+
+    public function test_member_successfully_uploads_proof_of_payment_and_creates_pending_record(): void
+    {
+        Storage::fake('public');
+
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'BRI',
+            'account_number' => '1122334455',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Annual Pro',
+            'badge' => 'PLATINUM VIP',
+            'tier' => 'Premium & VIP',
+            'description' => 'Akses 1 tahun penuh',
+            'price' => 5000000,
+            'promo_price' => 4500000,
+            'duration_value' => 12,
+            'duration_unit' => 'Bulan',
+            'duration_in_days' => 365,
+            'facilities' => ['Akses semua cabang'],
+            'pt_sessions' => 5,
+            'is_active' => true,
+        ]);
+
+        $fakeReceipt = UploadedFile::fake()->image('receipt.jpg', 600, 800);
+
+        $response = $this->actingAs($member)
+            ->post(route('member.membership.process-payment', $package), [
+                'bank_id' => $bank->id,
+                'sender_name' => 'Budi Santoso',
+                'proof_image' => $fakeReceipt,
+            ]);
+
+        $payment = Payment::query()->first();
+
+        $this->assertNotNull($payment);
+        $response->assertRedirect(route('member.membership.payment-status', $payment));
+
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'member_id' => $member->id,
+            'package_id' => $package->id,
+            'package_type' => 'membership',
+            'payment_type' => 'membership',
+            'amount' => 4500000,
+            'bank_id' => $bank->id,
+            'bank_sender' => 'Budi Santoso',
+            'status' => 'pending',
+        ]);
+
+        $this->assertTrue(Storage::disk('public')->exists($payment->proof_image_path));
+    }
+
+    public function test_member_can_access_upload_proof_page_with_selected_bank_and_nominal(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '8271081234567890',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Starter Pass',
+            'tier' => 'Basic',
+            'price' => 450000,
+            'duration_value' => 1,
+            'duration_unit' => 'Bulan',
+            'duration_in_days' => 30,
+            'facilities' => ['Akses Gym'],
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.membership.upload-proof', [
+            'package' => $package,
+            'bank_id' => $bank->id,
+            'unique_code' => 421,
+        ]));
+
+        $response->assertOk()
+            ->assertSee('Upload Bukti Pembayaran')
+            ->assertSee('FitCore Starter Pass')
+            ->assertSee('BCA')
+            ->assertSee('8271081234567890')
+            ->assertSee('KIRIM BUKTI PEMBAYARAN');
+    }
+
+    public function test_member_can_submit_payment_proof_via_upload_proof_post_route(): void
+    {
+        Storage::fake('public');
+
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'Mandiri',
+            'account_number' => '1234509876',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Elite Champion',
+            'tier' => 'Premium & VIP',
+            'price' => 299000,
+            'duration_value' => 1,
+            'duration_unit' => 'Bulan',
+            'duration_in_days' => 30,
+            'facilities' => ['Akses Penuh'],
+            'is_active' => true,
+        ]);
+
+        $fakeReceipt = UploadedFile::fake()->image('struk-transfer.png', 500, 500);
+
+        $response = $this->actingAs($member)
+            ->post(route('member.membership.upload-proof.store', $package), [
+                'bank_id' => $bank->id,
+                'sender_name' => 'Siti Nurhaliza',
+                'proof_image' => $fakeReceipt,
+            ]);
+
+        $payment = Payment::query()->latest('id')->first();
+
+        $this->assertNotNull($payment);
+        $response->assertRedirect(route('member.membership.payment-status', $payment));
+        $this->assertEquals('pending', $payment->status);
+        $this->assertEquals('Siti Nurhaliza', $payment->bank_sender);
+    }
+
+    public function test_inactive_package_is_not_visible_in_member_package_catalog(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+        MembershipPackage::create([
+            'name' => 'Inactive Super Pass',
+            'tier' => 'Basic',
+            'price' => 200000,
+            'duration_in_days' => 30,
+            'facilities' => ['Gym access'],
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.membership.packages'));
+
+        $response->assertOk()
+            ->assertDontSee('Inactive Super Pass');
+    }
+
+    public function test_accessing_inactive_package_checkout_redirects_with_error_flash(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+        $package = MembershipPackage::create([
+            'name' => 'Expired Discount Pass',
+            'tier' => 'Basic',
+            'price' => 200000,
+            'duration_in_days' => 30,
+            'facilities' => ['Gym access'],
+            'is_active' => false,
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.membership.checkout', $package));
+
+        $response->assertRedirect(route('member.membership.packages'))
+            ->assertSessionHas('error', 'Paket membership yang dipilih sedang tidak aktif.');
+    }
+
+    public function test_submitting_payment_calculates_total_amount_including_unique_code(): void
+    {
+        Storage::fake('public');
+
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '8888999900',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Monthly Plan',
+            'tier' => 'Basic',
+            'price' => 500000,
+            'promo_price' => 450000,
+            'duration_in_days' => 30,
+            'facilities' => ['Akses Penuh'],
+            'is_active' => true,
+        ]);
+
+        $fakeReceipt = UploadedFile::fake()->image('bukti.png', 400, 400);
+
+        $response = $this->actingAs($member)
+            ->post(route('member.membership.upload-proof.store', $package), [
+                'bank_id' => $bank->id,
+                'sender_name' => 'Fajar Pratama',
+                'proof_image' => $fakeReceipt,
+                'unique_code' => 421,
+            ]);
+
+        $payment = Payment::query()->latest('id')->first();
+
+        $this->assertNotNull($payment);
+        $this->assertEquals(450421, $payment->amount);
+        $response->assertRedirect(route('member.membership.payment-status', $payment));
+    }
+
+    public function test_processing_payment_sends_notification_to_admins(): void
+    {
+        Notification::fake();
+        Storage::fake('public');
+
+        $admin = User::factory()->create(['role' => 'admin']);
+        $otherAdmin = User::factory()->create(['role' => 'admin']);
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Starter Pass',
+            'tier' => 'Basic',
+            'price' => 450000,
+            'duration_in_days' => 30,
+            'facilities' => ['Akses Gym'],
+            'is_active' => true,
+        ]);
+
+        $fakeReceipt = UploadedFile::fake()->image('bukti.png', 400, 400);
+
+        $this->actingAs($member)
+            ->post(route('member.membership.upload-proof.store', $package), [
+                'bank_id' => $bank->id,
+                'sender_name' => 'Member Test',
+                'proof_image' => $fakeReceipt,
+            ])
+            ->assertRedirect();
+
+        Notification::assertSentTo(
+            [$admin, $otherAdmin],
+            AdminNewPaymentNotification::class
+        );
+    }
+}

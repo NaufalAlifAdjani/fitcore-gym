@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TrainerProfile extends Model
 {
@@ -11,5 +12,12 @@ class TrainerProfile extends Model
 
     protected $guarded = [];
 
-    public function user() { return $this->belongsTo(User::class); }
+    protected $casts = [
+        'experience' => 'integer',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

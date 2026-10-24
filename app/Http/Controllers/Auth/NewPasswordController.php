@@ -21,6 +21,10 @@ class NewPasswordController extends Controller
      */
     public function create(Request $request): View
     {
+        if ($request->email && preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $request->email, $matches)) {
+            $request->merge(['email' => $matches[0]]);
+        }
+
         return view('auth.reset-password', ['request' => $request]);
     }
 
@@ -31,6 +35,10 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if ($request->email && preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $request->email, $matches)) {
+            $request->merge(['email' => $matches[0]]);
+        }
+
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],

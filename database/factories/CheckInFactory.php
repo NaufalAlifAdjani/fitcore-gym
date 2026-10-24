@@ -15,6 +15,7 @@ class CheckInFactory extends Factory
     {
         $checkedIn = fake()->dateTimeBetween('-1 month', 'now');
         $checkedOut = (clone $checkedIn)->modify('+'.fake()->numberBetween(60, 180).' minutes');
+
         return [
             'member_id' => MemberProfile::factory(),
             'membership_id' => Membership::factory(),
