@@ -22,18 +22,21 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Pure Laravel Native Authorization (Gates) - No third-party / Spatie
-        Gate::define('admin', fn (User $user): bool => $user->role === 'admin');
-        Gate::define('trainer', fn (User $user): bool => $user->role === 'trainer');
-        Gate::define('member', fn (User $user): bool => $user->role === 'member');
+        // Roles
+        Gate::define('admin', fn (User $user): bool => $user->isAdmin());
+        Gate::define('trainer', fn (User $user): bool => $user->isTrainer());
+        Gate::define('member', fn (User $user): bool => $user->isMember());
 
-        Gate::define(
-            'manage-membership-packages',
-            fn (User $user): bool => $user->role === 'admin',
-        );
+        // Dashboards
+        Gate::define('access-admin-dashboard', fn (User $user): bool => $user->isAdmin());
+        Gate::define('access-trainer-dashboard', fn (User $user): bool => $user->isTrainer());
+        Gate::define('access-member-dashboard', fn (User $user): bool => $user->isMember());
 
-        Gate::define(
-            'access-member-dashboard',
-            fn (User $user): bool => $user->role === 'member',
-        );
+        // Permissions & Features
+        Gate::define('manage-membership-packages', fn (User $user): bool => $user->isAdmin());
+        Gate::define('verify-payments', fn (User $user): bool => $user->isAdmin());
+        Gate::define('manage-members', fn (User $user): bool => $user->isAdmin());
+        Gate::define('manage-pt-sessions', fn (User $user): bool => $user->isAdmin() || $user->isTrainer());
+        Gate::define('book-pt-session', fn (User $user): bool => $user->isMember());
     }
 }

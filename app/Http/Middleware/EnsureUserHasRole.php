@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -10,12 +8,23 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserHasRole
 {
-    public function handle(Request $request, Closure $next, string $role): Response
+    /**
+     * Handle an incoming request.
+     *
+     * @param  Closure(Request): (Response)  $next
+     */
+    public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        if (! $request->user() || $request->user()->role !== $role) {
-            abort(403, 'Akses ditolak. Anda tidak memiliki role yang sesuai.');
+        $user = $request->user();
+
+        if (! $user) {
+            return redirect()->route('login');
         }
 
-        return $next($request);
+        if (empty($roles) || in_array($user->role, $roles, true)) {
+            return $next($request);
+        }
+
+        abort(Response::HTTP_FORBIDDEN, 'Akses Ditolak. Anda tidak memiliki izin untuk mengakses halaman ini.');
     }
 }
