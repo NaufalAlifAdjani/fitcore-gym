@@ -59,11 +59,11 @@ Route::middleware('auth')->group(function () {
 
     // Member Dashboard
     Route::get('/member/dashboard', [MemberDashboardController::class, 'index'])
-        ->middleware('can:access-member-dashboard')
+        ->middleware('role:member')
         ->name('member.dashboard');
 
     // Member Membership Package, Checkout, Upload Proof, and Payment Status routes
-    Route::prefix('membership')->name('member.membership.')->controller(MemberMembershipPackageController::class)->group(function () {
+    Route::prefix('membership')->name('member.membership.')->middleware('role:member')->controller(MemberMembershipPackageController::class)->group(function () {
         Route::get('/packages', 'index')->name('packages');
         Route::get('/checkout/{package}', 'checkout')->name('checkout');
         Route::get('/upload-proof/{package}', 'uploadProof')->name('upload-proof');
@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/packages', [MembershipPackageController::class, 'index'])->name('packages.index');
     Route::post('/packages', [MembershipPackageController::class, 'store'])->name('packages.store');
