@@ -30,7 +30,7 @@ class PtPackageController extends Controller
             $query->where('status', 'inactive');
         }
 
-        $packages = $query->latest('id')->paginate(10)->withQueryString();
+        $packages = $query->latest('created_at')->latest('id')->paginate(10)->withQueryString();
 
         $totalPackages = PtPackage::count();
         $activePackages = PtPackage::where('status', 'active')->count();
