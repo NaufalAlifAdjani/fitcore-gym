@@ -16,12 +16,14 @@ class PaymentSeeder extends Seeder
         $member = User::query()->where('role', 'member')->oldest('id')->firstOrFail();
         $admin = User::query()->where('role', 'admin')->oldest('id')->firstOrFail();
         $membershipPackage = MembershipPackage::query()->oldest('id')->firstOrFail();
-        $ptPackageFiveSessions = PtPackage::query()
-            ->where('name', 'Personal Trainer - 5 Sesi')
-            ->firstOrFail();
-        $ptPackageTenSessions = PtPackage::query()
-            ->where('name', 'Personal Trainer - 10 Sesi')
-            ->firstOrFail();
+        $ptPackageFiveSessions = PtPackage::query()->where('name', 'PT 4 Sesi')->first()
+            ?? PtPackage::query()->where('name', 'Personal Trainer - 5 Sesi')->first()
+            ?? PtPackage::query()->oldest('id')->first()
+            ?? PtPackage::factory()->create();
+        $ptPackageTenSessions = PtPackage::query()->where('name', 'PT 8 Sesi')->first()
+            ?? PtPackage::query()->where('name', 'Personal Trainer - 10 Sesi')->first()
+            ?? PtPackage::query()->latest('id')->first()
+            ?? PtPackage::factory()->create();
 
         $banks = collect(['BCA', 'BRI', 'BNI', 'Mandiri'])
             ->mapWithKeys(fn (string $name) => [
