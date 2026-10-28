@@ -1,12 +1,21 @@
 @php
-    $navigationItems = [
+    $adminNavigationItems = [
         ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'active' => request()->routeIs('admin.dashboard'), 'icon' => 'dashboard'],
         ['label' => 'Paket & Harga', 'route' => 'admin.packages.index', 'active' => request()->routeIs('admin.packages.*'), 'icon' => 'packages'],
-        ['label' => 'Paket Sesi & Jadwal PT', 'route' => 'admin.pt-sessions.index', 'active' => request()->routeIs('admin.pt-sessions.*'), 'icon' => 'calendar'],
+        ['label' => 'Paket Sesi & Jadwal PT', 'route' => 'admin.pt-sessions.index', 'active' => request()->routeIs('admin.pt-sessions.*') || request()->routeIs('admin.pt-packages.*'), 'icon' => 'calendar'],
         ['label' => 'Verifikasi Pembayaran', 'route' => 'admin.payments.index', 'active' => request()->routeIs('admin.payments.*'), 'icon' => 'payments'],
-        ['label' => 'Scanner Check-in', 'route' => 'admin.check-in.index', 'active' => request()->routeIs('admin.check-in.*'), 'icon' => 'scan'],
+        ['label' => 'Scanner Check-in', 'route' => 'admin.checkin.index', 'active' => request()->routeIs('admin.checkin.*') || request()->routeIs('admin.check-in.*'), 'icon' => 'scan'],
         ['label' => 'Manajemen Member', 'route' => 'admin.members.index', 'active' => request()->routeIs('admin.members.*'), 'icon' => 'members'],
         ['label' => 'Pengaturan', 'route' => 'admin.settings.index', 'active' => request()->routeIs('admin.settings.*'), 'icon' => 'settings'],
+    ];
+
+    $trainerNavigationItems = [
+        ['label' => 'Dashboard', 'route' => 'trainer.dashboard', 'active' => request()->routeIs('trainer.dashboard'), 'icon' => 'dashboard'],
+        ['label' => 'Jadwal Sesi PT', 'route' => 'trainer.sessions.index', 'active' => request()->routeIs('trainer.sessions.*'), 'icon' => 'calendar'],
+        ['label' => 'Klien Saya', 'route' => 'trainer.clients.index', 'active' => request()->routeIs('trainer.clients.*'), 'icon' => 'members'],
+        ['label' => 'Ketersediaan Waktu', 'route' => 'trainer.availability.index', 'active' => request()->routeIs('trainer.availability.*'), 'icon' => 'clock'],
+        ['label' => 'Pendapatan / Komisi', 'route' => 'trainer.commissions.index', 'active' => request()->routeIs('trainer.commissions.*'), 'icon' => 'payments'],
+        ['label' => 'Scanner Check-in', 'route' => 'admin.checkin.index', 'active' => request()->routeIs('admin.checkin.*'), 'icon' => 'scan'],
     ];
 @endphp
 
@@ -26,7 +35,7 @@
     aria-label="Navigasi utama"
 >
     <!-- Brand Logo / Teks -->
-    <a href="{{ route('admin.dashboard') }}" class="flex h-16 shrink-0 items-center gap-3 border-b border-[#E5E7EB] px-6">
+    <a href="{{ route('dashboard') }}" class="flex h-16 shrink-0 items-center gap-3 border-b border-[#E5E7EB] px-6">
         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ED1B45] text-white shadow-sm">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 012.25 13.5v-3A1.5 1.5 0 013.75 9zm15 0h1.5A1.5 1.5 0 0121.75 10.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 0117.25 13.5v-3a1.5 1.5 0 011.5-1.5zM6.75 12h10.5M5.25 7.5v9M18.75 7.5v9" />
@@ -43,7 +52,7 @@
         <p class="font-inter text-[11px] font-bold text-[#565A66] uppercase tracking-wider mb-2 px-4">Navigasi Portal</p>
         <nav class="space-y-1">
             @if (Auth::user()->role === 'admin')
-                @foreach ($navigationItems as $item)
+                @foreach ($adminNavigationItems as $item)
                     <a
                         href="{{ route($item['route']) }}"
                         @class([
@@ -102,17 +111,131 @@
                         <span>{{ $item['label'] }}</span>
                     </a>
                 @endforeach
+            @elseif (Auth::user()->role === 'trainer')
+                @foreach ($trainerNavigationItems as $item)
+                    <a
+                        href="{{ route($item['route']) }}"
+                        @class([
+                            'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
+                            'bg-[#ED1B45] text-white font-semibold shadow-sm' => $item['active'],
+                            'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => ! $item['active'],
+                        ])
+                        aria-current="{{ $item['active'] ? 'page' : 'false' }}"
+                        x-on:click="sidebarOpen = false"
+                    >
+                    @switch($item['icon'])
+                        @case('dashboard')
+                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8" />
+                                <rect x="13" y="3" width="8" height="5" rx="2" stroke="currentColor" stroke-width="1.8" />
+                                <rect x="13" y="10" width="8" height="11" rx="2" stroke="currentColor" stroke-width="1.8" />
+                                <rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8" />
+                            </svg>
+                            @break
+                        @case('calendar')
+                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            @break
+                        @case('members')
+                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            @break
+                        @case('clock')
+                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            @break
+                        @case('payments')
+                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            @break
+                        @case('scan')
+                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M8 4H5a1 1 0 0 0-1 1v3m12-4h3a1 1 0 0 1 1 1v3M8 20H5a1 1 0 0 1-1-1v-3m12 4h3a1 1 0 0 0 1-1v-3M7 12h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                            </svg>
+                            @break
+                    @endswitch
+                        <span>{{ $item['label'] }}</span>
+                    </a>
+                @endforeach
+                <a href="{{ route('profile.edit') }}" @class([
+                    'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
+                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('profile.*'),
+                    'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('profile.*'),
+                ]) x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8" />
+                        <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                    </svg>
+                    <span>Profil</span>
+                </a>
             @else
-                <a href="{{ route('dashboard') }}" class="flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm font-medium text-[#565A66] transition duration-200 hover:bg-[#F6F6F7] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
+                {{-- Member role navigation --}}
+                <a href="{{ route('dashboard') }}" @class([
+                    'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
+                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('member.dashboard') || request()->routeIs('dashboard'),
+                    'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !(request()->routeIs('member.dashboard') || request()->routeIs('dashboard')),
+                ]) x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8" />
                         <rect x="13" y="3" width="8" height="5" rx="2" stroke="currentColor" stroke-width="1.8" />
                         <rect x="13" y="10" width="8" height="11" rx="2" stroke="currentColor" stroke-width="1.8" />
                         <rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8" />
                     </svg>
-                    <span>Dashboard</span>
+                    <span>Dashboard Member</span>
                 </a>
-                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm font-medium text-[#565A66] transition duration-200 hover:bg-[#F6F6F7] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
+                <a href="{{ route('pt-sessions.index') }}" @class([
+                    'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
+                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('pt-sessions.*'),
+                    'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('pt-sessions.*'),
+                ]) x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Sesi PT Saya</span>
+                </a>
+                <a href="{{ route('member.card') }}" @class([
+                    'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
+                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('member.card'),
+                    'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('member.card'),
+                ]) x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="4" width="18" height="16" rx="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="9" cy="10" r="2"/>
+                        <path d="M15 8h2M15 12h2M7 16h10"/>
+                    </svg>
+                    <span>Kartu Member</span>
+                </a>
+                <a href="{{ route('member.membership.packages') }}" @class([
+                    'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
+                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('member.membership.*'),
+                    'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('member.membership.*'),
+                ]) x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" stroke-linejoin="round"/>
+                        <path d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Paket Membership</span>
+                </a>
+                <a href="{{ route('member.pt-packages.index') }}" @class([
+                    'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
+                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('member.pt-packages.*'),
+                    'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('member.pt-packages.*'),
+                ]) x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <circle cx="12" cy="7" r="4"/>
+                        <path d="M5.5 21v-2a6.5 6.5 0 0 1 13 0v2"/>
+                    </svg>
+                    <span>Sewa PT</span>
+                </a>
+                <a href="{{ route('profile.edit') }}" @class([
+                    'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
+                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('profile.*'),
+                    'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('profile.*'),
+                ]) x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8" />
                         <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
@@ -169,7 +292,7 @@
 
         <!-- Judul Halaman di Topbar -->
         <p class="truncate font-poppins font-bold text-lg text-[#16151A]">
-            {{ Auth::user()->role === 'admin' ? 'Portal Admin' : 'Portal FitCore' }}
+            {{ Auth::user()->role === 'admin' ? 'Portal Admin' : (Auth::user()->role === 'trainer' ? 'Portal Trainer' : 'Portal FitCore') }}
         </p>
     </div>
 
@@ -204,7 +327,7 @@
                     <!-- User Profile Dropdown Teks -->
                     <span class="block max-w-36 truncate font-inter text-sm font-semibold text-[#16151A]">{{ Auth::user()->name }}</span>
                     <!-- User Profile Role / Email -->
-                    <span class="block max-w-36 truncate font-inter text-xs text-[#565A66]">{{ Auth::user()->email ?: 'admin@fitcore.id' }}</span>
+                    <span class="block max-w-36 truncate font-inter text-xs text-[#565A66]">{{ Auth::user()->email ?: 'user@fitcore.id' }}</span>
                 </span>
                 <svg class="hidden h-4 w-4 text-[#565A66] sm:block" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
@@ -220,7 +343,7 @@
             >
                 <div class="border-b border-[#E5E7EB] px-3 py-2 sm:hidden">
                     <p class="truncate font-inter text-sm font-semibold text-[#16151A]">{{ Auth::user()->name }}</p>
-                    <p class="truncate font-inter text-xs text-[#565A66]">{{ Auth::user()->email ?: 'admin@fitcore.id' }}</p>
+                    <p class="truncate font-inter text-xs text-[#565A66]">{{ Auth::user()->email ?: 'user@fitcore.id' }}</p>
                 </div>
                 <a
                     href="{{ route('profile.edit') }}"

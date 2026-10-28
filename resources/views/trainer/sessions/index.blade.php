@@ -6,7 +6,15 @@
         
         <!-- Google Calendar Container -->
         <div class="bg-white rounded-3xl border border-[#E5E7EB] p-4 sm:p-6 shadow-sm mb-8 space-y-4">
-
+            @if(session('success'))
+                <div class="mb-4 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span class="font-medium">{{ session('success') }}</span>
+                    </div>
+                    <button type="button" @click="$el.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 text-xs font-bold cursor-pointer">✕</button>
+                </div>
+            @endif
             
             <!-- Google Calendar Top Bar -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
@@ -255,6 +263,9 @@
                                                                 <h4 class="text-sm font-bold text-[#16151A] group-hover:text-[#ED1B45] transition truncate">
                                                                     Sesi PT &bull; {{ $taskSession->member->name }}
                                                                 </h4>
+                                                                <p class="text-[11px] text-[#565A66] truncate">
+                                                                    {{ $taskSession->session_info }}
+                                                                </p>
                                                             </div>
                                                         </div>
 
@@ -432,6 +443,8 @@
                                             </div>
                                             <div class="text-xs text-[#565A66] mt-0.5 flex items-center gap-2 flex-wrap">
                                                 <span class="font-semibold text-[#16151A] whitespace-nowrap">{{ $session->time_range }}</span>
+                                                <span class="text-gray-300">&bull;</span>
+                                                <span class="truncate">{{ $session->session_info }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -568,6 +581,8 @@
                                                     </div>
                                                     <div class="text-xs text-[#565A66] mt-0.5 flex items-center gap-2 flex-wrap">
                                                         <span class="font-semibold text-[#16151A] whitespace-nowrap">{{ $session->time_range }}</span>
+                                                        <span class="text-gray-300">&bull;</span>
+                                                        <span class="truncate">{{ $session->session_info }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -726,6 +741,8 @@
                                                     </div>
                                                     <div class="text-xs text-[#565A66] mt-0.5 flex items-center gap-2 flex-wrap">
                                                         <span class="font-semibold text-[#16151A] whitespace-nowrap">{{ $session->time_range }}</span>
+                                                        <span class="text-gray-300">&bull;</span>
+                                                        <span class="truncate">{{ $session->session_info }}</span>
                                                     </div>
                                                 </div>
                                             </div>

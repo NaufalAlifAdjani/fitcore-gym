@@ -14,6 +14,7 @@ class CheckIn extends Model
     protected $casts = [
         'checked_in_at' => 'datetime',
         'checked_out_at' => 'datetime',
+        'check_in_date'  => 'date',
     ];
 
     public function member()
@@ -24,5 +25,10 @@ class CheckIn extends Model
     public function membership()
     {
         return $this->belongsTo(Membership::class);
+    }
+
+    public function checkedBy()
+    {
+        return $this->belongsTo(User::class, 'checked_by');
     }
 }

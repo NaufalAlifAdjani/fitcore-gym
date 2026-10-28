@@ -90,7 +90,7 @@ class GoogleAuthController extends Controller
             }
 
             if ($user->isTrainer()) {
-                return redirect('/trainer/dashboard');
+                return redirect()->route('trainer.dashboard');
             }
 
             return redirect()->route('member.dashboard');

@@ -25,6 +25,8 @@
 
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
+        <!-- Role login yang dipilih (member atau trainer) -->
+        <input type="hidden" name="role" :value="role">
 
         <!-- Email atau Nomor WhatsApp -->
         <x-auth-input
