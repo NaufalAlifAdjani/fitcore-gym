@@ -12,7 +12,7 @@ use Illuminate\View\View;
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Menampilkan halaman/form login
+     * Display the login view.
      */
     public function create(): View
     {
@@ -20,46 +20,28 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Memproses otentikasi login
+     * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        // Validasi input
-        $credentials = $request->validated();
+        $request->authenticate();
 
-        // Coba lakukan autentikasi
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $request->session()->regenerate();
+        $request->session()->regenerate();
 
-            // Redirect berdasarkan Role User
-            $role = Auth::user()->role;
-            if ($role === 'admin') {
-                return redirect()->intended(route('admin.dashboard', absolute: false));
-            } elseif ($role === 'trainer') {
-                return redirect()->intended('/trainer/dashboard');
-            } elseif ($role === 'member') {
-                return redirect()->route('member.dashboard');
-            }
-
-            return redirect()->route('member.dashboard');
-        }
-
-        // Jika gagal, kembalikan pesan error
-        return back()->withErrors([
-            'email' => 'Email atau password yang Anda masukkan salah.',
-        ])->onlyInput('email');
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**
-     * Memproses Logout
+     * Destroy an authenticated session.
      */
     public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
+
         $request->session()->regenerateToken();
 
-        return redirect()->route('login');
+        return redirect('/');
     }
 }

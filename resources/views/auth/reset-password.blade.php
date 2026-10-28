@@ -1,67 +1,38 @@
 <x-guest-layout>
-    <!-- Header Title & Subtitle -->
-    <div class="mb-6">
-        <h2 class="text-3xl sm:text-4xl font-black text-gray-950 leading-tight">
-            Atur Ulang Kata Sandi
-        </h2>
-        <p class="text-gray-500 text-xs sm:text-sm mt-1.5 leading-relaxed">
-            Silakan masukkan kata sandi baru yang aman untuk akun Anda.
-        </p>
-    </div>
-
-    <form method="POST" action="{{ route('password.store') }}" class="space-y-4">
+    <form method="POST" action="{{ route('password.store') }}">
         @csrf
 
         <!-- Password Reset Token -->
         <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-        @php
-            $displayEmail = old('email', $request->email);
-            if ($displayEmail && preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $displayEmail, $matches)) {
-                $displayEmail = $matches[0];
-            }
-        @endphp
-
         <!-- Email Address -->
-        <x-auth-input 
-            label="Email Akun" 
-            icon="at"
-            type="email" 
-            name="email" 
-            :value="$displayEmail" 
-            placeholder="nama@email.com"
-            required 
-            autofocus
-        />
+        <div>
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
 
-        <!-- Password Baru -->
-        <x-auth-input 
-            label="Kata Sandi Baru" 
-            badge="Min. 8 karakter"
-            icon="lock"
-            type="password" 
-            name="password" 
-            placeholder="Masukkan kata sandi baru" 
-            required 
-            autofocus 
-            autocomplete="new-password" 
-        />
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
+            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        </div>
 
-        <!-- Konfirmasi Password Baru -->
-        <x-auth-input 
-            label="Konfirmasi Kata Sandi Baru" 
-            icon="lock"
-            type="password" 
-            name="password_confirmation" 
-            placeholder="Ulangi kata sandi baru" 
-            required 
-            autocomplete="new-password" 
-        />
+        <!-- Confirm Password -->
+        <div class="mt-4">
+            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
-        <!-- Submit Button -->
-        <div class="pt-2">
+            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                                type="password"
+                                name="password_confirmation" required autocomplete="new-password" />
+
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <div class="flex items-center justify-end mt-4">
             <x-primary-button>
-                Perbarui Kata Sandi
+                {{ __('Reset Password') }}
             </x-primary-button>
         </div>
     </form>
