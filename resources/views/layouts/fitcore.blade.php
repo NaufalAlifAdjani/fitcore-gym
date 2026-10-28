@@ -44,19 +44,19 @@
 
             <!-- Menu Navigasi Tengah -->
             <nav class="hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3">
-                <a href="{{ route('dashboard') }}" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
+                <a href="{{ route('member.dashboard') }}" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
                     Beranda
                 </a>
-                <a href="#" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
+                <a href="{{ route('member.membership.packages') }}" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
                     Paket Membership
                 </a>
                 <a href="{{ route('member.pt-packages.index') }}" class="px-5 py-2 text-sm font-bold text-white bg-[#E11D48] rounded-full shadow-md shadow-rose-900/50 transition">
                     Personal Trainer
                 </a>
-                <a href="#" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
+                <a href="{{ route('pt-sessions.index') }}" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
                     Booking Sesi
                 </a>
-                <a href="#" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
+                <a href="{{ route('member.membership.packages') }}" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
                     Riwayat Transaksi
                 </a>
             </nav>

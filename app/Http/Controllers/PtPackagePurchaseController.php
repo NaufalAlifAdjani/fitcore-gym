@@ -7,11 +7,16 @@ use App\Models\Bank;
 use App\Models\MemberPtQuota;
 use App\Models\Payment;
 use App\Models\PtPackage;
+use App\Models\User;
+use App\Notifications\AdminNewPaymentNotification;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class PtPackagePurchaseController extends Controller
@@ -255,13 +260,23 @@ class PtPackagePurchaseController extends Controller
             ]);
         }
 
+        do {
+            $invoiceId = 'INV-PT-'.strtoupper(Str::random(8));
+        } while (Payment::where('invoice_id', $invoiceId)->exists());
+
+        $bankDestination = "{$bank->name} ({$bank->account_number} a.n. {$bank->account_holder})";
+
         // Catat pembayaran sementara status pending
         $payment = Payment::create([
+            'invoice_id' => $invoiceId,
             'member_id' => $user->id,
             'membership_id' => $user->memberships()->where('status', 'active')->latest()->first()?->id,
+            'package_id' => $ptPackage?->id,
             'pt_package_id' => $ptPackage?->id,
-            'bank_id' => $bank->id,
+            'package_type' => 'pt_session',
             'payment_type' => 'pt_package',
+            'bank_id' => $bank->id,
+            'bank_destination' => $bankDestination,
             'amount' => $totalAmount,
             'status' => 'pending',
         ]);
@@ -283,7 +298,7 @@ class PtPackagePurchaseController extends Controller
             $payment = Payment::with(['bank', 'ptPackage'])->find($paymentId);
         }
 
-        $orderNumber = $payment ? ('#PT-'.date('Y').'-'.str_pad($payment->id, 4, '0', STR_PAD_LEFT)) : '#PT-2024-8849';
+        $orderNumber = $payment?->invoice_id ?? ($payment ? ('#PT-'.date('Y').'-'.str_pad($payment->id, 4, '0', STR_PAD_LEFT)) : '#PT-2024-8849');
         $trainerId = (int) $request->query('trainer_id', 1);
         $trainers = [
             1 => 'Coach Rama Prasetya',
@@ -330,22 +345,31 @@ class PtPackagePurchaseController extends Controller
             'sender_bank' => ['required', 'string', 'max:255'],
         ]);
 
-        $proofPath = null;
-        if ($request->hasFile('proof_image')) {
-            $proofPath = $request->file('proof_image')->store('payment-proofs', 'public');
-        }
+        $file = $request->file('proof_image');
+        $proofPath = $file ? $file->store('payment-proofs', 'public') : null;
+        $proofUrl = $proofPath ? Storage::url($proofPath) : null;
+        $bankSender = $request->input('sender_name').' ('.$request->input('sender_bank').')';
 
+        $payment = null;
         if ($paymentId && is_numeric($paymentId)) {
             $payment = Payment::find($paymentId);
             if ($payment) {
-                if ($proofPath) {
-                    $payment->update(['proof_image_path' => $proofPath]);
+                $payment->update([
+                    'proof_image_path' => $proofPath,
+                    'proof_image_url' => $proofUrl,
+                    'bank_sender' => $bankSender,
+                    'transfer_date' => now(),
+                ]);
+
+                $admins = User::where('role', 'admin')->get();
+                if ($admins->isNotEmpty()) {
+                    Notification::send($admins, new AdminNewPaymentNotification($payment));
                 }
             }
         }
 
         return redirect()->route('member.pt-packages.index')
-            ->with('success', 'Bukti pembayaran berhasil diunggah! Tim finance Maxfit akan memverifikasi dalam 1×24 jam.');
+            ->with('success', 'Bukti pembayaran berhasil diunggah! Tim finance akan memverifikasi dalam 1×24 jam.');
     }
 
     /**
@@ -452,15 +476,29 @@ class PtPackagePurchaseController extends Controller
             $today,
             $proofPath
         ) {
+            do {
+                $invoiceId = 'INV-PT-'.strtoupper(Str::random(8));
+            } while (Payment::where('invoice_id', $invoiceId)->exists());
+
+            $bankDestination = "{$bank->name} ({$bank->account_number} a.n. {$bank->account_holder})";
+            $proofUrl = $proofPath ? Storage::url($proofPath) : null;
+
             // Catat pembayaran
             $payment = Payment::create([
+                'invoice_id' => $invoiceId,
                 'member_id' => $user->id,
                 'membership_id' => $activeMembership?->id,
+                'package_id' => $ptPackage->id,
                 'pt_package_id' => $ptPackage->id,
-                'bank_id' => $bank->id,
+                'package_type' => 'pt_session',
                 'payment_type' => 'pt_package',
+                'bank_id' => $bank->id,
+                'bank_destination' => $bankDestination,
+                'bank_sender' => $user->name,
                 'amount' => $ptPackage->price,
                 'proof_image_path' => $proofPath,
+                'proof_image_url' => $proofUrl,
+                'transfer_date' => now(),
                 'status' => 'pending',
             ]);
 

@@ -36,11 +36,11 @@
                 ])>
                 Paket Membership
             </a>
-            <a href="#"
+            <a href="{{ route('member.pt-packages.index') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md' => $active === 'pt',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => $active !== 'pt',
+                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('member.pt-packages.*') || $active === 'pt',
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('member.pt-packages.*') && $active !== 'pt',
                 ])>
                 Personal Trainer
             </a>
@@ -52,7 +52,7 @@
                 ])>
                 Booking Sesi
             </a>
-            <a href="#"
+            <a href="{{ route('member.membership.packages') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
                     'bg-[#BA0030] text-white shadow-md' => $active === 'riwayat',
@@ -144,15 +144,15 @@
             class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ ((request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && !request()->routeIs('pt-sessions.*') && $active !== 'beranda' && $active !== 'booking' && $active !== 'riwayat') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Paket Membership
         </a>
-        <a href="#"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $active === 'pt' ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+        <a href="{{ route('member.pt-packages.index') }}"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('member.pt-packages.*') || $active === 'pt') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Personal Trainer
         </a>
         <a href="{{ route('pt-sessions.index') }}"
             class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('pt-sessions.*') || $active === 'booking') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Booking Sesi
         </a>
-        <a href="#"
+        <a href="{{ route('member.membership.packages') }}"
             class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $active === 'riwayat' ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Riwayat Transaksi
         </a>

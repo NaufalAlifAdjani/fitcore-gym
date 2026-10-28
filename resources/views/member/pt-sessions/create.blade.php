@@ -239,24 +239,24 @@
                     <div class="bg-white rounded-3xl border border-[#E5E7EB] p-6 shadow-sm space-y-4">
                         <div class="flex items-center gap-3">
                             <div class="w-12 h-12 rounded-full overflow-hidden bg-zinc-800 shrink-0">
-                                @if (isset($trainer->trainerProfile->photo_path) && $trainer->trainerProfile->photo_path)
+                                @if (isset($trainer?->trainerProfile?->photo_path) && $trainer?->trainerProfile?->photo_path)
                                     <img src="{{ asset('storage/'.$trainer->trainerProfile->photo_path) }}"
-                                        alt="{{ $trainer->name }}" class="w-full h-full object-cover">
+                                        alt="{{ $trainer?->name ?? 'Coach' }}" class="w-full h-full object-cover">
                                 @else
                                     <div class="w-full h-full bg-gradient-to-tr from-zinc-800 to-zinc-600 flex items-center justify-center text-white font-bold text-sm">
-                                        {{ strtoupper(substr($trainer->name ?? 'Rama', 0, 2)) }}
+                                        {{ strtoupper(substr($trainer?->name ?? 'Rama', 0, 2)) }}
                                     </div>
                                 @endif
                             </div>
                             <div class="min-w-0">
                                 <div class="flex items-center gap-1.5">
                                     <h3 class="text-sm font-bold text-[#16151A] truncate">
-                                        {{ $trainer->name ?? 'Coach Rama Prasetya' }}
+                                        {{ $trainer?->name ?? 'Coach Rama Prasetya' }}
                                     </h3>
                                     <span class="text-[#ED1B45] text-xs">✓</span>
                                 </div>
                                 <p class="text-[11px] text-[#565A66]">
-                                    {{ $trainer->trainerProfile->specialization ?? 'Hypertrophy & Strength Conditioning' }}
+                                    {{ $trainer?->trainerProfile?->specialization ?? 'Hypertrophy & Strength Conditioning' }}
                                 </p>
                             </div>
                         </div>
@@ -318,7 +318,7 @@
                                 <div>
                                     <div class="text-[#A1A1AA] text-[11px]">Pelatih</div>
                                     <div class="font-bold text-white text-xs mt-0.5">
-                                        {{ $trainer->name ?? 'Coach Rama Prasetya' }}
+                                        {{ $trainer?->name ?? 'Coach Rama Prasetya' }}
                                     </div>
                                 </div>
                             </div>

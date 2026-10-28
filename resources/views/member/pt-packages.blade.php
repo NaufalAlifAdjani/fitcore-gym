@@ -83,14 +83,13 @@
 
                 $displayPackages = $defaultFigmaPackages;
                 if (isset($packages) && $packages->isNotEmpty()) {
-                    $dbSessionCounts = $packages->pluck('pt_session_count')->toArray();
                     $customPackages = [];
                     foreach ($packages as $pkg) {
-                        $sessions = $pkg->pt_session_count ?? 10;
+                        $sessions = (int) ($pkg->pt_session_count ?? 10);
                         $price = (float) $pkg->price;
                         $originalPrice = round($price * 1.25);
                         $perSession = round($price / max(1, $sessions));
-                        $isPopular = ($sessions == 16);
+                        $isPopular = ($sessions === 16);
 
                         $customPackages[] = [
                             'id' => $pkg->id,
@@ -102,16 +101,7 @@
                             'is_popular' => $isPopular,
                         ];
                     }
-                    if ($packages->count() <= 3 && !in_array(16, $dbSessionCounts) && !in_array(24, $dbSessionCounts)) {
-                        $displayPackages = $customPackages;
-                    } else {
-                        foreach ($displayPackages as &$figmaPkg) {
-                            $matchedDb = $packages->firstWhere('pt_session_count', $figmaPkg['sessions']);
-                            if ($matchedDb) {
-                                $figmaPkg['id'] = $matchedDb->id;
-                            }
-                        }
-                    }
+                    $displayPackages = $customPackages;
                 }
             @endphp
 

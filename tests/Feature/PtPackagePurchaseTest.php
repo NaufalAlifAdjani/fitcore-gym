@@ -454,4 +454,90 @@ class PtPackagePurchaseTest extends TestCase
         $this->assertNotNull($payment->proof_image_path);
         $storage->assertExists($payment->proof_image_path);
     }
+
+    /** Test 16: PT package checkout and admin verification end-to-end integration */
+    public function test_pt_package_checkout_and_admin_approval_end_to_end_integration(): void
+    {
+        $storage = Storage::fake('public');
+        $member = $this->createMember();
+        $this->createActiveMembership($member, 60);
+
+        $admin = $this->createAdmin();
+
+        $package = PtPackage::factory()->create([
+            'name' => 'PT Pro 12 Sesi',
+            'pt_session_count' => 12,
+            'price' => 3000000,
+            'min_membership_days' => 15,
+            'validity_days' => 60,
+            'status' => 'active',
+        ]);
+
+        $bank = Bank::factory()->create(['status' => 'active', 'name' => 'BCA']);
+
+        // 1. Member melakukan checkout
+        $checkoutResponse = $this->actingAs($member)
+            ->post(route('member.pt-packages.process-checkout'), [
+                'package_id' => $package->id,
+                'trainer_id' => 1,
+                'bank_id' => $bank->id,
+            ]);
+
+        $checkoutResponse->assertRedirect();
+        $payment = Payment::where('member_id', $member->id)
+            ->where('package_id', $package->id)
+            ->first();
+
+        $this->assertNotNull($payment);
+        $this->assertStringStartsWith('INV-PT-', $payment->invoice_id);
+        $this->assertSame('pending', $payment->status);
+        $this->assertSame('pt_session', $payment->package_type);
+
+        // 2. Member mengunggah bukti pembayaran
+        $file = UploadedFile::fake()->image('transfer_receipt.jpg');
+        $uploadResponse = $this->actingAs($member)
+            ->post(route('member.pt-packages.submit-proof', ['payment' => $payment->id]), [
+                'proof_image' => $file,
+                'sender_name' => 'Budi Member',
+                'sender_bank' => 'BCA',
+            ]);
+
+        $uploadResponse->assertRedirect(route('member.pt-packages.index'));
+        $uploadResponse->assertSessionHas('success');
+
+        $payment->refresh();
+        $this->assertNotNull($payment->proof_image_path);
+        $this->assertNotNull($payment->proof_image_url);
+        $this->assertNotNull($payment->transfer_date);
+        $this->assertStringContainsString('Budi Member', $payment->bank_sender);
+
+        // 3. Admin memverifikasi dan menyetujui pembayaran
+        $approveResponse = $this->actingAs($admin)
+            ->postJson(route('admin.payments.approve', $payment->id));
+
+        $approveResponse->assertOk();
+        $approveResponse->assertJson(['success' => true]);
+
+        $payment->refresh();
+        $this->assertSame('verified', $payment->status);
+        $this->assertSame($admin->id, $payment->verified_by);
+
+        // 4. Kuota sesi PT member aktif
+        $this->assertDatabaseHas('member_pt_quotas', [
+            'member_id' => $member->id,
+            'pt_package_id' => $package->id,
+            'source' => 'purchase',
+            'total_sessions' => 12,
+            'remaining_sessions' => 12,
+            'status' => 'active',
+        ]);
+
+        // 5. Member dapat mengakses halaman booking sesi
+        $bookingPageResponse = $this->actingAs($member)
+            ->get(route('pt-sessions.create'));
+
+        $bookingPageResponse->assertOk();
+        $bookingPageResponse->assertSee('Pilih Jadwal');
+        $bookingPageResponse->assertSee('12 Sesi');
+    }
 }
