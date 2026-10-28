@@ -8,7 +8,8 @@ use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipP
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
-use App\Livewire\Trainer\Sessions\Index;
+use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
+use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,7 +24,7 @@ Route::get('/dashboard', function () {
     }
 
     if ($role === 'trainer') {
-        return redirect()->route('trainer.sessions.index');
+        return redirect()->route('trainer.dashboard');
     }
 
     return redirect()->route('member.dashboard');
@@ -73,6 +74,14 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
+    Route::get('/dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/jadwal-sesi', TrainerSessionsIndex::class)->name('sessions.index');
+    Route::view('/klien-saya', 'trainer.placeholder', ['title' => 'Klien Saya'])->name('clients.index');
+    Route::view('/ketersediaan-waktu', 'trainer.placeholder', ['title' => 'Ketersediaan Waktu'])->name('availability.index');
+    Route::view('/pendapatan-komisi', 'trainer.placeholder', ['title' => 'Pendapatan / Komisi'])->name('commissions.index');
+});
+
 Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/packages', [MembershipPackageController::class, 'index'])->name('packages.index');
@@ -98,7 +107,3 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
 });
 
 require __DIR__.'/auth.php';
-
-Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
-    Route::get('/jadwal-sesi', Index::class)->name('sessions.index');
-});

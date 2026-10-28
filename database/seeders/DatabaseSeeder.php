@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin',
                 'phone' => '081200000001',
                 'status' => 'active',
+                'email_verified_at' => now(),
             ],
         );
 
@@ -37,6 +38,7 @@ class DatabaseSeeder extends Seeder
                 'role' => 'member',
                 'phone' => '081200000002',
                 'status' => 'active',
+                'email_verified_at' => now(),
             ],
         );
 

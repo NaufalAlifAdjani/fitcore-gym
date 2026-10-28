@@ -33,6 +33,11 @@ class PtSession extends Model
         return $this->belongsTo(MemberPtQuota::class, 'member_pt_quota_id');
     }
 
+    public function memberPtQuota(): BelongsTo
+    {
+        return $this->belongsTo(MemberPtQuota::class, 'member_pt_quota_id');
+    }
+
     public function member(): BelongsTo
     {
         return $this->belongsTo(User::class, 'member_id');
@@ -77,7 +82,7 @@ class PtSession extends Model
 
     public function getCanBeChangedAttribute(): bool
     {
-        if (! in_array($this->status, [PtSessionStatus::Confirmed, PtSessionStatus::Pending])) {
+        if (! in_array($this->status, [PtSessionStatus::Confirmed, PtSessionStatus::Pending], true)) {
             return false;
         }
 

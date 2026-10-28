@@ -26,7 +26,7 @@
     aria-label="Navigasi utama"
 >
     <!-- Brand Logo / Teks -->
-    <a href="{{ route('admin.dashboard') }}" class="flex h-16 shrink-0 items-center gap-3 border-b border-[#E5E7EB] px-6">
+    <a href="{{ route('dashboard') }}" class="flex h-16 shrink-0 items-center gap-3 border-b border-[#E5E7EB] px-6">
         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ED1B45] text-white shadow-sm">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 012.25 13.5v-3A1.5 1.5 0 013.75 9zm15 0h1.5A1.5 1.5 0 0121.75 10.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 0117.25 13.5v-3a1.5 1.5 0 011.5-1.5zM6.75 12h10.5M5.25 7.5v9M18.75 7.5v9" />
@@ -102,6 +102,47 @@
                         <span>{{ $item['label'] }}</span>
                     </a>
                 @endforeach
+            @elseif (Auth::user()->role === 'trainer')
+                <a href="{{ route('trainer.dashboard') }}"
+                    class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.dashboard') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-[#F6F6F7] hover:text-[#ED1B45]' }}"
+                    x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.dashboard') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ route('trainer.sessions.index') }}"
+                    class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.sessions.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-[#F6F6F7] hover:text-[#ED1B45]' }}"
+                    x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.sessions.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Jadwal Sesi PT</span>
+                </a>
+                <a href="{{ route('trainer.clients.index') }}"
+                    class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.clients.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-[#F6F6F7] hover:text-[#ED1B45]' }}"
+                    x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.clients.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span>Klien Saya</span>
+                </a>
+                <a href="{{ route('trainer.availability.index') }}"
+                    class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.availability.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-[#F6F6F7] hover:text-[#ED1B45]' }}"
+                    x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.availability.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Ketersediaan Waktu</span>
+                </a>
+                <a href="{{ route('trainer.commissions.index') }}"
+                    class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.commissions.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-[#F6F6F7] hover:text-[#ED1B45]' }}"
+                    x-on:click="sidebarOpen = false">
+                    <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.commissions.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span>Pendapatan / Komisi</span>
+                </a>
             @else
                 <a href="{{ route('dashboard') }}" class="flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm font-medium text-[#565A66] transition duration-200 hover:bg-[#F6F6F7] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -120,7 +161,6 @@
                     <span>Profil</span>
                 </a>
             @endif
-        </nav>
 
         @if (Auth::user()->role === 'admin')
             <div class="mt-8 border-t border-[#E5E7EB] pt-5">
