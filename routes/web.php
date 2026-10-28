@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\MemberManagementController;
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
@@ -100,8 +101,16 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
         });
 
     Route::view('/pt-sessions', 'admin.placeholder', ['title' => 'Paket Sesi & Jadwal PT'])->name('pt-sessions.index');
+    Route::prefix('member-management')->name('members.')->controller(MemberManagementController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/export', 'export')->name('export');
+        Route::get('/{member}', 'show')->whereNumber('member')->name('show');
+        Route::put('/{member}', 'update')->whereNumber('member')->name('update');
+        Route::patch('/{member}/deactivate', 'deactivate')->whereNumber('member')->name('deactivate');
+        Route::delete('/{member}', 'destroy')->whereNumber('member')->name('destroy');
+    });
     Route::view('/check-in', 'admin.placeholder', ['title' => 'Scanner Check-in'])->name('check-in.index');
-    Route::view('/members', 'admin.placeholder', ['title' => 'Manajemen Member'])->name('members.index');
     Route::view('/settings', 'admin.placeholder', ['title' => 'Pengaturan'])->name('settings.index');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');
 });

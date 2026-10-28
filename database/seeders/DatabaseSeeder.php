@@ -50,6 +50,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PaymentSeeder::class,
             PtBookingDemoSeeder::class,
+            MemberManagementDemoSeeder::class,
         ]);
     }
 }
