@@ -23,20 +23,10 @@ class PtPackage extends Model
     {
         return [
             'pt_session_count' => 'integer',
-            'price' => 'decimal:2',
+            'price' => 'integer',
             'min_membership_days' => 'integer',
             'validity_days' => 'integer',
         ];
-    }
-
-    public function isActive(): bool
-    {
-        return $this->status === 'active';
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', 'active');
     }
 
     public function quotas(): HasMany

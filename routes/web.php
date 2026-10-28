@@ -28,7 +28,7 @@ Route::get('/dashboard', function () {
     }
 
     if ($role === 'trainer') {
-        return redirect()->route('trainer.dashboard');
+        return redirect()->route('trainer.sessions.index');
     }
 
     return redirect()->route('member.dashboard');
