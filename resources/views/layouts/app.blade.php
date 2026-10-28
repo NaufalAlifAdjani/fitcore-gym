@@ -151,7 +151,7 @@
                     <div class="mt-4">
                         <h3 id="logout-title" class="font-poppins text-lg font-bold text-[#16151A]">Konfirmasi Keluar</h3>
                         <p class="mt-2 font-inter text-sm text-[#565A66]">
-                            Apakah Anda yakin ingin keluar dari akun ini? Sesi Anda saat ini akan diakhiri.
+                            Apakah Anda yakin ingin keluar dari akun FitCore Gym? Sesi Anda saat ini akan diakhiri.
                         </p>
                     </div>
 

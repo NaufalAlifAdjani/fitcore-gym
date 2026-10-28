@@ -107,7 +107,7 @@ class AuthenticationTest extends TestCase
             ->get(route('admin.dashboard'))
             ->assertOk()
             ->assertSee('Konfirmasi Keluar')
-            ->assertSee('Apakah Anda yakin ingin keluar dari akun ini? Sesi Anda saat ini akan diakhiri.')
+            ->assertSee('Apakah Anda yakin ingin keluar dari akun FitCore Gym? Sesi Anda saat ini akan diakhiri.')
             ->assertSee('Batal')
             ->assertSee('Ya, Keluar')
             ->assertSee('showLogoutModal = true', false)
