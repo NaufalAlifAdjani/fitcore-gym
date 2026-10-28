@@ -19,12 +19,12 @@ class CheckInFactory extends Factory
         $checkedInCarbon = Carbon::instance($checkedIn)->timezone('Asia/Jakarta');
 
         return [
-            'member_id'     => MemberProfile::factory(),
+            'member_id' => MemberProfile::factory(),
             'membership_id' => Membership::factory(),
             'check_in_date' => $checkedInCarbon->toDateString(),
             'checked_in_at' => $checkedIn,
             'checked_out_at' => fake()->randomElement([$checkedOut, null]),
-            'method'        => fake()->randomElement(['manual', 'qr_code']),
+            'method' => fake()->randomElement(['manual', 'qr_code']),
         ];
     }
 }

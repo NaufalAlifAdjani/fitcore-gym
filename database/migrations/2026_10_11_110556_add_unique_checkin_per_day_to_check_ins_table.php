@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,7 @@ return new class extends Migration
             ->orderBy('id')
             ->each(function ($row) {
                 $date = $row->checked_in_at
-                    ? \Carbon\Carbon::parse($row->checked_in_at)->timezone('Asia/Jakarta')->toDateString()
+                    ? Carbon::parse($row->checked_in_at)->timezone('Asia/Jakarta')->toDateString()
                     : now('Asia/Jakarta')->toDateString();
 
                 DB::table('check_ins')

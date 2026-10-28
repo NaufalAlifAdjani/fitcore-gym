@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CheckInRequest extends FormRequest
@@ -32,7 +33,7 @@ class CheckInRequest extends FormRequest
     {
         return [
             'qr_token.required' => 'Token QR Code diperlukan.',
-            'qr_token.string'   => 'Format token QR Code tidak valid.',
+            'qr_token.string' => 'Format token QR Code tidak valid.',
         ];
     }
 
@@ -42,7 +43,7 @@ class CheckInRequest extends FormRequest
      */
     protected function failedAuthorization(): never
     {
-        throw new \Illuminate\Auth\Access\AuthorizationException(
+        throw new AuthorizationException(
             'Anda tidak memiliki akses untuk melakukan check-in.'
         );
     }

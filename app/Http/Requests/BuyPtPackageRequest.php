@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BuyPtPackageRequest extends FormRequest
@@ -22,8 +23,8 @@ class BuyPtPackageRequest extends FormRequest
     {
         return [
             'pt_package_id' => ['required', 'integer', 'exists:pt_packages,id'],
-            'bank_id'       => ['required', 'integer', 'exists:banks,id'],
-            'proof_image'   => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'bank_id' => ['required', 'integer', 'exists:banks,id'],
+            'proof_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ];
     }
 
@@ -34,14 +35,14 @@ class BuyPtPackageRequest extends FormRequest
     {
         return [
             'pt_package_id.required' => 'Pilih paket PT yang ingin dibeli.',
-            'pt_package_id.integer'  => 'Format ID paket PT tidak valid.',
-            'pt_package_id.exists'   => 'Paket PT yang dipilih tidak ditemukan.',
-            'bank_id.required'       => 'Pilih bank tujuan pembayaran.',
-            'bank_id.integer'        => 'Format ID bank tidak valid.',
-            'bank_id.exists'         => 'Bank tujuan pembayaran tidak valid.',
-            'proof_image.image'      => 'Bukti pembayaran harus berupa gambar.',
-            'proof_image.mimes'      => 'Format bukti pembayaran harus JPG, JPEG, PNG, atau WEBP.',
-            'proof_image.max'        => 'Ukuran bukti pembayaran maksimal 2MB.',
+            'pt_package_id.integer' => 'Format ID paket PT tidak valid.',
+            'pt_package_id.exists' => 'Paket PT yang dipilih tidak ditemukan.',
+            'bank_id.required' => 'Pilih bank tujuan pembayaran.',
+            'bank_id.integer' => 'Format ID bank tidak valid.',
+            'bank_id.exists' => 'Bank tujuan pembayaran tidak valid.',
+            'proof_image.image' => 'Bukti pembayaran harus berupa gambar.',
+            'proof_image.mimes' => 'Format bukti pembayaran harus JPG, JPEG, PNG, atau WEBP.',
+            'proof_image.max' => 'Ukuran bukti pembayaran maksimal 2MB.',
         ];
     }
 
@@ -50,7 +51,7 @@ class BuyPtPackageRequest extends FormRequest
      */
     protected function failedAuthorization(): never
     {
-        throw new \Illuminate\Auth\Access\AuthorizationException(
+        throw new AuthorizationException(
             'Hanya member gym yang dapat membeli paket Personal Trainer.'
         );
     }

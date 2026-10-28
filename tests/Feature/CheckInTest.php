@@ -4,12 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\Bank;
 use App\Models\CheckIn;
-use App\Models\Membership;
 use App\Models\MemberProfile;
+use App\Models\Membership;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -37,9 +36,10 @@ class CheckInTest extends TestCase
     {
         $member = User::factory()->create(['role' => 'member']);
         $profile = MemberProfile::factory()->create([
-            'user_id'   => $member->id,
-            'qr_token'  => $qrToken,
+            'user_id' => $member->id,
+            'qr_token' => $qrToken,
         ]);
+
         return [$member, $profile];
     }
 
@@ -47,29 +47,29 @@ class CheckInTest extends TestCase
     private function activeMembership(User $member, array $overrides = []): Membership
     {
         $package = MembershipPackage::factory()->create([
-            'name'          => 'Monthly',
+            'name' => 'Monthly',
             'duration_days' => 30,
-            'price'         => 200000,
+            'price' => 200000,
         ]);
 
         $membership = Membership::factory()->create(array_merge([
-            'member_id'            => $member->id,
+            'member_id' => $member->id,
             'membership_package_id' => $package->id,
-            'start_date'           => now('Asia/Jakarta')->subDays(5)->toDateString(),
-            'end_date'             => now('Asia/Jakarta')->addDays(25)->toDateString(),
-            'status'               => 'active',
+            'start_date' => now('Asia/Jakarta')->subDays(5)->toDateString(),
+            'end_date' => now('Asia/Jakarta')->addDays(25)->toDateString(),
+            'status' => 'active',
         ], $overrides));
 
         $bank = Bank::factory()->create();
 
         // Verified payment
         Payment::factory()->create([
-            'member_id'    => $member->id,
+            'member_id' => $member->id,
             'membership_id' => $membership->id,
             'payment_type' => 'membership',
-            'amount'       => 200000,
-            'bank_id'      => $bank->id,
-            'status'       => 'verified',
+            'amount' => 200000,
+            'bank_id' => $bank->id,
+            'status' => 'verified',
         ]);
 
         return $membership;
@@ -96,7 +96,7 @@ class CheckInTest extends TestCase
 
         $this->assertDatabaseHas('check_ins', [
             'member_id' => $member->id,
-            'method'    => 'qr_code',
+            'method' => 'qr_code',
             'checked_by' => $admin->id,
         ]);
     }
@@ -143,8 +143,8 @@ class CheckInTest extends TestCase
 
         $this->activeMembership($member, [
             'start_date' => now('Asia/Jakarta')->subDays(60)->toDateString(),
-            'end_date'   => now('Asia/Jakarta')->subDays(30)->toDateString(),
-            'status'     => 'expired',
+            'end_date' => now('Asia/Jakarta')->subDays(30)->toDateString(),
+            'status' => 'expired',
         ]);
 
         $response = $this->actingAs($admin)
@@ -165,20 +165,20 @@ class CheckInTest extends TestCase
 
         $package = MembershipPackage::factory()->create();
         $membership = Membership::factory()->create([
-            'member_id'             => $member->id,
+            'member_id' => $member->id,
             'membership_package_id' => $package->id,
-            'start_date'            => now('Asia/Jakarta')->subDays(1)->toDateString(),
-            'end_date'              => now('Asia/Jakarta')->addDays(29)->toDateString(),
-            'status'                => 'active',
+            'start_date' => now('Asia/Jakarta')->subDays(1)->toDateString(),
+            'end_date' => now('Asia/Jakarta')->addDays(29)->toDateString(),
+            'status' => 'active',
         ]);
 
         // Pending payment — NOT verified
         Payment::factory()->create([
-            'member_id'    => $member->id,
+            'member_id' => $member->id,
             'membership_id' => $membership->id,
             'payment_type' => 'membership',
-            'bank_id'      => Bank::factory()->create()->id,
-            'status'       => 'pending',
+            'bank_id' => Bank::factory()->create()->id,
+            'status' => 'pending',
         ]);
 
         $response = $this->actingAs($admin)
@@ -200,12 +200,12 @@ class CheckInTest extends TestCase
 
         // Simulate a previous check-in for today
         CheckIn::create([
-            'member_id'     => $member->id,
+            'member_id' => $member->id,
             'membership_id' => $membership->id,
             'check_in_date' => now('Asia/Jakarta')->toDateString(),
             'checked_in_at' => now('Asia/Jakarta'),
-            'method'        => 'qr_code',
-            'checked_by'    => $admin->id,
+            'method' => 'qr_code',
+            'checked_by' => $admin->id,
         ]);
 
         $response = $this->actingAs($admin)

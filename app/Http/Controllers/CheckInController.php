@@ -99,13 +99,13 @@ class CheckInController extends Controller
         // against race conditions. We catch it explicitly and return a 409.
         try {
             $checkIn = CheckIn::create([
-                'member_id'      => $member->id,
-                'membership_id'  => $activeMembership->id,
-                'check_in_date'  => $todayDate,
-                'checked_in_at'  => $today,
+                'member_id' => $member->id,
+                'membership_id' => $activeMembership->id,
+                'check_in_date' => $todayDate,
+                'checked_in_at' => $today,
                 'checked_out_at' => null,
-                'method'         => 'qr_code',
-                'checked_by'     => $request->user()->id,
+                'method' => 'qr_code',
+                'checked_by' => $request->user()->id,
             ]);
         } catch (UniqueConstraintViolationException) {
             // Race condition: two requests passed the exists() check simultaneously.
@@ -117,11 +117,11 @@ class CheckInController extends Controller
 
         // ── E. Return Success Response ────────────────────────────────────────
         return response()->json([
-            'success'       => true,
-            'message'       => 'Check-in berhasil!',
-            'member_name'   => $member->name,
-            'membership'    => $activeMembership->package->name ?? 'N/A',
-            'valid_until'   => $activeMembership->end_date->locale('id')->translatedFormat('d F Y'),
+            'success' => true,
+            'message' => 'Check-in berhasil!',
+            'member_name' => $member->name,
+            'membership' => $activeMembership->package->name ?? 'N/A',
+            'valid_until' => $activeMembership->end_date->locale('id')->translatedFormat('d F Y'),
             'checked_in_at' => $today->format('H:i'),
         ]);
     }
