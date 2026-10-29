@@ -67,49 +67,8 @@
         <!-- Right: Notifications & Trainer Profile -->
         <div class="flex items-center gap-3 sm:gap-4">
             
-            <!-- Notification Bell Icon with Red Dot -->
-            <div class="relative" x-data="{ notifOpen: false }">
-                <button 
-                    type="button" 
-                    @click="notifOpen = !notifOpen"
-                    class="relative p-2.5 rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 transition-colors focus:outline-none cursor-pointer"
-                    aria-label="Notifikasi"
-                >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                    </svg>
-                    <!-- Red Notification Dot -->
-                    <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-[#ED1B45] rounded-full ring-2 ring-white"></span>
-                </button>
-
-                <!-- Notifications Dropdown -->
-                <div 
-                    x-show="notifOpen" 
-                    @click.away="notifOpen = false" 
-                    x-transition:enter="transition ease-out duration-150"
-                    x-transition:enter-start="opacity-0 scale-95"
-                    x-transition:enter-end="opacity-100 scale-100"
-                    x-transition:leave="transition ease-in duration-100"
-                    x-transition:leave-start="opacity-100 scale-100"
-                    x-transition:leave-end="opacity-0 scale-95"
-                    class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-[#E5E7EB] py-3 px-4 z-50 text-sm"
-                    style="display: none;"
-                >
-                    <div class="flex items-center justify-between pb-2 border-b border-[#E5E7EB]">
-                        <span class="font-bold text-[#16151A] font-heading">Notifikasi Sesi</span>
-                        <span class="text-[11px] bg-red-50 text-[#ED1B45] font-extrabold px-2 py-0.5 rounded-full">Baru</span>
-                    </div>
-                    <div class="py-3 space-y-2.5">
-                        <div class="flex items-start gap-2.5 text-xs text-[#565A66]">
-                            <span class="w-2 h-2 rounded-full bg-[#ED1B45] mt-1.5 shrink-0"></span>
-                            <div>
-                                <p class="font-semibold text-[#16151A]">Permintaan booking baru</p>
-                                <p class="text-[11px] text-[#565A66]">Member telah mengajukan sesi latihan personal.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <!-- Notification Bell Icon with Dropdown -->
+            <x-notification-dropdown theme="light" />
 
             <!-- Vertical Separator Divider -->
             <div class="h-8 w-px bg-[#E5E7EB]"></div>

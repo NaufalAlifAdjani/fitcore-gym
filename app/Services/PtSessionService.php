@@ -9,6 +9,9 @@ use App\Exceptions\SlotUnavailableException;
 use App\Models\MemberPtQuota;
 use App\Models\PtSession;
 use App\Models\User;
+use App\Notifications\NewSessionRequestedNotification;
+use App\Notifications\SessionCancelledNotification;
+use App\Notifications\SessionConfirmedNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -219,7 +222,7 @@ class PtSessionService
             $quota->increment('used_sessions');
             $quota->decrement('remaining_sessions');
 
-            return PtSession::create([
+            $session = PtSession::create([
                 'member_pt_quota_id' => $quota->id,
                 'member_id' => $member->id,
                 'trainer_id' => $trainer->id,
@@ -228,6 +231,11 @@ class PtSessionService
                 'end_time' => $endTime,
                 'status' => PtSessionStatus::Pending,
             ]);
+
+            $session->loadMissing(['member', 'trainer']);
+            $trainer->notify(new NewSessionRequestedNotification($session));
+
+            return $session;
         });
     }
 
@@ -237,6 +245,27 @@ class PtSessionService
     public function canChange(PtSession $session): bool
     {
         return $session->can_be_changed;
+    }
+
+    /**
+     * Mengonfirmasi sesi PT dan mengirimkan notifikasi ke member.
+     */
+    public function confirm(PtSession $session, ?User $confirmedBy = null): PtSession
+    {
+        return DB::transaction(function () use ($session, $confirmedBy) {
+            $lockedSession = PtSession::where('id', $session->id)->lockForUpdate()->firstOrFail();
+
+            if ($lockedSession->status === PtSessionStatus::Pending) {
+                $lockedSession->update([
+                    'status' => PtSessionStatus::Confirmed,
+                ]);
+
+                $lockedSession->loadMissing(['member', 'trainer']);
+                $lockedSession->member?->notify(new SessionConfirmedNotification($lockedSession, $confirmedBy));
+            }
+
+            return $lockedSession->fresh();
+        });
     }
 
     /**
@@ -303,16 +332,20 @@ class PtSessionService
     }
 
     /**
-     * Membatalkan sesi dan mengembalikan kuota aktif.
+     * Membatalkan sesi dan mengembalikan kuota aktif serta mengirimkan notifikasi.
      *
      * @throws ChangeDeadlinePassedException
      */
-    public function cancel(PtSession $session, ?string $reason = null): PtSession
-    {
-        return DB::transaction(function () use ($session) {
+    public function cancel(
+        PtSession $session,
+        ?string $reason = null,
+        ?User $cancelledBy = null,
+        bool $enforceDeadline = true
+    ): PtSession {
+        return DB::transaction(function () use ($session, $reason, $cancelledBy, $enforceDeadline) {
             $lockedSession = PtSession::where('id', $session->id)->lockForUpdate()->firstOrFail();
 
-            if (! $this->canChange($lockedSession)) {
+            if ($enforceDeadline && ! $this->canChange($lockedSession)) {
                 throw new ChangeDeadlinePassedException;
             }
 
@@ -327,6 +360,14 @@ class PtSessionService
             if ($quota) {
                 $quota->decrement('used_sessions');
                 $quota->increment('remaining_sessions');
+            }
+
+            $lockedSession->loadMissing(['member', 'trainer']);
+
+            if ($cancelledBy && $cancelledBy->id === $lockedSession->member_id) {
+                $lockedSession->trainer?->notify(new SessionCancelledNotification($lockedSession, $reason, $cancelledBy));
+            } else {
+                $lockedSession->member?->notify(new SessionCancelledNotification($lockedSession, $reason, $cancelledBy));
             }
 
             return $lockedSession->fresh();
@@ -381,6 +422,13 @@ class PtSessionService
                         $quota->decrement('used_sessions');
                         $quota->increment('remaining_sessions');
                     }
+
+                    $lockedSession->loadMissing(['member', 'trainer']);
+                    $lockedSession->member?->notify(new SessionCancelledNotification(
+                        $lockedSession,
+                        'Batas waktu konfirmasi sesi telah berakhir',
+                        null
+                    ));
 
                     $cancelledCount++;
                 });

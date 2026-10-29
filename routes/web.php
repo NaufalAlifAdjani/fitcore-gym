@@ -8,6 +8,7 @@ use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
 use App\Http\Controllers\MemberCardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PtPackagePurchaseController;
 use App\Http\Controllers\PtSessionController;
@@ -38,6 +39,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Notifications
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.mark-all-read');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
 
     // Member Dashboard
     Route::get('/member/dashboard', [MemberDashboardController::class, 'index'])

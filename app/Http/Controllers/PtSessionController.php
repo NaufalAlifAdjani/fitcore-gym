@@ -202,7 +202,8 @@ class PtSessionController extends Controller
         try {
             $this->ptSessionService->cancel(
                 $ptSession,
-                $request->input('reason')
+                $request->input('reason'),
+                $request->user()
             );
 
             return redirect()

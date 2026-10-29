@@ -204,19 +204,8 @@
 
                     <!-- Right Header: Notifications & Coach Profile -->
                     <div class="flex items-center gap-5 sm:gap-6 ml-auto">
-                        <!-- Notification Bell -->
-                        <button
-                            type="button"
-                            class="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition cursor-pointer"
-                            aria-label="Notifikasi"
-                        >
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            <!-- Red indicator dot -->
-                            <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#ED1B45] ring-2 ring-white"></span>
-                        </button>
+                        <!-- Notification Bell & Dropdown -->
+                        <x-notification-dropdown theme="light" />
 
                         <!-- Coach Profile -->
                         <div class="flex items-center gap-3">

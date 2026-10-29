@@ -298,18 +298,8 @@
 
     <!-- Kanan: Notifikasi + User Profile Dropdown -->
     <div class="flex shrink-0 items-center gap-2 sm:gap-4">
-        <!-- Ikon Notifikasi -->
-        <button
-            type="button"
-            aria-label="Notifikasi"
-            class="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-[#F6F6F7] transition cursor-pointer"
-        >
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <!-- Red Dot Indicator -->
-            <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#ED1B45] ring-2 ring-white"></span>
-        </button>
+        <!-- Ikon Notifikasi & Dropdown -->
+        <x-notification-dropdown theme="light" />
 
         <!-- User Profile Dropdown -->
         <div class="relative" x-on:click.outside="profileOpen = false">

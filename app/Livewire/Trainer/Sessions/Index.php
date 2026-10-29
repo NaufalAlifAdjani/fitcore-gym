@@ -6,11 +6,10 @@ namespace App\Livewire\Trainer\Sessions;
 
 use App\Actions\GetTrainerSchedule;
 use App\Enums\PtSessionStatus;
-use App\Models\MemberPtQuota;
 use App\Models\PtSession;
+use App\Services\PtSessionService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -288,9 +287,7 @@ class Index extends Component
         $session = $query->firstOrFail();
 
         if ($session->status === PtSessionStatus::Pending) {
-            $session->update([
-                'status' => PtSessionStatus::Confirmed,
-            ]);
+            app(PtSessionService::class)->confirm($session, Auth::user());
 
             unset($this->sessions, $this->tasksList, $this->monthSessions, $this->taskStatusCounts);
 
@@ -310,20 +307,12 @@ class Index extends Component
         $session = $query->firstOrFail();
 
         if ($session->status === PtSessionStatus::Pending) {
-            DB::transaction(function () use ($session) {
-                $session->update([
-                    'status' => PtSessionStatus::Cancelled,
-                ]);
-
-                $quota = MemberPtQuota::where('id', $session->member_pt_quota_id)
-                    ->lockForUpdate()
-                    ->first();
-
-                if ($quota) {
-                    $quota->decrement('used_sessions');
-                    $quota->increment('remaining_sessions');
-                }
-            });
+            app(PtSessionService::class)->cancel(
+                $session,
+                'Sesi ditolak oleh pelatih',
+                Auth::user(),
+                enforceDeadline: false
+            );
 
             unset($this->sessions, $this->tasksList, $this->monthSessions, $this->taskStatusCounts);
 
