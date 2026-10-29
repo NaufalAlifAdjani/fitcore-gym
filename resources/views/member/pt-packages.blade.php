@@ -1,12 +1,17 @@
 <x-fitcore-layout :title="'Booking Sesi Personal Trainer | FITCORE ATHLETIC'">
 
-    {{-- HERO SECTION (Background Putih) --}}
-    <section class="bg-white border-b border-gray-100 py-12 md:py-16">
-        <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-zinc-950 tracking-tight leading-tight">
-                Booking Sesi <span style="color: #C80036;">Personal</span><br>
-                <span style="color: #C80036;">Trainer</span>
+    {{-- HERO SECTION (Nuansa Putih / Light Bersih) --}}
+    <section class="bg-white border-b border-slate-200/90 pt-16 pb-20 px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-5xl text-center">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#BA0030] bg-rose-50 border border-rose-200 rounded-full mb-4">
+                FITCORE ATHLETIC PERSONAL TRAINER
+            </span>
+            <h1 class="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight">
+                Booking Sesi <span class="text-[#BA0030]">Personal Trainer</span>
             </h1>
+            <p class="mt-3.5 max-w-2xl mx-auto text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
+                Tingkatkan performa fisik Anda dengan bimbingan pelatih pribadi tersertifikasi dan program latihan yang dirancang khusus untuk mencapai target kebugaran Anda.
+            </p>
         </div>
     </section>
 
