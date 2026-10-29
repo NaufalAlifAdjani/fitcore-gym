@@ -61,7 +61,7 @@
                             min="1"
                             step="1"
                             placeholder="4"
-                            class="!bg-white !border-[#E5E7EB] !p-3 pr-16 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
+                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
                         />
                         <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#565A66] font-inter">
                             Sesi
@@ -85,7 +85,7 @@
                             min="0"
                             step="1"
                             placeholder="1500000"
-                            class="!bg-white !border-[#E5E7EB] !p-3 pl-12 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
+                            class="!bg-white !border-[#E5E7EB] !py-3 !pr-3 !pl-12 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
                         />
                     </div>
                     @error('price') <span class="mt-1 block font-inter text-xs text-red-600">{{ $message }}</span> @enderror
@@ -118,7 +118,7 @@
                             min="0"
                             step="1"
                             placeholder="0"
-                            class="!bg-white !border-[#E5E7EB] !p-3 pr-16 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
+                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
                         />
                         <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#565A66] font-inter">
                             Hari
@@ -142,7 +142,7 @@
                             min="1"
                             step="1"
                             placeholder="30"
-                            class="!bg-white !border-[#E5E7EB] !p-3 pr-16 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
+                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
                         />
                         <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#565A66] font-inter">
                             Hari
