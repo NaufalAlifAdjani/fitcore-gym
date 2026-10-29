@@ -51,12 +51,23 @@ class GoogleAuthController extends Controller
      */
     public function handleGoogleCallback(Request $request): RedirectResponse
     {
+<<<<<<< Updated upstream
         // Jika pengguna membatalkan atau terjadi error dari Google
         if ($request->has('error')) {
             return redirect()->route('login')->withErrors([
                 'google' => 'Login Google dibatalkan atau terjadi kesalahan: ' . $request->get('error'),
             ]);
         }
+=======
+        if ($request->has('error')) {
+            return redirect()->route('login')->withErrors([
+                'google' => 'Login Google dibatalkan atau terjadi kesalahan: '.$request->get('error'),
+            ]);
+        }
+
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+>>>>>>> Stashed changes
 
         $code = $request->get('code');
         if (empty($code)) {
