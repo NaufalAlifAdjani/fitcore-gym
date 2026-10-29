@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\JpegEncoder;
+use Intervention\Image\Encoders\WebpEncoder;
+use Intervention\Image\ImageManager;
+use Throwable;
 
 class MembershipPackageController extends Controller
 {
@@ -111,8 +116,42 @@ class MembershipPackageController extends Controller
         $bank = Bank::findOrFail($validated['bank_id']);
 
         $file = $request->file('proof_image');
-        $path = $file->store('payment-proofs', 'public');
-        $url = Storage::url($path);
+
+        try {
+            $manager = new ImageManager(new Driver);
+            $image = method_exists($manager, 'read')
+                ? $manager->read($file)
+                : $manager->decode($file);
+
+            $image->scaleDown(width: 800);
+
+            if (class_exists(WebpEncoder::class)) {
+                $encoded = $image->encode(new WebpEncoder(quality: 80));
+                $extension = 'webp';
+            } elseif (method_exists($image, 'toWebp')) {
+                $encoded = $image->toWebp(80);
+                $extension = 'webp';
+            } elseif (class_exists(JpegEncoder::class)) {
+                $encoded = $image->encode(new JpegEncoder(quality: 80));
+                $extension = 'jpg';
+            } else {
+                $encoded = method_exists($image, 'toJpeg')
+                    ? $image->toJpeg(80)
+                    : $image->encode();
+                $extension = 'jpg';
+            }
+
+            $path = 'payments/'.Str::uuid().'.'.$extension;
+            Storage::disk('public')->put($path, (string) $encoded);
+            $url = Storage::url($path);
+        } catch (Throwable $e) {
+            report($e);
+
+            return back()
+                ->withInput()
+                ->withErrors(['proof_image' => 'Gagal memproses dan mengompres berkas bukti pembayaran. Pastikan berkas adalah gambar yang valid.'])
+                ->with('error', 'Terjadi kesalahan saat memproses bukti pembayaran.');
+        }
 
         $uniqueCode = (int) $request->input('unique_code', 0);
         $basePrice = ($package->promo_price !== null && $package->promo_price < $package->price)

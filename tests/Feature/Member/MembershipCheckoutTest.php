@@ -11,6 +11,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Tests\TestCase;
 
 class MembershipCheckoutTest extends TestCase
@@ -357,5 +359,53 @@ class MembershipCheckoutTest extends TestCase
             [$admin, $otherAdmin],
             AdminNewPaymentNotification::class
         );
+    }
+
+    public function test_uploaded_proof_image_is_compressed_and_stored_in_payments_directory(): void
+    {
+        Storage::fake('public');
+
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_holder' => 'PT FitCore Gym',
+            'status' => 'active',
+        ]);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Gold',
+            'tier' => 'Gold',
+            'price' => 1500000,
+            'duration_in_days' => 90,
+            'facilities' => ['Akses Semua Fasilitas'],
+            'is_active' => true,
+        ]);
+
+        // Upload large image (1200 x 900)
+        $largeImage = UploadedFile::fake()->image('large-receipt.jpg', 1200, 900);
+
+        $response = $this->actingAs($member)
+            ->post(route('member.membership.upload-proof.store', $package), [
+                'bank_id' => $bank->id,
+                'sender_name' => 'Member Test',
+                'proof_image' => $largeImage,
+            ]);
+
+        $payment = Payment::query()->latest('id')->first();
+        $this->assertNotNull($payment);
+        $response->assertRedirect(route('member.membership.payment-status', $payment));
+
+        // Assert path starts with payments/ and file exists
+        $this->assertStringStartsWith('payments/', $payment->proof_image_path);
+        $this->assertTrue(Storage::disk('public')->exists($payment->proof_image_path));
+
+        // Read stored compressed image and assert scaled down to max width 800
+        $storedContent = Storage::disk('public')->get($payment->proof_image_path);
+        $manager = new ImageManager(new Driver);
+        $savedImage = method_exists($manager, 'read')
+            ? $manager->read($storedContent)
+            : $manager->decode($storedContent);
+
+        $this->assertLessThanOrEqual(800, $savedImage->width());
     }
 }
