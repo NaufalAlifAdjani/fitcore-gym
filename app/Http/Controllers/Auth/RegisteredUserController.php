@@ -49,7 +49,7 @@ class RegisteredUserController extends Controller
 
         MemberProfile::create([
             'user_id' => $user->id,
-            'member_code' => 'MEM' . rand(100000, 999999),
+            'member_code' => 'MEM'.rand(100000, 999999),
         ]);
 
         event(new Registered($user));
