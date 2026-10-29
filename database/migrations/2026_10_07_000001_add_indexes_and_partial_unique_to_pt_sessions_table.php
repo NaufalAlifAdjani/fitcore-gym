@@ -19,6 +19,24 @@ return new class extends Migration
 
         $driver = Schema::getConnection()->getDriverName();
         if (in_array($driver, ['pgsql', 'sqlite'])) {
+            if ($driver === 'pgsql') {
+                DB::statement("
+                    UPDATE pt_sessions
+                    SET status = 'cancelled'
+                    WHERE id IN (
+                        SELECT id FROM (
+                            SELECT id, ROW_NUMBER() OVER (
+                                PARTITION BY trainer_id, session_date, start_time 
+                                ORDER BY id ASC
+                            ) as rnum
+                            FROM pt_sessions
+                            WHERE status != 'cancelled'
+                        ) t
+                        WHERE t.rnum > 1
+                    )
+                ");
+            }
+
             DB::statement("
                 CREATE UNIQUE INDEX pt_sessions_trainer_date_time_unique 
                 ON pt_sessions (trainer_id, session_date, start_time) 

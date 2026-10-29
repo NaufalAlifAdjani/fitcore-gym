@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\MemberManagementController;
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\PtPackageController;
@@ -14,24 +15,28 @@ use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/login');
 
-Route::get('/dashboard', function () {
+Route::get('/dashboard', function (Request $request) {
     $role = auth()->user()?->role;
 
-    if ($role === 'admin') {
-        return redirect()->route('admin.dashboard');
+    $targetRoute = match ($role) {
+        'admin' => 'admin.dashboard',
+        'trainer' => 'trainer.dashboard',
+        default => 'member.dashboard',
+    };
+
+    $redirect = redirect()->route($targetRoute, $request->query());
+
+    if ($request->has('verified') || session('verified')) {
+        $redirect->with('verified', true)
+            ->with('success', session('success') ?? 'Email Anda berhasil diverifikasi! Selamat datang di FitCore Gym.');
     }
 
-    if ($role === 'trainer') {
-        return redirect()->route('trainer.sessions.index');
-    }
-
-    return redirect()->route('member.dashboard');
+    return $redirect;
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -41,11 +46,11 @@ Route::middleware('auth')->group(function () {
 
     // Member Dashboard
     Route::get('/member/dashboard', [MemberDashboardController::class, 'index'])
-        ->middleware('role:member')
+        ->middleware('can:access-member-dashboard')
         ->name('member.dashboard');
 
     // Member Membership Package, Checkout, Upload Proof, and Payment Status routes
-    Route::prefix('membership')->name('member.membership.')->middleware('role:member')->controller(MemberMembershipPackageController::class)->group(function () {
+    Route::prefix('membership')->name('member.membership.')->controller(MemberMembershipPackageController::class)->group(function () {
         Route::get('/packages', 'index')->name('packages');
         Route::get('/checkout/{package}', 'checkout')->name('checkout');
         Route::get('/upload-proof/{package}', 'uploadProof')->name('upload-proof');
@@ -83,7 +88,7 @@ Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')
     Route::view('/pendapatan-komisi', 'trainer.placeholder', ['title' => 'Pendapatan / Komisi'])->name('commissions.index');
 });
 
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/packages', [MembershipPackageController::class, 'index'])->name('packages.index');
     Route::post('/packages', [MembershipPackageController::class, 'store'])->name('packages.store');
@@ -106,7 +111,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::patch('/pt-packages/{ptPackage}/toggle-status', [PtPackageController::class, 'toggleStatus'])->name('pt-packages.toggle-status');
     Route::get('/pt-sessions', [PtPackageController::class, 'index'])->name('pt-sessions.index');
     Route::get('/check-in', [CheckInController::class, 'index'])->name('check-in.index');
-    Route::view('/members', 'admin.placeholder', ['title' => 'Manajemen Member'])->name('members.index');
+    Route::prefix('member-management')->name('members.')->controller(MemberManagementController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/export', 'export')->name('export');
+        Route::get('/{member}', 'show')->whereNumber('member')->name('show');
+        Route::put('/{member}', 'update')->whereNumber('member')->name('update');
+        Route::patch('/{member}/deactivate', 'deactivate')->whereNumber('member')->name('deactivate');
+        Route::delete('/{member}', 'destroy')->whereNumber('member')->name('destroy');
+    });
     Route::view('/settings', 'admin.placeholder', ['title' => 'Pengaturan'])->name('settings.index');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');
 });

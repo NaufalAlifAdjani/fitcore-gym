@@ -175,6 +175,8 @@
                     </div>
                 </section>
             </div>
+
+            <x-email-verified-modal />
         </div>
 
         @livewireScriptConfig

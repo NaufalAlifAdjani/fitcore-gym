@@ -63,6 +63,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Membership::class, 'member_id');
     }
 
+    public function latestMembership(): HasOne
+    {
+        return $this->hasOne(Membership::class, 'member_id')->latestOfMany();
+    }
+
     public function ptQuotas(): HasMany
     {
         return $this->hasMany(MemberPtQuota::class, 'member_id');
