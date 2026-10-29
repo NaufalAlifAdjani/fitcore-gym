@@ -66,10 +66,10 @@ class AuthenticatedSessionController extends Controller
             } elseif ($role === 'trainer') {
                 return redirect()->intended(route('trainer.dashboard', absolute: false));
             } elseif ($role === 'member') {
-                return redirect()->route('member.dashboard');
+                return redirect()->intended(route('member.dashboard', absolute: false));
             }
 
-            return redirect()->route('member.dashboard');
+            return redirect()->intended(route('member.dashboard', absolute: false));
         }
 
         // Jika gagal, kembalikan pesan error

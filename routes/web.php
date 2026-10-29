@@ -15,24 +15,30 @@ use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
+Route::get('/dashboard', function (Request $request) {
     $role = auth()->user()?->role;
 
-    if ($role === 'admin') {
-        return redirect()->route('admin.dashboard');
+    $targetRoute = match ($role) {
+        'admin' => 'admin.dashboard',
+        'trainer' => 'trainer.dashboard',
+        default => 'member.dashboard',
+    };
+
+    $redirect = redirect()->route($targetRoute, $request->query());
+
+    if ($request->has('verified') || session('verified')) {
+        $redirect->with('verified', true)
+            ->with('success', session('success') ?? 'Email Anda berhasil diverifikasi! Selamat datang di FitCore Gym.');
     }
 
-    if ($role === 'trainer') {
-        return redirect()->route('trainer.dashboard');
-    }
-
-    return redirect()->route('member.dashboard');
+    return $redirect;
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

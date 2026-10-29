@@ -34,5 +34,8 @@
                 {{ $slot }}
             </main>
         </div>
+
+        <x-toast />
+        <x-email-verified-modal />
     </body>
 </html>

@@ -296,6 +296,8 @@
                     </div>
                 </div>
             </div>
+
+            <x-email-verified-modal />
         </div>
         @livewireScripts
     </body>

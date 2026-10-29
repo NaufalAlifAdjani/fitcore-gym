@@ -27,6 +27,7 @@
         <!-- Right Side: Form Container Slot -->
         <div class="bg-white p-8 sm:p-12 lg:p-16 flex items-center justify-center">
             <div class="w-full max-w-md">
+                <x-toast />
                 {{ $slot }}
             </div>
         </div>
