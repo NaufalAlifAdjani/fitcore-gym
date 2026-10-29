@@ -18,9 +18,7 @@ use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/', '/login');
 
 Route::get('/dashboard', function (Request $request) {
     $role = auth()->user()?->role;
