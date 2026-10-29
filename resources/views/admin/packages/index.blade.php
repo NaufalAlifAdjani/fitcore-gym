@@ -95,60 +95,6 @@
                 </div>
             @endif
 
-            <!-- 3. Statistik (3 Kolom) -->
-            <section aria-label="Ringkasan paket membership" class="grid grid-cols-1 gap-6 md:grid-cols-3">
-                <!-- Card 1: Total Paket Gym -->
-                <div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] p-6 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="font-inter text-xs font-bold uppercase tracking-wider text-[#565A66]">Total Paket Gym</span>
-                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ED1B45]/10 text-[#ED1B45]">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <path d="M7 3.75h7l4.25 4.3v12.2H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
-                                <path d="M14 4v4h4M8.5 13h7M8.5 16.5h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="mt-4">
-                        <p class="font-poppins font-extrabold text-[3rem] text-[#16151A] leading-none">{{ $totalPackages }}</p>
-                        <p class="mt-2.5 font-inter text-xs text-[#565A66]">paket terdaftar</p>
-                    </div>
-                </div>
-
-                <!-- Card 2: Rata-rata Harga Paket Aktif -->
-                <div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] p-6 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="font-inter text-xs font-bold uppercase tracking-wider text-[#565A66]">Rata-rata Harga Paket Aktif</span>
-                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#10B981]/10 text-[#10B981]">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <rect x="3.5" y="5" width="17" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8" />
-                                <path d="M3.5 9h17M7.5 14h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="mt-4">
-                        <p class="font-poppins font-extrabold text-2xl lg:text-3xl xl:text-[2.6rem] text-[#16151A] leading-none truncate">{{ $formattedAvgPrice }}</p>
-                        <p class="mt-2.5 font-inter text-xs text-[#565A66]">harga resmi per paket</p>
-                    </div>
-                </div>
-
-                <!-- Card 3: Paket Aktif -->
-                <div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] p-6 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="font-inter text-xs font-bold uppercase tracking-wider text-[#565A66]">Paket Aktif</span>
-                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#3B82F6]/10 text-[#3B82F6]">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <circle cx="9" cy="8" r="3.25" stroke="currentColor" stroke-width="1.8" />
-                                <path d="M3.75 19v-1.2A4.8 4.8 0 0 1 8.55 13h.9a4.8 4.8 0 0 1 4.8 4.8V19M16 5.3a3.25 3.25 0 0 1 0 6.2m1.2 2a4.8 4.8 0 0 1 3.05 4.5V19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="mt-4">
-                        <p class="font-poppins font-extrabold text-[3rem] text-[#16151A] leading-none">{{ $activePackages }}</p>
-                        <p class="mt-2.5 font-inter text-xs text-[#565A66]">siap dipilih member</p>
-                    </div>
-                </div>
-            </section>
-
             <!-- 5. Card Putih Besar Pembungkus Tabel & Filter Tabs -->
             <div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] overflow-hidden" aria-label="Daftar paket membership">
                 <!-- 4. Filter Tabs & Info Item -->
@@ -215,23 +161,36 @@
                             @else
                                 @foreach ($packages as $pkg)
                                 @php
-                                    $isBestSeller = strtoupper($pkg->badge ?? '') === 'BEST SELLER';
-                                    $badgeStyle = match (strtoupper($pkg->badge ?? '')) {
-                                        'BEST SELLER' => 'bg-[#ED1B45] text-white',
-                                        'PLATINUM VIP' => 'bg-[#1E1E1E] text-white',
-                                        'GOLD STANDARD' => 'bg-amber-100 text-amber-800',
-                                        'SILVER' => 'bg-[#E5E7EB] text-[#565A66]',
-                                        'STUDENT TIER' => 'bg-sky-100 text-sky-800',
-                                        default => 'bg-[#F6F6F7] text-[#565A66]',
+                                    $tier = trim((string) ($pkg->tier ?? ''));
+                                    $badge = trim((string) ($pkg->badge ?? ''));
+                                    $isBestSeller = strcasecmp($badge, 'BEST SELLER') === 0;
+
+                                    // Logika pewarnaan berdasarkan tier
+                                    [$avatarStyle, $badgeStyle] = match (true) {
+                                        strcasecmp($tier, 'Premium & VIP') === 0 || stripos($tier, 'Premium') !== false => [
+                                            'bg-gray-900 text-white',
+                                            'bg-gray-900 text-white',
+                                        ],
+                                        strcasecmp($tier, 'Standard') === 0 => [
+                                            'bg-amber-100 text-amber-600',
+                                            'bg-amber-100 text-amber-800',
+                                        ],
+                                        stripos($tier, 'Student') !== false => [
+                                            'bg-sky-100 text-sky-600',
+                                            'bg-sky-100 text-sky-800',
+                                        ],
+                                        default => [
+                                            'bg-gray-100 text-gray-600',
+                                            'bg-gray-100 text-gray-700',
+                                        ],
                                     };
-                                    $avatarStyle = match (strtoupper($pkg->badge ?? '')) {
-                                        'BEST SELLER' => 'bg-[#ED1B45]/10 text-[#ED1B45]',
-                                        'PLATINUM VIP' => 'bg-[#1E1E1E]/10 text-[#1E1E1E]',
-                                        'GOLD STANDARD' => 'bg-amber-100 text-amber-700',
-                                        'SILVER' => 'bg-[#E5E7EB] text-[#565A66]',
-                                        'STUDENT TIER' => 'bg-sky-100 text-sky-700',
-                                        default => 'bg-[#F6F6F7] text-[#565A66]',
-                                    };
+
+                                    // Pengecualian khusus: jika badge bernilai 'BEST SELLER' (case-insensitive)
+                                    if ($isBestSeller) {
+                                        $avatarStyle = 'bg-red-100 text-[#ED1B45]';
+                                        $badgeStyle = 'bg-[#ED1B45] text-white';
+                                    }
+
                                     $hasPromo = $pkg->promo_price !== null && $pkg->price > $pkg->promo_price;
                                     $discount = $hasPromo ? (int) round((($pkg->price - $pkg->promo_price) / $pkg->price) * 100) : 0;
                                 @endphp
