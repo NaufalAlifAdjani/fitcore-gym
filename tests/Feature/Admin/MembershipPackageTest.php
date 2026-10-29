@@ -177,7 +177,7 @@ class MembershipPackageTest extends TestCase
             ->assertSee('Semua Tier');
     }
 
-    public function test_package_tier_and_badge_coloring_logic(): void
+    public function test_package_tier_and_badge_styling_is_standardized(): void
     {
         $this->actingAs(User::factory()->create(['role' => 'admin']));
 
@@ -188,46 +188,18 @@ class MembershipPackageTest extends TestCase
         ]));
 
         MembershipPackage::create($this->packageData([
-            'name' => 'Package Standard',
+            'name' => 'Package Without Badge',
             'tier' => 'Standard',
-            'badge' => 'STANDARD PACK',
-        ]));
-
-        MembershipPackage::create($this->packageData([
-            'name' => 'Package Student',
-            'tier' => 'Student Tier',
-            'badge' => 'STUDENT',
-        ]));
-
-        MembershipPackage::create($this->packageData([
-            'name' => 'Package Basic',
-            'tier' => 'Basic',
-            'badge' => 'BASIC',
-        ]));
-
-        MembershipPackage::create($this->packageData([
-            'name' => 'Package Best Seller',
-            'tier' => 'Standard',
-            'badge' => 'BEST SELLER',
+            'badge' => null,
         ]));
 
         $response = $this->get(route('admin.packages.index'));
 
         $response->assertOk();
-        // Premium & VIP
-        $response->assertSee('bg-gray-900 text-white');
-        // Standard
-        $response->assertSee('bg-amber-100 text-amber-600');
-        $response->assertSee('bg-amber-100 text-amber-800');
-        // Student
-        $response->assertSee('bg-sky-100 text-sky-600');
-        $response->assertSee('bg-sky-100 text-sky-800');
-        // Basic
         $response->assertSee('bg-gray-100 text-gray-600');
         $response->assertSee('bg-gray-100 text-gray-700');
-        // Best Seller override
-        $response->assertSee('bg-red-100 text-[#ED1B45]');
-        $response->assertSee('bg-[#ED1B45] text-white');
+        $response->assertSee('EXCLUSIVE');
+        $response->assertSee('Standard');
     }
 
     private function packageData(array $overrides = []): array

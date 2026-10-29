@@ -161,56 +161,23 @@
                             @else
                                 @foreach ($packages as $pkg)
                                 @php
-                                    $tier = trim((string) ($pkg->tier ?? ''));
-                                    $badge = trim((string) ($pkg->badge ?? ''));
-                                    $isBestSeller = strcasecmp($badge, 'BEST SELLER') === 0;
-
-                                    // Logika pewarnaan berdasarkan tier
-                                    [$avatarStyle, $badgeStyle] = match (true) {
-                                        strcasecmp($tier, 'Premium & VIP') === 0 || stripos($tier, 'Premium') !== false => [
-                                            'bg-gray-900 text-white',
-                                            'bg-gray-900 text-white',
-                                        ],
-                                        strcasecmp($tier, 'Standard') === 0 => [
-                                            'bg-amber-100 text-amber-600',
-                                            'bg-amber-100 text-amber-800',
-                                        ],
-                                        stripos($tier, 'Student') !== false => [
-                                            'bg-sky-100 text-sky-600',
-                                            'bg-sky-100 text-sky-800',
-                                        ],
-                                        default => [
-                                            'bg-gray-100 text-gray-600',
-                                            'bg-gray-100 text-gray-700',
-                                        ],
-                                    };
-
-                                    // Pengecualian khusus: jika badge bernilai 'BEST SELLER' (case-insensitive)
-                                    if ($isBestSeller) {
-                                        $avatarStyle = 'bg-red-100 text-[#ED1B45]';
-                                        $badgeStyle = 'bg-[#ED1B45] text-white';
-                                    }
-
                                     $hasPromo = $pkg->promo_price !== null && $pkg->price > $pkg->promo_price;
                                     $discount = $hasPromo ? (int) round((($pkg->price - $pkg->promo_price) / $pkg->price) * 100) : 0;
                                 @endphp
-                                <tr @class([
-                                    'transition duration-150 hover:bg-[#F6F6F7]/60',
-                                    'bg-[#ED1B45]/5 hover:bg-[#ED1B45]/10' => $isBestSeller,
-                                ])>
+                                <tr class="transition duration-150 hover:bg-[#F6F6F7]/60">
                                     <!-- Tier & Nama Paket -->
                                     <td class="px-6 py-5">
                                         <div class="flex min-w-[260px] items-center gap-3.5">
-                                            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full {{ $avatarStyle }}">
+                                            <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-600">
                                                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                                     <path d="M5 8.5 12 4l7 4.5v7L12 20l-7-4.5v-7Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
                                                     <path d="m5.5 8.5 6.5 4 6.5-4M12 12.5V20" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
                                                 </svg>
                                             </span>
                                             <div class="min-w-0">
-                                                @if ($pkg->badge)
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold font-inter mb-1.5 {{ $badgeStyle }}">
-                                                        {{ $pkg->badge }}
+                                                @if ($pkg->badge || $pkg->tier)
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold font-inter mb-1.5 bg-gray-100 text-gray-700">
+                                                        {{ $pkg->badge ?? $pkg->tier }}
                                                     </span>
                                                 @endif
                                                 <h2 class="font-poppins font-bold text-lg text-[#16151A] leading-tight">{{ $pkg->name }}</h2>
