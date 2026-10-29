@@ -2,16 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+[x-cloak] {
+    display: none !important;
+}
+
 .flatpickr-calendar {
     font-family: inherit;
 }
 .flatpickr-day.selected {
     background: #ED1B45 !important;
     border-color: #ED1B45 !important;
-}
-
-[x-cloak] {
-    display: none !important;
 }
 
 @media print {
@@ -30,13 +30,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 0 !important;
-        background: white !important;
-    }
-
-    .receipt-print-area img {
-        max-width: 100%;
-        max-height: 95vh;
-        object-fit: contain;
+        background: #ffffff;
+        padding: 24px;
     }
 }

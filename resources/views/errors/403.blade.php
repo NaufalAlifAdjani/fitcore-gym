@@ -41,45 +41,39 @@
             </div>
 
             <!-- Error Code Tag -->
-            <div class="inline-flex items-center gap-1.5 rounded-full bg-[#ED1B45]/15 border border-[#ED1B45]/30 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#ED1B45] mb-4">
+            <div class="inline-flex items-center gap-1.5 rounded-full bg-[#ED1B45]/15 border border-[#ED1B45]/30 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#ED1B45] mb-5">
                 <span>HTTP 403</span>
                 <span>•</span>
                 <span>Akses Ditolak</span>
             </div>
 
-            <!-- Heading & Description -->
-            <h1 class="font-poppins text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                Area Khusus & Terbatas
+            <!-- Highlighted Description Text -->
+            <h1 class="font-poppins text-xl sm:text-2xl font-bold text-white tracking-tight leading-relaxed max-w-lg mx-auto">
+                {{ $exception->getMessage() ?: 'Akses Ditolak. Anda tidak memiliki izin untuk mengakses halaman ini.' }}
             </h1>
-            <p class="mt-3 font-inter text-slate-400 text-sm sm:text-base leading-relaxed">
-                {{ $exception->getMessage() ?: 'Mohon maaf, peran akun Anda tidak memiliki izin atau otorisasi untuk mengakses halaman ini.' }}
-            </p>
 
-            @auth
-                <!-- User Role Info -->
-                <div class="mt-5 p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs font-inter text-slate-400 flex items-center justify-between">
-                    <span>Login sebagai: <strong class="text-slate-200">{{ auth()->user()->name }}</strong></span>
-                    <span class="capitalize px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-semibold uppercase tracking-wider text-[10px]">
-                        Role: {{ auth()->user()->role }}
-                    </span>
-                </div>
-            @endauth
+            @php
+                $berandaUrl = route('dashboard');
+                if (auth()->check()) {
+                    $userRole = auth()->user()->role;
+                    if ($userRole === 'admin') {
+                        $berandaUrl = route('admin.dashboard');
+                    } elseif ($userRole === 'trainer') {
+                        $berandaUrl = route('trainer.sessions.index');
+                    } elseif ($userRole === 'member') {
+                        $berandaUrl = route('member.dashboard');
+                    }
+                }
+            @endphp
 
-            <!-- Actions -->
-            <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-                <a href="{{ route('dashboard') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#ED1B45] px-6 py-3 font-inter text-sm font-semibold text-white shadow-lg shadow-[#ED1B45]/25 hover:bg-[#D1123D] transition focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:ring-offset-2 focus:ring-offset-[#131B26]">
+            <!-- Action Button -->
+            <div class="mt-8 flex items-center justify-center">
+                <a href="{{ $berandaUrl }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#ED1B45] px-8 py-3.5 font-inter text-sm font-semibold text-white shadow-lg shadow-[#ED1B45]/25 hover:bg-[#D1123D] transition focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:ring-offset-2 focus:ring-offset-[#131B26]">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
                     </svg>
-                    <span>Kembali ke Dashboard</span>
+                    <span>Beranda</span>
                 </a>
-
-                <button onclick="window.history.back()" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 px-6 py-3 font-inter text-sm font-semibold text-slate-300 hover:text-white transition cursor-pointer">
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                    </svg>
-                    <span>Halaman Sebelumnya</span>
-                </button>
             </div>
         </div>
 

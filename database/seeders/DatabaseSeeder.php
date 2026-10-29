@@ -16,6 +16,9 @@ class DatabaseSeeder extends Seeder
             BankSeeder::class,
             MembershipPackageSeeder::class,
             PtPackageSeeder::class,
+            PtBookingDemoSeeder::class,
+            PtSessionSeeder::class,
+            PaymentSeeder::class,
         ]);
 
         User::query()->updateOrCreate(
@@ -46,7 +49,6 @@ class DatabaseSeeder extends Seeder
             ['user_id' => $member->id],
             ['member_code' => 'FC-'.str_pad((string) $member->id, 6, '0', STR_PAD_LEFT)],
         );
-
         $this->call([
             PaymentSeeder::class,
             PtBookingDemoSeeder::class,

@@ -60,7 +60,8 @@ class PaymentVerificationController extends Controller
                 filled($filters['end_date'] ?? null),
                 fn ($query) => $query->whereDate('transfer_date', '<=', $filters['end_date']),
             )
-            ->latest('transfer_date')
+            ->orderByRaw('CASE WHEN transfer_date IS NULL THEN 1 ELSE 0 END, transfer_date DESC')
+            ->latest('id')
             ->paginate(15)
             ->withQueryString();
 
