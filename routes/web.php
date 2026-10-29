@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
+use App\Http\Controllers\Admin\PtManagementController;
 use App\Http\Controllers\Admin\PtPackageController;
 use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
@@ -107,6 +108,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/pt-sessions', [PtPackageController::class, 'index'])->name('pt-sessions.index');
     Route::get('/check-in', [CheckInController::class, 'index'])->name('check-in.index');
     Route::view('/members', 'admin.placeholder', ['title' => 'Manajemen Member'])->name('members.index');
+
+    // Manajemen Personal Trainer
+    Route::prefix('pt-management')->name('trainers.')->controller(PtManagementController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{trainer}', 'show')->name('show');
+        Route::put('/{trainer}', 'update')->name('update');
+        Route::patch('/{trainer}/toggle-status', 'toggleStatus')->name('toggle-status');
+        Route::delete('/{trainer}', 'destroy')->name('destroy');
+    });
+
     Route::view('/settings', 'admin.placeholder', ['title' => 'Pengaturan'])->name('settings.index');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');
 });
