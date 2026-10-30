@@ -71,5 +71,11 @@
         @endif
     </div>
 
-    <x-input-error :messages="$errors->get($name)" class="mt-1" />
+    @php
+        $fieldMessages = array_filter(
+            (array) $errors->get($name),
+            fn ($msg) => $msg !== 'Harap verifikasi email Anda terlebih dahulu sebelum login.'
+        );
+    @endphp
+    <x-input-error :messages="$fieldMessages" class="mt-1" />
 </div>

@@ -104,6 +104,11 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     // Native Role Authorization Helpers (No Spatie)
+    public function getIsVerifiedAttribute(): bool
+    {
+        return $this->hasVerifiedEmail();
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
