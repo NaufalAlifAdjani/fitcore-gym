@@ -165,6 +165,43 @@ class MembershipPackageTest extends TestCase
         $this->assertDatabaseCount('membership_packages', 0);
     }
 
+    public function test_packages_index_does_not_display_summary_statistics_cards(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'admin']));
+
+        $this->get(route('admin.packages.index'))
+            ->assertOk()
+            ->assertDontSee('Total Paket Gym')
+            ->assertDontSee('Rata-rata Harga Paket Aktif')
+            ->assertDontSee('Paket Aktif')
+            ->assertSee('Semua Tier');
+    }
+
+    public function test_package_tier_and_badge_styling_is_standardized(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'admin']));
+
+        MembershipPackage::create($this->packageData([
+            'name' => 'Package VIP',
+            'tier' => 'Premium & VIP',
+            'badge' => 'EXCLUSIVE',
+        ]));
+
+        MembershipPackage::create($this->packageData([
+            'name' => 'Package Without Badge',
+            'tier' => 'Standard',
+            'badge' => null,
+        ]));
+
+        $response = $this->get(route('admin.packages.index'));
+
+        $response->assertOk();
+        $response->assertSee('bg-gray-100 text-gray-600');
+        $response->assertSee('bg-gray-100 text-gray-700');
+        $response->assertSee('EXCLUSIVE');
+        $response->assertSee('Standard');
+    }
+
     private function packageData(array $overrides = []): array
     {
         return array_merge([

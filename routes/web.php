@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\PtPackageController;
 use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
+use App\Http\Controllers\Member\TransactionHistoryController;
 use App\Http\Controllers\MemberCardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PtPackagePurchaseController;
@@ -78,6 +79,12 @@ Route::middleware('auth')->group(function () {
         ->name('pt-sessions.update');
     Route::patch('/pt-sessions/{ptSession}/cancel', [PtSessionController::class, 'cancel'])
         ->name('pt-sessions.cancel');
+
+    // Member Transaction History
+    Route::prefix('member/riwayat-transaksi')->name('member.riwayat-transaksi.')->controller(TransactionHistoryController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{payment}/invoice', 'invoice')->name('invoice');
+    });
 });
 
 Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
