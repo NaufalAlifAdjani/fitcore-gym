@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MemberManagementController;
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
+use App\Http\Controllers\Admin\PtManagementController;
 use App\Http\Controllers\Admin\PtPackageController;
 use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
@@ -111,6 +112,7 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
     Route::patch('/pt-packages/{ptPackage}/toggle-status', [PtPackageController::class, 'toggleStatus'])->name('pt-packages.toggle-status');
     Route::get('/pt-sessions', [PtPackageController::class, 'index'])->name('pt-sessions.index');
     Route::get('/check-in', [CheckInController::class, 'index'])->name('check-in.index');
+    // Manajemen Member
     Route::prefix('member-management')->name('members.')->controller(MemberManagementController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
@@ -119,6 +121,16 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
         Route::put('/{member}', 'update')->whereNumber('member')->name('update');
         Route::patch('/{member}/deactivate', 'deactivate')->whereNumber('member')->name('deactivate');
         Route::delete('/{member}', 'destroy')->whereNumber('member')->name('destroy');
+    });
+
+    // Manajemen Personal Trainer
+    Route::prefix('pt-management')->name('trainers.')->controller(PtManagementController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{trainer}', 'show')->name('show');
+        Route::put('/{trainer}', 'update')->name('update');
+        Route::patch('/{trainer}/toggle-status', 'toggleStatus')->name('toggle-status');
+        Route::delete('/{trainer}', 'destroy')->name('destroy');
     });
     Route::view('/settings', 'admin.placeholder', ['title' => 'Pengaturan'])->name('settings.index');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');

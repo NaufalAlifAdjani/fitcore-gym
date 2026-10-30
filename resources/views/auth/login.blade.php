@@ -20,8 +20,22 @@
         FITCORE GYM
     </h2>
 
-    <!-- Flash Message Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <!-- Flash Message Session Status (Card Hijau) -->
+    <x-auth-session-status class="mb-5" :status="session('status')" />
+
+    <!-- Card Peringatan Verifikasi Email (Card Merah) -->
+    @if ($errors->has('email') && in_array('Harap verifikasi email Anda terlebih dahulu sebelum login.', (array) $errors->get('email'), true))
+        <div class="mb-5 flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50/95 p-4 text-rose-900 shadow-xs">
+            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#be0a32] text-white font-bold text-xs mt-0.5">
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div class="text-xs font-semibold leading-relaxed">
+                Harap verifikasi email Anda terlebih dahulu sebelum login.
+            </div>
+        </div>
+    @endif
 
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf

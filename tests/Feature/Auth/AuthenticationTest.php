@@ -30,6 +30,23 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('member.dashboard', absolute: false));
     }
 
+    public function test_unverified_users_cannot_authenticate_and_receive_verification_error_message(): void
+    {
+        $user = User::factory()->unverified()->create([
+            'password' => 'password123',
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password123',
+        ]);
+
+        $this->assertGuest();
+        $response->assertSessionHasErrors([
+            'email' => 'Harap verifikasi email Anda terlebih dahulu sebelum login.',
+        ]);
+    }
+
     public function test_members_are_redirected_to_the_member_dashboard_after_login(): void
     {
         $member = User::factory()->create(['role' => 'member']);
