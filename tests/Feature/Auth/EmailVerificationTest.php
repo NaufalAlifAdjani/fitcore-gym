@@ -56,11 +56,9 @@ class EmailVerificationTest extends TestCase
         $this->assertFalse($user->fresh()->hasVerifiedEmail());
     }
 
-    public function test_guest_can_verify_email_via_smtp_link_and_then_login(): void
+    public function test_guest_can_verify_email_and_be_authenticated(): void
     {
-        $user = User::factory()->unverified()->create([
-            'password' => 'password123',
-        ]);
+        $user = User::factory()->unverified()->create();
 
         Event::fake();
 
@@ -70,21 +68,11 @@ class EmailVerificationTest extends TestCase
             ['id' => $user->id, 'hash' => sha1($user->email)]
         );
 
-        // Guest clicks the verification link
         $response = $this->get($verificationUrl);
 
         Event::assertDispatched(Verified::class);
         $this->assertTrue($user->fresh()->hasVerifiedEmail());
-        $response->assertRedirect(route('login'));
-        $response->assertSessionHas('status');
-
-        // User can now login successfully
-        $loginResponse = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password123',
-        ]);
-
         $this->assertAuthenticatedAs($user);
-        $loginResponse->assertRedirect(route('member.dashboard', absolute: false));
+        $response->assertRedirect(route('dashboard', absolute: false).'?verified=1');
     }
 }

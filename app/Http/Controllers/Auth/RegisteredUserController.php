@@ -9,6 +9,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
@@ -51,7 +52,12 @@ class RegisteredUserController extends Controller
             'member_code' => 'MEM'.rand(100000, 999999),
         ]);
 
-        event(new Registered($user));
+        try {
+            event(new Registered($user));
+        } catch (\Throwable $e) {
+            Log::error('Gagal mengirim email verifikasi pendaftaran: '.$e->getMessage());
+            session()->flash('warning', 'Pendaftaran berhasil! Namun email verifikasi belum terkirim karena kendala koneksi server SMTP. Anda dapat mencoba klik "Kirim Ulang Email Verifikasi".');
+        }
 
         // Pengguna baru tidak langsung login secara otomatis sebelum verifikasi email
         return redirect()->route('login')->with('status', 'Registrasi berhasil! Harap verifikasi email Anda terlebih dahulu sebelum login.');

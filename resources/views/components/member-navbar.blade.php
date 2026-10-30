@@ -28,11 +28,19 @@
                 ])>
                 Beranda
             </a>
+            <a href="{{ route('member.card') }}"
+                @class([
+                    'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
+                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('member.card') || $active === 'card',
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('member.card') && $active !== 'card',
+                ])>
+                Kartu Member
+            </a>
             <a href="{{ route('member.membership.packages') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30' => (request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && !request()->routeIs('pt-sessions.*') && $active !== 'beranda' && $active !== 'booking' && $active !== 'riwayat',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => (!request()->routeIs('member.membership.*') && $active !== 'packages') || request()->routeIs('member.dashboard') || request()->routeIs('pt-sessions.*') || $active === 'beranda' || $active === 'booking' || $active === 'riwayat',
+                    'bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30' => (request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && !request()->routeIs('pt-sessions.*') && !request()->routeIs('member.card') && $active !== 'beranda' && $active !== 'booking' && $active !== 'riwayat' && $active !== 'card',
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => (!request()->routeIs('member.membership.*') && $active !== 'packages') || request()->routeIs('member.dashboard') || request()->routeIs('pt-sessions.*') || request()->routeIs('member.card') || $active === 'beranda' || $active === 'booking' || $active === 'riwayat' || $active === 'card',
                 ])>
                 Paket Membership
             </a>
@@ -92,6 +100,9 @@
                         <p class="truncate text-xs font-bold text-white">{{ Auth::user()?->name }}</p>
                         <p class="truncate text-[10px] text-slate-400">{{ Auth::user()?->email }}</p>
                     </div>
+                    <a href="{{ route('member.card') }}" class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-300 hover:bg-slate-800 hover:text-white">
+                        Kartu Member Digital
+                    </a>
                     <a href="{{ route('profile.edit') }}" class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-300 hover:bg-slate-800 hover:text-white">
                         Pengaturan Profil
                     </a>
@@ -140,8 +151,12 @@
             class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('member.dashboard') || $active === 'beranda') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Beranda
         </a>
+        <a href="{{ route('member.card') }}"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('member.card') || $active === 'card') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            Kartu Member
+        </a>
         <a href="{{ route('member.membership.packages') }}"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ ((request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && !request()->routeIs('pt-sessions.*') && $active !== 'beranda' && $active !== 'booking' && $active !== 'riwayat') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ ((request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && !request()->routeIs('pt-sessions.*') && !request()->routeIs('member.card') && $active !== 'beranda' && $active !== 'booking' && $active !== 'riwayat' && $active !== 'card') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Paket Membership
         </a>
         <a href="{{ route('member.pt-packages.index') }}"
