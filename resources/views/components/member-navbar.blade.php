@@ -1,6 +1,15 @@
 @props([
-    'active' => 'packages',
+    'active' => null,
 ])
+
+@php
+    $isBeranda = request()->routeIs('member.dashboard') || $active === 'beranda';
+    $isCard = request()->routeIs('member.card*') || $active === 'card';
+    $isPt = request()->routeIs('member.pt-packages.*') || $active === 'pt';
+    $isBooking = request()->routeIs('pt-sessions.*') || $active === 'booking';
+    $isRiwayat = request()->routeIs('member.riwayat-transaksi.*') || $active === 'riwayat';
+    $isPackages = (request()->routeIs('member.membership.*') || $active === 'packages') && ! $isBeranda && ! $isCard && ! $isPt && ! $isBooking && ! $isRiwayat;
+@endphp
 
 <header class="sticky top-0 z-40 w-full border-b border-slate-800 bg-[#0B0F17]/95 backdrop-blur-md" x-data="{ mobileMenuOpen: false }">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
@@ -23,48 +32,48 @@
             <a href="{{ route('member.dashboard') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('member.dashboard') || $active === 'beranda',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('member.dashboard') && $active !== 'beranda',
+                    'bg-[#BA0030] text-white shadow-md' => $isBeranda,
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => ! $isBeranda,
                 ])>
                 Beranda
             </a>
             <a href="{{ route('member.card') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('member.card') || $active === 'card',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('member.card') && $active !== 'card',
+                    'bg-[#BA0030] text-white shadow-md' => $isCard,
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => ! $isCard,
                 ])>
                 Kartu Member
             </a>
             <a href="{{ route('member.membership.packages') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30' => (request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && !request()->routeIs('pt-sessions.*') && !request()->routeIs('member.card') && $active !== 'beranda' && $active !== 'booking' && $active !== 'riwayat' && $active !== 'card',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => (!request()->routeIs('member.membership.*') && $active !== 'packages') || request()->routeIs('member.dashboard') || request()->routeIs('pt-sessions.*') || request()->routeIs('member.card') || $active === 'beranda' || $active === 'booking' || $active === 'riwayat' || $active === 'card',
+                    'bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30' => $isPackages,
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => ! $isPackages,
                 ])>
                 Paket Membership
             </a>
             <a href="{{ route('member.pt-packages.index') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('member.pt-packages.*') || $active === 'pt',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('member.pt-packages.*') && $active !== 'pt',
+                    'bg-[#BA0030] text-white shadow-md' => $isPt,
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => ! $isPt,
                 ])>
                 Personal Trainer
             </a>
             <a href="{{ route('pt-sessions.index') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('pt-sessions.*') || $active === 'booking',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('pt-sessions.*') && $active !== 'booking',
+                    'bg-[#BA0030] text-white shadow-md' => $isBooking,
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => ! $isBooking,
                 ])>
                 Booking Sesi
             </a>
             <a href="{{ route('member.riwayat-transaksi.index') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('member.riwayat-transaksi.*') || $active === 'riwayat',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('member.riwayat-transaksi.*') && $active !== 'riwayat',
+                    'bg-[#BA0030] text-white shadow-md' => $isRiwayat,
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => ! $isRiwayat,
                 ])>
                 Riwayat Transaksi
             </a>
@@ -148,27 +157,27 @@
         class="md:hidden border-t border-slate-800 bg-[#0B0F17]/98 px-4 pt-3 pb-5 space-y-2"
     >
         <a href="{{ route('member.dashboard') }}"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('member.dashboard') || $active === 'beranda') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $isBeranda ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Beranda
         </a>
         <a href="{{ route('member.card') }}"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('member.card') || $active === 'card') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $isCard ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Kartu Member
         </a>
         <a href="{{ route('member.membership.packages') }}"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ ((request()->routeIs('member.membership.*') || $active === 'packages') && !request()->routeIs('member.dashboard') && !request()->routeIs('pt-sessions.*') && !request()->routeIs('member.card') && $active !== 'beranda' && $active !== 'booking' && $active !== 'riwayat' && $active !== 'card') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $isPackages ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Paket Membership
         </a>
         <a href="{{ route('member.pt-packages.index') }}"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('member.pt-packages.*') || $active === 'pt') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $isPt ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Personal Trainer
         </a>
         <a href="{{ route('pt-sessions.index') }}"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('pt-sessions.*') || $active === 'booking') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $isBooking ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Booking Sesi
         </a>
         <a href="{{ route('member.riwayat-transaksi.index') }}"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('member.riwayat-transaksi.*') || $active === 'riwayat') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $isRiwayat ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Riwayat Transaksi
         </a>
     </div>
