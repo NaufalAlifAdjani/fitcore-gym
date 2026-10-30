@@ -1,23 +1,23 @@
-<x-member-layout title="Kartu Member Digital - FitCore Athletic" active-nav="card">
-    <div class="py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+<x-app-layout>
+    <div class="min-h-screen bg-[#F6F6F7] py-8 sm:py-12 px-4 sm:px-6 lg:px-8 text-[#16151A]">
         <div class="max-w-xl mx-auto space-y-8">
 
             <!-- Page Title / Header Badge -->
             <div class="text-center space-y-2">
-                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#BA0030] bg-rose-500/10 border border-[#BA0030]/30 rounded-full">
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#BA0030] bg-rose-50 border border-rose-200 rounded-full">
                     <span class="w-1.5 h-1.5 rounded-full bg-[#BA0030] animate-pulse"></span>
                     FitCore Digital Pass
                 </span>
-                <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-[#16151A] tracking-tight">
                     Kartu Member Digital
                 </h1>
-                <p class="text-xs sm:text-sm text-slate-400 font-medium max-w-md mx-auto">
+                <p class="text-xs sm:text-sm text-[#565A66] font-medium max-w-md mx-auto">
                     Tunjukkan QR Code berikut kepada staf resepsionis FitCore untuk verifikasi kehadiran dan akses gym instan.
                 </p>
             </div>
 
             <!-- VIP DIGITAL MEMBERSHIP CARD -->
-            <div class="relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-br from-[#1C1C22] via-[#141418] to-[#0A0A0E] p-6 sm:p-8 text-white shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+            <div class="relative overflow-hidden rounded-[28px] border border-zinc-800 bg-gradient-to-br from-[#1C1C22] via-[#141418] to-[#0A0A0E] p-6 sm:p-8 text-white shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
                 <!-- Ambient Glow Effect -->
                 <div class="absolute -top-16 -right-16 w-56 h-56 bg-[#BA0030]/25 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute -bottom-16 -left-16 w-56 h-56 bg-slate-800/30 rounded-full blur-3xl pointer-events-none"></div>
@@ -133,40 +133,40 @@
             </div>
 
             <!-- Petunjuk Penggunaan -->
-            <div class="rounded-2xl border border-slate-800 bg-[#111622]/90 p-6 backdrop-blur-md shadow-lg space-y-4">
+            <div class="rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm space-y-4">
                 <div class="flex items-center gap-2.5">
-                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#BA0030]/20 text-[#BA0030]">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 text-[#BA0030]">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 16v-4M12 8h.01" />
                         </svg>
                     </span>
-                    <h3 class="font-heading text-sm font-bold text-white">
+                    <h3 class="font-heading text-sm font-bold text-[#16151A]">
                         Panduan Check-In Gym
                     </h3>
                 </div>
 
-                <ol class="space-y-3 text-xs text-slate-300 font-inter">
+                <ol class="space-y-3 text-xs text-[#565A66] font-inter">
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-800 text-[10px] font-bold text-[#BA0030]">1</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#BA0030]">1</span>
                         <span>Buka halaman ini melalui smartphone Anda saat tiba di lokasi gym FitCore.</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-800 text-[10px] font-bold text-[#BA0030]">2</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#BA0030]">2</span>
                         <span>Tunjukkan layar QR Code ini kepada resepsionis atau arahkan ke scanner check-in otomatis.</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-800 text-[10px] font-bold text-[#BA0030]">3</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#BA0030]">3</span>
                         <span>Sistem akan memverifikasi status keaktifan paket membership Anda secara instan (1x per hari).</span>
                     </li>
                 </ol>
 
                 @if(!$activeMembership)
-                    <div class="mt-4 rounded-xl border border-rose-500/20 bg-rose-500/10 p-3.5 flex items-center justify-between gap-3 font-inter">
-                        <p class="text-xs text-rose-300 font-medium">
+                    <div class="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-3.5 flex items-center justify-between gap-3 font-inter">
+                        <p class="text-xs text-rose-800 font-medium">
                             Membership Anda sedang tidak aktif. Perbarui paket untuk mulai check-in.
                         </p>
-                        <a href="{{ route('member.membership.packages') }}" class="shrink-0 rounded-full bg-[#BA0030] px-4 py-1.5 text-xs font-bold text-white hover:bg-rose-700 transition">
+                        <a href="{{ route('member.membership.packages') }}" class="shrink-0 rounded-full bg-[#BA0030] px-4 py-1.5 text-xs font-bold text-white hover:bg-rose-700 transition shadow-xs">
                             Beli Paket
                         </a>
                     </div>
@@ -175,4 +175,4 @@
 
         </div>
     </div>
-</x-member-layout>
+</x-app-layout>
