@@ -540,4 +540,58 @@ class PtPackagePurchaseTest extends TestCase
         $bookingPageResponse->assertSee('Pilih Jadwal');
         $bookingPageResponse->assertSee('12 Sesi');
     }
+
+    /** Test 17: Purchased PT package card remains visible and shows quota indicator */
+    public function test_purchased_pt_package_card_does_not_disappear_from_packages_page(): void
+    {
+        $member = $this->createMember();
+        $this->createActiveMembership($member, 45);
+
+        $package = PtPackage::factory()->create([
+            'name' => 'PT 16 Sesi Khusus',
+            'pt_session_count' => 16,
+            'price' => 2500000,
+            'min_membership_days' => 30,
+            'status' => 'active',
+        ]);
+
+        MemberPtQuota::factory()->create([
+            'member_id' => $member->id,
+            'pt_package_id' => $package->id,
+            'total_sessions' => 16,
+            'remaining_sessions' => 16,
+            'status' => 'active',
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.pt-packages.index'));
+
+        $response->assertOk();
+        $response->assertSee('PT 16 Sesi Khusus');
+        $response->assertSee('Sisa 16 Sesi');
+        $response->assertSee('Beli Sesi Tambahan');
+    }
+
+    /** Test 18: PT checkout renders random 3-digit unique code */
+    public function test_pt_checkout_renders_random_unique_code(): void
+    {
+        $member = $this->createMember();
+        $this->createActiveMembership($member, 45);
+
+        $package = PtPackage::factory()->create([
+            'name' => 'PT 8 Sesi Pro',
+            'pt_session_count' => 8,
+            'price' => 2000000,
+            'status' => 'active',
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.pt-packages.checkout', [
+            'package_id' => $package->id,
+        ]));
+
+        $response->assertOk();
+        $uniqueCode = $response->viewData('uniqueCode');
+        $this->assertIsInt($uniqueCode);
+        $this->assertGreaterThanOrEqual(100, $uniqueCode);
+        $this->assertLessThanOrEqual(999, $uniqueCode);
+    }
 }

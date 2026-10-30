@@ -55,7 +55,9 @@ class MembershipPackageController extends Controller
             $banks = Bank::all();
         }
 
-        return view('member.packages.checkout', compact('package', 'banks'));
+        $uniqueCode = random_int(100, 999);
+
+        return view('member.packages.checkout', compact('package', 'banks', 'uniqueCode'));
     }
 
     /**
@@ -84,7 +86,10 @@ class MembershipPackageController extends Controller
 
         $selectedBank ??= $banks->first();
 
-        $uniqueCode = (int) $request->query('unique_code', 421);
+        $uniqueCode = (int) $request->query('unique_code', 0);
+        if ($uniqueCode <= 0) {
+            $uniqueCode = random_int(100, 999);
+        }
 
         $effectivePrice = ($package->promo_price !== null && $package->promo_price < $package->price)
             ? $package->promo_price

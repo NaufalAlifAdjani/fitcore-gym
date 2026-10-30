@@ -129,8 +129,18 @@
                             </div>
 
                             {{-- Nama Paket (untuk kompatibilitas test & kejelasan paket) --}}
-                            <div class="text-xs font-bold text-gray-500 mt-1">
-                                {{ $pkg['name'] ?? ('PT ' . $pkg['sessions'] . ' Sesi') }}
+                            @php
+                                $userQuota = isset($myQuotas) ? $myQuotas->where('status', 'active')->where('remaining_sessions', '>', 0)->firstWhere('pt_package_id', $pkg['id']) : null;
+                            @endphp
+                            <div class="flex items-center justify-between gap-2 mt-1">
+                                <span class="text-xs font-bold text-gray-500">
+                                    {{ $pkg['name'] ?? ('PT ' . $pkg['sessions'] . ' Sesi') }}
+                                </span>
+                                @if($userQuota)
+                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shrink-0">
+                                        ✓ Sisa {{ $userQuota->remaining_sessions }} Sesi
+                                    </span>
+                                @endif
                             </div>
 
                             {{-- Total Harga Aktif & Coret --}}
@@ -159,7 +169,7 @@
                         {{-- Tombol Pilih Paket --}}
                         <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $pkg['id'], 'sessions' => $pkg['sessions']]) }}" 
                            class="mt-6 w-full py-3.5 rounded-xl font-extrabold text-xs sm:text-sm text-zinc-900 bg-[#EEF2FF] hover:bg-indigo-100 active:scale-[0.99] transition text-center block shadow-sm">
-                            {{ !empty($pkg['is_popular']) ? 'Paket Terpilih' : 'Pilih Paket' }}
+                            {{ $userQuota ? 'Beli Sesi Tambahan' : (!empty($pkg['is_popular']) ? 'Paket Terpilih' : 'Pilih Paket') }}
                         </a>
 
                     </div>

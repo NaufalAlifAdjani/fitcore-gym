@@ -36,8 +36,18 @@ class PtPackagePurchaseController extends Controller
             ->where('start_date', '<=', $today->toDateString())
             ->where('end_date', '>=', $today->toDateString())
             ->where(function ($q) {
-                $q->whereDoesntHave('payments')
-                    ->orWhereHas('payments', fn ($p) => $p->where('status', 'verified'));
+                $q->whereDoesntHave('payments', function ($sub) {
+                    $sub->where(function ($typeQ) {
+                        $typeQ->where('payment_type', 'membership')
+                            ->orWhere('package_type', 'membership');
+                    });
+                })
+                    ->orWhereHas('payments', function ($sub) {
+                        $sub->where(function ($typeQ) {
+                            $typeQ->where('payment_type', 'membership')
+                                ->orWhere('package_type', 'membership');
+                        })->where('status', 'verified');
+                    });
             })
             ->with('package')
             ->latest('end_date')
@@ -198,7 +208,7 @@ class PtPackagePurchaseController extends Controller
         $sessionCount = $selectedPackage?->pt_session_count ?? 12;
         $subtotal = $selectedPackage ? (float) $selectedPackage->price : 3000000;
 
-        $uniqueCode = 421;
+        $uniqueCode = random_int(100, 999);
         $totalAmount = (int) ($subtotal + $uniqueCode);
 
         $banks = Bank::where('status', 'active')->orderBy('id')->get();
@@ -246,7 +256,10 @@ class PtPackagePurchaseController extends Controller
             }
         }
 
-        $uniqueCode = 421;
+        $uniqueCode = (int) $request->input('unique_code', 0);
+        if ($uniqueCode <= 0) {
+            $uniqueCode = random_int(100, 999);
+        }
         $subtotal = $ptPackage ? (float) $ptPackage->price : 3000000;
         $totalAmount = (int) $request->input('total_amount', $subtotal + $uniqueCode);
 
@@ -310,8 +323,15 @@ class PtPackagePurchaseController extends Controller
 
         $packageName = $payment?->ptPackage?->name ?? 'Paket Performance Pro';
         $packageSubtext = '12 Sesi Pelatihan Terstruktur + Monitoring InBody Bulanan';
-        $uniqueCode = 421;
-        $totalAmount = $payment ? $payment->amount : 3000421;
+        $uniqueCode = (int) $request->query('unique_code', 0);
+        if ($payment) {
+            $basePrice = $payment->ptPackage ? (float) $payment->ptPackage->price : 3000000;
+            $uniqueCode = max(0, (int) ($payment->amount - $basePrice));
+        }
+        if ($uniqueCode <= 0) {
+            $uniqueCode = random_int(100, 999);
+        }
+        $totalAmount = $payment ? $payment->amount : (3000000 + $uniqueCode);
         $packagePrice = $payment ? max(0, $payment->amount - $uniqueCode) : 3000000;
 
         $bank = $payment?->bank ?? (object) [
@@ -417,8 +437,18 @@ class PtPackagePurchaseController extends Controller
             ->where('start_date', '<=', $today->toDateString())
             ->where('end_date', '>=', $today->toDateString())
             ->where(function ($q) {
-                $q->whereDoesntHave('payments')
-                    ->orWhereHas('payments', fn ($p) => $p->where('status', 'verified'));
+                $q->whereDoesntHave('payments', function ($sub) {
+                    $sub->where(function ($typeQ) {
+                        $typeQ->where('payment_type', 'membership')
+                            ->orWhere('package_type', 'membership');
+                    });
+                })
+                    ->orWhereHas('payments', function ($sub) {
+                        $sub->where(function ($typeQ) {
+                            $typeQ->where('payment_type', 'membership')
+                                ->orWhere('package_type', 'membership');
+                        })->where('status', 'verified');
+                    });
             })
             ->latest('end_date')
             ->first();
