@@ -15,12 +15,12 @@
             storeUrl: @js(route('admin.pt-packages.store')),
         })"
         x-on:keydown.escape.window="showModal = false"
-        class="min-h-screen bg-[#F6F6F7] px-4 py-8 text-[#16151A] sm:px-6 lg:px-10"
+        class="min-h-screen bg-[#F6F6F7] px-4 py-6 text-[#16151A] sm:px-6 lg:px-8 w-full max-w-full"
     >
-        <div class="mx-auto max-w-[1600px] space-y-8">
+        <div class="mx-auto max-w-full space-y-6">
             <!-- Header & Search/Filter Controls -->
-            <header class="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
-                <div>
+            <header class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div class="min-w-0 flex-1">
                     <div class="flex items-center gap-2">
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1 font-inter text-xs font-bold text-[#ED1B45] border border-rose-200">
                             <span class="h-1.5 w-1.5 rounded-full bg-[#ED1B45]"></span>
@@ -28,7 +28,7 @@
                         </span>
                         <span class="text-xs font-medium text-[#565A66] font-inter">Personal Trainer Service</span>
                     </div>
-                    <h1 class="mt-2 text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">
+                    <h1 class="mt-2 text-2xl sm:text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">
                         Manajemen Paket Sesi Personal Trainer (PT)
                     </h1>
                     <p class="font-inter text-sm text-[#565A66] mt-1 max-w-3xl">
@@ -36,12 +36,12 @@
                     </p>
                 </div>
 
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <form method="GET" action="{{ route('admin.pt-packages.index') }}" class="flex flex-col gap-3 sm:flex-row">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center shrink-0">
+                    <form method="GET" action="{{ route('admin.pt-packages.index') }}" class="flex flex-col gap-2.5 sm:flex-row sm:items-center">
                         <!-- Search Bar -->
                         <label class="relative block">
                             <span class="sr-only">Cari nama paket sesi PT</span>
-                            <svg class="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#565A66]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <svg class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#565A66]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                 <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" />
                                 <path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
                             </svg>
@@ -52,7 +52,7 @@
                                 x-on:input.debounce.400ms="$event.target.form.requestSubmit()"
                                 placeholder="Cari paket sesi PT..."
                                 aria-label="Cari nama paket sesi PT"
-                                class="w-full sm:w-60 rounded-full border border-[#E5E7EB] bg-white py-2.5 pl-11 pr-4 text-sm font-inter text-[#16151A] placeholder-[#565A66] shadow-sm focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full sm:w-48 md:w-56 rounded-full border border-[#E5E7EB] bg-white py-2 pl-10 pr-4 text-sm font-inter text-[#16151A] placeholder-[#565A66] shadow-sm focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
                             >
                         </label>
 
@@ -63,7 +63,7 @@
                                 name="status"
                                 aria-label="Filter status paket"
                                 onchange="this.form.submit()"
-                                class="w-full sm:w-44 rounded-full border border-[#E5E7EB] bg-white py-2.5 pl-4 pr-10 text-sm font-inter font-medium text-[#16151A] shadow-sm focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer transition"
+                                class="w-full sm:w-36 rounded-full border border-[#E5E7EB] bg-white py-2 pl-3.5 pr-8 text-sm font-inter font-medium text-[#16151A] shadow-sm focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer transition"
                             >
                                 <option value="">Semua Status</option>
                                 <option value="active" @selected(request('status') === 'active')>Aktif</option>
@@ -78,7 +78,7 @@
                     <button
                         type="button"
                         x-on:click="openCreateModal()"
-                        class="bg-[#ED1B45] text-white px-6 py-2.5 rounded-full font-inter font-semibold shadow-sm hover:bg-[#D1123D] transition flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+                        class="bg-[#ED1B45] text-white px-5 py-2 rounded-full font-inter font-semibold shadow-sm hover:bg-[#D1123D] transition flex items-center justify-center gap-2 shrink-0 cursor-pointer whitespace-nowrap text-sm"
                     >
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -109,62 +109,10 @@
                 </div>
             @endif
 
-            <!-- Statistik Kartu -->
-            <section aria-label="Ringkasan paket sesi personal trainer" class="grid grid-cols-1 gap-6 md:grid-cols-3">
-                <!-- Card 1: Total Paket PT -->
-                <div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] p-6 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="font-inter text-xs font-bold uppercase tracking-wider text-[#565A66]">Total Paket PT</span>
-                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ED1B45]/10 text-[#ED1B45]">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.504-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.004 0A2.25 2.25 0 0015 12V6.75a3 3 0 00-6 0V12a2.25 2.25 0 002.25 2.25" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="mt-4">
-                        <p class="font-poppins font-extrabold text-[3rem] text-[#16151A] leading-none">{{ $totalPackages }}</p>
-                        <p class="mt-2.5 font-inter text-xs text-[#565A66]">paket sesi terdaftar</p>
-                    </div>
-                </div>
-
-                <!-- Card 2: Paket Aktif -->
-                <div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] p-6 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="font-inter text-xs font-bold uppercase tracking-wider text-[#565A66]">Paket Aktif</span>
-                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="mt-4">
-                        <p class="font-poppins font-extrabold text-[3rem] text-[#16151A] leading-none">{{ $activePackages }}</p>
-                        <p class="mt-2.5 font-inter text-xs text-[#565A66]">dapat dipilih & dibeli member</p>
-                    </div>
-                </div>
-
-                <!-- Card 3: Rata-rata Tarif Paket Aktif -->
-                <div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] p-6 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)] flex flex-col justify-between">
-                    <div class="flex items-center justify-between">
-                        <span class="font-inter text-xs font-bold uppercase tracking-wider text-[#565A66]">Rata-rata Tarif Paket</span>
-                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <rect x="3" y="5" width="18" height="14" rx="2.5" />
-                                <path stroke-linecap="round" d="M3 10h18M7 15h4" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="mt-4">
-                        <p class="font-poppins font-extrabold text-2xl lg:text-3xl xl:text-[2.6rem] text-[#16151A] leading-none truncate">{{ $formattedAvgPrice }}</p>
-                        <p class="mt-2.5 font-inter text-xs text-[#565A66]">tarif rata-rata per paket aktif</p>
-                    </div>
-                </div>
-            </section>
-
             <!-- Tabel Daftar Paket Sesi PT -->
             <div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] overflow-hidden" aria-label="Daftar paket sesi personal trainer">
                 <!-- Info Item & Subheader -->
-                <div class="flex flex-col gap-4 border-b border-[#E5E7EB] p-6 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex flex-col gap-3 border-b border-[#E5E7EB] p-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h2 class="font-poppins text-lg font-bold text-[#16151A]">Daftar Paket Sesi PT</h2>
                         <p class="font-inter text-xs text-[#565A66] mt-0.5">Kelola kuota, status aktif, dan batasan masa aktif membership.</p>
@@ -178,22 +126,22 @@
 
                 <!-- Table Content -->
                 <div class="overflow-x-auto">
-                    <table class="w-full min-w-[1000px] border-collapse text-left">
+                    <table class="w-full border-collapse text-left">
                         <thead class="border-b border-[#E5E7EB] bg-[#F6F6F7]/50 font-inter text-[11px] font-bold text-[#565A66] uppercase tracking-wider">
                             <tr>
-                                <th scope="col" class="px-6 py-4">Nama Paket PT</th>
-                                <th scope="col" class="px-6 py-4">Jumlah Sesi</th>
-                                <th scope="col" class="px-6 py-4">Tarif Harga</th>
-                                <th scope="col" class="px-6 py-4">Syarat Min. Membership</th>
-                                <th scope="col" class="px-6 py-4">Masa Berlaku</th>
-                                <th scope="col" class="px-6 py-4 text-center">Status</th>
-                                <th scope="col" class="px-6 py-4 text-center">Aksi</th>
+                                <th scope="col" class="px-4 py-3.5 sm:px-5 sm:py-4">Nama Paket PT</th>
+                                <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 whitespace-nowrap">Jumlah Sesi</th>
+                                <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 whitespace-nowrap">Tarif Harga</th>
+                                <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 whitespace-nowrap">Syarat Min. Membership</th>
+                                <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 whitespace-nowrap">Masa Berlaku</th>
+                                <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 text-center whitespace-nowrap">Status</th>
+                                <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 text-center whitespace-nowrap">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-[#E5E7EB] font-inter text-sm">
                             @if ($packages->isEmpty())
                                 <tr>
-                                    <td colspan="7" class="px-6 py-16 text-center">
+                                    <td colspan="7" class="px-4 py-16 text-center">
                                         <div class="mx-auto flex max-w-sm flex-col items-center">
                                             <div class="flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 text-[#ED1B45] mb-4">
                                                 <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -233,12 +181,12 @@
                                     @endphp
                                     <tr class="hover:bg-[#F6F6F7]/60 transition">
                                         <!-- Nama Paket PT -->
-                                        <td class="px-6 py-5">
+                                        <td class="px-4 py-4 sm:px-5">
                                             <div class="flex items-center gap-3">
-                                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ED1B45]/10 text-[#ED1B45] font-poppins font-bold text-sm">
+                                                <div class="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-[#ED1B45]/10 text-[#ED1B45] font-poppins font-bold text-xs sm:text-sm">
                                                     PT
                                                 </div>
-                                                <div>
+                                                <div class="min-w-0">
                                                     <p class="font-poppins font-bold text-[#16151A] leading-snug">
                                                         {{ $pkg->name }}
                                                     </p>
@@ -250,8 +198,8 @@
                                         </td>
 
                                         <!-- Jumlah Sesi -->
-                                        <td class="px-6 py-5">
-                                            <span class="inline-flex items-center gap-1.5 rounded-full bg-[#16151A]/5 border border-[#E5E7EB] px-3 py-1 font-inter text-xs font-bold text-[#16151A]">
+                                        <td class="px-3 py-4 sm:px-4 whitespace-nowrap">
+                                            <span class="inline-flex items-center gap-1.5 rounded-full bg-[#16151A]/5 border border-[#E5E7EB] px-2.5 py-1 font-inter text-xs font-bold text-[#16151A]">
                                                 <svg class="h-3.5 w-3.5 text-[#ED1B45]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                                                     <circle cx="12" cy="12" r="10" />
                                                     <path stroke-linecap="round" d="M12 6v6l4 2" />
@@ -261,7 +209,7 @@
                                         </td>
 
                                         <!-- Tarif Harga -->
-                                        <td class="px-6 py-5">
+                                        <td class="px-3 py-4 sm:px-4 whitespace-nowrap">
                                             <div>
                                                 <p class="font-poppins font-extrabold text-[#16151A] text-base">
                                                     Rp {{ number_format($pkg->price, 0, ',', '.') }}
@@ -275,9 +223,9 @@
                                         </td>
 
                                         <!-- Syarat Minimum Sisa Hari Membership -->
-                                        <td class="px-6 py-5">
+                                        <td class="px-3 py-4 sm:px-4 whitespace-nowrap">
                                             @if ($pkg->min_membership_days > 0)
-                                                <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-semibold text-amber-800">
+                                                <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-1 text-xs font-semibold text-amber-800">
                                                     <svg class="h-3.5 w-3.5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                                                         <line x1="16" y1="2" x2="16" y2="6" />
@@ -287,14 +235,14 @@
                                                     Min. {{ $pkg->min_membership_days }} Hari
                                                 </span>
                                             @else
-                                                <span class="inline-flex items-center rounded-full bg-slate-100 border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600">
+                                                <span class="inline-flex items-center rounded-full bg-slate-100 border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600">
                                                     Tanpa Syarat
                                                 </span>
                                             @endif
                                         </td>
 
                                         <!-- Masa Berlaku Sesi -->
-                                        <td class="px-6 py-5">
+                                        <td class="px-3 py-4 sm:px-4 whitespace-nowrap">
                                             <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#16151A]">
                                                 <svg class="h-4 w-4 text-[#565A66]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                                     <circle cx="12" cy="12" r="10" />
@@ -305,7 +253,7 @@
                                         </td>
 
                                         <!-- Status Switch -->
-                                        <td class="px-6 py-5 text-center">
+                                        <td class="px-3 py-4 sm:px-4 text-center whitespace-nowrap">
                                             <div
                                                 x-data="ptPackageStatus({
                                                     url: @js(route('admin.pt-packages.toggle-status', $pkg)),
@@ -335,7 +283,7 @@
                                         </td>
 
                                         <!-- Aksi Edit -->
-                                        <td class="px-6 py-5 text-center">
+                                        <td class="px-3 py-4 sm:px-4 text-center whitespace-nowrap">
                                             <button
                                                 type="button"
                                                 data-package="{{ json_encode([
