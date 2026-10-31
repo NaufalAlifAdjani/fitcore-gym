@@ -126,14 +126,6 @@
                                 <span>Keanggotaan Aktif</span>
                             </div>
                         @endif
-                    @elseif ($payment->status === 'pending')
-                        <div class="inline-flex items-center gap-1.5 text-xs font-inter font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60 mt-1">
-                            <svg class="h-3.5 w-3.5 text-amber-500 animate-spin shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                            </svg>
-                            <span>Estimasi verifikasi finance: ± 15-30 menit</span>
-                        </div>
                     @elseif ($payment->status === 'rejected')
                         <div class="text-xs font-inter text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200/60 mt-1">
                             <span>Alasan Penolakan: {{ $payment->rejection_reason ?? 'Bukti transfer tidak terbaca atau nominal tidak sesuai.' }}</span>

@@ -408,4 +408,24 @@ class MembershipCheckoutTest extends TestCase
 
         $this->assertLessThanOrEqual(800, $savedImage->width());
     }
+
+    public function test_membership_checkout_generates_random_3_digit_unique_code(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Starter Random',
+            'tier' => 'Basic',
+            'price' => 500000,
+            'duration_in_days' => 30,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($member)->get(route('member.membership.checkout', $package));
+
+        $response->assertOk();
+        $uniqueCode = $response->viewData('uniqueCode');
+        $this->assertIsInt($uniqueCode);
+        $this->assertGreaterThanOrEqual(100, $uniqueCode);
+        $this->assertLessThanOrEqual(999, $uniqueCode);
+    }
 }

@@ -1,3 +1,9 @@
+@props([
+    'title' => 'Fitcore Athletic - Personal Trainer',
+    'activeNav' => null,
+    'active' => null,
+])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-[#F8F9FA]">
 <head>
@@ -24,53 +30,8 @@
 </head>
 <body class="min-h-screen flex flex-col bg-[#F8F9FA] text-zinc-900 antialiased selection:bg-[#E11D48] selection:text-white">
 
-    <!-- NAVBAR (Sticky Top, Background #18181B, Height h-20) -->
-    <header class="sticky top-0 z-50 bg-[#18181B] border-b border-zinc-800 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            
-            <!-- Logo Kiri -->
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-[#E11D48] flex items-center justify-center text-white shadow-md shadow-rose-900/40 group-hover:scale-105 transition-transform duration-200">
-                    <!-- Dumbbell Icon -->
-                    <svg class="w-6 h-6 rotate-[-45deg]" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6 5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5zm9 0a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V5zM4 9a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9zm12 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V9zM8 11h8v2H8v-2z"/>
-                    </svg>
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-xl font-black text-white tracking-wider leading-none">FITCORE</span>
-                    <span class="text-[9px] font-semibold text-zinc-400 tracking-[0.28em] uppercase leading-tight mt-0.5">ATHLETIC</span>
-                </div>
-            </a>
-
-            <!-- Menu Navigasi Tengah -->
-            <nav class="hidden md:flex items-center gap-1 sm:gap-2 lg:gap-3">
-                <a href="{{ route('member.dashboard') }}" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
-                    Beranda
-                </a>
-                <a href="{{ route('member.membership.packages') }}" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
-                    Paket Membership
-                </a>
-                <a href="{{ route('member.pt-packages.index') }}" class="px-5 py-2 text-sm font-bold text-white bg-[#E11D48] rounded-full shadow-md shadow-rose-900/50 transition">
-                    Personal Trainer
-                </a>
-                <a href="{{ route('pt-sessions.index') }}" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
-                    Booking Sesi
-                </a>
-                <a href="{{ route('member.membership.packages') }}" class="px-4 py-2 text-sm font-semibold text-zinc-300 hover:text-white transition rounded-full hover:bg-zinc-800/60">
-                    Riwayat Transaksi
-                </a>
-            </nav>
-
-            <!-- Profil User Kanan -->
-            <div class="flex items-center gap-3">
-                <a href="{{ route('profile.edit') }}" title="{{ Auth::user()->name ?? 'Profil Member' }}" class="w-10 h-10 rounded-full bg-[#E11D48] flex items-center justify-center text-white shadow-md shadow-rose-900/40 hover:opacity-90 transition transform hover:scale-105">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </header>
+    <!-- NAVBAR -->
+    <x-member-navbar :active="$active ?? $activeNav" />
 
     <!-- CONTENT WRAPPER -->
     <main class="flex-1 w-full">

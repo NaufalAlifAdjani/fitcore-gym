@@ -81,7 +81,7 @@ class TransactionHistoryTest extends TestCase
             ->assertSee('INV-OCT-2026-001')
             ->assertSee('INV-SEP-2026-002')
             ->assertSee('FitCore Starter Pass')
-            ->assertSee('Estimasi verifikasi finance: ± 15-30 menit');
+            ->assertDontSee('Estimasi verifikasi finance: ± 15-30 menit');
     }
 
     public function test_member_can_filter_transactions_by_status(): void
