@@ -89,6 +89,8 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
     Route::get('/dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
+    Route::post('/sessions/{ptSession}/confirm', [TrainerDashboardController::class, 'confirmSession'])->name('sessions.confirm');
+    Route::post('/sessions/{ptSession}/reject', [TrainerDashboardController::class, 'rejectSession'])->name('sessions.reject');
     Route::get('/jadwal-sesi', TrainerSessionsIndex::class)->name('sessions.index');
     Route::view('/klien-saya', 'trainer.placeholder', ['title' => 'Klien Saya'])->name('clients.index');
     Route::view('/ketersediaan-waktu', 'trainer.placeholder', ['title' => 'Ketersediaan Waktu'])->name('availability.index');
