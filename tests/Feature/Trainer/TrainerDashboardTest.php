@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Trainer;
 
+use App\Enums\PtSessionStatus;
 use App\Models\MemberProfile;
 use App\Models\MemberPtQuota;
 use App\Models\PtPackage;
 use App\Models\PtSession;
-use App\Models\Rating;
 use App\Models\TrainerProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -45,7 +45,7 @@ class TrainerDashboardTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_trainer_can_view_performance_dashboard_with_metrics_and_reviews(): void
+    public function test_trainer_can_view_operational_dashboard_with_metrics_today_sessions_and_commission(): void
     {
         $trainer = User::factory()->create([
             'name' => 'Rian Ardiansyah',
@@ -85,6 +85,72 @@ class TrainerDashboardTest extends TestCase
             'source' => 'purchase',
             'total_sessions' => 10,
             'used_sessions' => 1,
+            'remaining_sessions' => 1, // <= 2 to trigger low quota alert
+            'start_date' => now()->startOfMonth(),
+            'end_date' => now()->addMonths(2),
+            'status' => 'active',
+        ]);
+
+        // Today's completed session
+        PtSession::create([
+            'member_pt_quota_id' => $quota->id,
+            'member_id' => $member->id,
+            'trainer_id' => $trainer->id,
+            'session_date' => now()->toDateString(),
+            'start_time' => '10:00:00',
+            'end_time' => '11:00:00',
+            'status' => PtSessionStatus::Completed->value,
+        ]);
+
+        // Pending session
+        PtSession::create([
+            'member_pt_quota_id' => $quota->id,
+            'member_id' => $member->id,
+            'trainer_id' => $trainer->id,
+            'session_date' => now()->addDay()->toDateString(),
+            'start_time' => '14:00:00',
+            'end_time' => '15:00:00',
+            'status' => PtSessionStatus::Pending->value,
+        ]);
+
+        $response = $this->actingAs($trainer)->get('/trainer/dashboard');
+
+        $response->assertOk();
+        $response->assertSee('Rian Ardiansyah');
+        $response->assertSee('Sesi Hari Ini');
+        $response->assertSee('Total Sesi Selesai');
+        $response->assertSee('Estimasi Komisi');
+        $response->assertSee('Total Member Aktif');
+        $response->assertSee('Jadwal Sesi Hari Ini');
+        $response->assertSee('Permintaan Booking');
+        $response->assertSee('Peringatan Sisa Kuota');
+        $response->assertSee('Kevin Kusuma');
+        $response->assertSee('#MC-8821');
+        $response->assertSee('Paket PT 10 Sesi');
+        $response->assertDontSee('/ 80 Sesi');
+        $response->assertDontSee('/ 20 Member');
+    }
+
+    public function test_trainer_can_confirm_pending_session_from_dashboard(): void
+    {
+        $trainer = User::factory()->create(['role' => 'trainer']);
+        $member = User::factory()->create(['role' => 'member']);
+
+        $package = PtPackage::create([
+            'name' => 'Paket PT 10 Sesi',
+            'pt_session_count' => 10,
+            'price' => 600000,
+            'min_membership_days' => 0,
+            'validity_days' => 90,
+            'status' => 'active',
+        ]);
+
+        $quota = MemberPtQuota::create([
+            'member_id' => $member->id,
+            'pt_package_id' => $package->id,
+            'source' => 'purchase',
+            'total_sessions' => 10,
+            'used_sessions' => 1,
             'remaining_sessions' => 9,
             'start_date' => now()->startOfMonth(),
             'end_date' => now()->addMonths(2),
@@ -95,43 +161,29 @@ class TrainerDashboardTest extends TestCase
             'member_pt_quota_id' => $quota->id,
             'member_id' => $member->id,
             'trainer_id' => $trainer->id,
-            'session_date' => now()->toDateString(),
+            'session_date' => now()->addDay()->toDateString(),
             'start_time' => '10:00:00',
             'end_time' => '11:00:00',
-            'status' => 'completed',
+            'status' => PtSessionStatus::Pending->value,
         ]);
 
-        Rating::create([
-            'member_id' => $member->id,
-            'pt_session_id' => $session->id,
-            'trainer_id' => $trainer->id,
-            'rating' => 5,
-            'comment' => 'Coach Rian teliti banget koreksi form bench press.',
+        $response = $this->actingAs($trainer)->post(route('trainer.sessions.confirm', $session));
+
+        $response->assertRedirect(route('trainer.dashboard'));
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('pt_sessions', [
+            'id' => $session->id,
+            'status' => PtSessionStatus::Confirmed->value,
         ]);
-
-        $response = $this->actingAs($trainer)->get('/trainer/dashboard');
-
-        $response->assertOk();
-        $response->assertSee('Performa Saya');
-        $response->assertSee('Total Sesi');
-        $response->assertSee('Rating Rata-rata');
-        $response->assertSee('Total Member Aktif');
-        $response->assertSee('Kevin Kusuma');
-        $response->assertSee('#MC-8821');
-        $response->assertSee('Paket PT 10 Sesi');
-        $response->assertSee('Coach Rian teliti banget koreksi form bench press.');
-        $response->assertSee('Coach Rian Ardiansyah');
-        $response->assertSee('Master Trainer');
     }
 
-    public function test_trainer_can_filter_reviews_by_star_rating(): void
+    public function test_trainer_can_reject_pending_session_and_refund_quota(): void
     {
         $trainer = User::factory()->create(['role' => 'trainer']);
+        $member = User::factory()->create(['role' => 'member']);
 
-        $member1 = User::factory()->create(['name' => 'Client Five Star', 'role' => 'member']);
-        $member2 = User::factory()->create(['name' => 'Client Four Star', 'role' => 'member']);
-
-        $pkg = PtPackage::create([
+        $package = PtPackage::create([
             'name' => 'Paket PT 10 Sesi',
             'pt_session_count' => 10,
             'price' => 600000,
@@ -140,73 +192,89 @@ class TrainerDashboardTest extends TestCase
             'status' => 'active',
         ]);
 
-        $quota1 = MemberPtQuota::create([
-            'member_id' => $member1->id,
-            'pt_package_id' => $pkg->id,
+        $quota = MemberPtQuota::create([
+            'member_id' => $member->id,
+            'pt_package_id' => $package->id,
             'source' => 'purchase',
             'total_sessions' => 10,
+            'used_sessions' => 1,
             'remaining_sessions' => 9,
             'start_date' => now()->startOfMonth(),
             'end_date' => now()->addMonths(2),
+            'status' => 'active',
         ]);
 
-        $quota2 = MemberPtQuota::create([
-            'member_id' => $member2->id,
-            'pt_package_id' => $pkg->id,
-            'source' => 'purchase',
-            'total_sessions' => 10,
-            'remaining_sessions' => 9,
-            'start_date' => now()->startOfMonth(),
-            'end_date' => now()->addMonths(2),
-        ]);
-
-        $s1 = PtSession::create([
-            'member_pt_quota_id' => $quota1->id,
-            'member_id' => $member1->id,
+        $session = PtSession::create([
+            'member_pt_quota_id' => $quota->id,
+            'member_id' => $member->id,
             'trainer_id' => $trainer->id,
-            'session_date' => now()->toDateString(),
-            'start_time' => '08:00:00',
-            'end_time' => '09:00:00',
-            'status' => 'completed',
-        ]);
-
-        $s2 = PtSession::create([
-            'member_pt_quota_id' => $quota2->id,
-            'member_id' => $member2->id,
-            'trainer_id' => $trainer->id,
-            'session_date' => now()->toDateString(),
+            'session_date' => now()->addDay()->toDateString(),
             'start_time' => '10:00:00',
             'end_time' => '11:00:00',
-            'status' => 'completed',
+            'status' => PtSessionStatus::Pending->value,
         ]);
 
-        Rating::create([
-            'member_id' => $member1->id,
-            'pt_session_id' => $s1->id,
-            'trainer_id' => $trainer->id,
-            'rating' => 5,
-            'comment' => 'Luar biasa bintang lima!',
+        $response = $this->actingAs($trainer)->post(route('trainer.sessions.reject', $session));
+
+        $response->assertRedirect(route('trainer.dashboard'));
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('pt_sessions', [
+            'id' => $session->id,
+            'status' => PtSessionStatus::Cancelled->value,
         ]);
 
-        Rating::create([
-            'member_id' => $member2->id,
-            'pt_session_id' => $s2->id,
-            'trainer_id' => $trainer->id,
-            'rating' => 4,
-            'comment' => 'Bagus bintang empat.',
+        $this->assertDatabaseHas('member_pt_quotas', [
+            'id' => $quota->id,
+            'used_sessions' => 0,
+            'remaining_sessions' => 10,
+        ]);
+    }
+
+    public function test_trainer_cannot_confirm_or_reject_other_trainers_session(): void
+    {
+        $trainerA = User::factory()->create(['role' => 'trainer']);
+        $trainerB = User::factory()->create(['role' => 'trainer']);
+        $member = User::factory()->create(['role' => 'member']);
+
+        $package = PtPackage::create([
+            'name' => 'Paket PT 10 Sesi',
+            'pt_session_count' => 10,
+            'price' => 600000,
+            'min_membership_days' => 0,
+            'validity_days' => 90,
+            'status' => 'active',
         ]);
 
-        // Filter 5 stars
-        $res5 = $this->actingAs($trainer)->get('/trainer/dashboard?star=5');
-        $res5->assertOk();
-        $res5->assertSee('Luar biasa bintang lima!');
-        $res5->assertDontSee('Bagus bintang empat.');
+        $quota = MemberPtQuota::create([
+            'member_id' => $member->id,
+            'pt_package_id' => $package->id,
+            'source' => 'purchase',
+            'total_sessions' => 10,
+            'used_sessions' => 1,
+            'remaining_sessions' => 9,
+            'start_date' => now()->startOfMonth(),
+            'end_date' => now()->addMonths(2),
+            'status' => 'active',
+        ]);
 
-        // Filter 4 stars
-        $res4 = $this->actingAs($trainer)->get('/trainer/dashboard?star=4');
-        $res4->assertOk();
-        $res4->assertSee('Bagus bintang empat.');
-        $res4->assertDontSee('Luar biasa bintang lima!');
+        $session = PtSession::create([
+            'member_pt_quota_id' => $quota->id,
+            'member_id' => $member->id,
+            'trainer_id' => $trainerA->id,
+            'session_date' => now()->addDay()->toDateString(),
+            'start_time' => '10:00:00',
+            'end_time' => '11:00:00',
+            'status' => PtSessionStatus::Pending->value,
+        ]);
+
+        // Trainer B attempts to confirm Trainer A's session
+        $responseConfirm = $this->actingAs($trainerB)->post(route('trainer.sessions.confirm', $session));
+        $responseConfirm->assertStatus(403);
+
+        // Trainer B attempts to reject Trainer A's session
+        $responseReject = $this->actingAs($trainerB)->post(route('trainer.sessions.reject', $session));
+        $responseReject->assertStatus(403);
     }
 
     public function test_trainer_dashboard_displays_all_main_menu_items(): void

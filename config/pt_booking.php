@@ -47,4 +47,15 @@ return [
     'auto_cancel_pending_hours_before' => 12,
     'min_booking_notice_hours' => 24,
     'late_tolerance_minutes' => 15,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Commission Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Default flat commission rate per completed PT session (in IDR).
+    | Can be overridden or customized as gym business rules evolve.
+    |
+    */
+    'default_commission_rate' => (int) env('PT_DEFAULT_COMMISSION_RATE', 60000),
 ];
