@@ -2,7 +2,6 @@
     <div
         x-data="{
             showDetailModal: false,
-            showAddModal: {{ $errors->any() && !old('_method') ? 'true' : 'false' }},
             showEditModal: {{ $errors->any() && old('_method') === 'PUT' ? 'true' : 'false' }},
             showDeleteModal: false,
             deleteType: 'soft',
@@ -36,7 +35,7 @@
                 this.showDeleteModal = true;
             }
         }"
-        x-on:keydown.escape.window="showDetailModal = false; showAddModal = false; showEditModal = false; showDeleteModal = false"
+        x-on:keydown.escape.window="showDetailModal = false; showEditModal = false; showDeleteModal = false"
         class="min-h-screen bg-[#F6F6F7] px-4 py-8 text-[#16151A] sm:px-6 lg:px-10"
     >
         <div class="mx-auto max-w-[1600px] space-y-6">
@@ -108,18 +107,6 @@
                         </svg>
                         <span>Export CSV</span>
                     </a>
-
-                    <!-- Tambah Member Button -->
-                    <button
-                        type="button"
-                        x-on:click="showAddModal = true"
-                        class="inline-flex items-center gap-2 rounded-full bg-[#ED1B45] px-4 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-[#D1123D] focus:outline-none cursor-pointer"
-                    >
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
-                        <span>Tambah Member</span>
-                    </button>
                 </div>
             </header>
 
@@ -571,13 +558,6 @@
                                         @else
                                             <p class="font-semibold text-sm text-[#16151A]">Belum ada data anggota</p>
                                             <p class="text-xs text-gray-400 mt-1">Belum ada anggota gym yang terdaftar di dalam sistem.</p>
-                                            <button
-                                                type="button"
-                                                x-on:click="showAddModal = true"
-                                                class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#ED1B45] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-[#D1123D]"
-                                            >
-                                                <span>+ Tambah Anggota Sekarang</span>
-                                            </button>
                                         @endif
                                     </td>
                                 </tr>
@@ -892,154 +872,6 @@
             </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- MODAL 2: TAMBAH MEMBER (ADD NEW MEMBER)   -->
-        <!-- ========================================== -->
-        <div
-            x-cloak
-            x-show="showAddModal"
-            class="fixed inset-0 z-50 overflow-y-auto"
-            aria-labelledby="modal-title"
-            role="dialog"
-            aria-modal="true"
-        >
-            <div
-                x-show="showAddModal"
-                x-transition.opacity
-                x-on:click="showAddModal = false"
-                class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
-            ></div>
-
-            <div class="flex min-h-screen items-center justify-center p-4 sm:p-6 text-center">
-                <div
-                    x-show="showAddModal"
-                    x-transition
-                    class="relative w-full max-w-lg rounded-2xl bg-white p-6 sm:p-8 text-left shadow-2xl transition-all border border-[#E5E7EB]"
-                >
-                    <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-4">
-                        <div>
-                            <h3 class="font-poppins text-lg font-bold text-[#16151A]">Tambah Anggota Baru</h3>
-                            <p class="text-xs text-[#565A66]">Daftarkan member baru dan aktifkan paket keanggotaannya.</p>
-                        </div>
-                        <button type="button" x-on:click="showAddModal = false" class="text-gray-400 hover:text-gray-600">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                        </button>
-                    </div>
-
-                    <form method="POST" action="{{ route('admin.members.store') }}" class="mt-4 space-y-4 font-inter text-xs">
-                        @csrf
-
-                        <!-- Nama Lengkap -->
-                        <div>
-                            <label class="block font-semibold text-[#16151A] mb-1">Nama Lengkap *</label>
-                            <input
-                                type="text"
-                                name="name"
-                                value="{{ old('name') }}"
-                                required
-                                placeholder="Contoh: Nama Lengkap Member"
-                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
-                            >
-                            @error('name') <p class="text-rose-600 mt-1">{{ $message }}</p> @enderror
-                        </div>
-
-                        <!-- Email & Telepon -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                                <label class="block font-semibold text-[#16151A] mb-1">Email *</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value="{{ old('email') }}"
-                                    required
-                                    placeholder="nama@email.com"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
-                                >
-                                @error('email') <p class="text-rose-600 mt-1">{{ $message }}</p> @enderror
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-[#16151A] mb-1">Nomor Telepon (WhatsApp) *</label>
-                                <input
-                                    type="text"
-                                    name="phone"
-                                    value="{{ old('phone') }}"
-                                    required
-                                    placeholder="08123456789"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
-                                >
-                                @error('phone') <p class="text-rose-600 mt-1">{{ $message }}</p> @enderror
-                            </div>
-                        </div>
-
-                        <!-- Jenis Kelamin & Paket Membership -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                                <label class="block font-semibold text-[#16151A] mb-1">Jenis Kelamin</label>
-                                <select
-                                    name="gender"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
-                                >
-                                    <option value="Laki-laki">Laki-laki</option>
-                                    <option value="Perempuan">Perempuan</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-[#16151A] mb-1">Pilih Paket Membership</label>
-                                <select
-                                    name="membership_package_id"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
-                                >
-                                    <option value="">-- Tanpa Paket Langsung --</option>
-                                    @foreach ($packages as $pkg)
-                                        <option value="{{ $pkg->id }}">
-                                            {{ $pkg->name }} ({{ $pkg->duration_days ?? 30 }} hari)
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Tanggal Mulai -->
-                        <div>
-                            <label class="block font-semibold text-[#16151A] mb-1">Tanggal Mulai Membership</label>
-                            <input
-                                type="date"
-                                name="start_date"
-                                value="{{ old('start_date', now()->format('Y-m-d')) }}"
-                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
-                            >
-                        </div>
-
-                        <!-- Alamat -->
-                        <div>
-                            <label class="block font-semibold text-[#16151A] mb-1">Alamat (Opsional)</label>
-                            <textarea
-                                name="address"
-                                rows="2"
-                                placeholder="Alamat domisili anggota..."
-                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
-                            >{{ old('address') }}</textarea>
-                        </div>
-
-                        <div class="flex items-center justify-end gap-3 pt-4 border-t border-[#E5E7EB]">
-                            <button
-                                type="button"
-                                x-on:click="showAddModal = false"
-                                class="rounded-full bg-gray-100 px-5 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-gray-200 transition"
-                            >
-                                Batal
-                            </button>
-                            <button
-                                type="submit"
-                                class="rounded-full bg-[#ED1B45] px-6 py-2.5 text-xs font-semibold text-white hover:bg-[#D1123D] transition shadow-xs"
-                            >
-                                Simpan Member Baru
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <!-- ========================================== -->
         <!-- MODAL 3: UBAH DATA MEMBER (EDIT MEMBER)    -->
