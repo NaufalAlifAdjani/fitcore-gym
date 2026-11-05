@@ -19,6 +19,7 @@ class PtSession extends Model
     protected $casts = [
         'session_date' => 'date',
         'status' => PtSessionStatus::class,
+        'completed_at' => 'datetime',
     ];
 
     public function setSessionDateAttribute($value): void
@@ -110,6 +111,15 @@ class PtSession extends Model
         $cutoffHours = (int) config('pt_booking.auto_cancel_pending_hours_before', 12);
 
         return now()->greaterThanOrEqualTo($startsAt->copy()->subHours($cutoffHours));
+    }
+
+    public function markAsCompleted(?string $notes = null): void
+    {
+        $this->update([
+            'status' => PtSessionStatus::Completed,
+            'notes' => $notes ?? $this->notes,
+            'completed_at' => now(),
+        ]);
     }
 
     public function getTimeRangeAttribute(): string
