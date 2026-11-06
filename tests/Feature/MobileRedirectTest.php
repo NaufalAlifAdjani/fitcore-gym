@@ -2,6 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Bank;
+use App\Models\MemberPtQuota;
+use App\Models\MembershipPackage;
+use App\Models\Payment;
+use App\Models\PtSession;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -54,6 +59,116 @@ class MobileRedirectTest extends TestCase
         ])->get('/member/dashboard');
 
         $response->assertRedirect('/m/dashboard');
+    }
+
+    public function test_logged_in_member_on_mobile_is_redirected_from_membership_packages_to_m_packages(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $response = $this->actingAs($member)->withHeaders([
+            'User-Agent' => self::IPHONE_USER_AGENT,
+        ])->get('/membership/packages');
+
+        $response->assertRedirect('/m/packages');
+    }
+
+    public function test_logged_in_member_on_mobile_is_redirected_from_membership_checkout_to_m_checkout(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $package = MembershipPackage::create([
+            'name' => 'Paket Basic',
+            'type' => 'membership',
+            'duration_days' => 30,
+            'price' => 150000,
+            'status' => 'active',
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($member)->withHeaders([
+            'User-Agent' => self::IPHONE_USER_AGENT,
+        ])->get("/membership/checkout/{$package->id}");
+
+        $response->assertRedirect("/m/packages/{$package->id}/checkout");
+    }
+
+    public function test_logged_in_member_on_mobile_is_redirected_from_payment_status_to_m_payment_status(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $package = MembershipPackage::create([
+            'name' => 'Paket Basic',
+            'type' => 'membership',
+            'duration_days' => 30,
+            'price' => 150000,
+            'status' => 'active',
+            'is_active' => true,
+        ]);
+
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_holder' => 'FitCore Indonesia',
+            'status' => 'active',
+        ]);
+
+        $payment = Payment::create([
+            'invoice_id' => 'INV-MOB123',
+            'member_id' => $member->id,
+            'package_id' => $package->id,
+            'package_type' => 'membership',
+            'payment_type' => 'membership',
+            'amount' => 150200,
+            'bank_id' => $bank->id,
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($member)->withHeaders([
+            'User-Agent' => self::IPHONE_USER_AGENT,
+        ])->get("/membership/payment-status/{$payment->id}");
+
+        $response->assertRedirect("/m/payment-status/{$payment->id}");
+    }
+
+    public function test_logged_in_member_on_mobile_is_redirected_from_pt_sessions_show_to_m_pt_sessions_show(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $trainer = User::factory()->create([
+            'role' => 'trainer',
+        ]);
+
+        $quota = MemberPtQuota::factory()->create([
+            'member_id' => $member->id,
+        ]);
+
+        $session = PtSession::create([
+            'member_pt_quota_id' => $quota->id,
+            'member_id' => $member->id,
+            'trainer_id' => $trainer->id,
+            'session_date' => now()->addDays(2)->toDateString(),
+            'start_time' => '09:00',
+            'end_time' => '10:00',
+            'status' => 'confirmed',
+        ]);
+
+        $response = $this->actingAs($member)->withHeaders([
+            'User-Agent' => self::IPHONE_USER_AGENT,
+        ])->get("/pt-sessions/{$session->id}");
+
+        $response->assertRedirect("/m/pt-sessions/{$session->id}");
     }
 
     public function test_developer_can_force_mobile_redirect_via_query_parameter(): void

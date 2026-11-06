@@ -53,12 +53,35 @@ class AutoRedirectMobile
                 return redirect()->route('mobile.member.card');
             }
 
+            if ($request->is('membership/packages') || $request->is('packages') || $request->is('member/pt-packages')) {
+                return redirect()->route('mobile.member.packages');
+            }
+
+            if ($request->is('membership/checkout/*')) {
+                $packageId = $request->segment(3);
+
+                return redirect()->route('mobile.member.packages.checkout', $packageId);
+            }
+
+            if ($request->is('membership/payment-status/*')) {
+                $paymentId = $request->segment(3);
+
+                return redirect()->route('mobile.member.packages.payment-status', $paymentId);
+            }
+
             if ($request->is('pt-sessions')) {
                 return redirect()->route('mobile.member.pt-sessions.index');
             }
 
             if ($request->is('pt-sessions/create')) {
                 return redirect()->route('mobile.member.pt-sessions.create');
+            }
+
+            if ($request->is('pt-sessions/*') && ! $request->is('pt-sessions/slots') && ! $request->is('pt-sessions/availability')) {
+                $sessionId = $request->segment(2);
+                if (is_numeric($sessionId)) {
+                    return redirect()->route('mobile.member.pt-sessions.show', $sessionId);
+                }
             }
 
             if ($request->is('member/riwayat-transaksi') || $request->is('member/riwayat-transaksi/*')) {

@@ -18,7 +18,10 @@ use App\Http\Controllers\PtSessionSlotController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
 use App\Models\MemberPtQuota;
+use App\Models\MembershipPackage;
+use App\Models\Payment;
 use App\Models\PtSession;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -75,6 +78,10 @@ Route::middleware('auth')->group(function () {
         ->name('pt-sessions.create');
     Route::post('/pt-sessions', [PtSessionController::class, 'store'])
         ->name('pt-sessions.store');
+
+    Route::get('/pt-sessions/{ptSession}', function (PtSession $ptSession) {
+        return redirect()->route('pt-sessions.index');
+    })->name('pt-sessions.show');
 
     Route::get('/pt-sessions/{ptSession}/edit', [PtSessionController::class, 'edit'])
         ->name('pt-sessions.edit');
@@ -196,6 +203,33 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
         return view('mobile.member.card', $view->getData());
     })->name('mobile.member.card');
 
+    Route::get('/packages', function (Request $request, MemberMembershipPackageController $controller) {
+        $view = $controller->index();
+
+        return view('mobile.member.packages.index', $view->getData());
+    })->name('mobile.member.packages');
+
+    Route::get('/packages-catalog', function (Request $request, MemberMembershipPackageController $controller) {
+        $view = $controller->index();
+
+        return view('mobile.member.packages.index', $view->getData());
+    })->name('mobile.packages.index');
+
+    Route::get('/packages/{package}/checkout', function (MembershipPackage $package, Request $request, MemberMembershipPackageController $controller) {
+        $view = $controller->checkout($package);
+        if ($view instanceof RedirectResponse) {
+            return $view;
+        }
+
+        return view('mobile.member.packages.checkout', $view->getData());
+    })->name('mobile.member.packages.checkout');
+
+    Route::get('/payment-status/{payment}', function (Payment $payment, Request $request, MemberMembershipPackageController $controller) {
+        $view = $controller->paymentStatus($payment);
+
+        return view('mobile.member.packages.payment-status', $view->getData());
+    })->name('mobile.member.packages.payment-status');
+
     Route::get('/pt-sessions', function (Request $request, PtSessionController $controller) {
         $view = $controller->index($request);
 
@@ -207,6 +241,16 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
 
         return view('mobile.member.pt-sessions.create', $view->getData());
     })->name('mobile.member.pt-sessions.create');
+
+    Route::get('/pt-sessions/{ptSession}', function (PtSession $ptSession, Request $request) {
+        if ($ptSession->member_id !== $request->user()->id && $request->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $ptSession->load(['trainer.trainerProfile', 'quota']);
+
+        return view('mobile.member.pt-sessions.show', compact('ptSession'));
+    })->name('mobile.member.pt-sessions.show');
 
     Route::get('/riwayat-transaksi', function (Request $request, TransactionHistoryController $controller) {
         $view = $controller->index($request);
