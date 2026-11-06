@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PtSessionStatus;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MemberManagementController;
 use App\Http\Controllers\Admin\MembershipPackageController;
@@ -16,6 +17,8 @@ use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
+use App\Models\MemberPtQuota;
+use App\Models\PtSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -160,6 +163,74 @@ Route::middleware(['auth', 'role:member'])->name('member.')->group(function () {
 Route::middleware(['auth', 'role:admin,trainer'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/checkin', [CheckInController::class, 'index'])->name('checkin.index');
     Route::post('/checkin', [CheckInController::class, 'store'])->name('checkin.store');
+});
+
+Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
+    Route::get('/dashboard', function (Request $request) {
+        $user = $request->user()->load([
+            'memberProfile',
+            'memberships' => fn ($q) => $q->where('status', 'active')->with('package')->latest('start_date'),
+        ]);
+
+        $activeMembership = $user->memberships->first();
+
+        $quota = MemberPtQuota::where('member_id', $user->id)
+            ->where('status', 'active')
+            ->where('end_date', '>=', now()->toDateString())
+            ->first();
+
+        $upcomingSession = PtSession::with('trainer.trainerProfile')
+            ->where('member_id', $user->id)
+            ->whereIn('status', [PtSessionStatus::Confirmed->value, PtSessionStatus::Pending->value])
+            ->where('session_date', '>=', now()->toDateString())
+            ->orderBy('session_date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->first();
+
+        return view('mobile.member.dashboard', compact('user', 'activeMembership', 'quota', 'upcomingSession'));
+    })->name('mobile.member.dashboard');
+
+    Route::get('/card', function (Request $request, MemberCardController $controller) {
+        $view = $controller->show($request);
+
+        return view('mobile.member.card', $view->getData());
+    })->name('mobile.member.card');
+
+    Route::get('/pt-sessions', function (Request $request, PtSessionController $controller) {
+        $view = $controller->index($request);
+
+        return view('mobile.member.pt-sessions.index', $view->getData());
+    })->name('mobile.member.pt-sessions.index');
+
+    Route::get('/pt-sessions/booking', function (Request $request, PtSessionController $controller) {
+        $view = $controller->create($request);
+
+        return view('mobile.member.pt-sessions.create', $view->getData());
+    })->name('mobile.member.pt-sessions.create');
+
+    Route::get('/riwayat-transaksi', function (Request $request, TransactionHistoryController $controller) {
+        $view = $controller->index($request);
+
+        return view('mobile.member.riwayat-transaksi.index', $view->getData());
+    })->name('mobile.member.riwayat-transaksi.index');
+});
+
+Route::prefix('m/trainer')->middleware(['auth', 'role:trainer'])->group(function () {
+    Route::get('/dashboard', function (Request $request, TrainerDashboardController $controller) {
+        $view = $controller->index($request);
+
+        return view('mobile.trainer.dashboard', $view->getData());
+    })->name('mobile.trainer.dashboard');
+});
+
+Route::prefix('m')->middleware('guest')->group(function () {
+    Route::get('/login', function () {
+        return view('mobile.guest.login');
+    })->name('mobile.login');
+
+    Route::get('/register', function () {
+        return view('mobile.guest.register');
+    })->name('mobile.register');
 });
 
 require __DIR__.'/auth.php';
