@@ -6,7 +6,7 @@ LAYOUT: layouts.mobile-app
 TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
 --}}
 
-<x-layouts.mobile-app title="Profil Saya - FitCore Athletic" active-tab="beranda">
+<x-layouts.mobile-app title="Profil Saya - FitCore Athletic" active-tab="profile">
     <div class="space-y-4" x-data="{ activeTab: 'contact', showLogoutModal: false }">
 
         <!-- 1. Header Navigasi Atas -->

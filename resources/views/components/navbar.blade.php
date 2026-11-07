@@ -5,7 +5,7 @@
 <header class="sticky top-0 z-50 w-full border-b border-slate-800 bg-[#0B0F17]/95 backdrop-blur-md" x-data="{ mobileMenuOpen: false }">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
         <!-- Logo -->
-        <a href="{{ url('/') }}" class="flex items-center gap-3 group">
+        <a href="{{ route('landing.index') }}" class="flex items-center gap-3 group">
             <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 rounded-full shadow-[0_0_15px_rgba(186,0,48,0.5)] transition group-hover:scale-105">
                 <rect width="36" height="36" rx="18" fill="#BA0030"/>
                 <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="white"/>
@@ -20,27 +20,27 @@
 
         <!-- Desktop Navigation Items -->
         <nav class="hidden md:flex items-center gap-1 bg-slate-900/80 p-1.5 rounded-full border border-slate-800">
-            <a href="{{ Route::has('member.membership.packages') ? route('member.membership.packages') : '#' }}"
+            <a href="{{ Route::has('landing.packages') ? route('landing.packages') : (Route::has('member.membership.packages') ? route('member.membership.packages') : '#') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30' => request()->routeIs('member.membership.*') || $active === 'packages',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('member.membership.*') && $active !== 'packages',
+                    'bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30' => request()->routeIs('landing.packages') || request()->routeIs('member.membership.*') || $active === 'packages',
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('landing.packages') && !request()->routeIs('member.membership.*') && $active !== 'packages',
                 ])>
                 Paket Membership
             </a>
-            <a href="{{ Route::has('pt-sessions.index') ? route('pt-sessions.index') : '#' }}"
+            <a href="{{ Route::has('landing.trainers') ? route('landing.trainers') : (Route::has('pt-sessions.index') ? route('pt-sessions.index') : '#') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('pt-sessions.*') || $active === 'pt',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('pt-sessions.*') && $active !== 'pt',
+                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('landing.trainers') || request()->routeIs('pt-sessions.*') || $active === 'pt',
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('landing.trainers') && !request()->routeIs('pt-sessions.*') && $active !== 'pt',
                 ])>
                 Personal Trainer
             </a>
-            <a href="#"
+            <a href="{{ Route::has('landing.about') ? route('landing.about') : '#' }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#BA0030] text-white shadow-md' => $active === 'about',
-                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => $active !== 'about',
+                    'bg-[#BA0030] text-white shadow-md' => request()->routeIs('landing.about') || $active === 'about',
+                    'text-slate-300 hover:text-white hover:bg-slate-800/60' => !request()->routeIs('landing.about') && $active !== 'about',
                 ])>
                 Tentang Kami
             </a>
@@ -110,10 +110,12 @@
             @else
                 <!-- Guest Actions -->
                 <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="{{ route('login') }}" class="px-3 sm:px-4 py-2 text-xs font-bold text-slate-300 hover:text-white transition">
-                        Masuk
-                    </a>
-                    @if (Route::has('register'))
+                    @if (! request()->routeIs('login'))
+                        <a href="{{ route('login') }}" class="px-3 sm:px-4 py-2 text-xs font-bold text-slate-300 hover:text-white transition">
+                            Masuk
+                        </a>
+                    @endif
+                    @if (Route::has('register') && ! request()->routeIs('register'))
                         <a href="{{ route('register') }}" class="rounded-full bg-[#BA0030] px-4 sm:px-5 py-2 text-xs font-bold text-white shadow-md shadow-[#BA0030]/30 transition hover:bg-[#960026] hover:shadow-lg">
                             Daftar
                         </a>
@@ -145,17 +147,28 @@
         x-transition
         class="md:hidden border-t border-slate-800 bg-[#0B0F17]/98 px-4 pt-3 pb-5 space-y-2"
     >
-        <a href="{{ Route::has('member.membership.packages') ? route('member.membership.packages') : '#' }}"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('member.membership.*') || $active === 'packages') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+        <a href="{{ Route::has('landing.packages') ? route('landing.packages') : (Route::has('member.membership.packages') ? route('member.membership.packages') : '#') }}"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('landing.packages') || request()->routeIs('member.membership.*') || $active === 'packages') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Paket Membership
         </a>
-        <a href="{{ Route::has('pt-sessions.index') ? route('pt-sessions.index') : '#' }}"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('pt-sessions.*') || $active === 'pt') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+        <a href="{{ Route::has('landing.trainers') ? route('landing.trainers') : (Route::has('pt-sessions.index') ? route('pt-sessions.index') : '#') }}"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('landing.trainers') || request()->routeIs('pt-sessions.*') || $active === 'pt') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Personal Trainer
         </a>
-        <a href="#"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $active === 'about' ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+        <a href="{{ Route::has('landing.about') ? route('landing.about') : '#' }}"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('landing.about') || $active === 'about') ? 'bg-[#BA0030] text-white' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
             Tentang Kami
         </a>
+
+        @guest
+            <div class="pt-3 border-t border-slate-800 flex flex-col gap-2">
+                @if (! request()->routeIs('login'))
+                    <a href="{{ route('login') }}" class="block text-center py-2 text-xs font-bold text-slate-300">Masuk</a>
+                @endif
+                @if (Route::has('register') && ! request()->routeIs('register'))
+                    <a href="{{ route('register') }}" class="block text-center py-2 rounded-full bg-[#BA0030] text-white text-xs font-bold">Daftar</a>
+                @endif
+            </div>
+        @endguest
     </div>
 </header>
