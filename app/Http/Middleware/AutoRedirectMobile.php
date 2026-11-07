@@ -29,12 +29,46 @@ class AutoRedirectMobile
 
         // 3. Jika mobile dan URL belum berada di bawah prefix /m/*
         if ($isMobile && ! $request->is('m') && ! $request->is('m/*')) {
+            if ($request->hasSession()) {
+                $request->session()->reflash();
+            }
+
+            $query = $request->except('device');
+
+            if ($request->is('/')) {
+                if ($request->user()) {
+                    return match ($request->user()->role) {
+                        'trainer' => redirect()->route('mobile.trainer.dashboard'),
+                        'admin' => redirect()->route('admin.dashboard'),
+                        default => redirect()->route('mobile.member.dashboard'),
+                    };
+                }
+
+                return redirect()->route('mobile.landing.index');
+            }
+
             if ($request->is('login')) {
-                return redirect()->route('mobile.login');
+                return redirect()->route('mobile.login', $query);
             }
 
             if ($request->is('register')) {
-                return redirect()->route('mobile.register');
+                return redirect()->route('mobile.register', $query);
+            }
+
+            if ($request->is('packages')) {
+                if ($request->user()?->role === 'member') {
+                    return redirect()->route('mobile.member.packages');
+                }
+
+                return redirect()->route('mobile.landing.packages');
+            }
+
+            if ($request->is('trainers')) {
+                return redirect()->route('mobile.landing.trainers');
+            }
+
+            if ($request->is('about')) {
+                return redirect()->route('mobile.landing.about');
             }
 
             if ($request->is('member/dashboard')) {
@@ -65,7 +99,7 @@ class AutoRedirectMobile
                 return redirect()->route('mobile.member.card');
             }
 
-            if ($request->is('membership/packages') || $request->is('packages') || $request->is('member/pt-packages')) {
+            if ($request->is('membership/packages') || $request->is('member/pt-packages')) {
                 return redirect()->route('mobile.member.packages');
             }
 
@@ -86,7 +120,7 @@ class AutoRedirectMobile
             }
 
             if ($request->is('pt-sessions/create')) {
-                return redirect()->route('mobile.member.pt-sessions.create');
+                return redirect()->route('mobile.member.pt-sessions.create', $query);
             }
 
             if ($request->is('pt-sessions/*') && ! $request->is('pt-sessions/slots') && ! $request->is('pt-sessions/availability')) {

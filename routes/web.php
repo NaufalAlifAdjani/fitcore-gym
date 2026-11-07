@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\PtPackageController;
 use App\Http\Controllers\CheckInController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
 use App\Http\Controllers\Member\TransactionHistoryController;
@@ -25,7 +26,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/login');
+Route::get('/', [LandingController::class, 'index'])->name('landing.index');
+Route::get('/packages', [LandingController::class, 'packages'])->name('landing.packages');
+Route::get('/trainers', [LandingController::class, 'trainers'])->name('landing.trainers');
+Route::get('/about', [LandingController::class, 'about'])->name('landing.about');
 
 Route::get('/dashboard', function (Request $request) {
     $role = auth()->user()?->role;
@@ -271,12 +275,27 @@ Route::prefix('m/trainer')->name('mobile.trainer.')->middleware(['auth', 'role:t
     Route::get('/profile', [TrainerDashboardController::class, 'mobileProfileIndex'])->name('profile.index');
 });
 
+Route::prefix('m')->group(function () {
+    Route::get('/', [LandingController::class, 'mobileIndex'])->name('mobile.landing.index');
+    Route::get('/packages-info', [LandingController::class, 'mobilePackages'])->name('mobile.landing.packages');
+    Route::get('/trainers', [LandingController::class, 'mobileTrainers'])->name('mobile.landing.trainers');
+    Route::get('/about', [LandingController::class, 'mobileAbout'])->name('mobile.landing.about');
+});
+
 Route::prefix('m')->middleware('guest')->group(function () {
-    Route::get('/login', function () {
+    Route::get('/login', function (Request $request) {
+        if ($request->has('redirect')) {
+            session()->put('url.intended', $request->query('redirect'));
+        }
+
         return view('mobile.guest.login');
     })->name('mobile.login');
 
-    Route::get('/register', function () {
+    Route::get('/register', function (Request $request) {
+        if ($request->has('redirect')) {
+            session()->put('url.intended', $request->query('redirect'));
+        }
+
         return view('mobile.guest.register');
     })->name('mobile.register');
 });
