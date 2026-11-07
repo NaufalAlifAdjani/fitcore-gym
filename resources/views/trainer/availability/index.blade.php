@@ -152,11 +152,18 @@
                     >
                         ⚡ Buka Semua Hari (Sen–Min)
                     </button>
+                    <button
+                        type="submit"
+                        form="weekly-schedule-form"
+                        class="rounded-xl bg-[#ED1B45] hover:bg-[#BA0030] text-white px-4 py-2 font-poppins font-bold text-xs transition active:scale-95 shadow-xs"
+                    >
+                        Simpan Jadwal
+                    </button>
                 </div>
             </div>
 
             <!-- Form Simpan Jadwal Mingguan -->
-            <form action="{{ route('trainer.availability.schedule.update') }}" method="POST" class="space-y-6">
+            <form id="weekly-schedule-form" action="{{ route('trainer.availability.schedule.update') }}" method="POST" class="space-y-6">
                 @csrf
 
                 <div class="grid grid-cols-1 gap-5">
@@ -294,23 +301,27 @@
                     @endforeach
                 </div>
 
-                <!-- Sticky / Bottom Submit Button -->
-                <div class="sticky bottom-6 z-20 flex items-center justify-between gap-4 p-4 rounded-2xl bg-gray-900/90 backdrop-blur-md text-white shadow-xl">
-                    <div class="flex items-center gap-3 pl-2">
-                        <svg class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p class="font-inter text-xs text-gray-200 hidden sm:block">
-                            Pastikan jam kerja yang Anda buka siap untuk melayani sesi latihan member.
+                <!-- Bottom Submit Card (Menyatu dengan halaman, rapi dan tidak menghalangi konten) -->
+                <div class="rounded-2xl bg-white p-5 border border-gray-100 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <p class="font-inter text-xs text-gray-600">
+                            Perubahan jadwal rutin mingguan akan langsung diterapkan ke sistem booking sesi member.
                         </p>
                     </div>
 
-                    <button
-                        type="submit"
-                        class="px-6 py-2.5 rounded-xl font-poppins font-bold text-xs bg-[#ED1B45] hover:bg-[#BA0030] active:scale-95 text-white transition shadow-sm shrink-0"
-                    >
-                        Simpan Pengaturan Jadwal
-                    </button>
+                    <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                        <button
+                            type="submit"
+                            class="w-full sm:w-auto px-6 py-2.5 rounded-xl font-poppins font-bold text-xs bg-[#ED1B45] hover:bg-[#BA0030] active:scale-95 text-white transition shadow-xs text-center"
+                        >
+                            Simpan Pengaturan Jadwal
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
