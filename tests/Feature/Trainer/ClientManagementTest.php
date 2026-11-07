@@ -130,7 +130,9 @@ class ClientManagementTest extends TestCase
         $response->assertSee('Klien Bimbingan Saya');
         $response->assertSee('John Doe');
         $response->assertSee('MBR-0001');
-        $response->assertSee('8 Sesi Aktif');
+        $response->assertSee('Kuota Aktif');
+        $response->assertSee('Sesi Selesai');
+        $response->assertSee('Total Sesi');
         $response->assertSee(route('trainer.clients.show', $this->member->id));
     }
 
@@ -200,6 +202,17 @@ class ClientManagementTest extends TestCase
         $emptyFilterResponse->assertOk();
         $emptyFilterResponse->assertSee('Alice Smith');
         $emptyFilterResponse->assertDontSee('John Doe');
+
+        // Filter low quota (Alice kuotanya habis <= 2 sesi)
+        $lowFilterResponse = $this->actingAs($this->trainer)->get('/trainer/klien-saya?status=low_quota');
+        $lowFilterResponse->assertOk();
+        $lowFilterResponse->assertSee('Alice Smith');
+        $lowFilterResponse->assertDontSee('John Doe');
+
+        // Badge sisa sesi
+        $allClientsResponse = $this->actingAs($this->trainer)->get('/trainer/klien-saya');
+        $allClientsResponse->assertSee('Sisa 8 Sesi');
+        $allClientsResponse->assertSee('Perlu Perpanjangan');
     }
 
     public function test_trainer_can_view_member_session_history_and_profile(): void
@@ -243,7 +256,7 @@ class ClientManagementTest extends TestCase
         $response->assertSee('10 Sesi PT');
         $response->assertSee('Latihan punggung & bisep');
         $response->assertSee('Pelayanan coach sangat mantap dan teliti!');
-        $response->assertSee('Selesaikan Sesi');
+        $response->assertDontSee('Selesaikan Sesi');
     }
 
     public function test_trainer_cannot_view_unrelated_member_details(): void
@@ -335,5 +348,90 @@ class ClientManagementTest extends TestCase
 
         $session->refresh();
         $this->assertEquals(PtSessionStatus::Cancelled, $session->status);
+    }
+
+    public function test_total_sesi_displays_purchased_sessions_not_booking_requests_count(): void
+    {
+        // Member memiliki kuota 10 sesi yang dibeli ($this->quota->total_sessions = 10)
+        // Dan hanya memiliki 2 pengajuan sesi (booking)
+        PtSession::create([
+            'member_pt_quota_id' => $this->quota->id,
+            'member_id' => $this->member->id,
+            'trainer_id' => $this->trainer->id,
+            'session_date' => Carbon::today()->subDay()->toDateString(),
+            'start_time' => '09:00:00',
+            'end_time' => '10:00:00',
+            'status' => PtSessionStatus::Completed,
+        ]);
+
+        PtSession::create([
+            'member_pt_quota_id' => $this->quota->id,
+            'member_id' => $this->member->id,
+            'trainer_id' => $this->trainer->id,
+            'session_date' => Carbon::today()->toDateString(),
+            'start_time' => '10:00:00',
+            'end_time' => '11:00:00',
+            'status' => PtSessionStatus::Pending,
+        ]);
+
+        // Cek halaman index klien
+        $responseIndex = $this->actingAs($this->trainer)->get('/trainer/klien-saya');
+        $responseIndex->assertOk();
+        // Kartu member harus menampilkan total sesi yang dibeli (10), bukan total pengajuan sesi (2)
+        $responseIndex->assertSee('Total Sesi');
+        $responseIndex->assertSee('10');
+
+        // Cek halaman detail member
+        $responseShow = $this->actingAs($this->trainer)->get("/trainer/klien-saya/{$this->member->id}");
+        $responseShow->assertOk();
+        $responseShow->assertViewHas('totalPurchasedSessions', 10);
+    }
+
+    public function test_past_confirmed_sessions_are_automatically_completed(): void
+    {
+        // Buat sesi terkonfirmasi di masa lampau (kemarin)
+        $pastSession = PtSession::create([
+            'member_pt_quota_id' => $this->quota->id,
+            'member_id' => $this->member->id,
+            'trainer_id' => $this->trainer->id,
+            'session_date' => Carbon::today()->subDay()->toDateString(),
+            'start_time' => '09:00:00',
+            'end_time' => '10:00:00',
+            'status' => PtSessionStatus::Confirmed,
+        ]);
+
+        $this->assertEquals(PtSessionStatus::Confirmed, $pastSession->status);
+
+        // Saat mengakses halaman riwayat member, fungsi otomatisasi berjalan
+        $response = $this->actingAs($this->trainer)->get("/trainer/klien-saya/{$this->member->id}");
+        $response->assertOk();
+
+        $pastSession->refresh();
+        $this->assertEquals(PtSessionStatus::Completed, $pastSession->status);
+        $this->assertNotNull($pastSession->completed_at);
+
+        // Pastikan tidak ada tombol 'Selesaikan Sesi' pada UI
+        $response->assertDontSee('Selesaikan Sesi');
+    }
+
+    public function test_artisan_command_completes_past_confirmed_sessions(): void
+    {
+        $pastSession = PtSession::create([
+            'member_pt_quota_id' => $this->quota->id,
+            'member_id' => $this->member->id,
+            'trainer_id' => $this->trainer->id,
+            'session_date' => Carbon::today()->subDays(2)->toDateString(),
+            'start_time' => '14:00:00',
+            'end_time' => '15:00:00',
+            'status' => PtSessionStatus::Confirmed,
+        ]);
+
+        $this->artisan('pt:complete-past-confirmed')
+            ->expectsOutputToContain('sesi PT terkonfirmasi yang telah melewati jam jadwal berhasil diselesaikan otomatis.')
+            ->assertSuccessful();
+
+        $pastSession->refresh();
+        $this->assertEquals(PtSessionStatus::Completed, $pastSession->status);
+        $this->assertNotNull($pastSession->completed_at);
     }
 }

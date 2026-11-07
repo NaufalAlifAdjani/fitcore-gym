@@ -133,16 +133,10 @@ class PtSession extends Model
     public function getSessionInfoAttribute(): string
     {
         if (! $this->quota) {
-            return '';
-        }
-        $sesiKe = $this->quota->used_sessions + 1;
-        $totalSesi = $this->quota->total_sessions ?? $this->quota->remaining_sessions + $this->quota->used_sessions;
-
-        if ($sesiKe === 1) {
-            return "Paket {$totalSesi} Sesi (Sesi 1 / Orientasi)";
+            return 'Sesi Private Training';
         }
 
-        return "Paket {$totalSesi} Sesi (Sesi ke-{$sesiKe})";
+        return $this->quota->ptPackage?->name ?? "Paket {$this->quota->total_sessions} Sesi";
     }
 
     public function getRelativeTimeBadgeAttribute(): string

@@ -1,5 +1,5 @@
 <x-trainer-layout title="Riwayat Member: {{ $member->name }} - FitCore PT Portal">
-    <div x-data="{ completeModalOpen: false, activeSessionId: null, activeSessionInfo: '' }" class="space-y-8">
+    <div class="space-y-8">
         <!-- 1. Breadcrumbs -->
         <nav class="flex items-center gap-2 text-xs font-inter font-medium text-gray-500">
             <a href="{{ route('trainer.dashboard') }}" class="hover:text-gray-900 transition">Dashboard</a>
@@ -89,7 +89,7 @@
             <div class="flex items-center gap-4 sm:gap-6 border-t lg:border-t-0 lg:border-l border-gray-100 pt-4 lg:pt-0 lg:pl-6">
                 <div class="text-center sm:text-left">
                     <span class="block text-[11px] font-bold text-gray-400 uppercase font-inter">Total Sesi</span>
-                    <span class="font-poppins text-2xl font-extrabold text-gray-900">{{ $totalSessionsWithTrainer }}</span>
+                    <span class="font-poppins text-2xl font-extrabold text-gray-900">{{ $totalPurchasedSessions ?? $totalSessionsWithTrainer }}</span>
                 </div>
                 <div class="h-8 w-px bg-gray-100"></div>
                 <div class="text-center sm:text-left">
@@ -202,76 +202,49 @@
             @else
                 <div class="space-y-3">
                     @foreach ($sessions as $session)
-                        @php
-                            $isCompleted = in_array($session->status, [\App\Enums\PtSessionStatus::Completed, \App\Enums\PtSessionStatus::Done]);
-                            $isConfirmed = $session->status === \App\Enums\PtSessionStatus::Confirmed;
-                            $canComplete = $isConfirmed && $session->session_date->lessThanOrEqualTo(now()->toDateString());
-                        @endphp
-
                         <div class="rounded-2xl bg-white p-5 shadow-xs border border-gray-100 transition hover:border-gray-200">
-                            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                                <div class="flex items-start gap-4">
-                                    <!-- Date Calendar Box -->
-                                    <div class="flex flex-col items-center justify-center h-14 w-14 rounded-2xl bg-gray-50 border border-gray-100 shrink-0 text-center">
-                                        <span class="text-[10px] font-inter font-bold text-gray-400 uppercase">
-                                            {{ $session->session_date->format('M') }}
-                                        </span>
-                                        <span class="font-poppins text-lg font-black text-gray-900 leading-tight">
-                                            {{ $session->session_date->format('d') }}
-                                        </span>
-                                    </div>
-
-                                    <!-- Session Details -->
-                                    <div class="space-y-1">
-                                        <div class="flex flex-wrap items-center gap-2">
-                                            <h3 class="font-poppins text-sm font-bold text-gray-900">
-                                                {{ $session->session_info ?: 'Sesi Latihan Personal Trainer' }}
-                                            </h3>
-                                            <!-- Status Badge -->
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $session->status->badgeClasses() }}">
-                                                {{ $session->status->label() }}
-                                            </span>
-                                        </div>
-
-                                        <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs font-inter text-gray-500">
-                                            <span class="flex items-center gap-1">
-                                                <svg class="h-3.5 w-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                    <circle cx="12" cy="12" r="10" />
-                                                    <polyline points="12 6 12 12 16 14" />
-                                                </svg>
-                                                {{ $session->time_range }}
-                                            </span>
-                                            <span>•</span>
-                                            <span>{{ $session->session_date->translatedFormat('l, d F Y') }}</span>
-                                            @if ($session->completed_at)
-                                                <span>•</span>
-                                                <span class="text-emerald-600 font-medium">Diselesaikan: {{ $session->completed_at->format('d/m/Y H:i') }}</span>
-                                            @endif
-                                        </div>
-                                    </div>
+                            <div class="flex items-start gap-4">
+                                <!-- Date Calendar Box -->
+                                <div class="flex flex-col items-center justify-center h-14 w-14 rounded-2xl bg-gray-50 border border-gray-100 shrink-0 text-center">
+                                    <span class="text-[10px] font-inter font-bold text-gray-400 uppercase">
+                                        {{ $session->session_date->format('M') }}
+                                    </span>
+                                    <span class="font-poppins text-lg font-black text-gray-900 leading-tight">
+                                        {{ $session->session_date->format('d') }}
+                                    </span>
                                 </div>
 
-                                <!-- Actions / Button Selesaikan -->
-                                <div class="flex items-center gap-2 self-end lg:self-center shrink-0">
-                                    @if ($canComplete)
-                                        <button
-                                            type="button"
-                                            x-on:click="activeSessionId = {{ $session->id }}; activeSessionInfo = '{{ $session->session_date->format('d M Y') }} ({{ $session->time_range }})'; completeModalOpen = true"
-                                            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 font-inter text-xs font-semibold text-white shadow-xs hover:bg-emerald-700 transition cursor-pointer"
-                                        >
-                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                                            </svg>
-                                            <span>Selesaikan Sesi</span>
-                                        </button>
-                                    @elseif ($isCompleted)
-                                        <span class="inline-flex items-center gap-1 text-xs font-inter font-medium text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200/50">
-                                            <svg class="h-3.5 w-3.5 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                                            </svg>
-                                            Sesi Terlaksana
+                                <!-- Session Details -->
+                                <div class="space-y-1 flex-1 min-w-0">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <h3 class="font-poppins text-sm font-bold text-gray-900">
+                                            Sesi Private Training
+                                        </h3>
+                                        <!-- Status Badge -->
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $session->status->badgeClasses() }}">
+                                            {{ $session->status->label() }}
                                         </span>
-                                    @endif
+                                    </div>
+
+                                    <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs font-inter text-gray-500">
+                                        <span class="flex items-center gap-1">
+                                            <svg class="h-3.5 w-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <polyline points="12 6 12 12 16 14" />
+                                            </svg>
+                                            {{ $session->time_range }}
+                                        </span>
+                                        <span>•</span>
+                                        <span>{{ $session->session_date->translatedFormat('l, d F Y') }}</span>
+                                        @if ($session->quota?->ptPackage?->name)
+                                            <span>•</span>
+                                            <span>{{ $session->quota->ptPackage->name }}</span>
+                                        @endif
+                                        @if ($session->completed_at)
+                                            <span>•</span>
+                                            <span class="text-emerald-600 font-medium">Diselesaikan: {{ $session->completed_at->format('d/m/Y H:i') }}</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
 
@@ -317,85 +290,6 @@
                 </div>
             @endif
         </div>
-
-        <!-- 6. Modal: Selesaikan Sesi & Input Catatan -->
-        <div
-            x-cloak
-            x-show="completeModalOpen"
-            x-transition.opacity
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/50 backdrop-blur-xs"
-        >
-            <div
-                x-show="completeModalOpen"
-                x-transition.scale
-                x-on:click.outside="completeModalOpen = false"
-                class="w-full max-w-lg rounded-3xl bg-white p-6 sm:p-8 shadow-xl space-y-6"
-            >
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="font-poppins text-lg font-bold text-gray-900">
-                                Selesaikan Sesi Latihan
-                            </h3>
-                            <p class="font-inter text-xs text-gray-500" x-text="activeSessionInfo"></p>
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        x-on:click="completeModalOpen = false"
-                        class="rounded-xl p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition"
-                    >
-                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                <form
-                    x-bind:action="'/trainer/sessions/' + activeSessionId + '/complete'"
-                    method="POST"
-                    class="space-y-4"
-                >
-                    @csrf
-                    <div>
-                        <label for="modal-notes" class="block font-inter text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
-                            Catatan Latihan / Evaluasi Progres (Opsional)
-                        </label>
-                        <textarea
-                            id="modal-notes"
-                            name="notes"
-                            rows="4"
-                            placeholder="Contoh: Fokus latihan Chest & Triceps. Bench press 50kg 4 set. Form squat makin stabil, mobilitas ankle mulai membaik..."
-                            class="w-full rounded-2xl border border-gray-200 p-3.5 font-inter text-sm text-gray-900 placeholder-gray-400 focus:outline-hidden focus:ring-2 focus:ring-[#ED1B45]/20 focus:border-[#ED1B45] transition"
-                        ></textarea>
-                        <p class="mt-1 font-inter text-[11px] text-gray-400">
-                            Catatan ini akan tersimpan di riwayat latihan member dan dapat dilihat pada sesi bimbingan berikutnya.
-                        </p>
-                    </div>
-
-                    <div class="flex items-center justify-end gap-3 pt-2">
-                        <button
-                            type="button"
-                            x-on:click="completeModalOpen = false"
-                            class="px-4 py-2.5 rounded-xl border border-gray-200 font-inter text-xs font-semibold text-gray-700 hover:bg-gray-50 transition"
-                        >
-                            Batal
-                        </button>
-                        <button
-                            type="submit"
-                            class="px-5 py-2.5 rounded-xl bg-emerald-600 font-inter text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition"
-                        >
-                            Konfirmasi Selesai
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 </x-trainer-layout>
+

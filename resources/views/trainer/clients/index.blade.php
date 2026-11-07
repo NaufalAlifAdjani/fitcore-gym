@@ -72,30 +72,39 @@
                 </div>
             </div>
 
-            <!-- Klien Kuota Aktif -->
-            <div class="rounded-2xl bg-white p-5 shadow-xs border border-gray-100 flex flex-col justify-between transition hover:border-gray-200">
+            <!-- Perlu Perpanjangan / Kuota Menipis -->
+            <a
+                href="{{ route('trainer.clients.index', array_merge(request()->query(), ['status' => 'low_quota'])) }}"
+                class="rounded-2xl bg-white p-5 shadow-xs border border-gray-100 flex flex-col justify-between transition hover:border-amber-200 hover:shadow-xs group"
+                title="Filter klien yang sisa kuotanya menipis (≤ 2 sesi) atau habis"
+            >
                 <div class="flex items-center gap-3">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 group-hover:bg-amber-100 transition">
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                     </div>
                     <div>
                         <span class="block font-inter text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                            STATUS BERJALAN
+                            RETENSI &amp; PERPANJANGAN
                         </span>
-                        <h3 class="font-poppins text-sm font-bold text-gray-900 leading-tight">
-                            Klien Kuota Aktif
+                        <h3 class="font-poppins text-sm font-bold text-gray-900 leading-tight group-hover:text-amber-600 transition">
+                            Perlu Perpanjangan
                         </h3>
                     </div>
                 </div>
-                <div class="mt-4">
-                    <span class="font-poppins text-3xl font-extrabold text-emerald-600 tracking-tight">
-                        {{ $activeClientsCount }}
+                <div class="mt-4 flex items-baseline justify-between">
+                    <div>
+                        <span class="font-poppins text-3xl font-extrabold {{ $lowQuotaClientsCount > 0 ? 'text-amber-600' : 'text-gray-900' }} tracking-tight">
+                            {{ $lowQuotaClientsCount }}
+                        </span>
+                        <span class="font-inter text-xs text-gray-500 ml-1">member</span>
+                    </div>
+                    <span class="font-inter text-[11px] font-semibold text-amber-600 group-hover:underline">
+                        Sisa &le; 2 / Habis &rarr;
                     </span>
-                    <span class="font-inter text-xs text-gray-500 ml-1">member aktif</span>
                 </div>
-            </div>
+            </a>
 
             <!-- Sesi Selesai Bulan Ini -->
             <div class="rounded-2xl bg-white p-5 shadow-xs border border-gray-100 flex flex-col justify-between transition hover:border-gray-200">
@@ -157,6 +166,12 @@
                         Kuota Aktif
                     </a>
                     <a
+                        href="{{ route('trainer.clients.index', array_merge(request()->query(), ['status' => 'low_quota'])) }}"
+                        class="px-3.5 py-2 rounded-xl text-xs font-inter font-semibold transition shrink-0 {{ $statusFilter === 'low_quota' ? 'bg-amber-500 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}"
+                    >
+                        Perlu Perpanjangan
+                    </a>
+                    <a
                         href="{{ route('trainer.clients.index', array_merge(request()->query(), ['status' => 'empty_quota'])) }}"
                         class="px-3.5 py-2 rounded-xl text-xs font-inter font-semibold transition shrink-0 {{ $statusFilter === 'empty_quota' ? 'bg-gray-800 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}"
                     >
@@ -206,9 +221,13 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 @foreach ($clients as $client)
                     @php
-                        $activeQuotas = $client->ptQuotas;
+                        $activeQuotas = $client->ptQuotas->filter(function ($q) {
+                            return $q->status === 'active' && $q->end_date >= \Carbon\Carbon::today();
+                        });
                         $remainingQuotaSum = (int) $activeQuotas->sum('remaining_sessions');
-                        $totalSessionsTogether = $client->memberSessions->count();
+                        $totalPurchasedSessions = (int) ($activeQuotas->isNotEmpty()
+                            ? $activeQuotas->sum('total_sessions')
+                            : $client->ptQuotas->sum('total_sessions'));
                         $completedSessionsTogether = $client->memberSessions->whereIn('status', [\App\Enums\PtSessionStatus::Completed, \App\Enums\PtSessionStatus::Done])->count();
                         $lastSession = $client->memberSessions->first();
                         
@@ -251,13 +270,19 @@
 
                                 <!-- Status Kuota Badge -->
                                 <div>
-                                    @if ($remainingQuotaSum > 0)
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                    @if ($remainingQuotaSum > 2)
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
                                             <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                                            {{ $remainingQuotaSum }} Sesi Aktif
+                                            Sisa {{ $remainingQuotaSum }} Sesi
+                                        </span>
+                                    @elseif ($remainingQuotaSum > 0)
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200/60">
+                                            <span class="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                            Sisa {{ $remainingQuotaSum }} Sesi
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-gray-600 border border-gray-200/60">
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-gray-100 text-gray-600 border border-gray-200/60">
+                                            <span class="h-1.5 w-1.5 rounded-full bg-gray-400"></span>
                                             Kuota Habis
                                         </span>
                                     @endif
@@ -286,12 +311,12 @@
                             <!-- Session summary stats -->
                             <div class="grid grid-cols-2 gap-2 my-3 text-center">
                                 <div class="rounded-xl bg-gray-50/80 p-2.5">
-                                    <span class="block text-[10px] font-bold text-gray-400 uppercase font-inter">Total Sesi</span>
-                                    <span class="font-poppins text-sm font-extrabold text-gray-900">{{ $totalSessionsTogether }}</span>
+                                    <span class="block text-[10px] font-bold text-gray-400 uppercase font-inter">Sesi Selesai</span>
+                                    <span class="font-poppins text-sm font-extrabold text-emerald-600">{{ $completedSessionsTogether }}</span>
                                 </div>
                                 <div class="rounded-xl bg-gray-50/80 p-2.5">
-                                    <span class="block text-[10px] font-bold text-gray-400 uppercase font-inter">Selesai</span>
-                                    <span class="font-poppins text-sm font-extrabold text-emerald-600">{{ $completedSessionsTogether }}</span>
+                                    <span class="block text-[10px] font-bold text-gray-400 uppercase font-inter">Total Sesi</span>
+                                    <span class="font-poppins text-sm font-extrabold text-gray-900">{{ $totalPurchasedSessions }}</span>
                                 </div>
                             </div>
                         </div>
@@ -319,3 +344,4 @@
         @endif
     </div>
 </x-trainer-layout>
+
