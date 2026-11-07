@@ -261,12 +261,14 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'mobileIndex'])->name('mobile.member.profile.index');
 });
 
-Route::prefix('m/trainer')->middleware(['auth', 'role:trainer'])->group(function () {
-    Route::get('/dashboard', function (Request $request, TrainerDashboardController $controller) {
-        $view = $controller->index($request);
-
-        return view('mobile.trainer.dashboard', $view->getData());
-    })->name('mobile.trainer.dashboard');
+Route::prefix('m/trainer')->name('mobile.trainer.')->middleware(['auth', 'role:trainer'])->group(function () {
+    Route::get('/dashboard', [TrainerDashboardController::class, 'mobileDashboard'])->name('dashboard');
+    Route::get('/sessions', [TrainerDashboardController::class, 'mobileSessionsIndex'])->name('sessions.index');
+    Route::get('/sessions/{ptSession}', [TrainerDashboardController::class, 'mobileSessionShow'])->name('sessions.show');
+    Route::post('/sessions/{ptSession}/confirm', [TrainerDashboardController::class, 'confirmSession'])->name('sessions.confirm');
+    Route::post('/sessions/{ptSession}/reject', [TrainerDashboardController::class, 'rejectSession'])->name('sessions.reject');
+    Route::get('/clients', [TrainerDashboardController::class, 'mobileClientsIndex'])->name('clients.index');
+    Route::get('/profile', [TrainerDashboardController::class, 'mobileProfileIndex'])->name('profile.index');
 });
 
 Route::prefix('m')->middleware('guest')->group(function () {

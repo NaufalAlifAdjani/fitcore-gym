@@ -49,6 +49,18 @@ class AutoRedirectMobile
                 return redirect()->route('mobile.trainer.dashboard');
             }
 
+            if ($request->is('trainer/jadwal-sesi') || $request->is('trainer/sessions*')) {
+                return redirect()->route('mobile.trainer.sessions.index');
+            }
+
+            if ($request->is('trainer/klien-saya') || $request->is('trainer/clients*')) {
+                return redirect()->route('mobile.trainer.clients.index');
+            }
+
+            if ($request->is('trainer/profile')) {
+                return redirect()->route('mobile.trainer.profile.index');
+            }
+
             if ($request->is('member/card')) {
                 return redirect()->route('mobile.member.card');
             }
@@ -89,6 +101,10 @@ class AutoRedirectMobile
             }
 
             if ($request->is('profile') || $request->is('profile/*')) {
+                if ($request->user()?->role === 'trainer') {
+                    return redirect()->route('mobile.trainer.profile.index');
+                }
+
                 return redirect()->route('mobile.member.profile.index');
             }
         }
