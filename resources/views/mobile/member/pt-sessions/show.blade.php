@@ -14,7 +14,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
     $profile = $trainer?->trainerProfile;
 @endphp
 
-<x-layouts.mobile-app title="Detail Sesi PT - FitCore Athletic" active-tab="sessions">
+<x-layouts.mobile-app title="Detail Sesi PT - FitCore Athletic" active-tab="pt-sessions">
     <div x-data="{ showCancelModal: false, cancelReason: '' }" class="space-y-4">
 
         <!-- 1. Header Navigation -->

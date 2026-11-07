@@ -12,7 +12,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
     $remainingQuota = $quota->remaining_sessions ?? 0;
 @endphp
 
-<x-layouts.mobile-app title="Booking Sesi PT - FitCore Athletic" active-tab="sessions">
+<x-layouts.mobile-app title="Booking Sesi PT - FitCore Athletic" active-tab="pt-sessions">
     <div x-data="{
         step: 1,
         selectedTrainerId: '{{ $defaultTrainer->id ?? '' }}',
@@ -129,16 +129,16 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         @endif
 
         <!-- 3. Stepper Pills Row (1. Pilih Trainer, 2. Waktu, 3. Konfirmasi) -->
-        <div class="flex items-center gap-1.5 p-1 bg-white rounded-full border border-[#E5E7EB] text-[11px] font-bold text-center shadow-xs">
-            <div class="flex-1 py-1.5 rounded-full transition-all"
+        <div class="flex items-center gap-1 p-1 bg-white rounded-xl border border-[#E5E7EB] text-[11px] font-bold text-center shadow-xs">
+            <div class="flex-1 py-1.5 rounded-lg transition-all"
                  :class="step === 1 ? 'bg-[#ED1B45] text-white shadow-xs' : (step > 1 ? 'text-[#16151A] bg-gray-100' : 'text-[#565A66]')">
                 1. Pilih Trainer
             </div>
-            <div class="flex-1 py-1.5 rounded-full transition-all"
+            <div class="flex-1 py-1.5 rounded-lg transition-all"
                  :class="step === 2 ? 'bg-[#ED1B45] text-white shadow-xs' : (step > 2 ? 'text-[#16151A] bg-gray-100' : 'text-[#565A66]')">
                 2. Waktu
             </div>
-            <div class="flex-1 py-1.5 rounded-full transition-all"
+            <div class="flex-1 py-1.5 rounded-lg transition-all"
                  :class="step === 3 ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66]'">
                 3. Konfirmasi
             </div>
@@ -190,25 +190,25 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 <label class="block text-xs font-bold uppercase tracking-wider text-[#16151A] font-poppins">
                     Pilih Pelatih Pendamping
                 </label>
-                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar">
+                <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
                     <button type="button" @click="activeFilter = 'semua'"
                         :class="activeFilter === 'semua' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
-                        class="px-3 py-1 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs">
+                        class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs whitespace-nowrap">
                         Semua
                     </button>
                     <button type="button" @click="activeFilter = 'hypertrophy'"
                         :class="activeFilter === 'hypertrophy' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
-                        class="px-3 py-1 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs">
+                        class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs whitespace-nowrap">
                         Hypertrophy
                     </button>
                     <button type="button" @click="activeFilter = 'fatloss'"
                         :class="activeFilter === 'fatloss' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
-                        class="px-3 py-1 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs">
+                        class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs whitespace-nowrap">
                         Fat Loss
                     </button>
                     <button type="button" @click="activeFilter = 'rehab'"
                         :class="activeFilter === 'rehab' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
-                        class="px-3 py-1 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs">
+                        class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs whitespace-nowrap">
                         Rehab
                     </button>
                 </div>

@@ -47,7 +47,7 @@
         </a>
 
         <div class="flex items-center gap-2">
-            <a href="{{ route('profile.edit') }}" class="relative block" title="Profil Saya">
+            <a href="{{ route('mobile.member.profile.index') }}" class="relative block" title="Profil Saya">
                 <x-avatar-initial :initials="auth()->user()->name ?? 'MB'" color_theme="red" class="w-8 h-8 text-xs border border-[#E5E7EB] shadow-xs" />
             </a>
         </div>
@@ -59,14 +59,28 @@
     </main>
 
     <!-- Fixed Bottom Tab Bar (Light Theme per DESIGN.md & stitch-prompts #Shared UI Patterns) -->
+    @php
+        $currentRoute = request()->route()?->getName() ?? '';
+        $currentPath = request()->path();
+
+        $resolvedTab = match (true) {
+            in_array($activeTab, ['pt-sessions', 'sessions']) || str_starts_with($currentRoute, 'mobile.member.pt-sessions') || str_starts_with($currentPath, 'm/pt-sessions') => 'pt-sessions',
+            in_array($activeTab, ['packages', 'paket']) || str_starts_with($currentRoute, 'mobile.member.packages') || $currentRoute === 'mobile.packages.index' || str_starts_with($currentPath, 'm/packages') => 'packages',
+            in_array($activeTab, ['card', 'qr']) || $currentRoute === 'mobile.member.card' || str_starts_with($currentPath, 'm/card') => 'card',
+            in_array($activeTab, ['history', 'riwayat', 'riwayat-transaksi']) || str_starts_with($currentRoute, 'mobile.member.riwayat-transaksi') || str_starts_with($currentPath, 'm/riwayat-transaksi') => 'history',
+            $activeTab === 'profile' || str_starts_with($currentRoute, 'mobile.member.profile') || str_starts_with($currentPath, 'm/profile') => 'profile',
+            default => 'beranda',
+        };
+    @endphp
+
     <nav class="fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-lg border-t border-[#E5E7EB] pb-safe shadow-[0_-4px_16px_rgba(0,0,0,0.06)]"
-         x-data="{ currentTab: '{{ $activeTab }}' }">
+         x-data="{ currentNavTab: '{{ $resolvedTab }}' }">
         <div class="max-w-md mx-auto px-3 flex items-center justify-between h-16">
             
             <!-- 1. Beranda -->
             <a href="{{ route('mobile.member.dashboard') }}"
-               class="flex flex-col items-center justify-center flex-1 py-1 transition group"
-               :class="currentTab === 'beranda' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
+               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'beranda' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]' }}"
+               :class="currentNavTab === 'beranda' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
                 <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
@@ -75,8 +89,8 @@
 
             <!-- 2. Sesi PT -->
             <a href="{{ route('mobile.member.pt-sessions.index') }}"
-               class="flex flex-col items-center justify-center flex-1 py-1 transition group"
-               :class="currentTab === 'sessions' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
+               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'pt-sessions' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]' }}"
+               :class="currentNavTab === 'pt-sessions' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
                 <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
@@ -101,8 +115,8 @@
 
             <!-- 4. Paket -->
             <a href="{{ route('mobile.member.packages') }}"
-               class="flex flex-col items-center justify-center flex-1 py-1 transition group"
-               :class="currentTab === 'packages' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
+               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'packages' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]' }}"
+               :class="currentNavTab === 'packages' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
                 <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
@@ -111,8 +125,8 @@
 
             <!-- 5. Riwayat -->
             <a href="{{ route('mobile.member.riwayat-transaksi.index') }}"
-               class="flex flex-col items-center justify-center flex-1 py-1 transition group"
-               :class="currentTab === 'history' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
+               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'history' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]' }}"
+               :class="currentNavTab === 'history' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
                 <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                 </svg>

@@ -87,6 +87,10 @@ class AutoRedirectMobile
             if ($request->is('member/riwayat-transaksi') || $request->is('member/riwayat-transaksi/*')) {
                 return redirect()->route('mobile.member.riwayat-transaksi.index');
             }
+
+            if ($request->is('profile') || $request->is('profile/*')) {
+                return redirect()->route('mobile.member.profile.index');
+            }
         }
 
         return $next($request);

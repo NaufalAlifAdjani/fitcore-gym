@@ -171,6 +171,20 @@ class MobileRedirectTest extends TestCase
         $response->assertRedirect("/m/pt-sessions/{$session->id}");
     }
 
+    public function test_logged_in_member_on_mobile_is_redirected_from_profile_to_m_profile(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $response = $this->actingAs($member)->withHeaders([
+            'User-Agent' => self::IPHONE_USER_AGENT,
+        ])->get('/profile');
+
+        $response->assertRedirect('/m/profile');
+    }
+
     public function test_developer_can_force_mobile_redirect_via_query_parameter(): void
     {
         $response = $this->withHeaders([

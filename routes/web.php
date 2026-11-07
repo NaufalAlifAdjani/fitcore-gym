@@ -257,6 +257,8 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
 
         return view('mobile.member.riwayat-transaksi.index', $view->getData());
     })->name('mobile.member.riwayat-transaksi.index');
+
+    Route::get('/profile', [ProfileController::class, 'mobileIndex'])->name('mobile.member.profile.index');
 });
 
 Route::prefix('m/trainer')->middleware(['auth', 'role:trainer'])->group(function () {

@@ -222,6 +222,12 @@ class MobileMemberDashboardTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Sesi Latihan PT');
         $response->assertSee('+ Booking');
+        $response->assertSee('Semua');
+        $response->assertSee('Menunggu');
+        $response->assertSee('Terkonfirmasi');
+        $response->assertSee('Dibatalkan');
+        // Pastikan active state bottom navbar berada pada tab Sesi PT
+        $response->assertSee('currentNavTab: \'pt-sessions\'', false);
     }
 
     public function test_member_can_submit_pt_booking_from_mobile_wizard(): void
@@ -355,6 +361,31 @@ class MobileMemberDashboardTest extends TestCase
         $response->assertSee('Coach Sarah');
         $response->assertSee('Sesi Hari Ini');
         $response->assertSee('Butuh Respon');
+    }
+
+    public function test_member_can_access_mobile_profile_page(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'name' => 'Budi Pratama',
+            'email' => 'budi@example.com',
+        ]);
+
+        MemberProfile::create([
+            'user_id' => $member->id,
+            'member_code' => 'MEM-123456',
+        ]);
+
+        $response = $this->actingAs($member)->get(route('mobile.member.profile.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Profil Saya');
+        $response->assertSee('Budi Pratama');
+        $response->assertSee('budi@example.com');
+        $response->assertSee('MEM-123456');
+        $response->assertSee('Edit Informasi Akun');
+        $response->assertSee('Perbarui Kata Sandi');
+        $response->assertSee('Keluar dari Akun');
     }
 
     public function test_non_member_cannot_access_mobile_dashboard(): void
