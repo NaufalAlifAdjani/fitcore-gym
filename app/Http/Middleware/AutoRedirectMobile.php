@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Jenssegers\Agent\Agent;
 use Symfony\Component\HttpFoundation\Response;
 
 class AutoRedirectMobile
@@ -19,13 +18,16 @@ class AutoRedirectMobile
             return $next($request);
         }
 
-        // 2. Deteksi apakah perangkat adalah smartphone atau developer memaksa via ?device=mobile
-        // Tidak menyimpan ke session agar tidak membajak tampilan web desktop ketika dibuka kembali normal
+        // 2. Deteksi apakah perangkat adalah smartphone menggunakan Native Regex bawaan (PHP + Laravel)
+        // Mengecualikan tablet agar perangkat berlayar besar tetap mendapatkan tampilan desktop
         $deviceQuery = $request->query('device');
-        $agent = new Agent($request->server->all(), $request->userAgent());
+        $userAgent = $request->userAgent() ?? '';
+
+        $isPhone = (bool) preg_match('/(iphone|ipod|android.*mobile|mobile|blackberry|bb10|iemobile|opera mini)/i', $userAgent);
+        $isTablet = (bool) preg_match('/(ipad|tablet|(android(?!.*mobile))|silk|playbook)/i', $userAgent);
 
         $isMobile = $deviceQuery === 'mobile'
-            || ($deviceQuery !== 'desktop' && $agent->isMobile() && ! $agent->isTablet());
+            || ($deviceQuery !== 'desktop' && $isPhone && ! $isTablet);
 
         // 3. Jika mobile dan URL belum berada di bawah prefix /m/*
         if ($isMobile && ! $request->is('m') && ! $request->is('m/*')) {

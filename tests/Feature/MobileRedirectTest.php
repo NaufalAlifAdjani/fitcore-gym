@@ -193,4 +193,35 @@ class MobileRedirectTest extends TestCase
 
         $response->assertRedirect('/m/login');
     }
+
+    public function test_android_phone_is_automatically_redirected_to_mobile(): void
+    {
+        $androidPhoneUserAgent = 'Mozilla/5.0 (Linux; Android 13; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.43 Mobile Safari/537.36';
+
+        $response = $this->withHeaders([
+            'User-Agent' => $androidPhoneUserAgent,
+        ])->get('/login');
+
+        $response->assertRedirect('/m/login');
+    }
+
+    public function test_tablet_device_stays_on_desktop_view(): void
+    {
+        $ipadUserAgent = 'Mozilla/5.0 (iPad; CPU OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1';
+
+        $response = $this->withHeaders([
+            'User-Agent' => $ipadUserAgent,
+        ])->get('/login');
+
+        $response->assertStatus(200);
+    }
+
+    public function test_mobile_device_can_force_desktop_via_query_parameter(): void
+    {
+        $response = $this->withHeaders([
+            'User-Agent' => self::IPHONE_USER_AGENT,
+        ])->get('/login?device=desktop');
+
+        $response->assertStatus(200);
+    }
 }
