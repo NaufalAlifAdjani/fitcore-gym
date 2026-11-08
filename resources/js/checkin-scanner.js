@@ -1,10 +1,11 @@
 import { Html5Qrcode } from 'html5-qrcode';
 
 /**
- * QR Code Check-In Scanner
+ * QR Code Check-In Scanner (Dual Mode: Hardware Scanner Gun & Webcam)
  *
- * Reads QR codes via device camera and submits the token to the
- * backend for validation. All check-in decisions are made server-side.
+ * Mendukung pembacaan QR Code melalui:
+ * 1. Alat scanner fisik (Barcode/QR Gun USB atau Wireless) via keyboard emulation.
+ * 2. Kamera Webcam / Kamera perangkat (Laptop / HP / Tablet) via html5-qrcode.
  */
 
 // Resolve the POST URL from the Blade data attribute (set in checkin.blade.php)
@@ -12,6 +13,7 @@ const CHECKIN_STORE_URL = document.getElementById('checkin-page')?.dataset?.stor
 
 let html5QrCode = null;
 let isProcessing = false;
+let wasCameraActive = false;
 
 // ── DOM References ──────────────────────────────────────────────────────────
 const startBtn      = document.getElementById('btn-start-scanner');
@@ -20,6 +22,9 @@ const resultBox     = document.getElementById('scan-result');
 const statusText    = document.getElementById('scanner-status');
 const cameraSelect  = document.getElementById('camera-select');
 const cameraWrapper = document.getElementById('camera-wrapper');
+
+const hardwareForm  = document.getElementById('hardware-scanner-form');
+const hardwareInput = document.getElementById('hardware-scanner-input');
 
 // ── Camera Initialization ───────────────────────────────────────────────────
 async function loadCameras() {
@@ -47,7 +52,7 @@ async function loadCameras() {
     }
 }
 
-// ── Scanner Lifecycle ───────────────────────────────────────────────────────
+// ── Scanner Lifecycle (Webcam) ──────────────────────────────────────────────
 async function startScanner() {
     const cameraId = cameraSelect.value;
     if (!cameraId) {
@@ -62,6 +67,7 @@ async function startScanner() {
         startBtn.disabled = true;
         stopBtn.disabled  = false;
         cameraWrapper.classList.remove('hidden');
+        wasCameraActive = true;
 
         await html5QrCode.start(
             cameraId,
@@ -70,7 +76,7 @@ async function startScanner() {
             onScanFailure,
         );
 
-        setStatus('Scanner aktif. Arahkan kamera ke QR Code member.', 'success');
+        setStatus('Scanner aktif. Arahkan kamera atau tembakkan scanner ke QR Code member.', 'success');
     } catch (err) {
         console.error('Scanner start error:', err);
         handleCameraError(err);
@@ -96,18 +102,17 @@ async function stopScanner() {
     startBtn.disabled = false;
     stopBtn.disabled  = true;
     cameraWrapper.classList.add('hidden');
-    setStatus('Scanner dihentikan.', 'idle');
+    setStatus('Scanner kamera dihentikan.', 'idle');
 }
 
-// ── Scan Callbacks ──────────────────────────────────────────────────────────
+// ── Scan Callbacks (Webcam) ─────────────────────────────────────────────────
 async function onScanSuccess(decodedText) {
-    // Prevent duplicate callbacks or rapid repeated scans
     if (isProcessing) {
         return;
     }
     isProcessing = true;
 
-    // Hentikan scanner dan matikan kamera otomatis agar satu QR tidak diproses berulang kali
+    // Hentikan scanner dan matikan kamera otomatis
     await stopScanner();
 
     setStatus('QR Code terbaca. Memvalidasi…', 'info');
@@ -120,12 +125,99 @@ async function onScanSuccess(decodedText) {
         showResult(false, 'Terjadi kesalahan saat memproses check-in.');
     } finally {
         isProcessing = false;
+        focusHardwareInput();
     }
 }
 
 function onScanFailure(_errorMessage) {
     // Silently ignore — continuous scan failures are expected while camera is searching
 }
+
+// ── Hardware Scanner / Manual Input Handling ────────────────────────────────
+function focusHardwareInput() {
+    if (hardwareInput) {
+        hardwareInput.focus();
+        hardwareInput.select();
+    }
+}
+
+async function handleHardwareSubmit(token) {
+    const cleanToken = (token ?? '').trim();
+    if (!cleanToken) {
+        return;
+    }
+
+    if (isProcessing) {
+        return;
+    }
+    isProcessing = true;
+
+    // Jika kamera sedang menyala, hentikan juga
+    if (html5QrCode) {
+        await stopScanner();
+    }
+
+    if (hardwareInput) {
+        hardwareInput.value = '';
+    }
+
+    setStatus('Memvalidasi token member…', 'info');
+    clearResult();
+
+    try {
+        await submitToken(cleanToken);
+    } catch (err) {
+        console.error('Hardware submit error:', err);
+        showResult(false, 'Terjadi kesalahan saat memproses check-in.');
+    } finally {
+        isProcessing = false;
+        focusHardwareInput();
+    }
+}
+
+if (hardwareForm) {
+    hardwareForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await handleHardwareSubmit(hardwareInput?.value);
+    });
+}
+
+// ── Global Hardware Keystroke Buffer (Menangkap Tembakan Scanner Tanpa Harus Klik Input) ──
+let hardwareBuffer = '';
+let lastKeyTime = 0;
+
+document.addEventListener('keydown', async (e) => {
+    const activeEl = document.activeElement;
+    // Jika user sedang aktif mengetik di textarea atau input selain scanner, jangan potong
+    if (activeEl && (activeEl.tagName === 'TEXTAREA' || (activeEl.tagName === 'INPUT' && activeEl !== hardwareInput))) {
+        return;
+    }
+
+    // Jika target sudah hardwareInput, biarkan form onsubmit yang menangani
+    if (activeEl === hardwareInput) {
+        return;
+    }
+
+    const now = Date.now();
+    const key = e.key;
+
+    // Reset buffer jika jeda antar huruf lebih dari 150ms (alat scanner menembak < 50ms per karakter)
+    if (now - lastKeyTime > 150) {
+        hardwareBuffer = '';
+    }
+    lastKeyTime = now;
+
+    if (key === 'Enter') {
+        const token = hardwareBuffer.trim();
+        hardwareBuffer = '';
+        if (token.length >= 8 && !isProcessing) {
+            e.preventDefault();
+            await handleHardwareSubmit(token);
+        }
+    } else if (key.length === 1) {
+        hardwareBuffer += key;
+    }
+});
 
 // ── API Request ─────────────────────────────────────────────────────────────
 async function submitToken(token) {
@@ -160,7 +252,7 @@ async function submitToken(token) {
 
     if (data.success) {
         showResult(true, null, data);
-        setStatus('Check-in berhasil. Klik "Scan Member Berikutnya" untuk melanjutkan.', 'success');
+        setStatus('Check-in berhasil. Siap untuk member berikutnya.', 'success');
         addCheckInToTable(data);
     } else {
         showResult(false, data.message ?? 'Check-in ditolak.');
@@ -309,7 +401,7 @@ function showResult(success, errorMessage = null, data = null) {
                         </svg>
                     </span>
                     <div>
-                        <h3 class="font-poppins text-lg font-bold text-rose-950">Check-in Gagal</h3>
+                        <h3 class="font-poppins text-lg font-bold text-rose-950">Check-in Ditolak</h3>
                         <p class="font-inter text-sm font-semibold text-rose-700 mt-0.5">${escapeHtml(errorMessage ?? 'Check-in ditolak.')}</p>
                     </div>
                 </div>
@@ -334,7 +426,12 @@ function showResult(success, errorMessage = null, data = null) {
     if (scanNextBtn) {
         scanNextBtn.addEventListener('click', async () => {
             clearResult();
-            await startScanner();
+            focusHardwareInput();
+            if (wasCameraActive) {
+                await startScanner();
+            } else {
+                setStatus('Scanner siap. Tembakkan alat scanner atau klik "Mulai Scanner".', 'idle');
+            }
         });
     }
 }
@@ -370,8 +467,16 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // ── Event Listeners ──────────────────────────────────────────────────────────
-startBtn.addEventListener('click', startScanner);
-stopBtn.addEventListener('click', stopScanner);
+startBtn.addEventListener('click', () => {
+    wasCameraActive = true;
+    startScanner();
+});
+
+stopBtn.addEventListener('click', () => {
+    wasCameraActive = false;
+    stopScanner();
+});
 
 // ── Initialise ───────────────────────────────────────────────────────────────
 loadCameras();
+focusHardwareInput();
