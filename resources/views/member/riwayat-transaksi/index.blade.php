@@ -1,4 +1,4 @@
-﻿<x-member-layout title="Riwayat Transaksi - FitCore Athletic" active-nav="riwayat">
+<x-member-layout title="Riwayat Transaksi - FitCore Athletic" active-nav="riwayat">
     <div
         x-data="{
             showDetailModal: false,

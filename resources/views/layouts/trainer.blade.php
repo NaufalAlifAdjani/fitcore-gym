@@ -7,6 +7,10 @@
 
         <title>{{ $title ?? 'FitCore PT Portal - Personal Trainer' }}</title>
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,26 +50,11 @@
             >
                 <div class="flex flex-col">
                     <!-- Brand Logo -->
-                    <div class="flex items-center gap-3 px-6 pt-6 pb-5">
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FF5722] text-white shadow-sm">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="m6.5 6.5 11 11" />
-                                <path d="m21 21-1-1" />
-                                <path d="m3 3 1 1" />
-                                <path d="m18 22 4-4" />
-                                <path d="m2 6 4-4" />
-                                <path d="m3 10 7-7" />
-                                <path d="m14 21 7-7" />
-                            </svg>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-poppins font-extrabold text-xl leading-tight text-gray-900 tracking-tight">
-                                FitCore
-                            </span>
-                            <span class="font-inter text-[10px] font-extrabold tracking-wider text-[#FF5722] uppercase">
-                                PT PORTAL
-                            </span>
-                        </div>
+                    <div class="flex items-center justify-between gap-3 px-6 pt-6 pb-5 border-b border-gray-100">
+                        <img src="{{ asset('images/logo/logo.png') }}" alt="FitCore" class="h-7 w-auto object-contain">
+                        <span class="font-inter text-[9px] font-extrabold tracking-wider text-[#FF5722] uppercase bg-orange-50 px-2 py-0.5 rounded-full border border-orange-200">
+                            PT PORTAL
+                        </span>
                     </div>
 
                     <!-- Floor Active Status Pill -->

@@ -29,11 +29,7 @@
                     <!-- Card Top Header -->
                     <div class="flex items-center justify-between border-b border-orange-100 pb-4">
                         <div class="flex items-center gap-2.5">
-                            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/30">
-                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 012.25 13.5v-3A1.5 1.5 0 013.75 9zm15 0h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 0117.25 13.5v-3a1.5 1.5 0 011.5-1.5zM6.75 12h10.5M5.25 7.5v9M18.75 7.5v9" />
-                                </svg>
-                            </span>
+                            <img src="{{ asset('images/logo/logo-icon.png') }}" alt="FitCore" class="h-9 w-auto object-contain">
                             <div>
                                 <p class="font-heading text-sm font-extrabold tracking-wider text-zinc-900">
                                     FITCORE <span class="text-[#FF5722]">ATHLETIC</span>

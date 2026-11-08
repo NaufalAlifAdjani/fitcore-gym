@@ -1,4 +1,4 @@
-﻿@props([
+@props([
     'title' => null,
     'value' => null,
     'trend_text' => null,

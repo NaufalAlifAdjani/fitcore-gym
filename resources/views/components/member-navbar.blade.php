@@ -1,4 +1,4 @@
-﻿@props([
+@props([
     'active' => null,
 ])
 
@@ -14,17 +14,9 @@
 <header class="sticky top-0 z-40 w-full border-b border-gray-200/80 bg-white/95 backdrop-blur-md" x-data="{ mobileMenuOpen: false }">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
         <!-- Logo -->
-        <a href="{{ route('member.dashboard') }}" class="flex items-center gap-3 group">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 rounded-full shadow-[0_0_12px_rgba(255,87,34,0.35)] transition group-hover:scale-105">
-                <rect width="36" height="36" rx="18" fill="#FF5722"/>
-                <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="white"/>
-            </svg>
-            <div class="flex flex-col">
-                <span class="font-heading text-lg font-extrabold tracking-wider text-zinc-900">
-                    FITCORE <span class="text-[#FF5722]">ATHLETIC</span>
-                </span>
-                <span class="text-[9px] font-bold uppercase tracking-[0.25em] text-zinc-500">Gym &amp; Performance Center</span>
-            </div>
+        <a href="{{ route('member.dashboard') }}" class="flex items-center gap-2 group">
+            <img src="{{ asset('images/logo/logo.png') }}" alt="FITCORE ATHLETIC" class="h-8 sm:h-9 w-auto object-contain transition duration-200 group-hover:scale-105">
+            <span class="sr-only">FITCORE ATHLETIC</span>
         </a>
 
         <!-- Desktop Navigation Items -->

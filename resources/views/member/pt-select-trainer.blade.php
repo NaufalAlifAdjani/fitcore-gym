@@ -1,4 +1,4 @@
-﻿<x-fitcore-layout :title="'Pilih Personal Trainer | FITCORE ATHLETIC'">
+<x-fitcore-layout :title="'Pilih Personal Trainer | FITCORE ATHLETIC'">
 
     <section class="bg-[#F8F9FA] min-h-[calc(100vh-80px-350px)]">
         <div class="max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-14" x-data="{

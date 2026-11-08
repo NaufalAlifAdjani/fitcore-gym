@@ -1,4 +1,4 @@
-﻿<x-app-layout>
+<x-app-layout>
     <div x-data="ptReschedule({
         sessionId: {{ $session->id }},
         trainerId: {{ $trainer->id ?? 1 }},

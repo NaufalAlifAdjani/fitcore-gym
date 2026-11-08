@@ -1,4 +1,4 @@
-﻿<x-member-layout title="Pilih Paket Keanggotaan - FitCore Athletic" active-nav="packages">
+<x-member-layout title="Pilih Paket Keanggotaan - FitCore Athletic" active-nav="packages">
     <!-- Header Section (Nuansa Putih / Light Bersih) -->
     <section class="bg-white border-b border-[#E5E7EB] pt-14 pb-20 px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-5xl text-center">

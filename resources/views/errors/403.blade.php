@@ -1,9 +1,13 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>403 - Akses Ditolak | FitCore Athletic</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,15 +24,8 @@
 
     <div class="w-full max-w-xl mx-auto text-center relative z-10">
         <!-- Brand Logo -->
-        <div class="mb-8 flex items-center justify-center gap-2">
-            <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FF5722] text-white shadow-lg shadow-[#FF5722]/30">
-                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 012.25 13.5v-3A1.5 1.5 0 013.75 9zm15 0h1.5A1.5 1.5 0 0121.75 10.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 0117.25 13.5v-3a1.5 1.5 0 011.5-1.5zM6.75 12h10.5M5.25 7.5v9M18.75 7.5v9" />
-                </svg>
-            </span>
-            <span class="font-poppins font-extrabold text-2xl tracking-tight text-[#16151A]">
-                FIT<span class="text-[#FF5722]">CORE</span>
-            </span>
+        <div class="mb-8 flex items-center justify-center">
+            <img src="{{ asset('images/logo/logo.png') }}" alt="FitCore" class="h-10 w-auto object-contain">
         </div>
 
         <!-- 403 Card Container -->

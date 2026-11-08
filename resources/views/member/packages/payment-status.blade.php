@@ -1,4 +1,4 @@
-﻿<x-member-layout title="Status Pembayaran - FitCore Athletic" active-nav="riwayat">
+<x-member-layout title="Status Pembayaran - FitCore Athletic" active-nav="riwayat">
     <div class="py-16 px-4 sm:px-6 lg:px-8 bg-[#F8F9FA] min-h-screen flex items-center justify-center">
         <div class="mx-auto max-w-xl w-full">
             <div class="rounded-3xl border border-gray-200 bg-white p-8 sm:p-10 shadow-xl text-center">

@@ -1,4 +1,4 @@
-﻿@php
+@php
     $isPt = $payment->package_type === 'pt_session' || $payment->payment_type === 'pt_package';
     $packageName = $isPt
         ? ($payment->ptPackage?->name ?? 'Personal Trainer Session')

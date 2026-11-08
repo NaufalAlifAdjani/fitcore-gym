@@ -1,4 +1,4 @@
-﻿<x-app-layout>
+<x-app-layout>
     <div x-data="ptBooking({
         trainerId: {{ $trainer->id ?? 1 }},
         initialDate: '{{ now()->toDateString() }}',

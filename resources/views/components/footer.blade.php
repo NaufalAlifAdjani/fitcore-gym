@@ -1,19 +1,10 @@
-﻿<footer class="bg-[#F8F9FA] border-t border-gray-200 text-zinc-600 pt-14 pb-8 px-4 sm:px-6 lg:px-8 mt-auto">
+<footer class="bg-[#F8F9FA] border-t border-gray-200 text-zinc-600 pt-14 pb-8 px-4 sm:px-6 lg:px-8 mt-auto">
     <div class="max-w-7xl mx-auto space-y-12">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
             <!-- Brand & Jam Operasional (5 Cols) -->
             <div class="md:col-span-5 space-y-5">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-[#FF5722] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#FF5722]/30">
-                        <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 16.5 18 4.5"/>
-                            <path d="m14 4 4 4"/>
-                            <path d="m6 20 4-4"/>
-                        </svg>
-                    </div>
-                    <span class="text-xl font-black tracking-wider text-zinc-900 uppercase font-heading">
-                        FITCORE
-                    </span>
+                    <img src="{{ asset('images/logo/logo.png') }}" alt="FitCore Athletic" class="h-9 w-auto object-contain">
                 </div>
 
                 <p class="text-xs text-zinc-500 leading-relaxed max-w-sm">
