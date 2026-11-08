@@ -26,6 +26,66 @@
 
             <!-- Scanner Card -->
             <div class="bg-white rounded-[20px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-[#E5E7EB] p-6 sm:p-8 space-y-6">
+                <!-- Hardware Scanner (USB/Wireless Gun) & Manual Input Section -->
+                <div class="rounded-2xl bg-[#F6F6F7]/80 border border-[#E5E7EB] p-4 sm:p-5 space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#ED1B45]/10 text-[#ED1B45] shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+                                </svg>
+                            </span>
+                            <label for="hardware-scanner-input" class="font-poppins text-xs font-bold uppercase tracking-wider text-[#16151A]">
+                                Alat Scanner Fisik (USB / Wireless) &amp; Input Token
+                            </label>
+                        </div>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold font-inter bg-emerald-50 text-emerald-700 border border-emerald-200 w-fit">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Siap Terima Tembakan Scanner
+                        </span>
+                    </div>
+
+                    <form id="hardware-scanner-form" class="flex flex-col sm:flex-row gap-2.5" onsubmit="return false;">
+                        <div class="relative flex-1">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+                                </svg>
+                            </div>
+                            <input
+                                id="hardware-scanner-input"
+                                type="text"
+                                autocomplete="off"
+                                autofocus
+                                placeholder="Tembak QR dengan alat scanner atau masukkan token manual..."
+                                class="w-full rounded-xl border border-[#E5E7EB] bg-white py-2.5 pl-10 pr-4 text-sm font-inter text-[#16151A] shadow-xs focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition placeholder:text-slate-400"
+                            />
+                        </div>
+                        <button
+                            id="btn-submit-hardware"
+                            type="submit"
+                            class="bg-[#16151A] hover:bg-black text-white px-5 py-2.5 rounded-xl font-inter font-semibold transition text-sm flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                            <span>Verifikasi</span>
+                        </button>
+                    </form>
+                    <p class="text-[11px] font-inter text-[#565A66]">
+                        Cukup tembakkan alat scanner ke layar HP member. Hasil scan akan otomatis terkirim tanpa perlu menekan tombol apa pun.
+                    </p>
+                </div>
+
+                <!-- Divider: Opsi Alternatif Menggunakan Kamera -->
+                <div class="relative flex py-1 items-center">
+                    <div class="flex-grow border-t border-[#E5E7EB]"></div>
+                    <span class="flex-shrink mx-4 text-[11px] font-bold uppercase tracking-widest text-[#565A66] font-inter bg-white px-2">
+                        Atau Gunakan Kamera Webcam
+                    </span>
+                    <div class="flex-grow border-t border-[#E5E7EB]"></div>
+                </div>
+
                 <!-- Camera Controls -->
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-[#E5E7EB]">
                     <div class="space-y-1.5 flex-1">
@@ -192,19 +252,19 @@
                 <div class="grid gap-3 sm:grid-cols-2 text-xs font-inter text-[#565A66]">
                     <div class="flex items-start gap-2.5 p-3 rounded-xl bg-[#F6F6F7]">
                         <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#FF5722] text-[10px] shadow-xs">1</span>
-                        <span>Berikan izin kamera browser dan pilih kamera belakang jika menggunakan tablet/hp.</span>
+                        <span><strong>Alat Scanner Fisik (Rekomendasi):</strong> Tancapkan scanner USB/Wireless, arahkan laser scanner ke layar HP member.</span>
                     </div>
                     <div class="flex items-start gap-2.5 p-3 rounded-xl bg-[#F6F6F7]">
                         <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#FF5722] text-[10px] shadow-xs">2</span>
-                        <span>Klik <strong>Mulai Scanner</strong>, lalu arahkan kamera ke layar QR Code member.</span>
+                        <span><strong>Kamera Webcam:</strong> Berikan izin kamera browser, klik <strong>Mulai Scanner</strong>, lalu posisikan QR Code di layar.</span>
                     </div>
                     <div class="flex items-start gap-2.5 p-3 rounded-xl bg-[#F6F6F7]">
                         <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#FF5722] text-[10px] shadow-xs">3</span>
-                        <span>Sistem otomatis memverifikasi masa aktif membership dan status verifikasi bayar.</span>
+                        <span>Sistem otomatis memverifikasi masa aktif membership dan status verifikasi bayar tanpa intervensi manual.</span>
                     </div>
                     <div class="flex items-start gap-2.5 p-3 rounded-xl bg-[#F6F6F7]">
                         <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#FF5722] text-[10px] shadow-xs">4</span>
-                        <span>Check-in berlaku maksimal 1x per hari per member untuk mencegah penyalahgunaan pass.</span>
+                        <span>Check-in berlaku maksimal 1x per hari per member. Data langsung masuk ke tabel kehadiran hari ini secara real-time.</span>
                     </div>
                 </div>
             </div>
