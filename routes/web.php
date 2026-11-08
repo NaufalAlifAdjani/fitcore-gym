@@ -301,3 +301,16 @@ Route::prefix('m')->middleware('guest')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Fallback untuk rute /m/* yang tidak terdaftar agar tetap diproses oleh AutoRedirectMobile
+Route::get('/m/{any}', function (Request $request) {
+    if ($request->user()) {
+        return match ($request->user()->role) {
+            'trainer' => redirect()->route('mobile.trainer.dashboard'),
+            'admin' => redirect()->route('admin.dashboard'),
+            default => redirect()->route('mobile.member.dashboard'),
+        };
+    }
+
+    return redirect()->route('mobile.landing.index');
+})->where('any', '.*')->name('mobile.fallback');

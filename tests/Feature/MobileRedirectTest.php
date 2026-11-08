@@ -224,4 +224,153 @@ class MobileRedirectTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_desktop_guest_visiting_m_root_is_redirected_to_desktop_root(): void
+    {
+        $response = $this->withHeaders([
+            'User-Agent' => self::DESKTOP_USER_AGENT,
+        ])->get('/m');
+
+        $response->assertRedirect('/');
+    }
+
+    public function test_desktop_guest_visiting_m_public_pages_is_redirected_to_desktop_equivalents(): void
+    {
+        $responsePackages = $this->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/packages-info');
+        $responsePackages->assertRedirect('/packages');
+
+        $responseTrainers = $this->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/trainers');
+        $responseTrainers->assertRedirect('/trainers');
+
+        $responseAbout = $this->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/about');
+        $responseAbout->assertRedirect('/about');
+
+        $responseLogin = $this->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/login');
+        $responseLogin->assertRedirect('/login');
+
+        $responseRegister = $this->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/register');
+        $responseRegister->assertRedirect('/register');
+    }
+
+    public function test_desktop_logged_in_member_visiting_m_dashboard_is_redirected_to_member_dashboard(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $response = $this->actingAs($member)->withHeaders([
+            'User-Agent' => self::DESKTOP_USER_AGENT,
+        ])->get('/m/dashboard');
+
+        $response->assertRedirect('/member/dashboard');
+    }
+
+    public function test_desktop_logged_in_member_visiting_m_member_routes_is_redirected_to_desktop_equivalents(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $package = MembershipPackage::create([
+            'name' => 'Paket Silver',
+            'type' => 'membership',
+            'duration_days' => 30,
+            'price' => 200000,
+            'status' => 'active',
+            'is_active' => true,
+        ]);
+
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1122334455',
+            'account_holder' => 'FitCore Gym',
+            'status' => 'active',
+        ]);
+
+        $payment = Payment::create([
+            'invoice_id' => 'INV-TEST123',
+            'member_id' => $member->id,
+            'package_id' => $package->id,
+            'package_type' => 'membership',
+            'payment_type' => 'membership',
+            'amount' => 200500,
+            'bank_id' => $bank->id,
+            'status' => 'pending',
+        ]);
+
+        // /m/card -> /member/card
+        $resCard = $this->actingAs($member)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/card');
+        $resCard->assertRedirect('/member/card');
+
+        // /m/packages -> /membership/packages
+        $resPackages = $this->actingAs($member)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/packages');
+        $resPackages->assertRedirect('/membership/packages');
+
+        // /m/packages/{id}/checkout -> /membership/checkout/{id}
+        $resCheckout = $this->actingAs($member)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get("/m/packages/{$package->id}/checkout");
+        $resCheckout->assertRedirect("/membership/checkout/{$package->id}");
+
+        // /m/payment-status/{id} -> /membership/payment-status/{id}
+        $resPayment = $this->actingAs($member)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get("/m/payment-status/{$payment->id}");
+        $resPayment->assertRedirect("/membership/payment-status/{$payment->id}");
+
+        // /m/pt-sessions -> /pt-sessions
+        $resSessions = $this->actingAs($member)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/pt-sessions');
+        $resSessions->assertRedirect('/pt-sessions');
+
+        // /m/pt-sessions/booking -> /pt-sessions/create
+        $resBooking = $this->actingAs($member)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/pt-sessions/booking');
+        $resBooking->assertRedirect('/pt-sessions/create');
+
+        // /m/profile -> /profile
+        $resProfile = $this->actingAs($member)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/profile');
+        $resProfile->assertRedirect('/profile');
+    }
+
+    public function test_desktop_logged_in_trainer_visiting_m_trainer_routes_is_redirected_to_desktop_equivalents(): void
+    {
+        $trainer = User::factory()->create([
+            'role' => 'trainer',
+            'email_verified_at' => now(),
+        ]);
+
+        // /m/trainer/dashboard -> /trainer/dashboard
+        $resDash = $this->actingAs($trainer)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/trainer/dashboard');
+        $resDash->assertRedirect('/trainer/dashboard');
+
+        // /m/trainer/sessions -> /trainer/jadwal-sesi
+        $resSessions = $this->actingAs($trainer)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/trainer/sessions');
+        $resSessions->assertRedirect('/trainer/jadwal-sesi');
+
+        // /m/trainer/clients -> /trainer/klien-saya
+        $resClients = $this->actingAs($trainer)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/trainer/clients');
+        $resClients->assertRedirect('/trainer/klien-saya');
+
+        // /m/trainer/profile -> /profile
+        $resProfile = $this->actingAs($trainer)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/trainer/profile');
+        $resProfile->assertRedirect('/profile');
+    }
+
+    public function test_desktop_device_with_device_mobile_override_can_stay_on_m_routes(): void
+    {
+        $response = $this->withHeaders([
+            'User-Agent' => self::DESKTOP_USER_AGENT,
+        ])->get('/m?device=mobile');
+
+        $response->assertStatus(200);
+    }
+
+    public function test_desktop_unknown_m_route_falls_back_appropriately(): void
+    {
+        // Guest fallback -> /
+        $resGuest = $this->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/random-nonexistent-route');
+        $resGuest->assertRedirect('/');
+
+        // Member fallback -> /member/dashboard
+        $member = User::factory()->create(['role' => 'member']);
+        $resMember = $this->actingAs($member)->withHeaders(['User-Agent' => self::DESKTOP_USER_AGENT])->get('/m/random-nonexistent-route');
+        $resMember->assertRedirect('/member/dashboard');
+    }
 }

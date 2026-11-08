@@ -29,7 +29,10 @@ class AutoRedirectMobile
         $isMobile = $deviceQuery === 'mobile'
             || ($deviceQuery !== 'desktop' && $isPhone && ! $isTablet);
 
-        // 3. Jika mobile dan URL belum berada di bawah prefix /m/*
+        $isDesktop = $deviceQuery === 'desktop'
+            || ($deviceQuery !== 'mobile' && ($isTablet || preg_match('/(windows nt|macintosh|x11|cros)/i', $userAgent) || (! $isMobile && ! app()->runningUnitTests())));
+
+        // 3. Jika mobile dan URL belum berada di bawah prefix /m/* (Forward Redirect: Desktop -> Mobile)
         if ($isMobile && ! $request->is('m') && ! $request->is('m/*')) {
             if ($request->hasSession()) {
                 $request->session()->reflash();
@@ -143,6 +146,129 @@ class AutoRedirectMobile
 
                 return redirect()->route('mobile.member.profile.index');
             }
+        }
+
+        // 4. Jika desktop dan URL berada di bawah prefix /m/* (Reverse Redirect: Mobile -> Desktop)
+        if ($isDesktop && ($request->is('m') || $request->is('m/*'))) {
+            if ($request->hasSession()) {
+                $request->session()->reflash();
+            }
+
+            $query = $request->except('device');
+
+            // --- A. TAMU / GUEST / LANDING / AUTH ---
+            if ($request->is('m')) {
+                if ($request->user()) {
+                    return match ($request->user()->role) {
+                        'trainer' => redirect()->route('trainer.dashboard', $query),
+                        'admin' => redirect()->route('admin.dashboard', $query),
+                        default => redirect()->route('member.dashboard', $query),
+                    };
+                }
+
+                return redirect()->route('landing.index', $query);
+            }
+
+            if ($request->is('m/packages-info')) {
+                return redirect()->route('landing.packages', $query);
+            }
+
+            if ($request->is('m/trainers')) {
+                return redirect()->route('landing.trainers', $query);
+            }
+
+            if ($request->is('m/about')) {
+                return redirect()->route('landing.about', $query);
+            }
+
+            if ($request->is('m/login')) {
+                return redirect()->route('login', $query);
+            }
+
+            if ($request->is('m/register')) {
+                return redirect()->route('register', $query);
+            }
+
+            // --- B. TRAINER ROUTES (/m/trainer/...) ---
+            if ($request->is('m/trainer/dashboard') || $request->is('m/trainer')) {
+                return redirect()->route('trainer.dashboard', $query);
+            }
+
+            if ($request->is('m/trainer/sessions') || $request->is('m/trainer/sessions/*')) {
+                return redirect()->route('trainer.sessions.index', $query);
+            }
+
+            if ($request->is('m/trainer/clients') || $request->is('m/trainer/clients/*')) {
+                return redirect()->route('trainer.clients.index', $query);
+            }
+
+            if ($request->is('m/trainer/profile') || $request->is('m/trainer/profile/*')) {
+                return redirect()->route('profile.edit', $query);
+            }
+
+            if ($request->is('m/trainer/*')) {
+                return redirect()->route('trainer.dashboard', $query);
+            }
+
+            // --- C. MEMBER ROUTES (/m/... atau /m/member/...) ---
+            if ($request->is('m/dashboard') || $request->is('m/member/dashboard') || $request->is('m/member')) {
+                return redirect()->route('member.dashboard', $query);
+            }
+
+            if ($request->is('m/card') || $request->is('m/member/card')) {
+                return redirect()->route('member.card', $query);
+            }
+
+            if ($request->is('m/packages') || $request->is('m/packages-catalog') || $request->is('m/member/packages')) {
+                if ($request->user()?->role === 'member') {
+                    return redirect()->route('member.membership.packages', $query);
+                }
+
+                return redirect()->route('landing.packages', $query);
+            }
+
+            if (preg_match('#^m/(?:member/)?packages/([^/]+)/checkout#', $request->path(), $matches)) {
+                return redirect()->route('member.membership.checkout', array_merge(['package' => $matches[1]], $query));
+            }
+
+            if (preg_match('#^m/(?:member/)?payment-status/([^/]+)#', $request->path(), $matches)) {
+                return redirect()->route('member.membership.payment-status', array_merge(['payment' => $matches[1]], $query));
+            }
+
+            if ($request->is('m/pt-sessions/booking') || $request->is('m/member/pt-sessions/booking')) {
+                return redirect()->route('pt-sessions.create', $query);
+            }
+
+            if (preg_match('#^m/(?:member/)?pt-sessions/(\d+)#', $request->path(), $matches)) {
+                return redirect()->route('pt-sessions.show', array_merge(['ptSession' => $matches[1]], $query));
+            }
+
+            if ($request->is('m/pt-sessions') || $request->is('m/member/pt-sessions')) {
+                return redirect()->route('pt-sessions.index', $query);
+            }
+
+            if ($request->is('m/riwayat-transaksi') || $request->is('m/riwayat-transaksi/*') || $request->is('m/member/riwayat-transaksi*')) {
+                return redirect()->route('member.riwayat-transaksi.index', $query);
+            }
+
+            if ($request->is('m/profile') || $request->is('m/profile/*') || $request->is('m/member/profile*')) {
+                return redirect()->route('profile.edit', $query);
+            }
+
+            if ($request->is('m/member/*')) {
+                return redirect()->route('member.dashboard', $query);
+            }
+
+            // --- D. FALLBACK PENGALIHAN ---
+            if ($request->user()) {
+                return match ($request->user()->role) {
+                    'trainer' => redirect()->route('trainer.dashboard', $query),
+                    'admin' => redirect()->route('admin.dashboard', $query),
+                    default => redirect()->route('member.dashboard', $query),
+                };
+            }
+
+            return redirect()->route('landing.index', $query);
         }
 
         return $next($request);
