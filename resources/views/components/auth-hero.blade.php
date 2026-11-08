@@ -1,14 +1,14 @@
 <div class="relative overflow-hidden p-8 sm:p-12 lg:p-16 flex flex-col justify-between min-h-full"
      style="background: 
-        radial-gradient(circle at 10% 25%, rgba(180, 10, 50, 0.28) 0%, rgba(100, 10, 40, 0.15) 35%, transparent 70%),
-        linear-gradient(135deg, #1c0822 0%, #120718 45%, #0b040e 100%);">
+        radial-gradient(circle at 10% 25%, rgba(255, 87, 34, 0.32) 0%, rgba(255, 107, 0, 0.18) 35%, transparent 70%),
+        linear-gradient(135deg, #1f120c 0%, #140d09 45%, #0b0705 100%);">
 
-    <!-- Efek Cahaya Merah Halus & Elegan (Subtle Red Ambient Glow) -->
+    <!-- Efek Cahaya Blaze Orange & Amber Halus (Athletic Flame Ambient Glow) -->
     <div class="absolute -top-16 -left-16 w-[450px] h-[450px] rounded-full pointer-events-none"
-         style="background: radial-gradient(circle, rgba(190, 15, 50, 0.35) 0%, rgba(130, 10, 40, 0.18) 50%, transparent 70%); filter: blur(90px); -webkit-filter: blur(90px);"></div>
+         style="background: radial-gradient(circle, rgba(255, 87, 34, 0.38) 0%, rgba(255, 107, 0, 0.2) 50%, transparent 70%); filter: blur(90px); -webkit-filter: blur(90px);"></div>
          
     <div class="absolute top-[15%] -left-10 w-[550px] h-[320px] rounded-full pointer-events-none -rotate-[22deg]"
-         style="background: linear-gradient(135deg, rgba(200, 20, 60, 0.25) 0%, rgba(140, 10, 45, 0.12) 50%, transparent 75%); filter: blur(100px); -webkit-filter: blur(100px);"></div>
+         style="background: linear-gradient(135deg, rgba(255, 138, 101, 0.28) 0%, rgba(255, 87, 34, 0.15) 50%, transparent 75%); filter: blur(100px); -webkit-filter: blur(100px);"></div>
 
     <!-- Konten Teks Headline Dinamis -->
     <div class="relative z-10 max-w-xl">

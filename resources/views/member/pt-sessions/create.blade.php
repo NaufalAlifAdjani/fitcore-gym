@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <div x-data="ptBooking({
         trainerId: {{ $trainer->id ?? 1 }},
         initialDate: '{{ now()->toDateString() }}',
@@ -31,7 +31,7 @@
                             <button 
                                 type="button" 
                                 @click="goToToday()"
-                                class="px-4 py-1.5 text-xs font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#ED1B45] hover:text-[#ED1B45] active:bg-gray-100 transition shadow-2xs cursor-pointer"
+                                class="px-4 py-1.5 text-xs font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#FF5722] hover:text-[#FF5722] active:bg-gray-100 transition shadow-2xs cursor-pointer"
                             >
                                 Today
                             </button>
@@ -84,7 +84,7 @@
                                     <div 
                                         @click="!day.isPast && selectDate(day.date)"
                                         :class="{
-                                            'bg-[#ED1B45]/10 ring-2 ring-inset ring-[#ED1B45] font-bold': selectedDate === day.date,
+                                            'bg-[#FF5722]/10 ring-2 ring-inset ring-[#FF5722] font-bold': selectedDate === day.date,
                                             'bg-white hover:bg-gray-50/80 cursor-pointer': selectedDate !== day.date && !day.isPast && day.isCurrentMonth,
                                             'bg-gray-50/50 hover:bg-gray-100/70 cursor-pointer': selectedDate !== day.date && !day.isPast && !day.isCurrentMonth,
                                             'bg-gray-50/70 opacity-40 cursor-not-allowed': day.isPast
@@ -94,10 +94,10 @@
                                         <!-- Day Number Header -->
                                         <div class="flex items-center justify-center mt-0.5">
                                             <template x-if="selectedDate === day.date">
-                                                <div class="w-7 h-7 rounded-full bg-[#ED1B45] text-white font-bold text-xs sm:text-sm flex items-center justify-center shadow-xs" x-text="day.dayNum"></div>
+                                                <div class="w-7 h-7 rounded-full bg-[#FF5722] text-white font-bold text-xs sm:text-sm flex items-center justify-center shadow-xs" x-text="day.dayNum"></div>
                                             </template>
                                             <template x-if="selectedDate !== day.date && day.isToday">
-                                                <div class="w-7 h-7 rounded-full bg-white border-2 border-[#ED1B45] text-[#ED1B45] font-bold text-xs sm:text-sm flex items-center justify-center shadow-2xs" x-text="day.dayNum"></div>
+                                                <div class="w-7 h-7 rounded-full bg-white border-2 border-[#FF5722] text-[#FF5722] font-bold text-xs sm:text-sm flex items-center justify-center shadow-2xs" x-text="day.dayNum"></div>
                                             </template>
                                             <template x-if="selectedDate !== day.date && !day.isToday">
                                                 <span class="text-xs sm:text-sm font-medium" :class="day.isCurrentMonth ? 'text-[#16151A]' : 'text-gray-400'" x-text="day.dayNum"></span>
@@ -108,7 +108,7 @@
                                         <div class="mt-1 flex items-center justify-center">
                                             <template x-if="!day.isPast && availabilityMap[day.date] === true">
                                                 <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
-                                                      :class="selectedDate === day.date ? 'bg-[#ED1B45] text-white' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'">
+                                                      :class="selectedDate === day.date ? 'bg-[#FF5722] text-white' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'">
                                                     <span class="w-1.5 h-1.5 rounded-full" :class="selectedDate === day.date ? 'bg-white' : 'bg-emerald-500'"></span>
                                                     <span class="hidden sm:inline">Ada slot</span>
                                                 </span>
@@ -131,14 +131,14 @@
                                     Pilih Jam Sesi
                                 </h2>
                                 <p class="text-xs text-[#565A66] mt-0.5">
-                                    Jadwal untuk: <span class="font-bold text-[#ED1B45]" x-text="formattedSelectedDate || selectedDate"></span>
+                                    Jadwal untuk: <span class="font-bold text-[#FF5722]" x-text="formattedSelectedDate || selectedDate"></span>
                                 </p>
                             </div>
                         </div>
 
                         <!-- Loading Slots Indicator -->
                         <div x-show="isLoadingSlots" class="py-12 text-center space-y-3">
-                            <div class="inline-block w-8 h-8 border-4 border-[#ED1B45] border-t-transparent rounded-full animate-spin"></div>
+                            <div class="inline-block w-8 h-8 border-4 border-[#FF5722] border-t-transparent rounded-full animate-spin"></div>
                             <p class="text-xs text-[#565A66]">Memeriksa ketersediaan jam latihan...</p>
                         </div>
 
@@ -155,13 +155,13 @@
                                         <div class="relative">
                                             <!-- SLOT DIPILIH Badge -->
                                             <div x-show="selectedSlot === slot.time"
-                                                class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
+                                                class="absolute -top-2.5 right-2 bg-[#FF5722] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
                                                 SLOT DIPILIH
                                             </div>
                                             <button type="button"
                                                 @click="slot.status === 'available' && selectSlot(slot.time)"
                                                 :disabled="slot.status !== 'available'" :class="{
-                                                        'bg-[#FFE8EC] border-2 border-[#ED1B45] text-[#ED1B45] shadow-sm font-bold': selectedSlot === slot.time,
+                                                        'bg-[#FFE8EC] border-2 border-[#FF5722] text-[#FF5722] shadow-sm font-bold': selectedSlot === slot.time,
                                                         'bg-white hover:bg-zinc-50 border border-[#E5E7EB] text-[#16151A] hover:border-red-300': selectedSlot !== slot.time && slot.status === 'available',
                                                         'bg-[#F9FAFB] border border-[#E5E7EB] text-zinc-400 cursor-not-allowed opacity-60': slot.status !== 'available'
                                                     }"
@@ -182,13 +182,13 @@
                                     <template x-for="slot in slots.afternoon" :key="slot.time">
                                         <div class="relative">
                                             <div x-show="selectedSlot === slot.time"
-                                                class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
+                                                class="absolute -top-2.5 right-2 bg-[#FF5722] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
                                                 SLOT DIPILIH
                                             </div>
                                             <button type="button"
                                                 @click="slot.status === 'available' && selectSlot(slot.time)"
                                                 :disabled="slot.status !== 'available'" :class="{
-                                                        'bg-[#FFE8EC] border-2 border-[#ED1B45] text-[#ED1B45] shadow-sm font-bold': selectedSlot === slot.time,
+                                                        'bg-[#FFE8EC] border-2 border-[#FF5722] text-[#FF5722] shadow-sm font-bold': selectedSlot === slot.time,
                                                         'bg-white hover:bg-zinc-50 border border-[#E5E7EB] text-[#16151A] hover:border-red-300': selectedSlot !== slot.time && slot.status === 'available',
                                                         'bg-[#F9FAFB] border border-[#E5E7EB] text-zinc-400 cursor-not-allowed opacity-60': slot.status !== 'available'
                                                     }"
@@ -209,13 +209,13 @@
                                     <template x-for="slot in slots.evening" :key="slot.time">
                                         <div class="relative">
                                             <div x-show="selectedSlot === slot.time"
-                                                class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
+                                                class="absolute -top-2.5 right-2 bg-[#FF5722] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
                                                 SLOT DIPILIH
                                             </div>
                                             <button type="button"
                                                 @click="slot.status === 'available' && selectSlot(slot.time)"
                                                 :disabled="slot.status !== 'available'" :class="{
-                                                        'bg-[#FFE8EC] border-2 border-[#ED1B45] text-[#ED1B45] shadow-sm font-bold': selectedSlot === slot.time,
+                                                        'bg-[#FFE8EC] border-2 border-[#FF5722] text-[#FF5722] shadow-sm font-bold': selectedSlot === slot.time,
                                                         'bg-white hover:bg-zinc-50 border border-[#E5E7EB] text-[#16151A] hover:border-red-300': selectedSlot !== slot.time && slot.status === 'available',
                                                         'bg-[#F9FAFB] border border-[#E5E7EB] text-zinc-400 cursor-not-allowed opacity-60': slot.status !== 'available'
                                                     }"
@@ -253,7 +253,7 @@
                                     <h3 class="text-sm font-bold text-[#16151A] truncate">
                                         {{ $trainer?->name ?? 'Coach Rama Prasetya' }}
                                     </h3>
-                                    <span class="text-[#ED1B45] text-xs">✓</span>
+                                    <span class="text-[#FF5722] text-xs">✓</span>
                                 </div>
                                 <p class="text-[11px] text-[#565A66]">
                                     {{ $trainer?->trainerProfile?->specialization ?? 'Hypertrophy & Strength Conditioning' }}
@@ -266,7 +266,7 @@
                             <div class="flex justify-between items-center text-xs">
                                 <span class="text-[#565A66] font-medium">Sisa Kuota Sesi</span>
                                 <div class="font-bold">
-                                    <span class="text-[#ED1B45]">{{ $quota->remaining_sessions ?? 0 }}</span>
+                                    <span class="text-[#FF5722]">{{ $quota->remaining_sessions ?? 0 }}</span>
                                     <span class="text-[#16151A]"> / {{ $quota->total_sessions ?? 0 }} Sesi</span>
                                 </div>
                             </div>
@@ -276,7 +276,7 @@
                                 $pct = $total > 0 ? round(($rem / $total) * 100) : 0;
                             @endphp
                             <div class="w-full bg-zinc-100 rounded-full h-2 overflow-hidden">
-                                <div class="bg-[#ED1B45] h-full rounded-full transition-all duration-300"
+                                <div class="bg-[#FF5722] h-full rounded-full transition-all duration-300"
                                     style="width: {{ $pct }}%"></div>
                             </div>
                             <p class="text-[11px] text-[#565A66]">
@@ -287,7 +287,7 @@
 
                     <!-- Ringkasan Booking Card -->
                     <div class="bg-[#141414] rounded-3xl p-6 relative overflow-hidden text-white shadow-xl space-y-5">
-                        <div class="absolute -top-12 -right-12 w-44 h-44 bg-[#ED1B45]/20 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute -top-12 -right-12 w-44 h-44 bg-[#FF5722]/20 rounded-full blur-3xl pointer-events-none"></div>
 
                         <h3 class="text-base font-extrabold text-white font-heading">
                             Ringkasan Booking
@@ -332,7 +332,7 @@
                             <input type="hidden" name="start_time" :value="selectedSlot">
 
                             <button type="submit" :disabled="!selectedDate || !selectedSlot" :class="{
-                                        'bg-[#ED1B45] hover:bg-[#D1123D] text-white shadow-lg shadow-[#ED1B45]/30 cursor-pointer': selectedDate && selectedSlot,
+                                        'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-lg shadow-[#FF5722]/30 cursor-pointer': selectedDate && selectedSlot,
                                         'bg-zinc-800 text-zinc-500 cursor-not-allowed': !selectedDate || !selectedSlot
                                     }"
                                 class="w-full py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2">
@@ -380,7 +380,7 @@
 
                     <!-- Modal Title -->
                     <h3 class="text-2xl font-black text-white font-heading">
-                        Booking Berhasil <span class="text-[#ED1B45]">Diajukan!</span>
+                        Booking Berhasil <span class="text-[#FF5722]">Diajukan!</span>
                     </h3>
 
                     <!-- Subtext -->
@@ -391,7 +391,7 @@
                     <!-- Action Button -->
                     <div class="pt-2">
                         <a href="{{ route('pt-sessions.index') }}"
-                            class="inline-block w-full py-3 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white font-bold text-xs uppercase tracking-wider transition-colors">
+                            class="inline-block w-full py-3 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider transition-colors">
                             Lihat di Riwayat Sesi
                         </a>
                     </div>

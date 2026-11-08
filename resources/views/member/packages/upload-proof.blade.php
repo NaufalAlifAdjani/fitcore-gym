@@ -1,16 +1,16 @@
-<x-member-layout title="Upload Bukti Pembayaran - FitCore Athletic" active-nav="packages">
+﻿<x-member-layout title="Upload Bukti Pembayaran - FitCore Athletic" active-nav="packages">
     <div class="bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8 text-slate-900 border-b border-slate-200">
         <div class="mx-auto max-w-6xl">
             <!-- Breadcrumb Navigation -->
             <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <a href="{{ route('member.membership.checkout', $package->id) }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#BA0030] transition">
+                <a href="{{ route('member.membership.checkout', $package->id) }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#FF5722] transition">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Kembali ke Detail Pembayaran
                 </a>
                 <div class="flex items-center gap-2 text-xs font-bold text-slate-500">
                     <span class="text-slate-400">Langkah 1: Konfirmasi Pembayaran</span>
                     <span>•</span>
-                    <span class="text-[#BA0030]">Langkah 2: Form Bukti Transfer</span>
+                    <span class="text-[#FF5722]">Langkah 2: Form Bukti Transfer</span>
                 </div>
             </div>
 
@@ -46,14 +46,14 @@
 
                         <div class="flex items-center gap-4">
                             <div class="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-slate-900 flex items-center justify-center border border-slate-800 shadow-inner">
-                                <svg class="h-8 w-8 text-[#BA0030]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <svg class="h-8 w-8 text-[#FF5722]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6.5 6.5h11M6.5 17.5h11M4 9.5h16M4 14.5h16M8.5 4.5v15M15.5 4.5v15" stroke-linecap="round"/>
                                 </svg>
                                 <span class="absolute bottom-1 right-1.5 text-[8px] font-black text-rose-300">FITCORE</span>
                             </div>
 
                             <div class="flex-1 min-w-0">
-                                <span class="inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-rose-100 text-[#BA0030] mb-1">
+                                <span class="inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-rose-100 text-[#FF5722] mb-1">
                                     PAKET MEMBERSHIP
                                 </span>
                                 <h3 class="font-heading text-lg font-extrabold text-slate-900 truncate">

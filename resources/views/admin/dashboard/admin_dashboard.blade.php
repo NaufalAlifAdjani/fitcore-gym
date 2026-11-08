@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <section class="min-h-screen bg-[#F6F6F7] px-4 py-8 text-[#16151A] sm:px-6 lg:px-10">
         <div class="mx-auto max-w-[1600px] space-y-8">
             <!-- Header & Title Section -->
@@ -50,8 +50,8 @@
                     trend_color="bg-[#10B981]"
                 >
                     <x-slot name="icon">
-                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#ED1B45]/10 text-[#ED1B45]">
-                            <svg class="h-6 w-6 text-[#ED1B45]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FF5722]/10 text-[#FF5722]">
+                            <svg class="h-6 w-6 text-[#FF5722]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
                         </span>
@@ -122,7 +122,7 @@
                         <select
                             name="range"
                             onchange="window.location.href='?range=' + this.value"
-                            class="border border-[#E5E7EB] rounded-full px-4 py-1.5 text-xs font-inter text-[#565A66] hover:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer transition bg-white"
+                            class="border border-[#E5E7EB] rounded-full px-4 py-1.5 text-xs font-inter text-[#565A66] hover:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] cursor-pointer transition bg-white"
                         >
                             <option value="7_days" @selected(($currentRange ?? '7_days') === '7_days')>7 Hari Terakhir</option>
                             <option value="30_days" @selected(($currentRange ?? '') === '30_days')>30 Hari Terakhir</option>
@@ -150,7 +150,7 @@
                         </div>
                         <a
                             href="{{ route('admin.payments.index') }}"
-                            class="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-full border border-[#E5E7EB] bg-white px-4 py-2 font-inter text-xs font-semibold text-[#565A66] shadow-sm transition hover:border-[#ED1B45] hover:text-[#ED1B45]"
+                            class="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-full border border-[#E5E7EB] bg-white px-4 py-2 font-inter text-xs font-semibold text-[#565A66] shadow-sm transition hover:border-[#FF5722] hover:text-[#FF5722]"
                         >
                             <span>Lihat Semua Pembayaran</span>
                             <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -224,7 +224,7 @@
                                                 <button
                                                     type="button"
                                                     x-on:click="openProof = true"
-                                                    class="inline-flex items-center gap-1 text-xs font-semibold text-[#ED1B45] hover:underline cursor-pointer"
+                                                    class="inline-flex items-center gap-1 text-xs font-semibold text-[#FF5722] hover:underline cursor-pointer"
                                                     title="Lihat Bukti Transfer"
                                                 >
                                                     <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -248,7 +248,7 @@
                                                     <div class="relative max-w-lg w-full rounded-[16px] bg-white p-5 shadow-2xl text-left" x-on:click.stop>
                                                         <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-3 mb-4">
                                                             <div>
-                                                                <p class="font-inter text-[10px] font-bold uppercase tracking-wider text-[#ED1B45]">Bukti Transfer Member</p>
+                                                                <p class="font-inter text-[10px] font-bold uppercase tracking-wider text-[#FF5722]">Bukti Transfer Member</p>
                                                                 <h3 class="font-poppins text-sm font-bold text-[#16151A]">{{ $payment->invoice_id }} - {{ $payment->member?->name }}</h3>
                                                             </div>
                                                             <button type="button" x-on:click="openProof = false" class="rounded-full p-1.5 text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A]" aria-label="Tutup">
@@ -261,7 +261,7 @@
                                                                  class="max-h-[55vh] w-auto rounded-lg object-contain">
                                                         </div>
                                                         <div class="mt-4 flex items-center justify-between text-xs font-inter text-[#565A66]">
-                                                            <span>Nominal: <strong class="text-[#ED1B45]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</strong></span>
+                                                            <span>Nominal: <strong class="text-[#FF5722]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</strong></span>
                                                             <button type="button" x-on:click="openProof = false" class="rounded-full bg-[#F6F6F7] px-4 py-1.5 text-xs font-semibold text-[#565A66] hover:bg-[#E5E7EB] hover:text-[#16151A] transition">Tutup</button>
                                                         </div>
                                                     </div>
@@ -338,9 +338,9 @@
                     datasets: [{
                         label: 'Pendapatan (IDR)',
                         data: data,
-                        backgroundColor: 'rgba(237, 27, 69, 0.85)',
-                        hoverBackgroundColor: '#ED1B45',
-                        borderColor: '#ED1B45',
+                        backgroundColor: 'rgba(255, 87, 34, 0.85)',
+                        hoverBackgroundColor: '#FF5722',
+                        borderColor: '#FF5722',
                         borderWidth: 1,
                         borderRadius: 8,
                         borderSkipped: false,

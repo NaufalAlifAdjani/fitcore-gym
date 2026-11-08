@@ -1,11 +1,11 @@
-<x-app-layout>
+﻿<x-app-layout>
     <div class="min-h-screen bg-[#F6F6F7] py-8 sm:py-12 px-4 sm:px-6 lg:px-8 text-[#16151A]">
         <div class="max-w-xl mx-auto space-y-8">
 
             <!-- Page Title / Header Badge -->
             <div class="text-center space-y-2">
-                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#BA0030] bg-rose-50 border border-rose-200 rounded-full">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#BA0030] animate-pulse"></span>
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#FF5722] bg-orange-50 border border-orange-200 rounded-full">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#FF5722] animate-pulse"></span>
                     FitCore Digital Pass
                 </span>
                 <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-[#16151A] tracking-tight">
@@ -19,7 +19,7 @@
             <!-- VIP DIGITAL MEMBERSHIP CARD -->
             <div class="relative overflow-hidden rounded-[28px] border border-zinc-800 bg-gradient-to-br from-[#1C1C22] via-[#141418] to-[#0A0A0E] p-6 sm:p-8 text-white shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
                 <!-- Ambient Glow Effect -->
-                <div class="absolute -top-16 -right-16 w-56 h-56 bg-[#BA0030]/25 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -top-16 -right-16 w-56 h-56 bg-[#FF5722]/25 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="absolute -bottom-16 -left-16 w-56 h-56 bg-slate-800/30 rounded-full blur-3xl pointer-events-none"></div>
 
                 <!-- Subtle Grid Background -->
@@ -29,14 +29,14 @@
                     <!-- Card Top Header -->
                     <div class="flex items-center justify-between border-b border-white/10 pb-4">
                         <div class="flex items-center gap-2.5">
-                            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30">
+                            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/30">
                                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 012.25 13.5v-3A1.5 1.5 0 013.75 9zm15 0h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 0117.25 13.5v-3a1.5 1.5 0 011.5-1.5zM6.75 12h10.5M5.25 7.5v9M18.75 7.5v9" />
                                 </svg>
                             </span>
                             <div>
                                 <p class="font-heading text-sm font-extrabold tracking-wider text-white">
-                                    FITCORE <span class="text-[#BA0030]">ATHLETIC</span>
+                                    FITCORE <span class="text-[#FF5722]">ATHLETIC</span>
                                 </p>
                                 <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">
                                     Member Identity Pass
@@ -68,7 +68,7 @@
                                     {{ $user->name }}
                                 </h2>
                                 @if($profile && $profile->member_code)
-                                    <p class="font-mono text-xs font-semibold text-[#BA0030] mt-1 tracking-wider">
+                                    <p class="font-mono text-xs font-semibold text-[#FF5722] mt-1 tracking-wider">
                                         ID: {{ $profile->member_code }}
                                     </p>
                                 @endif
@@ -103,7 +103,7 @@
                                     </div>
                                 </div>
                                 <span class="mt-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase flex items-center gap-1 font-inter">
-                                    <svg class="w-3 h-3 text-[#BA0030]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <svg class="w-3 h-3 text-[#FF5722]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                                     </svg>
                                     Scan untuk Check-in
@@ -122,7 +122,7 @@
                     <!-- Card Bottom Footer -->
                     <div class="border-t border-white/10 pt-4 flex items-center justify-between text-[11px] text-slate-400 font-inter">
                         <span class="flex items-center gap-1.5">
-                            <span class="h-2 w-2 rounded-full bg-[#BA0030]"></span>
+                            <span class="h-2 w-2 rounded-full bg-[#FF5722]"></span>
                             FitCore Performance Center
                         </span>
                         <span class="font-mono text-[10px] tracking-widest text-slate-500 uppercase">
@@ -135,7 +135,7 @@
             <!-- Petunjuk Penggunaan -->
             <div class="rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm space-y-4">
                 <div class="flex items-center gap-2.5">
-                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 text-[#BA0030]">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50 text-[#FF5722]">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 16v-4M12 8h.01" />
@@ -148,15 +148,15 @@
 
                 <ol class="space-y-3 text-xs text-[#565A66] font-inter">
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#BA0030]">1</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#FF5722]">1</span>
                         <span>Buka halaman ini melalui smartphone Anda saat tiba di lokasi gym FitCore.</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#BA0030]">2</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#FF5722]">2</span>
                         <span>Tunjukkan layar QR Code ini kepada resepsionis atau arahkan ke scanner check-in otomatis.</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#BA0030]">3</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#FF5722]">3</span>
                         <span>Sistem akan memverifikasi status keaktifan paket membership Anda secara instan (1x per hari).</span>
                     </li>
                 </ol>
@@ -166,7 +166,7 @@
                         <p class="text-xs text-rose-800 font-medium">
                             Membership Anda sedang tidak aktif. Perbarui paket untuk mulai check-in.
                         </p>
-                        <a href="{{ route('member.membership.packages') }}" class="shrink-0 rounded-full bg-[#BA0030] px-4 py-1.5 text-xs font-bold text-white hover:bg-rose-700 transition shadow-xs">
+                        <a href="{{ route('member.membership.packages') }}" class="shrink-0 rounded-full bg-[#FF5722] px-4 py-1.5 text-xs font-bold text-white hover:bg-rose-700 transition shadow-xs">
                             Beli Paket
                         </a>
                     </div>

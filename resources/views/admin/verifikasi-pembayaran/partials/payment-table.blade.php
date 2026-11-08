@@ -1,4 +1,4 @@
-<div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] overflow-hidden" aria-label="Daftar pembayaran">
+﻿<div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] overflow-hidden" aria-label="Daftar pembayaran">
     <div class="p-6 border-b border-[#E5E7EB]">
         <h2 class="font-poppins font-bold text-xl text-[#16151A]">Riwayat Pembayaran</h2>
         <p class="font-inter text-sm text-[#565A66] mt-1">
@@ -67,7 +67,7 @@
                                     <button
                                         type="button"
                                         x-on:click="open = true"
-                                        class="text-[#ED1B45] text-xs font-semibold flex items-center gap-1 hover:underline cursor-pointer"
+                                        class="text-[#FF5722] text-xs font-semibold flex items-center gap-1 hover:underline cursor-pointer"
                                         title="Pratinjau Struk Transfer"
                                     >
                                         <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -92,7 +92,7 @@
                                         <div class="relative max-w-2xl w-full rounded-[16px] bg-white p-6 shadow-2xl text-left" x-on:click.stop>
                                             <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-3 mb-4">
                                                 <div>
-                                                    <p class="font-inter text-[10px] font-bold uppercase tracking-wider text-[#ED1B45]">Bukti Transfer Member</p>
+                                                    <p class="font-inter text-[10px] font-bold uppercase tracking-wider text-[#FF5722]">Bukti Transfer Member</p>
                                                     <h3 class="font-poppins text-base font-bold text-[#16151A]">{{ $payment->invoice_id }} - {{ $payment->member?->name }}</h3>
                                                 </div>
                                                 <button type="button" x-on:click="open = false" class="rounded-full p-1.5 text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A]" aria-label="Tutup">
@@ -105,7 +105,7 @@
                                                      class="w-full h-auto rounded-lg object-contain bg-white border border-[#E5E7EB]">
                                             </div>
                                             <div class="mt-4 flex items-center justify-between text-xs font-inter text-[#565A66]">
-                                                <span>Nominal: <strong class="text-[#ED1B45]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</strong> ({{ $payment->bank_sender }})</span>
+                                                <span>Nominal: <strong class="text-[#FF5722]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</strong> ({{ $payment->bank_sender }})</span>
                                                 <button type="button" x-on:click="open = false" class="rounded-full bg-[#F6F6F7] px-4 py-1.5 text-xs font-semibold text-[#565A66] hover:bg-[#E5E7EB] hover:text-[#16151A] transition">Tutup</button>
                                             </div>
                                         </div>
@@ -192,7 +192,7 @@
                                                         <button type="button" x-on:click="open = false" class="rounded-full bg-[#F6F6F7] px-4 py-2 text-xs font-semibold font-inter text-[#565A66] hover:bg-[#E5E7EB] hover:text-[#16151A] transition cursor-pointer">
                                                             Batal
                                                         </button>
-                                                        <button type="submit" class="rounded-full bg-[#ED1B45] px-5 py-2 text-xs font-semibold font-inter text-white hover:bg-[#D1123D] transition cursor-pointer">
+                                                        <button type="submit" class="rounded-full bg-[#FF5722] px-5 py-2 text-xs font-semibold font-inter text-white hover:bg-[#E64A19] transition cursor-pointer">
                                                             Konfirmasi Tolak
                                                         </button>
                                                     </div>
@@ -207,7 +207,7 @@
                                     x-on:click="openDetails($el.dataset.detailUrl)"
                                     data-detail-url="{{ route('admin.payments.show', $payment->id) }}"
                                     x-bind:disabled="isLoadingDetail"
-                                    class="border border-[#ED1B45] text-[#ED1B45] hover:bg-[#ED1B45] hover:text-white px-4 py-1.5 text-xs font-semibold font-inter rounded-full transition inline-flex items-center justify-center disabled:cursor-wait disabled:opacity-60 cursor-pointer"
+                                    class="border border-[#FF5722] text-[#FF5722] hover:bg-[#FF5722] hover:text-white px-4 py-1.5 text-xs font-semibold font-inter rounded-full transition inline-flex items-center justify-center disabled:cursor-wait disabled:opacity-60 cursor-pointer"
                                 >
                                     Detail / Verifikasi
                                 </button>
@@ -235,7 +235,7 @@
                 @else
                     <a href="{{ $payments->previousPageUrl() }}" rel="prev" class="rounded-full border border-[#E5E7EB] px-3.5 py-1.5 font-inter text-xs font-semibold text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] transition">Sebelumnya</a>
                 @endif
-                <span class="rounded-full bg-[#ED1B45] px-3 py-1.5 font-inter text-xs font-bold text-white shadow-sm">{{ $payments->currentPage() }}</span>
+                <span class="rounded-full bg-[#FF5722] px-3 py-1.5 font-inter text-xs font-bold text-white shadow-sm">{{ $payments->currentPage() }}</span>
                 @if ($payments->hasMorePages())
                     <a href="{{ $payments->nextPageUrl() }}" rel="next" class="rounded-full border border-[#E5E7EB] px-3.5 py-1.5 font-inter text-xs font-semibold text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] transition">Berikutnya</a>
                 @else

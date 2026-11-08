@@ -1,13 +1,13 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     <!-- Role Selector Toggle (Member / Personal Trainer) -->
     <div class="flex p-1 bg-gray-100 rounded-xl mb-8 border border-gray-200/60">
         <button type="button" @click="role = 'member'"
-            :class="role === 'member' ? 'bg-white shadow text-[#be0a32] font-bold' : 'text-gray-500 font-medium hover:text-gray-800'"
+            :class="role === 'member' ? 'bg-white shadow text-[#FF5722] font-bold' : 'text-gray-500 font-medium hover:text-gray-800'"
             class="flex-1 py-2 text-xs rounded-lg transition duration-150 text-center">
             Member
         </button>
         <button type="button" @click="role = 'trainer'"
-            :class="role === 'trainer' ? 'bg-white shadow text-[#be0a32] font-bold' : 'text-gray-500 font-medium hover:text-gray-800'"
+            :class="role === 'trainer' ? 'bg-white shadow text-[#FF5722] font-bold' : 'text-gray-500 font-medium hover:text-gray-800'"
             class="flex-1 py-2 text-xs rounded-lg transition duration-150 text-center">
             Personal Trainer
         </button>
@@ -26,7 +26,7 @@
     <!-- Card Peringatan Verifikasi Email (Card Merah) -->
     @if ($errors->has('email') && in_array('Harap verifikasi email Anda terlebih dahulu sebelum login.', (array) $errors->get('email'), true))
         <div class="mb-5 flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50/95 p-4 text-rose-900 shadow-xs">
-            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#be0a32] text-white font-bold text-xs mt-0.5">
+            <div class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#FF5722] text-white font-bold text-xs mt-0.5">
                 <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
@@ -67,11 +67,11 @@
         <!-- Remember Me & Forgot Password -->
         <div class="flex items-center justify-between text-xs pt-1 font-semibold">
             <label for="remember_me" class="inline-flex items-center gap-2 cursor-pointer text-gray-800">
-                <input id="remember_me" type="checkbox" name="remember" class="w-4 h-4 rounded border-gray-300 text-[#be0a32] focus:ring-[#be0a32]">
+                <input id="remember_me" type="checkbox" name="remember" class="w-4 h-4 rounded border-gray-300 text-[#FF5722] focus:ring-[#FF5722]">
                 <span>Ingat Saya</span>
             </label>
             @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" class="text-[#be0a32] hover:underline font-semibold">
+                <a href="{{ route('password.request') }}" class="text-[#FF5722] hover:underline font-semibold">
                     Lupa Kata Sandi?
                 </a>
             @endif
@@ -94,7 +94,7 @@
 
                 <!-- Tombol Google Login -->
                 <a href="{{ route('auth.google') }}" 
-                   class="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-full text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-[#be0a32] focus:ring-offset-2">
+                   class="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-full text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:ring-offset-2">
                     <svg class="w-4 h-4" viewBox="0 0 24 24">
                         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -105,7 +105,7 @@
                 </a>
 
                 @error('google')
-                    <p class="text-xs text-[#be0a32] text-center font-medium mt-1">{{ $message }}</p>
+                    <p class="text-xs text-[#FF5722] text-center font-medium mt-1">{{ $message }}</p>
                 @enderror
             </div>
         </template>
@@ -113,10 +113,10 @@
         <!-- Footer Link -->
         <div class="text-center text-xs text-gray-600 pt-3">
             <template x-if="role === 'member'">
-                <span>Belum memiliki akun member? <a href="{{ route('register') }}" class="text-[#be0a32] font-bold hover:underline">Daftar di sini</a></span>
+                <span>Belum memiliki akun member? <a href="{{ route('register') }}" class="text-[#FF5722] font-bold hover:underline">Daftar di sini</a></span>
             </template>
             <template x-if="role === 'trainer'">
-                <span>Belum terdaftar sebagai trainer? <a href="#" class="text-[#be0a32] font-bold hover:underline">Hubungi Admin</a></span>
+                <span>Belum terdaftar sebagai trainer? <a href="#" class="text-[#FF5722] font-bold hover:underline">Hubungi Admin</a></span>
             </template>
         </div>
     </form>

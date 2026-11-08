@@ -1,4 +1,4 @@
-<div class="space-y-6">
+﻿<div class="space-y-6">
     <!-- Google Calendar Container -->
     <div class="bg-white rounded-3xl border border-[#E5E7EB] p-4 sm:p-6 shadow-sm mb-8 space-y-4">
 
@@ -11,7 +11,7 @@
                 <button 
                     type="button" 
                     wire:click="goToToday"
-                    class="px-5 py-2 text-sm font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#ED1B45] hover:text-[#ED1B45] active:bg-gray-100 transition shadow-2xs cursor-pointer"
+                    class="px-5 py-2 text-sm font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#FF5722] hover:text-[#FF5722] active:bg-gray-100 transition shadow-2xs cursor-pointer"
                 >
                     Today
                 </button>
@@ -59,7 +59,7 @@
                     <button 
                         type="button" 
                         @click="open = !open"
-                        class="px-4 py-2 text-sm font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#ED1B45] flex items-center gap-2 shadow-2xs transition cursor-pointer"
+                        class="px-4 py-2 text-sm font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#FF5722] flex items-center gap-2 shadow-2xs transition cursor-pointer"
                     >
                         <span class="capitalize">{{ $view === 'month' ? 'Month' : ($view === 'week' ? 'Week' : 'Day') }}</span>
                         <svg class="w-4 h-4 text-[#565A66] transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,33 +73,33 @@
                             type="button" 
                             wire:click="setView('day')" 
                             @click="open = false"
-                            class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'day' ? 'text-[#ED1B45] font-bold bg-[#ED1B45]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'day' ? 'text-[#FF5722] font-bold bg-[#FF5722]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
                             <span>Day</span>
                             @if($view === 'day')
-                                <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-[#FF5722]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                             @endif
                         </button>
                         <button 
                             type="button" 
                             wire:click="setView('week')" 
                             @click="open = false"
-                            class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'week' ? 'text-[#ED1B45] font-bold bg-[#ED1B45]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'week' ? 'text-[#FF5722] font-bold bg-[#FF5722]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
                             <span>Week</span>
                             @if($view === 'week')
-                                <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-[#FF5722]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                             @endif
                         </button>
                         <button 
                             type="button" 
                             wire:click="setView('month')" 
                             @click="open = false"
-                            class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'month' ? 'text-[#ED1B45] font-bold bg-[#ED1B45]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="w-full text-left px-4 py-2 text-sm font-medium transition hover:bg-gray-50 flex items-center justify-between cursor-pointer {{ $view === 'month' ? 'text-[#FF5722] font-bold bg-[#FF5722]/10' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
                             <span>Month</span>
                             @if($view === 'month')
-                                <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                <svg class="w-4 h-4 text-[#FF5722]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                             @endif
                         </button>
                     </div>
@@ -110,7 +110,7 @@
                     <button 
                         type="button" 
                         wire:click="setMode('calendar')"
-                        class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center justify-center transition cursor-pointer {{ $mode === 'calendar' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                        class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center justify-center transition cursor-pointer {{ $mode === 'calendar' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         title="Tampilan Kalender"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -120,7 +120,7 @@
                     <button 
                         type="button" 
                         wire:click="setMode('tasks')"
-                        class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center justify-center transition cursor-pointer {{ $mode === 'tasks' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                        class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center justify-center transition cursor-pointer {{ $mode === 'tasks' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         title="Tampilan Tasks / Jadwal Sesi"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,7 +147,7 @@
                         <button 
                             type="button" 
                             wire:click="setTaskStatusFilter('all')"
-                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer {{ $taskStatusFilter === 'all' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer {{ $taskStatusFilter === 'all' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
                             <span>Semua</span>
                             <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $taskStatusFilter === 'all' ? 'bg-white/20 text-white' : 'bg-gray-200 text-[#565A66]' }}">
@@ -159,7 +159,7 @@
                         <button 
                             type="button" 
                             wire:click="setTaskStatusFilter('pending')"
-                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer {{ $taskStatusFilter === 'pending' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer {{ $taskStatusFilter === 'pending' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
                             <span>Menunggu</span>
                             <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $taskStatusFilter === 'pending' ? 'bg-white/20 text-white' : 'bg-amber-100 text-amber-700 font-bold' }}">
@@ -171,7 +171,7 @@
                         <button 
                             type="button" 
                             wire:click="setTaskStatusFilter('confirmed')"
-                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer {{ $taskStatusFilter === 'confirmed' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer {{ $taskStatusFilter === 'confirmed' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
                             <span>Terkonfirmasi</span>
                             <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $taskStatusFilter === 'confirmed' ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-700 font-bold' }}">
@@ -183,7 +183,7 @@
                         <button 
                             type="button" 
                             wire:click="setTaskStatusFilter('cancelled')"
-                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer {{ $taskStatusFilter === 'cancelled' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer {{ $taskStatusFilter === 'cancelled' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
                             <span>Dibatalkan</span>
                             <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $taskStatusFilter === 'cancelled' ? 'bg-white/20 text-white' : 'bg-zinc-200 text-zinc-700 font-bold' }}">
@@ -196,7 +196,7 @@
                 <!-- Tasks List Grouped by Date -->
                 @if($this->tasksList->isEmpty())
                     <div class="py-12 text-center text-[#565A66]">
-                        <div class="w-12 h-12 rounded-full bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center mx-auto mb-3">
+                        <div class="w-12 h-12 rounded-full bg-[#FF5722]/10 text-[#FF5722] flex items-center justify-center mx-auto mb-3">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                             </svg>
@@ -209,7 +209,7 @@
                             @endif
                         </p>
                         @if($taskStatusFilter !== 'all')
-                            <button type="button" wire:click="setTaskStatusFilter('all')" class="mt-2.5 text-xs font-bold text-[#ED1B45] hover:underline cursor-pointer inline-flex items-center gap-1">
+                            <button type="button" wire:click="setTaskStatusFilter('all')" class="mt-2.5 text-xs font-bold text-[#FF5722] hover:underline cursor-pointer inline-flex items-center gap-1">
                                 Lihat Semua Status Sesi
                             </button>
                         @endif
@@ -236,17 +236,17 @@
                                         @endphp
                                         <div 
                                             wire:key="task-session-{{ $taskSession->id }}"
-                                            class="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#ED1B45]/50 hover:shadow-md transition-all duration-200 group shadow-2xs"
+                                            class="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#FF5722]/50 hover:shadow-md transition-all duration-200 group shadow-2xs"
                                         >
                                             <div>
                                                 <!-- Top Card Row: Trainer Info & Badge -->
                                                 <div class="flex items-start justify-between gap-3 mb-3">
                                                     <div class="flex items-center gap-2.5 min-w-0">
-                                                        <div class="w-9 h-9 rounded-full bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center font-bold text-xs shrink-0 group-hover:bg-[#ED1B45] group-hover:text-white transition-colors duration-200">
+                                                        <div class="w-9 h-9 rounded-full bg-[#FF5722]/10 text-[#FF5722] flex items-center justify-center font-bold text-xs shrink-0 group-hover:bg-[#FF5722] group-hover:text-white transition-colors duration-200">
                                                             {{ strtoupper(substr($taskSession->trainer->name ?? 'T', 0, 1)) }}
                                                         </div>
                                                         <div class="min-w-0">
-                                                            <h4 class="text-sm font-bold text-[#16151A] group-hover:text-[#ED1B45] transition truncate">
+                                                            <h4 class="text-sm font-bold text-[#16151A] group-hover:text-[#FF5722] transition truncate">
                                                                 {{ $taskSession->trainer->name ?? 'Coach Rama' }}
                                                             </h4>
                                                             <p class="text-[11px] text-[#565A66] truncate">
@@ -262,7 +262,7 @@
 
                                                 <!-- Time Range Pill -->
                                                 <div class="flex items-center gap-2 text-xs text-[#565A66] bg-[#F6F6F7] p-2.5 rounded-xl mb-3">
-                                                    <svg class="w-4 h-4 text-[#ED1B45] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <svg class="w-4 h-4 text-[#FF5722] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                                     </svg>
                                                     <span class="font-bold text-[#16151A]">{{ $taskSession->time_range }}</span>
@@ -278,7 +278,7 @@
                                                     </a>
                                                     <button type="button" 
                                                             wire:click="openCancelModal({{ $taskSession->id }})"
-                                                            class="text-[#ED1B45] hover:underline text-xs font-bold px-2 py-1 cursor-pointer">
+                                                            class="text-[#FF5722] hover:underline text-xs font-bold px-2 py-1 cursor-pointer">
                                                         Batal Sesi
                                                     </button>
                                                 @else
@@ -332,13 +332,13 @@
                                     <div 
                                         wire:key="grid-day-{{ $dayDateString }}"
                                         wire:click="goToDate('{{ $dayDateString }}')"
-                                        class="min-h-[105px] sm:min-h-[125px] p-1.5 sm:p-2 border-b border-[#E5E7EB] flex flex-col transition cursor-pointer select-none {{ $isSelected ? 'bg-[#ED1B45]/5 ring-2 ring-inset ring-[#ED1B45]' : ($isCurrentMonth ? 'bg-white hover:bg-gray-50/80' : 'bg-gray-50/50 hover:bg-gray-100/70') }}"
+                                        class="min-h-[105px] sm:min-h-[125px] p-1.5 sm:p-2 border-b border-[#E5E7EB] flex flex-col transition cursor-pointer select-none {{ $isSelected ? 'bg-[#FF5722]/5 ring-2 ring-inset ring-[#FF5722]' : ($isCurrentMonth ? 'bg-white hover:bg-gray-50/80' : 'bg-gray-50/50 hover:bg-gray-100/70') }}"
                                     >
                                         <!-- Date Number Header in Cell -->
                                         <div class="flex items-center justify-center mb-1">
                                             @if($isToday)
                                                 <!-- Today: Solid Red Circle Badge -->
-                                                <div class="w-7 h-7 rounded-full bg-[#ED1B45] text-white font-medium text-xs sm:text-sm flex items-center justify-center shadow-xs">
+                                                <div class="w-7 h-7 rounded-full bg-[#FF5722] text-white font-medium text-xs sm:text-sm flex items-center justify-center shadow-xs">
                                                     {{ $gridDate->day }}
                                                 </div>
                                             @elseif($isFirstOfMonth)
@@ -400,7 +400,7 @@
                             :class="mobileTab === 'agenda' ? 'bg-white text-[#16151A] font-bold shadow-xs' : 'text-[#565A66] hover:text-[#16151A]'"
                             class="flex-1 py-1.5 px-3 rounded-xl text-xs transition cursor-pointer text-center flex items-center justify-center gap-1.5"
                         >
-                            <svg class="w-3.5 h-3.5 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                            <svg class="w-3.5 h-3.5 text-[#FF5722]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
                             <span>Agenda Harian</span>
                         </button>
                         <button 
@@ -409,7 +409,7 @@
                             :class="mobileTab === 'grid' ? 'bg-white text-[#16151A] font-bold shadow-xs' : 'text-[#565A66] hover:text-[#16151A]'"
                             class="flex-1 py-1.5 px-3 rounded-xl text-xs transition cursor-pointer text-center flex items-center justify-center gap-1.5"
                         >
-                            <svg class="w-3.5 h-3.5 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
+                            <svg class="w-3.5 h-3.5 text-[#FF5722]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
                             <span>Tabel 7 Hari</span>
                         </button>
                     </div>
@@ -428,13 +428,13 @@
                                     type="button"
                                     wire:key="mobile-week-strip-{{ $wDateString }}"
                                     wire:click="goToDate('{{ $wDateString }}')"
-                                    class="flex flex-col items-center justify-center py-2 px-0.5 rounded-xl transition cursor-pointer select-none {{ $isSelected ? 'bg-[#ED1B45] text-white shadow-xs font-bold' : ($isToday ? 'bg-white text-[#ED1B45] font-semibold border border-[#ED1B45]/40 shadow-2xs' : 'text-[#565A66] hover:bg-white') }}"
+                                    class="flex flex-col items-center justify-center py-2 px-0.5 rounded-xl transition cursor-pointer select-none {{ $isSelected ? 'bg-[#FF5722] text-white shadow-xs font-bold' : ($isToday ? 'bg-white text-[#FF5722] font-semibold border border-[#FF5722]/40 shadow-2xs' : 'text-[#565A66] hover:bg-white') }}"
                                 >
                                     <span class="text-[10px] uppercase tracking-wider {{ $isSelected ? 'text-white/80' : 'text-[#565A66]' }}">{{ $wDate->format('D') }}</span>
                                     <span class="text-sm font-bold mt-0.5">{{ $wDate->day }}</span>
                                     <div class="flex items-center gap-0.5 mt-1 h-1.5">
                                         @if($daySessions->isNotEmpty())
-                                            <span class="w-1.5 h-1.5 rounded-full {{ $isSelected ? 'bg-white' : 'bg-[#ED1B45]' }}"></span>
+                                            <span class="w-1.5 h-1.5 rounded-full {{ $isSelected ? 'bg-white' : 'bg-[#FF5722]' }}"></span>
                                         @endif
                                     </div>
                                 </button>
@@ -485,15 +485,15 @@
                                             <div 
                                                 wire:key="week-day-{{ $wDateString }}"
                                                 wire:click="goToDate('{{ $wDateString }}')"
-                                                class="min-h-[220px] p-2 flex flex-col transition cursor-pointer select-none {{ $isSelected ? 'bg-[#ED1B45]/5 ring-2 ring-inset ring-[#ED1B45]' : 'bg-white hover:bg-gray-50/80' }}"
+                                                class="min-h-[220px] p-2 flex flex-col transition cursor-pointer select-none {{ $isSelected ? 'bg-[#FF5722]/5 ring-2 ring-inset ring-[#FF5722]' : 'bg-white hover:bg-gray-50/80' }}"
                                             >
                                                 <div class="flex items-center justify-center mb-2">
                                                     @if($isToday)
-                                                        <div class="w-7 h-7 rounded-full bg-[#ED1B45] text-white font-medium text-xs sm:text-sm flex items-center justify-center shadow-xs">
+                                                        <div class="w-7 h-7 rounded-full bg-[#FF5722] text-white font-medium text-xs sm:text-sm flex items-center justify-center shadow-xs">
                                                             {{ $wDate->day }}
                                                         </div>
                                                     @else
-                                                        <div class="text-xs sm:text-sm {{ $isSelected ? 'text-[#ED1B45] font-bold' : 'text-[#16151A] font-medium' }}">
+                                                        <div class="text-xs sm:text-sm {{ $isSelected ? 'text-[#FF5722] font-bold' : 'text-[#16151A] font-medium' }}">
                                                             {{ $wDate->day }}
                                                         </div>
                                                     @endif
@@ -541,7 +541,7 @@
                             </h3>
                             <p class="text-xs text-[#565A66] mt-0.5">Daftar sesi latihan privat pada hari ini</p>
                         </div>
-                        <span class="px-3 py-1 rounded-full bg-[#ED1B45]/10 text-[#ED1B45] font-bold text-xs border border-[#ED1B45]/20">
+                        <span class="px-3 py-1 rounded-full bg-[#FF5722]/10 text-[#FF5722] font-bold text-xs border border-[#FF5722]/20">
                             {{ $this->sessions->count() }} Sesi
                         </span>
                     </div>
@@ -564,7 +564,7 @@
                                     @endphp
                                     <div wire:key="day-session-{{ $session->id }}" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-4 rounded-2xl border border-[#E5E7EB] bg-white hover:bg-gray-50/60 transition shadow-2xs">
                                         <div class="flex items-center gap-3.5 min-w-0">
-                                            <div class="w-11 h-11 rounded-full bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center font-bold text-sm shrink-0 border border-[#E5E7EB]">
+                                            <div class="w-11 h-11 rounded-full bg-[#FF5722]/10 text-[#FF5722] flex items-center justify-center font-bold text-sm shrink-0 border border-[#E5E7EB]">
                                                 {{ strtoupper(substr($session->trainer->name ?? 'T', 0, 1)) }}
                                             </div>
                                             <div class="min-w-0 flex-1">
@@ -588,7 +588,7 @@
                                                 </a>
                                                 <button type="button" 
                                                         wire:click="openCancelModal({{ $session->id }})"
-                                                        class="text-[#ED1B45] hover:underline text-xs font-bold px-2 py-1 cursor-pointer">
+                                                        class="text-[#FF5722] hover:underline text-xs font-bold px-2 py-1 cursor-pointer">
                                                     Batal Sesi
                                                 </button>
                                             @else
@@ -615,7 +615,7 @@
              wire:click.self="closeCancelModal">
             <div class="max-w-md w-full bg-white border border-[#E5E7EB] rounded-3xl p-7 shadow-2xl space-y-5">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-red-100 text-[#ED1B45] flex items-center justify-center font-bold text-lg shrink-0">
+                    <div class="w-10 h-10 rounded-full bg-red-100 text-[#FF5722] flex items-center justify-center font-bold text-lg shrink-0">
                         ✕
                     </div>
                     <div>
@@ -626,7 +626,7 @@
 
                 <div class="p-4 rounded-2xl bg-zinc-50 border border-zinc-200 text-xs text-[#16151A] space-y-1">
                     <div class="font-bold text-sm">{{ $targetDate }}</div>
-                    <div class="text-[#ED1B45] font-bold">{{ $targetTime }}</div>
+                    <div class="text-[#FF5722] font-bold">{{ $targetTime }}</div>
                     <p class="text-[#565A66] pt-1">
                         Sesi ini akan dibatalkan dan <span class="text-emerald-600 font-bold">1 kuota</span> akan segera dikembalikan ke akun Anda.
                     </p>
@@ -638,7 +638,7 @@
                         <input type="text"
                                wire:model="cancelReason"
                                placeholder="Contoh: Ada keperluan mendadak"
-                               class="w-full bg-white border border-[#E5E7EB] rounded-xl px-3 py-2 text-xs text-[#16151A] placeholder-zinc-400 focus:ring-[#ED1B45] focus:border-[#ED1B45]">
+                               class="w-full bg-white border border-[#E5E7EB] rounded-xl px-3 py-2 text-xs text-[#16151A] placeholder-zinc-400 focus:ring-[#FF5722] focus:border-[#FF5722]">
                     </div>
 
                     <div class="flex items-center justify-end gap-3 pt-2">
@@ -650,7 +650,7 @@
                         <button type="button"
                                 wire:click="confirmCancel"
                                 wire:loading.attr="disabled"
-                                class="px-6 py-2.5 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white text-xs font-bold transition-colors shadow-md shadow-[#ED1B45]/20 cursor-pointer">
+                                class="px-6 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold transition-colors shadow-md shadow-[#FF5722]/20 cursor-pointer">
                             Ya, Batalkan Sesi
                         </button>
                     </div>

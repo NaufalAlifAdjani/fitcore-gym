@@ -1,4 +1,4 @@
-<div
+﻿<div
     x-show="showModal"
     x-cloak
     x-transition.opacity
@@ -15,7 +15,7 @@
         <!-- Modal Header -->
         <div class="mb-6 flex items-start justify-between border-b border-[#E5E7EB] pb-5">
             <div>
-                <p class="font-inter text-[10px] font-bold uppercase tracking-[0.16em] text-[#ED1B45]">Personal Trainer FitCore</p>
+                <p class="font-inter text-[10px] font-bold uppercase tracking-[0.16em] text-[#FF5722]">Personal Trainer FitCore</p>
                 <h2 id="pt-package-modal-title" class="mt-1 font-poppins text-xl font-bold text-[#16151A]" x-text="isEditMode ? 'Edit Paket Sesi PT' : 'Tambah Paket Sesi PT'"></h2>
             </div>
             <button type="button" x-on:click="showModal = false" aria-label="Tutup modal" class="rounded-full p-2 text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] transition">
@@ -42,7 +42,7 @@
                     required
                     maxlength="255"
                     placeholder="Contoh: PT 12 Sesi atau Performance Pro"
-                    class="!bg-white !border-[#E5E7EB] !p-3 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
+                    class="!bg-white !border-[#E5E7EB] !p-3 font-inter !text-sm focus:!border-[#FF5722] focus:!ring-[#FF5722] w-full"
                 />
                 @error('name') <span class="mt-1 block font-inter text-xs text-red-600">{{ $message }}</span> @enderror
             </div>
@@ -61,7 +61,7 @@
                             min="1"
                             step="1"
                             placeholder="4"
-                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
+                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#FF5722] focus:!ring-[#FF5722] w-full"
                         />
                         <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#565A66] font-inter">
                             Sesi
@@ -85,7 +85,7 @@
                             min="0"
                             step="1"
                             placeholder="1500000"
-                            class="!bg-white !border-[#E5E7EB] !py-3 !pr-3 !pl-12 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
+                            class="!bg-white !border-[#E5E7EB] !py-3 !pr-3 !pl-12 font-inter !text-sm focus:!border-[#FF5722] focus:!ring-[#FF5722] w-full"
                         />
                     </div>
                     @error('price') <span class="mt-1 block font-inter text-xs text-red-600">{{ $message }}</span> @enderror
@@ -95,13 +95,13 @@
             <!-- Live Estimasi Harga per Sesi -->
             <div x-show="perSessionPrice() > 0" x-cloak class="rounded-xl border border-rose-100 bg-rose-50/60 p-3.5 flex items-center justify-between text-xs font-inter text-[#16151A]">
                 <div class="flex items-center gap-2">
-                    <svg class="h-4 w-4 text-[#ED1B45]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg class="h-4 w-4 text-[#FF5722]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10" />
                         <path d="M12 6v6l4 2" />
                     </svg>
                     <span class="text-[#565A66]">Estimasi tarif per sesi:</span>
                 </div>
-                <span class="font-bold text-[#ED1B45] text-sm" x-text="formattedPerSessionPrice() + ' / sesi'"></span>
+                <span class="font-bold text-[#FF5722] text-sm" x-text="formattedPerSessionPrice() + ' / sesi'"></span>
             </div>
 
             <!-- Syarat Sisa Hari & Masa Berlaku Sesi -->
@@ -118,7 +118,7 @@
                             min="0"
                             step="1"
                             placeholder="0"
-                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
+                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#FF5722] focus:!ring-[#FF5722] w-full"
                         />
                         <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#565A66] font-inter">
                             Hari
@@ -142,7 +142,7 @@
                             min="1"
                             step="1"
                             placeholder="30"
-                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#ED1B45] focus:!ring-[#ED1B45] w-full"
+                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#FF5722] focus:!ring-[#FF5722] w-full"
                         />
                         <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#565A66] font-inter">
                             Hari
@@ -180,7 +180,7 @@
                 </button>
                 <button
                     type="submit"
-                    class="bg-[#ED1B45] text-white px-6 py-2.5 rounded-full font-inter text-sm font-semibold shadow-sm hover:bg-[#D1123D] transition flex items-center justify-center gap-2 cursor-pointer"
+                    class="bg-[#FF5722] text-white px-6 py-2.5 rounded-full font-inter text-sm font-semibold shadow-sm hover:bg-[#E64A19] transition flex items-center justify-center gap-2 cursor-pointer"
                 >
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />

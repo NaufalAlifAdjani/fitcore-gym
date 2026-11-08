@@ -1,10 +1,10 @@
-<footer class="bg-[#141414] border-t border-[#262626] text-[#A1A1AA] pt-14 pb-8 px-4 sm:px-6 lg:px-8 mt-auto">
+﻿<footer class="bg-[#141414] border-t border-[#262626] text-[#A1A1AA] pt-14 pb-8 px-4 sm:px-6 lg:px-8 mt-auto">
     <div class="max-w-7xl mx-auto space-y-12">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
             <!-- Brand & Jam Operasional (5 Cols) -->
             <div class="md:col-span-5 space-y-5">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-[#ED1B45] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#ED1B45]/30">
+                    <div class="w-9 h-9 rounded-xl bg-[#FF5722] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#FF5722]/30">
                         <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M6 16.5 18 4.5"/>
                             <path d="m14 4 4 4"/>
@@ -23,7 +23,7 @@
                 <!-- Box Jam Operasional Gym -->
                 <div class="bg-[#1C1C1E] border border-[#2A2A2A] rounded-2xl p-4 text-xs space-y-2 max-w-sm">
                     <div class="flex items-center gap-2 text-white font-bold uppercase tracking-wider text-[11px]">
-                        <span class="text-[#ED1B45]">🕒</span>
+                        <span class="text-[#FF5722]">🕒</span>
                         <span>JAM OPERASIONAL GYM</span>
                     </div>
                     <div class="flex justify-between border-b border-[#2A2A2A] pb-1.5 text-zinc-300">
@@ -40,7 +40,7 @@
             <!-- Lokasi (3 Cols) -->
             <div class="md:col-span-3 space-y-4">
                 <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white">
-                    <span class="w-2 h-2 rounded-full bg-[#ED1B45]"></span>
+                    <span class="w-2 h-2 rounded-full bg-[#FF5722]"></span>
                     <span>LOKASI</span>
                 </div>
 
@@ -55,7 +55,7 @@
             <!-- Kontak & Dukungan (4 Cols) -->
             <div class="md:col-span-4 space-y-4">
                 <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white">
-                    <span class="w-2 h-2 rounded-full bg-[#ED1B45]"></span>
+                    <span class="w-2 h-2 rounded-full bg-[#FF5722]"></span>
                     <span>KONTAK & DUKUNGAN</span>
                 </div>
 
@@ -77,14 +77,14 @@
                     <!-- Email -->
                     <a href="mailto:support@maxfit.id"
                        class="flex items-center gap-3 bg-[#1C1C1E] hover:bg-[#252528] border border-[#2A2A2A] rounded-2xl p-3.5 text-xs transition-colors group">
-                        <div class="w-8 h-8 rounded-xl bg-[#ED1B45]/20 text-[#ED1B45] flex items-center justify-center shrink-0 border border-[#ED1B45]/30">
+                        <div class="w-8 h-8 rounded-xl bg-[#FF5722]/20 text-[#FF5722] flex items-center justify-center shrink-0 border border-[#FF5722]/30">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                             </svg>
                         </div>
                         <div>
                             <div class="text-[11px] text-[#A1A1AA]">Email Resmi Member & Kerjasama</div>
-                            <div class="font-bold text-white group-hover:text-[#ED1B45] transition-colors">support@maxfit.id</div>
+                            <div class="font-bold text-white group-hover:text-[#FF5722] transition-colors">support@maxfit.id</div>
                         </div>
                     </a>
                 </div>
@@ -93,16 +93,16 @@
                 <div class="pt-2 space-y-2">
                     <span class="text-[10px] uppercase tracking-wider text-[#A1A1AA] font-bold block">IKUTI KOMUNITAS ATLETIK</span>
                     <div class="flex items-center gap-2">
-                        <a href="#" class="w-8 h-8 rounded-full bg-[#1C1C1E] hover:bg-[#ED1B45] text-zinc-300 hover:text-white flex items-center justify-center border border-[#2A2A2A] transition-all">
+                        <a href="#" class="w-8 h-8 rounded-full bg-[#1C1C1E] hover:bg-[#FF5722] text-zinc-300 hover:text-white flex items-center justify-center border border-[#2A2A2A] transition-all">
                             <span class="text-xs font-bold">IG</span>
                         </a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-[#1C1C1E] hover:bg-[#ED1B45] text-zinc-300 hover:text-white flex items-center justify-center border border-[#2A2A2A] transition-all">
+                        <a href="#" class="w-8 h-8 rounded-full bg-[#1C1C1E] hover:bg-[#FF5722] text-zinc-300 hover:text-white flex items-center justify-center border border-[#2A2A2A] transition-all">
                             <span class="text-xs font-bold">YT</span>
                         </a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-[#1C1C1E] hover:bg-[#ED1B45] text-zinc-300 hover:text-white flex items-center justify-center border border-[#2A2A2A] transition-all">
+                        <a href="#" class="w-8 h-8 rounded-full bg-[#1C1C1E] hover:bg-[#FF5722] text-zinc-300 hover:text-white flex items-center justify-center border border-[#2A2A2A] transition-all">
                             <span class="text-xs font-bold">TK</span>
                         </a>
-                        <a href="#" class="w-8 h-8 rounded-full bg-[#1C1C1E] hover:bg-[#ED1B45] text-zinc-300 hover:text-white flex items-center justify-center border border-[#2A2A2A] transition-all">
+                        <a href="#" class="w-8 h-8 rounded-full bg-[#1C1C1E] hover:bg-[#FF5722] text-zinc-300 hover:text-white flex items-center justify-center border border-[#2A2A2A] transition-all">
                             <span class="text-xs font-bold">IN</span>
                         </a>
                     </div>

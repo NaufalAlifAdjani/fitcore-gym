@@ -1,11 +1,11 @@
-@props([
+﻿@props([
     'initials',
     'color_theme' => 'red',
 ])
 
 @php
     $themes = [
-        'red' => 'bg-[#ED1B45]/10 text-[#ED1B45]',
+        'red' => 'bg-[#FF5722]/10 text-[#FF5722]',
         'orange' => 'bg-[#F59E0B]/10 text-[#F59E0B]',
         'blue' => 'bg-[#3B82F6]/10 text-[#3B82F6]',
         'purple' => 'bg-[#8B5CF6]/10 text-[#8B5CF6]',

@@ -10,8 +10,8 @@
     font-family: inherit;
 }
 .flatpickr-day.selected {
-    background: #ED1B45 !important;
-    border-color: #ED1B45 !important;
+    background: #FF5722 !important;
+    border-color: #FF5722 !important;
 }
 
 @media print {

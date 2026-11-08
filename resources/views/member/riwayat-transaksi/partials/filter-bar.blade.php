@@ -1,4 +1,4 @@
-<form
+﻿<form
     method="GET"
     action="{{ route('member.riwayat-transaksi.index') }}"
     id="transaction-filter-form"
@@ -21,7 +21,7 @@
                     name="search"
                     value="{{ $currentSearch }}"
                     placeholder="Cari invoice / nama paket..."
-                    class="w-full rounded-full border border-[#E5E7EB] bg-[#F9FAFB] pl-10 pr-10 py-2.5 text-xs sm:text-sm font-inter text-[#16151A] placeholder-[#565A66] focus:border-[#ED1B45] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                    class="w-full rounded-full border border-[#E5E7EB] bg-[#F9FAFB] pl-10 pr-10 py-2.5 text-xs sm:text-sm font-inter text-[#16151A] placeholder-[#565A66] focus:border-[#FF5722] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                 />
                 @if ($currentSearch)
                     <a
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <!-- 2. Tab Status (Pill Aktif #ED1B45, Inaktif Transparan) di Tengah -->
+        <!-- 2. Tab Status (Pill Aktif #FF5722, Inaktif Transparan) di Tengah -->
         <input type="hidden" name="status" id="status-filter-input" value="{{ $currentStatus }}">
 
         <div class="flex items-center overflow-x-auto p-1 bg-[#F6F6F7] rounded-full border border-[#E5E7EB] self-start lg:self-center shrink-0">
@@ -45,7 +45,7 @@
                 onclick="setStatusFilter('all')"
                 @class([
                     'rounded-full px-4 py-2 text-xs font-inter font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap',
-                    'bg-[#ED1B45] text-white shadow-sm' => $currentStatus === 'all' || !$currentStatus,
+                    'bg-[#FF5722] text-white shadow-sm' => $currentStatus === 'all' || !$currentStatus,
                     'text-[#565A66] hover:text-[#16151A] bg-transparent' => $currentStatus !== 'all' && $currentStatus,
                 ])
             >
@@ -58,7 +58,7 @@
                 onclick="setStatusFilter('pending')"
                 @class([
                     'rounded-full px-4 py-2 text-xs font-inter font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap',
-                    'bg-[#ED1B45] text-white shadow-sm' => $currentStatus === 'pending',
+                    'bg-[#FF5722] text-white shadow-sm' => $currentStatus === 'pending',
                     'text-[#565A66] hover:text-[#16151A] bg-transparent' => $currentStatus !== 'pending',
                 ])
             >
@@ -71,7 +71,7 @@
                 onclick="setStatusFilter('verified')"
                 @class([
                     'rounded-full px-4 py-2 text-xs font-inter font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap',
-                    'bg-[#ED1B45] text-white shadow-sm' => $currentStatus === 'verified',
+                    'bg-[#FF5722] text-white shadow-sm' => $currentStatus === 'verified',
                     'text-[#565A66] hover:text-[#16151A] bg-transparent' => $currentStatus !== 'verified',
                 ])
             >
@@ -87,7 +87,7 @@
                     id="year-select"
                     name="year"
                     onchange="this.form.submit()"
-                    class="appearance-none rounded-full border border-[#E5E7EB] bg-white pl-4 pr-9 py-2 text-xs font-inter font-semibold text-[#16151A] shadow-sm hover:border-[#ED1B45]/50 focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer transition"
+                    class="appearance-none rounded-full border border-[#E5E7EB] bg-white pl-4 pr-9 py-2 text-xs font-inter font-semibold text-[#16151A] shadow-sm hover:border-[#FF5722]/50 focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] cursor-pointer transition"
                 >
                     <option value="all" @selected($currentYear === 'all')>Semua Tahun</option>
                     @foreach ($availableYears as $year)
@@ -104,7 +104,7 @@
             <!-- Tombol Submit Pencarian -->
             <button
                 type="submit"
-                class="bg-[#ED1B45] hover:bg-[#D1123D] text-white px-4 py-2 rounded-full font-inter font-semibold text-xs transition shadow-sm cursor-pointer"
+                class="bg-[#FF5722] hover:bg-[#E64A19] text-white px-4 py-2 rounded-full font-inter font-semibold text-xs transition shadow-sm cursor-pointer"
             >
                 Cari
             </button>

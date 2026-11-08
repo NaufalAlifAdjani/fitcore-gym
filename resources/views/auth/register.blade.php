@@ -1,4 +1,4 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     <!-- Judul & Subjudul Form -->
     <div class="mb-6">
         <h2 class="text-3xl sm:text-4xl font-black text-gray-950 leading-tight">
@@ -16,7 +16,7 @@
         <!-- 1. Nama Lengkap -->
         <div class="space-y-1">
             <label for="name" class="block text-xs font-bold text-gray-900">
-                <span class="text-[#be0a32]">*</span> Nama
+                <span class="text-[#FF5722]">*</span> Nama
             </label>
             <input 
                 id="name" 
@@ -26,7 +26,7 @@
                 placeholder="Isi nama sesuai KTP" 
                 required 
                 autofocus 
-                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#be0a32] focus:border-transparent transition" 
+                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:border-transparent transition" 
             />
             <x-input-error :messages="$errors->get('name')" class="mt-1" />
         </div>
@@ -34,9 +34,9 @@
         <!-- 2. Nomor Handphone (+62 Prefix) -->
         <div class="space-y-1">
             <label for="phone" class="block text-xs font-bold text-gray-900">
-                <span class="text-[#be0a32]">*</span> Nomor Handphone
+                <span class="text-[#FF5722]">*</span> Nomor Handphone
             </label>
-            <div class="flex rounded-xl overflow-hidden border border-gray-300 focus-within:ring-2 focus-within:ring-[#be0a32] focus-within:border-transparent transition">
+            <div class="flex rounded-xl overflow-hidden border border-gray-300 focus-within:ring-2 focus-within:ring-[#FF5722] focus-within:border-transparent transition">
                 <span class="inline-flex items-center px-4 bg-gray-50 text-gray-600 text-sm font-semibold border-r border-gray-300 select-none">
                     +62
                 </span>
@@ -56,7 +56,7 @@
         <!-- 3. Email -->
         <div class="space-y-1">
             <label for="email" class="block text-xs font-bold text-gray-900">
-                <span class="text-[#be0a32]">*</span> Email
+                <span class="text-[#FF5722]">*</span> Email
             </label>
             <input 
                 id="email" 
@@ -65,7 +65,7 @@
                 value="{{ old('email') }}" 
                 placeholder="user@mail.com" 
                 required 
-                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#be0a32] focus:border-transparent transition" 
+                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:border-transparent transition" 
             />
             <x-input-error :messages="$errors->get('email')" class="mt-1" />
         </div>
@@ -73,7 +73,7 @@
         <!-- 4. Kata Sandi -->
         <div class="space-y-1" x-data="{ showPassword: false }">
             <label for="password" class="block text-xs font-bold text-gray-900">
-                <span class="text-[#be0a32]">*</span> Kata Sandi
+                <span class="text-[#FF5722]">*</span> Kata Sandi
             </label>
             <div class="relative flex items-center">
                 <input 
@@ -83,7 +83,7 @@
                     x-model="password"
                     placeholder="Masukkan kata sandi (min. 8 karakter)" 
                     required 
-                    class="w-full pl-4 pr-11 py-3 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#be0a32] focus:border-transparent transition" 
+                    class="w-full pl-4 pr-11 py-3 bg-white border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:border-transparent transition" 
                 />
                 <button type="button" @click="showPassword = !showPassword"
                     class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer"
@@ -109,11 +109,11 @@
                     type="checkbox" 
                     name="terms" 
                     required 
-                    class="w-4 h-4 mt-0.5 rounded border-gray-300 text-[#be0a32] focus:ring-[#be0a32]" 
+                    class="w-4 h-4 mt-0.5 rounded border-gray-300 text-[#FF5722] focus:ring-[#FF5722]" 
                 />
                 <span>
-                    <span class="text-[#be0a32] font-bold">*</span> Saya sudah baca dan setuju dengan 
-                    <a href="#" class="text-[#be0a32] font-semibold hover:underline">kebijakan data privasi</a>.
+                    <span class="text-[#FF5722] font-bold">*</span> Saya sudah baca dan setuju dengan 
+                    <a href="#" class="text-[#FF5722] font-semibold hover:underline">kebijakan data privasi</a>.
                 </span>
             </label>
             <x-input-error :messages="$errors->get('terms')" class="mt-1" />
@@ -123,7 +123,7 @@
         <div class="pt-2">
             <button 
                 type="submit" 
-                class="w-full bg-[#be0a32] hover:bg-[#a1082a] text-white font-bold py-3.5 px-6 rounded-full flex items-center justify-center text-sm shadow-md hover:shadow-lg transition duration-150 focus:outline-none focus:ring-2 focus:ring-[#be0a32] focus:ring-offset-2">
+                class="w-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold py-3.5 px-6 rounded-full flex items-center justify-center text-sm shadow-md hover:shadow-lg transition duration-150 focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:ring-offset-2">
                 Daftar sekarang
             </button>
         </div>
@@ -138,7 +138,7 @@
         <!-- Tombol Daftar dengan Google -->
         <div>
             <a href="{{ route('auth.google') }}" 
-               class="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-full text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-[#be0a32] focus:ring-offset-2">
+               class="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-full text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:ring-offset-2">
                 <svg class="w-4 h-4" viewBox="0 0 24 24">
                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -149,14 +149,14 @@
             </a>
 
             @error('google')
-                <p class="text-xs text-[#be0a32] text-center font-medium mt-1">{{ $message }}</p>
+                <p class="text-xs text-[#FF5722] text-center font-medium mt-1">{{ $message }}</p>
             @enderror
         </div>
 
         <!-- 7. Link Balik ke Halaman Login -->
         <div class="text-center text-xs text-gray-600 pt-2">
             Sudah memiliki akun? 
-            <a href="{{ route('login') }}" class="text-[#be0a32] font-bold hover:underline">
+            <a href="{{ route('login') }}" class="text-[#FF5722] font-bold hover:underline">
                 Masuk di sini
             </a>
         </div>

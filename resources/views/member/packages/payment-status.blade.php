@@ -1,4 +1,4 @@
-<x-member-layout title="Status Pembayaran - FitCore Athletic" active-nav="riwayat">
+﻿<x-member-layout title="Status Pembayaran - FitCore Athletic" active-nav="riwayat">
     <div class="py-16 px-4 sm:px-6 lg:px-8 bg-[#0B0F17] min-h-screen flex items-center justify-center">
         <div class="mx-auto max-w-xl w-full">
             <div class="rounded-3xl border border-slate-800 bg-slate-900/90 p-8 sm:p-10 shadow-2xl text-center">
@@ -65,7 +65,7 @@
 
                     <div class="flex justify-between items-center">
                         <span class="text-slate-400">Nominal Transfer</span>
-                        <span class="font-bold text-[#BA0030]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</span>
+                        <span class="font-bold text-[#FF5722]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</span>
                     </div>
 
                     <div class="flex justify-between items-center">

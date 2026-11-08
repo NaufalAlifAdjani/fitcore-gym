@@ -1,4 +1,4 @@
-<x-guest-layout>
+﻿<x-guest-layout>
     <!-- Header Title & Subtitle -->
     <div class="mb-6">
         <h2 class="text-3xl sm:text-4xl font-black text-gray-950 leading-tight">
@@ -36,7 +36,7 @@
         <!-- Footer Link Balik ke Halaman Login -->
         <div class="text-center text-xs text-gray-600 pt-3">
             Ingat kata sandi akun Anda? 
-            <a href="{{ route('login') }}" class="text-[#be0a32] font-bold hover:underline">
+            <a href="{{ route('login') }}" class="text-[#FF5722] font-bold hover:underline">
                 Masuk di sini
             </a>
         </div>

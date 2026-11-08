@@ -1,4 +1,4 @@
-<x-trainer-layout :title="'Ketersediaan Waktu & Hari Kerja - PT Portal'">
+﻿<x-trainer-layout :title="'Ketersediaan Waktu & Hari Kerja - PT Portal'">
     <div class="space-y-6" x-data="{
         activeTab: 'weekly',
         selectAllSlots(dayNum) {
@@ -108,7 +108,7 @@
                 >
                     <span>🏖️ Cuti & Hari Libur</span>
                     @if ($upcomingDayOffs->count() > 0)
-                        <span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#ED1B45] text-[10px] font-bold text-white">
+                        <span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#FF5722] text-[10px] font-bold text-white">
                             {{ $upcomingDayOffs->count() }}
                         </span>
                     @endif
@@ -121,7 +121,7 @@
             <!-- Notice Box & Quick Actions -->
             <div class="rounded-2xl bg-white p-5 border border-gray-100 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                 <div class="flex items-center gap-3">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-[#ED1B45]">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-[#FF5722]">
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10" />
                             <polyline points="12 6 12 12 16 14" />
@@ -155,7 +155,7 @@
                     <button
                         type="submit"
                         form="weekly-schedule-form"
-                        class="rounded-xl bg-[#ED1B45] hover:bg-[#BA0030] text-white px-4 py-2 font-poppins font-bold text-xs transition active:scale-95 shadow-xs"
+                        class="rounded-xl bg-[#FF5722] hover:bg-[#FF5722] text-white px-4 py-2 font-poppins font-bold text-xs transition active:scale-95 shadow-xs"
                     >
                         Simpan Jadwal
                     </button>
@@ -190,7 +190,7 @@
                                             {{ $day['is_active'] ? 'checked' : '' }}
                                             x-model="isOpen"
                                         >
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ED1B45]"></div>
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF5722]"></div>
                                     </label>
 
                                     <div>
@@ -279,8 +279,8 @@
                                                     $timeShort = substr($time, 0, 5);
                                                     $isChecked = in_array($timeShort, $day['slots']);
                                                 @endphp
-                                                <label class="relative flex items-center justify-between p-3 rounded-xl border border-gray-200/80 bg-white hover:border-[#ED1B45] cursor-pointer transition select-none group has-checked:border-[#ED1B45] has-checked:bg-rose-50/40">
-                                                    <span class="font-inter font-semibold text-xs text-gray-800 group-hover:text-[#ED1B45]">
+                                                <label class="relative flex items-center justify-between p-3 rounded-xl border border-gray-200/80 bg-white hover:border-[#FF5722] cursor-pointer transition select-none group has-checked:border-[#FF5722] has-checked:bg-rose-50/40">
+                                                    <span class="font-inter font-semibold text-xs text-gray-800 group-hover:text-[#FF5722]">
                                                         {{ $timeShort }}
                                                     </span>
                                                     <input
@@ -288,7 +288,7 @@
                                                         name="days[{{ $dayNum }}][slots][]"
                                                         value="{{ $timeShort }}"
                                                         data-period="{{ $periodKey }}"
-                                                        class="day-slot-{{ $dayNum }} rounded-sm border-gray-300 text-[#ED1B45] focus:ring-[#ED1B45] h-4 w-4"
+                                                        class="day-slot-{{ $dayNum }} rounded-sm border-gray-300 text-[#FF5722] focus:ring-[#FF5722] h-4 w-4"
                                                         {{ $isChecked ? 'checked' : '' }}
                                                     >
                                                 </label>
@@ -317,7 +317,7 @@
                     <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
                         <button
                             type="submit"
-                            class="w-full sm:w-auto px-6 py-2.5 rounded-xl font-poppins font-bold text-xs bg-[#ED1B45] hover:bg-[#BA0030] active:scale-95 text-white transition shadow-xs text-center"
+                            class="w-full sm:w-auto px-6 py-2.5 rounded-xl font-poppins font-bold text-xs bg-[#FF5722] hover:bg-[#FF5722] active:scale-95 text-white transition shadow-xs text-center"
                         >
                             Simpan Pengaturan Jadwal
                         </button>
@@ -361,7 +361,7 @@
                             name="date"
                             min="{{ now()->toDateString() }}"
                             required
-                            class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 font-inter text-xs text-gray-800 focus:outline-hidden focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] transition"
+                            class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 font-inter text-xs text-gray-800 focus:outline-hidden focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] transition"
                         >
                     </div>
 
@@ -373,14 +373,14 @@
                             type="text"
                             name="reason"
                             placeholder="Contoh: Cuti Tahunan, Sakit, Acara Keluarga"
-                            class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 font-inter text-xs text-gray-800 focus:outline-hidden focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] transition"
+                            class="w-full rounded-xl border border-gray-200 px-3.5 py-2.5 font-inter text-xs text-gray-800 focus:outline-hidden focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] transition"
                         >
                     </div>
 
                     <div class="flex items-end">
                         <button
                             type="submit"
-                            class="w-full py-2.5 px-4 rounded-xl font-poppins font-bold text-xs bg-[#ED1B45] hover:bg-[#BA0030] text-white transition active:scale-95 shadow-sm text-center"
+                            class="w-full py-2.5 px-4 rounded-xl font-poppins font-bold text-xs bg-[#FF5722] hover:bg-[#FF5722] text-white transition active:scale-95 shadow-sm text-center"
                         >
                             + Tambah Hari Libur
                         </button>

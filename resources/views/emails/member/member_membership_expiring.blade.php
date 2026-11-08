@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -22,7 +22,7 @@
             border: 1px solid #E4E4E7;
         }
         .header {
-            background-color: #BA0030;
+            background-color: #FF5722;
             padding: 32px 24px;
             text-align: center;
             color: #FFFFFF;
@@ -50,7 +50,7 @@
         }
         .info-card {
             background-color: #FAFAFA;
-            border-left: 4px solid #BA0030;
+            border-left: 4px solid #FF5722;
             border-radius: 8px;
             padding: 16px 20px;
             margin: 24px 0;
@@ -78,7 +78,7 @@
         }
         .btn-renew {
             display: inline-block;
-            background-color: #BA0030;
+            background-color: #FF5722;
             color: #FFFFFF !important;
             text-decoration: none;
             padding: 14px 28px;

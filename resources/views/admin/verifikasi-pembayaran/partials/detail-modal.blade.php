@@ -1,4 +1,4 @@
-<div
+﻿<div
     x-cloak
     x-show="showDetailModal"
     x-transition.opacity
@@ -11,7 +11,7 @@
     <section x-transition class="max-h-[94vh] w-full max-w-6xl overflow-y-auto rounded-[20px] bg-white shadow-2xl">
         <header class="sticky top-0 z-10 flex items-start justify-between border-b border-[#E5E7EB] bg-white px-5 py-4 sm:px-7">
             <div>
-                <p class="font-inter text-[10px] font-bold uppercase tracking-[0.16em] text-[#ED1B45]">Pemeriksaan Transaksi</p>
+                <p class="font-inter text-[10px] font-bold uppercase tracking-[0.16em] text-[#FF5722]">Pemeriksaan Transaksi</p>
                 <h2 id="payment-detail-title" class="mt-1 font-poppins text-xl font-bold text-[#16151A]">Detail Pembayaran</h2>
                 <p class="mt-1 font-inter text-xs text-[#565A66]" x-text="selectedPayment?.invoice_id || ''"></p>
             </div>
@@ -43,7 +43,7 @@
                         </div>
                         <div>
                             <p class="font-inter text-[10px] font-semibold uppercase tracking-wide text-[#565A66]">Nominal</p>
-                            <p class="mt-1 font-poppins text-xs font-bold text-[#ED1B45]" x-text="formatCurrency(selectedPayment.amount)"></p>
+                            <p class="mt-1 font-poppins text-xs font-bold text-[#FF5722]" x-text="formatCurrency(selectedPayment.amount)"></p>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                     <section class="rounded-2xl border border-[#E5E7EB] p-5">
                         <h3 class="font-poppins text-sm font-bold text-[#16151A]">Profil Pemesan</h3>
                         <div class="mt-4 flex items-center gap-3">
-                            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#ED1B45]/10 font-poppins text-lg font-bold text-[#ED1B45]" x-text="(selectedPayment.member?.name || 'M').charAt(0).toUpperCase()"></span>
+                            <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#FF5722]/10 font-poppins text-lg font-bold text-[#FF5722]" x-text="(selectedPayment.member?.name || 'M').charAt(0).toUpperCase()"></span>
                             <div class="min-w-0">
                                 <p class="truncate font-inter text-sm font-bold text-[#16151A]" x-text="selectedPayment.member?.name || 'Member tidak tersedia'"></p>
                                 <p class="truncate font-inter text-xs text-[#565A66]" x-text="selectedPayment.member?.email || '-'"></p>

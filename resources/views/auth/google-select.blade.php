@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="utf-8">
@@ -104,7 +104,7 @@
                                class="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
                     </div>
                     <button type="submit" 
-                            class="w-full bg-[#be0a32] hover:bg-[#a1082a] text-white font-bold py-2.5 px-4 rounded-xl text-sm shadow transition">
+                            class="w-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold py-2.5 px-4 rounded-xl text-sm shadow transition">
                         Lanjutkan dengan Akun Ini
                     </button>
                 </form>

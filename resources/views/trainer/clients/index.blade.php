@@ -1,4 +1,4 @@
-<x-trainer-layout title="Klien Saya - FitCore PT Portal">
+﻿<x-trainer-layout title="Klien Saya - FitCore PT Portal">
     <div class="space-y-8">
         <!-- 1. Flash Alerts -->
         @if (session('success'))
@@ -34,7 +34,7 @@
 
             <div class="shrink-0">
                 <div class="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-inter text-xs font-semibold text-gray-700 shadow-xs border border-gray-100">
-                    <svg class="h-4 w-4 text-[#ED1B45]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="h-4 w-4 text-[#FF5722]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                         <line x1="16" y1="2" x2="16" y2="6" />
                         <line x1="8" y1="2" x2="8" y2="6" />
@@ -50,7 +50,7 @@
             <!-- Total Klien -->
             <div class="rounded-2xl bg-white p-5 shadow-xs border border-gray-100 flex flex-col justify-between transition hover:border-gray-200">
                 <div class="flex items-center gap-3">
-                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-[#ED1B45]">
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-[#FF5722]">
                         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
@@ -147,7 +147,7 @@
                         name="search"
                         value="{{ $search }}"
                         placeholder="Cari nama, email, nomor HP, atau ID member..."
-                        class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm font-inter text-gray-900 placeholder-gray-400 focus:outline-hidden focus:ring-2 focus:ring-[#ED1B45]/20 focus:border-[#ED1B45] transition"
+                        class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm font-inter text-gray-900 placeholder-gray-400 focus:outline-hidden focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] transition"
                     >
                 </div>
 
@@ -155,7 +155,7 @@
                 <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
                     <a
                         href="{{ route('trainer.clients.index', array_merge(request()->query(), ['status' => 'all'])) }}"
-                        class="px-3.5 py-2 rounded-xl text-xs font-inter font-semibold transition shrink-0 {{ $statusFilter === 'all' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}"
+                        class="px-3.5 py-2 rounded-xl text-xs font-inter font-semibold transition shrink-0 {{ $statusFilter === 'all' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }}"
                     >
                         Semua Klien
                     </a>
@@ -194,7 +194,7 @@
         <!-- 5. Client Cards Grid -->
         @if ($clients->isEmpty())
             <div class="rounded-2xl bg-white border border-gray-100 p-12 text-center shadow-xs">
-                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-rose-50 text-[#ED1B45] mb-4">
+                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-rose-50 text-[#FF5722] mb-4">
                     <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
@@ -325,7 +325,7 @@
                         <div class="pt-2">
                             <a
                                 href="{{ route('trainer.clients.show', $client->id) }}"
-                                class="w-full flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 py-2.5 font-inter text-xs font-semibold text-white shadow-xs hover:bg-[#ED1B45] transition"
+                                class="w-full flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-4 py-2.5 font-inter text-xs font-semibold text-white shadow-xs hover:bg-[#FF5722] transition"
                             >
                                 <span>Lihat Riwayat Sesi</span>
                                 <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">

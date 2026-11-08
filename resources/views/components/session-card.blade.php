@@ -1,4 +1,4 @@
-@props(['session'])
+﻿@props(['session'])
 
 @php
     $trainer = $session->trainer;
@@ -51,7 +51,7 @@
                 <h3 class="text-base sm:text-lg font-extrabold text-[#16151A] font-heading">
                     {{ $dateFormatted }}
                 </h3>
-                <div class="flex items-center gap-1.5 text-xs font-bold text-[#ED1B45] mt-1">
+                <div class="flex items-center gap-1.5 text-xs font-bold text-[#FF5722] mt-1">
                     <span>{{ $session->time_range }}</span>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     </a>
                     <button type="button"
                         @click="$dispatch('open-cancel-modal', { id: {{ $session->id }}, date: '{{ $dateFormatted }}', time: '{{ $session->time_range }}' })"
-                        class="text-[#ED1B45] hover:underline text-xs font-bold text-center px-2 py-1 cursor-pointer">
+                        class="text-[#FF5722] hover:underline text-xs font-bold text-center px-2 py-1 cursor-pointer">
                         Batal Sesi
                     </button>
                 @else

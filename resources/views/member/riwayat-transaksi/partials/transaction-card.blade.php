@@ -1,4 +1,4 @@
-@php
+﻿@php
     $isPt = $payment->package_type === 'pt_session' || $payment->payment_type === 'pt_package';
     $packageName = $isPt
         ? ($payment->ptPackage?->name ?? 'Personal Trainer Session')
@@ -39,7 +39,7 @@
 @endphp
 
 <article
-    class="bg-white rounded-2xl p-5 sm:p-6 shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-[#E5E7EB] hover:border-[#ED1B45]/30 transition-all duration-300"
+    class="bg-white rounded-2xl p-5 sm:p-6 shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-[#E5E7EB] hover:border-[#FF5722]/30 transition-all duration-300"
 >
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <!-- Kolom Kiri & Tengah: Info Transaksi & Paket -->
@@ -81,7 +81,7 @@
 
             <!-- Body Kartu: Nama Paket & Rincian -->
             <div class="flex items-start gap-4">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#ED1B45]/10 text-[#ED1B45]">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FF5722]/10 text-[#FF5722]">
                     @if ($isPt)
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -141,7 +141,7 @@
             <div class="sm:text-right">
                 <p class="font-inter text-[11px] font-semibold uppercase tracking-wider text-[#565A66]">Total Tagihan</p>
                 @if ($payment->status === 'pending')
-                    <p class="font-poppins text-xl sm:text-2xl font-bold text-[#ED1B45]">
+                    <p class="font-poppins text-xl sm:text-2xl font-bold text-[#FF5722]">
                         Rp {{ number_format((float) $payment->amount, 0, ',', '.') }}
                     </p>
                 @else
@@ -172,7 +172,7 @@
                     <!-- Tombol Cek Status (Primary Red) -->
                     <a
                         href="{{ route('member.membership.payment-status', $payment->id) }}"
-                        class="rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white px-4 py-2 font-inter text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5"
+                        class="rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white px-4 py-2 font-inter text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5"
                     >
                         <span>Cek Status</span>
                         <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -236,7 +236,7 @@
                     </button>
                     <a
                         href="{{ route('member.membership.packages') }}"
-                        class="rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white px-4 py-2 font-inter text-xs font-semibold shadow-sm transition"
+                        class="rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white px-4 py-2 font-inter text-xs font-semibold shadow-sm transition"
                     >
                         Beli Ulang
                     </a>

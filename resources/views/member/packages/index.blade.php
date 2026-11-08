@@ -1,8 +1,8 @@
-<x-member-layout title="Pilih Paket Keanggotaan - FitCore Athletic" active-nav="packages">
+﻿<x-member-layout title="Pilih Paket Keanggotaan - FitCore Athletic" active-nav="packages">
     <!-- Header Section (Nuansa Putih / Light Bersih) -->
     <section class="bg-white border-b border-[#E5E7EB] pt-14 pb-20 px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-5xl text-center">
-            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#ED1B45] bg-[#ED1B45]/10 border border-[#ED1B45]/20 rounded-full mb-4">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#FF5722] bg-[#FF5722]/10 border border-[#FF5722]/20 rounded-full mb-4">
                 FITCORE ATHLETIC MEMBERSHIP
             </span>
             <h1 class="font-poppins text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#16151A] tracking-tight">
@@ -63,11 +63,11 @@
                     @endphp
 
                     <!-- Card Paket (Kondisional: Best Seller vs Standard/VIP) -->
-                    <div class="relative flex flex-col justify-between rounded-3xl p-8 transition-all duration-300 {{ $isFeatured ? 'bg-[#141414] text-white border-2 border-[#ED1B45] shadow-2xl md:-translate-y-2 md:scale-[1.03] z-10' : 'bg-white border border-[#E5E7EB] text-[#16151A] shadow-[0_4px_12px_rgba(0,0,0,0.06)] hover:shadow-xl hover:border-[#ED1B45]/40' }}">
+                    <div class="relative flex flex-col justify-between rounded-3xl p-8 transition-all duration-300 {{ $isFeatured ? 'bg-[#141414] text-white border-2 border-[#FF5722] shadow-2xl md:-translate-y-2 md:scale-[1.03] z-10' : 'bg-white border border-[#E5E7EB] text-[#16151A] shadow-[0_4px_12px_rgba(0,0,0,0.06)] hover:shadow-xl hover:border-[#FF5722]/40' }}">
                         
                         @if ($package->badge)
                             <!-- Badge Paket -->
-                            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-wider whitespace-nowrap z-20 shadow-md {{ $isFeatured ? 'bg-[#ED1B45] text-white shadow-[#ED1B45]/30' : 'bg-slate-100 text-slate-700 border border-slate-200' }}">
+                            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-wider whitespace-nowrap z-20 shadow-md {{ $isFeatured ? 'bg-[#FF5722] text-white shadow-[#FF5722]/30' : 'bg-slate-100 text-slate-700 border border-slate-200' }}">
                                 {{ $package->badge }}
                             </div>
                         @endif
@@ -131,14 +131,14 @@
                             @if ($isFeatured)
                                 <a
                                     href="{{ $checkoutUrl }}"
-                                    class="block w-full text-center py-3.5 rounded-full font-bold text-sm bg-[#ED1B45] hover:bg-[#D1123D] text-white transition-all shadow-lg shadow-[#ED1B45]/30 hover:shadow-[#ED1B45]/50 hover:scale-[1.02]"
+                                    class="block w-full text-center py-3.5 rounded-full font-bold text-sm bg-[#FF5722] hover:bg-[#E64A19] text-white transition-all shadow-lg shadow-[#FF5722]/30 hover:shadow-[#FF5722]/50 hover:scale-[1.02]"
                                 >
                                     Gabung Elite Sekarang
                                 </a>
                             @else
                                 <a
                                     href="{{ $checkoutUrl }}"
-                                    class="block w-full text-center py-3.5 rounded-full font-semibold text-sm border-2 border-[#ED1B45] text-[#ED1B45] hover:bg-[#ED1B45] hover:text-white transition-colors"
+                                    class="block w-full text-center py-3.5 rounded-full font-semibold text-sm border-2 border-[#FF5722] text-[#FF5722] hover:bg-[#FF5722] hover:text-white transition-colors"
                                 >
                                     Pilih Paket Ini
                                 </a>
@@ -159,7 +159,7 @@
     <section class="bg-[#141414] py-20 px-4 sm:px-6 lg:px-8 border-t border-[#262626] text-white">
         <div class="mx-auto max-w-7xl">
             <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block text-[11px] font-extrabold uppercase tracking-widest text-[#ED1B45] mb-2">
+                <span class="inline-block text-[11px] font-extrabold uppercase tracking-widest text-[#FF5722] mb-2">
                     FASILITAS STANDAR INTERNASIONAL
                 </span>
                 <h2 class="font-poppins text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
@@ -174,7 +174,7 @@
             <div class="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <!-- Benefit 1 -->
                 <div class="rounded-2xl bg-[#1E1E1E] p-6 transition duration-200 hover:bg-[#252525]">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#ED1B45]/15 text-[#ED1B45] shadow-sm">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FF5722]/15 text-[#FF5722] shadow-sm">
                         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M6.5 6.5h11M6.5 17.5h11M4 9.5h16M4 14.5h16M8.5 4.5v15M15.5 4.5v15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                         </svg>
@@ -187,7 +187,7 @@
 
                 <!-- Benefit 2 -->
                 <div class="rounded-2xl bg-[#1E1E1E] p-6 transition duration-200 hover:bg-[#252525]">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#ED1B45]/15 text-[#ED1B45] shadow-sm">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FF5722]/15 text-[#FF5722] shadow-sm">
                         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M12 3v18M5 8h14M8 13h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                         </svg>
@@ -200,7 +200,7 @@
 
                 <!-- Benefit 3 -->
                 <div class="rounded-2xl bg-[#1E1E1E] p-6 transition duration-200 hover:bg-[#252525]">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#ED1B45]/15 text-[#ED1B45] shadow-sm">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FF5722]/15 text-[#FF5722] shadow-sm">
                         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <rect x="5" y="5" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2" />
                             <path d="M9 9h2v2H9V9Zm4 0h2v2h-2V9Zm-4 4h2v2H9v-2Zm4 0h2v2h-2v-2Z" fill="currentColor" />
@@ -214,7 +214,7 @@
 
                 <!-- Benefit 4 -->
                 <div class="rounded-2xl bg-[#1E1E1E] p-6 transition duration-200 hover:bg-[#252525]">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#ED1B45]/15 text-[#ED1B45] shadow-sm">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FF5722]/15 text-[#FF5722] shadow-sm">
                         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9Z" stroke="currentColor" stroke-width="2" />
                         </svg>
@@ -233,12 +233,12 @@
         <div class="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-10">
             <div class="space-y-3.5 md:col-span-2">
                 <div class="flex items-center gap-3">
-                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 shadow-md shadow-[#ED1B45]/30 rounded-full">
-                        <rect width="36" height="36" rx="18" fill="#ED1B45"/>
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 shadow-md shadow-[#FF5722]/30 rounded-full">
+                        <rect width="36" height="36" rx="18" fill="#FF5722"/>
                         <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="white"/>
                     </svg>
                     <div>
-                        <span class="font-poppins font-extrabold text-white text-base tracking-wider">FITCORE <span class="text-[#ED1B45]">ATHLETIC</span></span>
+                        <span class="font-poppins font-extrabold text-white text-base tracking-wider">FITCORE <span class="text-[#FF5722]">ATHLETIC</span></span>
                         <p class="text-[9px] uppercase tracking-widest text-slate-400">Gym &amp; Performance Center</p>
                     </div>
                 </div>
@@ -249,7 +249,7 @@
             <div>
                 <h4 class="font-poppins font-bold text-white uppercase text-xs tracking-wider mb-3.5">Lokasi &amp; Jam Operasional</h4>
                 <p class="leading-relaxed text-slate-400">Sudirman Central Business District (SCBD), District 8, Jakarta Selatan</p>
-                <p class="mt-2.5 text-[#ED1B45] font-bold">Senin - Minggu: 06:00 - 23:00 WIB</p>
+                <p class="mt-2.5 text-[#FF5722] font-bold">Senin - Minggu: 06:00 - 23:00 WIB</p>
             </div>
             <div>
                 <h4 class="font-poppins font-bold text-white uppercase text-xs tracking-wider mb-3.5">Kontak &amp; Bantuan</h4>

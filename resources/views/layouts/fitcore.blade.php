@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'title' => 'Fitcore Athletic - Personal Trainer',
     'activeNav' => null,
     'active' => null,
@@ -28,7 +28,7 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#F8F9FA] text-zinc-900 antialiased selection:bg-[#E11D48] selection:text-white">
+<body class="min-h-screen flex flex-col bg-[#F8F9FA] text-zinc-900 antialiased selection:bg-[#FF5722] selection:text-white">
 
     <!-- NAVBAR -->
     <x-member-navbar :active="$active ?? $activeNav" />
@@ -46,7 +46,7 @@
                 <!-- Kolom 1 (Brand & Jam Operasional) -->
                 <div class="space-y-6">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-[#E11D48] flex items-center justify-center text-white shadow-md">
+                        <div class="w-9 h-9 rounded-xl bg-[#FF5722] flex items-center justify-center text-white shadow-md">
                             <svg class="w-5 h-5 rotate-[-45deg]" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M6 5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5zm9 0a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V5zM4 9a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9zm12 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V9zM8 11h8v2H8v-2z"/>
                             </svg>
@@ -60,7 +60,7 @@
 
                     <div class="bg-[#18181C] border border-[#27272A] rounded-xl p-4 shadow-sm max-w-sm">
                         <div class="flex items-center gap-2 text-xs font-bold text-white mb-3">
-                            <svg class="w-4 h-4 text-[#E11D48]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 text-[#FF5722]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <circle cx="12" cy="12" r="10" stroke-width="2"/>
                                 <path stroke-linecap="round" stroke-width="2" d="M12 6v6l4 2"/>
                             </svg>
@@ -82,7 +82,7 @@
                 <!-- Kolom 2 (Lokasi) -->
                 <div>
                     <div class="flex items-center gap-2 text-xs font-black text-white tracking-widest uppercase mb-4">
-                        <span class="text-[#E11D48] text-base leading-none">●</span>
+                        <span class="text-[#FF5722] text-base leading-none">●</span>
                         <span>LOKASI</span>
                     </div>
                     <div class="bg-[#18181C] border border-[#27272A] rounded-xl p-5 shadow-sm">
@@ -96,7 +96,7 @@
                 <!-- Kolom 3 (Kontak & Dukungan) -->
                 <div>
                     <div class="flex items-center gap-2 text-xs font-black text-white tracking-widest uppercase mb-4">
-                        <span class="text-[#E11D48] text-base leading-none">●</span>
+                        <span class="text-[#FF5722] text-base leading-none">●</span>
                         <span>KONTAK &amp; DUKUNGAN</span>
                     </div>
 

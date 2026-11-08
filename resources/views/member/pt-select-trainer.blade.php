@@ -1,4 +1,4 @@
-<x-fitcore-layout :title="'Pilih Personal Trainer | FITCORE ATHLETIC'">
+﻿<x-fitcore-layout :title="'Pilih Personal Trainer | FITCORE ATHLETIC'">
 
     <section class="bg-[#F8F9FA] min-h-[calc(100vh-80px-350px)]">
         <div class="max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-14" x-data="{
@@ -51,7 +51,7 @@
                         <input type="text" 
                                x-model="searchQuery"
                                placeholder="Cari nama atau spesialis..." 
-                               class="w-full pl-11 pr-10 py-3 bg-white border border-gray-200 rounded-full text-xs font-semibold placeholder-gray-400 text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#E11D48] focus:border-transparent transition">
+                               class="w-full pl-11 pr-10 py-3 bg-white border border-gray-200 rounded-full text-xs font-semibold placeholder-gray-400 text-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:border-transparent transition">
                         <button type="button" 
                                 x-show="searchQuery.length > 0" 
                                 @click="searchQuery = ''" 
@@ -74,19 +74,19 @@
                     </button>
                     <button type="button" 
                             @click="selectedPeriod = 'morning'" 
-                            :class="selectedPeriod === 'morning' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-zinc-700 hover:bg-gray-100 border border-gray-200'" 
+                            :class="selectedPeriod === 'morning' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-zinc-700 hover:bg-gray-100 border border-gray-200'" 
                             class="px-3 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1">
                         <span>🌅 Sedia Pagi</span>
                     </button>
                     <button type="button" 
                             @click="selectedPeriod = 'afternoon'" 
-                            :class="selectedPeriod === 'afternoon' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-zinc-700 hover:bg-gray-100 border border-gray-200'" 
+                            :class="selectedPeriod === 'afternoon' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-zinc-700 hover:bg-gray-100 border border-gray-200'" 
                             class="px-3 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1">
                         <span>☀️ Sedia Siang</span>
                     </button>
                     <button type="button" 
                             @click="selectedPeriod = 'evening'" 
-                            :class="selectedPeriod === 'evening' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-zinc-700 hover:bg-gray-100 border border-gray-200'" 
+                            :class="selectedPeriod === 'evening' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-zinc-700 hover:bg-gray-100 border border-gray-200'" 
                             class="px-3 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1">
                         <span>🌙 Sedia Malam</span>
                     </button>
@@ -124,7 +124,7 @@
                                 {{-- Badge Ketersediaan Jam Kerja PT --}}
                                 <div class="mt-3.5 pt-3 border-t border-gray-100/90 flex flex-col gap-1.5">
                                     <div class="flex items-center gap-2 text-xs font-semibold text-zinc-800">
-                                        <svg class="w-3.5 h-3.5 text-[#ED1B45] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg class="w-3.5 h-3.5 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <circle cx="12" cy="12" r="10" stroke-width="2"/>
                                             <polyline points="12 6 12 12 16 14" stroke-width="2"/>
                                         </svg>
@@ -161,7 +161,7 @@
             <div x-show="visibleCount === 0" 
                  x-cloak 
                  class="bg-white rounded-2xl p-10 text-center border border-gray-200 mt-8 shadow-sm max-w-md mx-auto">
-                <div class="w-12 h-12 rounded-full bg-rose-50 text-[#E11D48] mx-auto flex items-center justify-center mb-3">
+                <div class="w-12 h-12 rounded-full bg-rose-50 text-[#FF5722] mx-auto flex items-center justify-center mb-3">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>

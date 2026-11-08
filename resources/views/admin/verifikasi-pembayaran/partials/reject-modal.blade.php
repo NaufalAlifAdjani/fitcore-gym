@@ -1,4 +1,4 @@
-<div
+﻿<div
     x-cloak
     x-show="showRejectModal"
     x-transition.opacity
@@ -61,7 +61,7 @@
                     type="submit"
                     variant="primary"
                     x-bind:disabled="isSubmitting"
-                    class="!rounded-full !bg-[#ED1B45] hover:!bg-[#D1123D] !px-6 !py-2.5 !text-sm font-inter font-semibold disabled:cursor-wait transition shadow-sm"
+                    class="!rounded-full !bg-[#FF5722] hover:!bg-[#E64A19] !px-6 !py-2.5 !text-sm font-inter font-semibold disabled:cursor-wait transition shadow-sm"
                 >
                     <span x-text="isSubmitting ? 'Memproses...' : 'Konfirmasi Penolakan'">Konfirmasi Penolakan</span>
                 </x-button>

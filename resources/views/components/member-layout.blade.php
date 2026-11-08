@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'title' => 'FitCore Athletic - Premium Gym & Performance Center',
     'activeNav' => 'packages',
 ])
@@ -26,7 +26,7 @@
         <!-- Scripts & Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-[#0B0F17] font-sans antialiased text-slate-100 selection:bg-[#BA0030] selection:text-white">
+    <body class="bg-[#0B0F17] font-sans antialiased text-slate-100 selection:bg-[#FF5722] selection:text-white">
         <div class="min-h-screen flex flex-col justify-between bg-[#0B0F17]">
             <x-member-navbar :active="$activeNav" />
 

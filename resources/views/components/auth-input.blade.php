@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'label' => null,
     'badge' => null,
     'icon' => null,
@@ -53,7 +53,7 @@
                 'class' => 'w-full ' 
                     . ($icon ? 'pl-10 ' : 'pl-4 ') 
                     . ($type === 'password' ? 'pr-11 ' : 'pr-4 ') 
-                    . 'py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#be0a32] focus:border-transparent transition'
+                    . 'py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:border-transparent transition'
             ]) }}
         />
 

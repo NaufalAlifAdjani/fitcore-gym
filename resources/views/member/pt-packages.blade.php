@@ -1,4 +1,4 @@
-<x-fitcore-layout :title="'Booking Sesi Personal Trainer | FITCORE ATHLETIC'">
+﻿<x-fitcore-layout :title="'Booking Sesi Personal Trainer | FITCORE ATHLETIC'">
 
     {{-- HERO SECTION (Background Putih) --}}
     <section class="bg-white border-b border-gray-100 py-12 md:py-16">
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="inline-flex items-center gap-2 bg-[#EEF2FF] border border-indigo-100 text-zinc-900 px-4 py-2 rounded-full shadow-sm self-start sm:self-center">
-                    <span class="w-4 h-4 rounded-full bg-[#E11D48] text-white flex items-center justify-center text-[10px] font-black">✓</span>
+                    <span class="w-4 h-4 rounded-full bg-[#FF5722] text-white flex items-center justify-center text-[10px] font-black">✓</span>
                     <span class="text-xs font-extrabold tracking-wide">1 sesi = 60 menit</span>
                 </div>
             </div>
@@ -111,7 +111,7 @@
                         
                         {{-- Floating Badge Populer --}}
                         @if(!empty($pkg['is_popular']))
-                            <div class="absolute -top-3 right-4 bg-[#E11D48] text-white text-[11px] font-black tracking-wider uppercase px-3 py-1 rounded-full shadow-sm flex items-center gap-1" style="background-color: #E11D48;">
+                            <div class="absolute -top-3 right-4 bg-[#FF5722] text-white text-[11px] font-black tracking-wider uppercase px-3 py-1 rounded-full shadow-sm flex items-center gap-1" style="background-color: #FF5722;">
                                 <span>🔥</span>
                                 <span>PALING POPULER</span>
                             </div>

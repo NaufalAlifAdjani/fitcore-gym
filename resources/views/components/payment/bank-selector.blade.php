@@ -1,4 +1,4 @@
-@props([
+﻿@props([
     'banks' => [],
     'selectedBank' => '',
     'name' => 'bank_id',
@@ -11,7 +11,7 @@
         <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
             <div>
                 <h2 class="font-heading text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                    <svg class="h-5 w-5 text-[#BA0030]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg class="h-5 w-5 text-[#FF5722]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="5" width="18" height="14" rx="2" />
                         <path d="M3 10h18" />
                     </svg>
@@ -26,7 +26,7 @@
             @forelse ($banks as $index => $bank)
                 <label
                     class="relative flex items-center justify-between p-4 sm:p-5 rounded-2xl border cursor-pointer transition-all duration-200"
-                    x-bind:class="selectedBank == '{{ $bank->id }}' ? 'border-[#BA0030] bg-rose-50/40 ring-2 ring-[#BA0030]/20 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'"
+                    x-bind:class="selectedBank == '{{ $bank->id }}' ? 'border-[#FF5722] bg-rose-50/40 ring-2 ring-[#FF5722]/20 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'"
                 >
                     <div class="flex items-center gap-4">
                         <input
@@ -34,7 +34,7 @@
                             name="{{ $name }}"
                             value="{{ $bank->id }}"
                             x-model="selectedBank"
-                            class="h-4 w-4 text-[#BA0030] focus:ring-[#BA0030] border-slate-300"
+                            class="h-4 w-4 text-[#FF5722] focus:ring-[#FF5722] border-slate-300"
                             {{ $selectedBank == $bank->id || ($selectedBank === '' && $index === 0) ? 'checked' : '' }}
                         />
                         <div>

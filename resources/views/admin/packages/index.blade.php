@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <div
         x-data="membershipPackages({
             hasErrors: @js($errors->any()),
@@ -51,7 +51,7 @@
                                 x-on:input.debounce.400ms="$event.target.form.requestSubmit()"
                                 placeholder="Cari paket..."
                                 aria-label="Cari nama paket"
-                                class="w-full sm:w-56 rounded-full border border-[#E5E7EB] bg-white py-2.5 pl-11 pr-4 text-sm font-inter text-[#16151A] placeholder-[#565A66] shadow-sm focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full sm:w-56 rounded-full border border-[#E5E7EB] bg-white py-2.5 pl-11 pr-4 text-sm font-inter text-[#16151A] placeholder-[#565A66] shadow-sm focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                             >
                         </label>
 
@@ -61,7 +61,7 @@
                                 name="status"
                                 aria-label="Filter status"
                                 onchange="this.form.submit()"
-                                class="w-full sm:w-44 rounded-full border border-[#E5E7EB] bg-white py-2.5 pl-4 pr-10 text-sm font-inter font-medium text-[#16151A] shadow-sm focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer transition"
+                                class="w-full sm:w-44 rounded-full border border-[#E5E7EB] bg-white py-2.5 pl-4 pr-10 text-sm font-inter font-medium text-[#16151A] shadow-sm focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] cursor-pointer transition"
                             >
                                 <option value="">Semua Status</option>
                                 <option value="active" @selected(request('status') === 'active')>Aktif</option>
@@ -76,7 +76,7 @@
                     <button
                         type="button"
                         x-on:click="openCreateModal()"
-                        class="bg-[#ED1B45] text-white px-6 py-2.5 rounded-full font-inter font-semibold shadow-sm hover:bg-[#D1123D] transition flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+                        class="bg-[#FF5722] text-white px-6 py-2.5 rounded-full font-inter font-semibold shadow-sm hover:bg-[#E64A19] transition flex items-center justify-center gap-2 shrink-0 cursor-pointer"
                     >
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -116,8 +116,8 @@
                                 href="{{ route('admin.packages.index', array_merge(request()->only(['search', 'status']), ['tier' => $tierValue])) }}"
                                 @class([
                                     'rounded-full px-5 py-2 font-inter text-sm transition',
-                                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => $isSelectedTier,
-                                    'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A] hover:border-[#ED1B45]/40 cursor-pointer' => ! $isSelectedTier,
+                                    'bg-[#FF5722] text-white font-semibold shadow-sm' => $isSelectedTier,
+                                    'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A] hover:border-[#FF5722]/40 cursor-pointer' => ! $isSelectedTier,
                                 ])
                                 aria-current="{{ $isSelectedTier ? 'page' : 'false' }}"
                             >
@@ -200,7 +200,7 @@
                                             <p class="font-poppins font-bold text-lg text-[#16151A]">Rp {{ number_format($pkg->promo_price, 0, ',', '.') }}</p>
                                             <div class="mt-1 flex items-center">
                                                 <span class="line-through text-[#565A66] text-xs font-inter">Rp {{ number_format($pkg->price, 0, ',', '.') }}</span>
-                                                <span class="bg-[#ED1B45] text-white rounded-full text-[10px] font-bold px-2 py-0.5 ml-2">HEMAT {{ $discount }}%</span>
+                                                <span class="bg-[#FF5722] text-white rounded-full text-[10px] font-bold px-2 py-0.5 ml-2">HEMAT {{ $discount }}%</span>
                                             </div>
                                         @else
                                             <p class="font-poppins font-bold text-lg text-[#16151A]">Rp {{ number_format($pkg->price, 0, ',', '.') }}</p>
@@ -243,7 +243,7 @@
                                                     role="switch"
                                                     aria-label="Ubah status paket"
                                                     x-bind:disabled="isSaving"
-                                                    class="relative inline-flex h-7 w-12 items-center rounded-full transition focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:ring-offset-2 disabled:cursor-wait"
+                                                    class="relative inline-flex h-7 w-12 items-center rounded-full transition focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:ring-offset-2 disabled:cursor-wait"
                                                     x-bind:class="isActive ? 'bg-[#10B981]' : 'bg-[#D4D4D8]'"
                                                 >
                                                     <span class="sr-only">Ubah status paket</span>
@@ -262,7 +262,7 @@
                                             data-package="{{ json_encode($pkg->only(['id', 'name', 'badge', 'tier', 'description', 'price', 'promo_price', 'duration_value', 'duration_unit', 'duration_in_days', 'facilities', 'pt_sessions', 'is_active']), JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP) }}"
                                             x-on:click="openEditModal(JSON.parse($el.dataset.package))"
                                             aria-label="Edit paket {{ $pkg->name }}"
-                                            class="w-9 h-9 rounded-full border border-[#E5E7EB] flex items-center justify-center text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#ED1B45] transition mx-auto cursor-pointer"
+                                            class="w-9 h-9 rounded-full border border-[#E5E7EB] flex items-center justify-center text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#FF5722] transition mx-auto cursor-pointer"
                                         >
                                             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                                 <path d="m14.5 6.5 3 3M4 20l4.3-.9L19 8.4a2.12 2.12 0 0 0-3-3L5.3 16.1 4 20Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
@@ -291,7 +291,7 @@
 
                             @for ($page = max(1, $packages->currentPage() - 2); $page <= min($packages->lastPage(), $packages->currentPage() + 2); $page++)
                                 @if ($page === $packages->currentPage())
-                                    <span aria-current="page" class="flex h-9 min-w-9 items-center justify-center rounded-full bg-[#ED1B45] text-white px-3 text-xs font-bold font-inter shadow-sm">{{ $page }}</span>
+                                    <span aria-current="page" class="flex h-9 min-w-9 items-center justify-center rounded-full bg-[#FF5722] text-white px-3 text-xs font-bold font-inter shadow-sm">{{ $page }}</span>
                                 @else
                                     <a href="{{ $packages->url($page) }}" aria-label="Halaman {{ $page }}" class="flex h-9 min-w-9 items-center justify-center rounded-full border border-[#E5E7EB] text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] px-3 text-xs font-semibold font-inter transition">{{ $page }}</a>
                                 @endif

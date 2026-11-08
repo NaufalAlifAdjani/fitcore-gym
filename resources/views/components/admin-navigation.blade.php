@@ -1,4 +1,4 @@
-@php
+﻿@php
     $adminNavigationItems = [
         ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'active' => request()->routeIs('admin.dashboard'), 'icon' => 'dashboard'],
         ['label' => 'Paket & Harga', 'route' => 'admin.packages.index', 'active' => request()->routeIs('admin.packages.*'), 'icon' => 'packages'],
@@ -36,13 +36,13 @@
 >
     <!-- Brand Logo / Teks -->
     <a href="{{ route('dashboard') }}" class="flex h-16 shrink-0 items-center gap-3 border-b border-[#E5E7EB] px-6">
-        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ED1B45] text-white shadow-sm">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#FF5722] text-white shadow-sm">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 012.25 13.5v-3A1.5 1.5 0 013.75 9zm15 0h1.5A1.5 1.5 0 0121.75 10.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 0117.25 13.5v-3a1.5 1.5 0 011.5-1.5zM6.75 12h10.5M5.25 7.5v9M18.75 7.5v9" />
             </svg>
         </span>
         <span class="font-poppins font-extrabold text-2xl text-[#16151A] tracking-tight">
-            FIT<span class="text-[#ED1B45]">CORE</span>
+            FIT<span class="text-[#FF5722]">CORE</span>
         </span>
     </a>
 
@@ -57,7 +57,7 @@
                         href="{{ route($item['route']) }}"
                         @class([
                             'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
-                            'bg-[#ED1B45] text-white font-semibold shadow-sm' => $item['active'],
+                            'bg-[#FF5722] text-white font-semibold shadow-sm' => $item['active'],
                             'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => ! $item['active'],
                         ])
                         aria-current="{{ $item['active'] ? 'page' : 'false' }}"
@@ -117,7 +117,7 @@
                         href="{{ route($item['route']) }}"
                         @class([
                             'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
-                            'bg-[#ED1B45] text-white font-semibold shadow-sm' => $item['active'],
+                            'bg-[#FF5722] text-white font-semibold shadow-sm' => $item['active'],
                             'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => ! $item['active'],
                         ])
                         aria-current="{{ $item['active'] ? 'page' : 'false' }}"
@@ -163,7 +163,7 @@
                 @endforeach
                 <a href="{{ route('profile.edit') }}" @class([
                     'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
-                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('profile.*'),
+                    'bg-[#FF5722] text-white font-semibold shadow-sm' => request()->routeIs('profile.*'),
                     'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('profile.*'),
                 ]) x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -176,7 +176,7 @@
                 {{-- Member role navigation --}}
                 <a href="{{ route('dashboard') }}" @class([
                     'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
-                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('member.dashboard') || request()->routeIs('dashboard'),
+                    'bg-[#FF5722] text-white font-semibold shadow-sm' => request()->routeIs('member.dashboard') || request()->routeIs('dashboard'),
                     'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !(request()->routeIs('member.dashboard') || request()->routeIs('dashboard')),
                 ]) x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -189,7 +189,7 @@
                 </a>
                 <a href="{{ route('pt-sessions.index') }}" @class([
                     'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
-                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('pt-sessions.*'),
+                    'bg-[#FF5722] text-white font-semibold shadow-sm' => request()->routeIs('pt-sessions.*'),
                     'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('pt-sessions.*'),
                 ]) x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -199,7 +199,7 @@
                 </a>
                 <a href="{{ route('member.card') }}" @class([
                     'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
-                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('member.card'),
+                    'bg-[#FF5722] text-white font-semibold shadow-sm' => request()->routeIs('member.card'),
                     'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('member.card'),
                 ]) x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -211,7 +211,7 @@
                 </a>
                 <a href="{{ route('member.membership.packages') }}" @class([
                     'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
-                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('member.membership.*'),
+                    'bg-[#FF5722] text-white font-semibold shadow-sm' => request()->routeIs('member.membership.*'),
                     'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('member.membership.*'),
                 ]) x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -222,7 +222,7 @@
                 </a>
                 <a href="{{ route('member.pt-packages.index') }}" @class([
                     'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
-                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('member.pt-packages.*'),
+                    'bg-[#FF5722] text-white font-semibold shadow-sm' => request()->routeIs('member.pt-packages.*'),
                     'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('member.pt-packages.*'),
                 ]) x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -233,7 +233,7 @@
                 </a>
                 <a href="{{ route('profile.edit') }}" @class([
                     'flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm transition duration-200 cursor-pointer',
-                    'bg-[#ED1B45] text-white font-semibold shadow-sm' => request()->routeIs('profile.*'),
+                    'bg-[#FF5722] text-white font-semibold shadow-sm' => request()->routeIs('profile.*'),
                     'text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] font-medium' => !request()->routeIs('profile.*'),
                 ]) x-on:click="sidebarOpen = false">
                     <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -264,7 +264,7 @@
         <button
             type="button"
             x-on:click="showLogoutModal = true"
-            class="flex w-full items-center gap-3 rounded-full px-4 py-3 text-left font-inter text-sm font-semibold text-[#ED1B45] transition hover:bg-[#ED1B45]/10 cursor-pointer"
+            class="flex w-full items-center gap-3 rounded-full px-4 py-3 text-left font-inter text-sm font-semibold text-[#FF5722] transition hover:bg-[#FF5722]/10 cursor-pointer"
         >
             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M10 17l5-5-5-5m5 5H3m9-9h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
@@ -308,7 +308,7 @@
                 <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
             <!-- Red Dot Indicator -->
-            <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#ED1B45] ring-2 ring-white"></span>
+            <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#FF5722] ring-2 ring-white"></span>
         </button>
 
         <!-- User Profile Dropdown -->
@@ -320,7 +320,7 @@
                 aria-label="Menu profil"
                 class="flex items-center gap-2 rounded-full p-1.5 transition hover:bg-[#F6F6F7] sm:gap-3 sm:pl-2 cursor-pointer"
             >
-                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#ED1B45] font-inter text-xs font-bold uppercase text-white shadow-sm">
+                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#FF5722] font-inter text-xs font-bold uppercase text-white shadow-sm">
                     {{ \Illuminate\Support\Str::of(Auth::user()->name)->explode(' ')->map(fn ($part) => \Illuminate\Support\Str::substr($part, 0, 1))->take(2)->implode('') }}
                 </span>
                 <span class="hidden text-left sm:block">
@@ -354,7 +354,7 @@
                 <button
                     type="button"
                     x-on:click="profileOpen = false; showLogoutModal = true"
-                    class="w-full rounded-full px-4 py-2.5 text-left font-inter text-sm font-semibold text-[#ED1B45] hover:bg-[#ED1B45]/10 transition cursor-pointer"
+                    class="w-full rounded-full px-4 py-2.5 text-left font-inter text-sm font-semibold text-[#FF5722] hover:bg-[#FF5722]/10 transition cursor-pointer"
                 >
                     Keluar
                 </button>
