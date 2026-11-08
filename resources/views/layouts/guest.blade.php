@@ -14,7 +14,7 @@
     <!-- Scripts & Styles via Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-[#100d1a] text-gray-900 min-h-screen flex flex-col">
+<body class="font-sans antialiased bg-[#F8F9FA] text-gray-900 min-h-screen flex flex-col">
 
     <!-- Top Navigation Bar Component -->
     <x-navbar />

@@ -45,15 +45,15 @@
                         </h2>
 
                         <div class="flex items-center gap-4">
-                            <div class="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-slate-900 flex items-center justify-center border border-slate-800 shadow-inner">
+                            <div class="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-orange-50 border border-orange-200/80 flex items-center justify-center shadow-xs">
                                 <svg class="h-8 w-8 text-[#FF5722]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6.5 6.5h11M6.5 17.5h11M4 9.5h16M4 14.5h16M8.5 4.5v15M15.5 4.5v15" stroke-linecap="round"/>
                                 </svg>
-                                <span class="absolute bottom-1 right-1.5 text-[8px] font-black text-rose-300">FITCORE</span>
+                                <span class="absolute bottom-1 right-1.5 text-[8px] font-black text-[#FF5722]">FITCORE</span>
                             </div>
 
                             <div class="flex-1 min-w-0">
-                                <span class="inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-rose-100 text-[#FF5722] mb-1">
+                                <span class="inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-orange-100 text-[#FF5722] mb-1">
                                     PAKET MEMBERSHIP
                                 </span>
                                 <h3 class="font-heading text-lg font-extrabold text-slate-900 truncate">
@@ -65,16 +65,16 @@
                             </div>
                         </div>
 
-                        <!-- Box Hitam Total Pembayaran -->
-                        <div class="mt-5 rounded-2xl bg-[#0B0F17] p-5 text-white shadow-md">
-                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
+                        <!-- Box Total Pembayaran (Light Athletic Palette) -->
+                        <div class="mt-5 rounded-2xl bg-gradient-to-r from-orange-50 via-white to-amber-50/50 border-2 border-orange-200 p-5 text-zinc-900 shadow-sm">
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
                                 TOTAL PEMBAYARAN :
                             </span>
                             <div class="mt-1 flex items-baseline justify-between">
-                                <span class="font-heading text-2xl sm:text-3xl font-black text-white tracking-tight">
+                                <span class="font-heading text-2xl sm:text-3xl font-black text-[#FF5722] tracking-tight">
                                     Rp {{ number_format($totalAmount, 0, ',', '.') }}
                                 </span>
-                                <span class="text-[11px] text-rose-400 font-semibold">Termasuk kode unik: +{{ $uniqueCode }}</span>
+                                <span class="text-[11px] text-[#FF5722] font-semibold">Termasuk kode unik: +{{ $uniqueCode }}</span>
                             </div>
                         </div>
                     </x-card>

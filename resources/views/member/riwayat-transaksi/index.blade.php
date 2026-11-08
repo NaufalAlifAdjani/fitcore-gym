@@ -157,9 +157,9 @@
                     <template x-if="selectedDetail?.status === 'verified' && selectedDetail?.invoice_url">
                         <a
                             x-bind:href="selectedDetail.invoice_url"
-                            class="rounded-full bg-[#141414] hover:bg-black text-white px-5 py-2 text-xs font-inter font-semibold transition inline-flex items-center gap-1.5"
+                            class="rounded-full bg-[#FF5722] hover:bg-[#E64A19] shadow-md shadow-orange-500/20 text-white px-5 py-2 text-xs font-inter font-semibold transition inline-flex items-center gap-1.5"
                         >
-                            <svg class="h-3.5 w-3.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             <span>Unduh Invoice PDF</span>
                         </a>
                     </template>
@@ -233,7 +233,7 @@
                     <button
                         type="button"
                         x-on:click="closeReceiptModal()"
-                        class="rounded-full bg-[#16151A] hover:bg-black text-white px-5 py-2 text-xs font-inter font-semibold transition cursor-pointer"
+                        class="rounded-full border border-gray-200 bg-white hover:bg-gray-100 text-gray-700 px-5 py-2 text-xs font-inter font-semibold transition cursor-pointer"
                     >
                         Tutup
                     </button>

@@ -1,4 +1,4 @@
-﻿<x-app-layout>
+<x-app-layout>
     <div
         id="checkin-page"
         data-store-url="{{ route('admin.checkin.store') }}"

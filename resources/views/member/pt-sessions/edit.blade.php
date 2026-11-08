@@ -287,21 +287,21 @@
                         </div>
                     </div>
 
-                    <!-- Ringkasan Perubahan Jadwal (Dark Card #141414) -->
-                    <div class="bg-[#141414] rounded-2xl p-6 text-white space-y-5 shadow-xl relative overflow-hidden">
+                    <!-- Ringkasan Perubahan Jadwal -->
+                    <div class="bg-gradient-to-b from-orange-50/70 via-white to-white border-2 border-orange-200/80 rounded-2xl p-6 text-zinc-900 space-y-5 shadow-lg shadow-orange-500/5 relative overflow-hidden">
                         <div
-                            class="absolute -top-12 -right-12 w-44 h-44 bg-[#FF5722]/20 rounded-full blur-3xl pointer-events-none">
+                            class="absolute -top-12 -right-12 w-44 h-44 bg-orange-400/15 rounded-full blur-3xl pointer-events-none">
                         </div>
 
-                        <h3 class="text-base font-extrabold font-heading text-white">
+                        <h3 class="text-base font-extrabold font-heading text-zinc-900">
                             Ringkasan Perubahan
                         </h3>
 
-                        <div class="space-y-3.5 text-xs text-zinc-300">
+                        <div class="space-y-3.5 text-xs text-zinc-600">
                             <!-- Jadwal Lama -->
                             <div>
-                                <span class="text-[#A1A1AA] text-[11px] block">Jadwal Sebelumnya:</span>
-                                <span class="font-medium text-zinc-400 line-through">
+                                <span class="text-gray-500 text-[11px] block">Jadwal Sebelumnya:</span>
+                                <span class="font-medium text-gray-400 line-through">
                                     {{ $session->session_date->locale('id')->translatedFormat('d M Y') }}
                                     ({{ substr($session->start_time, 0, 5) }})
                                 </span>
@@ -309,14 +309,14 @@
 
                             <!-- Tanggal Baru -->
                             <div>
-                                <span class="text-[#A1A1AA] text-[11px] block">Tanggal Baru:</span>
-                                <span class="font-bold text-white text-xs mt-0.5"
+                                <span class="text-gray-500 text-[11px] block">Tanggal Baru:</span>
+                                <span class="font-bold text-zinc-900 text-xs mt-0.5"
                                     x-text="formattedSelectedDate || selectedDate"></span>
                             </div>
 
                             <!-- Jam Baru -->
                             <div>
-                                <span class="text-[#A1A1AA] text-[11px] block">Jam Sesi Baru:</span>
+                                <span class="text-gray-500 text-[11px] block">Jam Sesi Baru:</span>
                                 <span class="font-bold text-[#FF5722] text-xs mt-0.5"
                                     x-text="selectedSlot ? (selectedSlot + ' - ' + endSlotTime + ' WIB') : 'Pilih slot jam'"></span>
                             </div>
@@ -332,8 +332,8 @@
                             <input type="hidden" name="start_time" :value="selectedSlot">
 
                             <button type="submit" :disabled="!selectedDate || !selectedSlot" :class="{
-                                         'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-lg shadow-[#FF5722]/30 cursor-pointer': selectedDate && selectedSlot,
-                                         'bg-zinc-800 text-zinc-500 cursor-not-allowed': !selectedDate || !selectedSlot
+                                         'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-lg shadow-orange-500/30 cursor-pointer': selectedDate && selectedSlot,
+                                         'bg-gray-200 text-gray-400 cursor-not-allowed': !selectedDate || !selectedSlot
                                      }"
                                 class="w-full py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2">
                                 <span>Simpan Jadwal Baru</span>

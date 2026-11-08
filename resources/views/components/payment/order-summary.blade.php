@@ -95,16 +95,16 @@
         </div>
     </div>
 
-    <!-- Box Hitam Pekat Total Pembayaran -->
-    <div class="mt-6 rounded-2xl bg-[#0B0F17] p-5 text-white shadow-md">
-        <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
+    <!-- Box Total Pembayaran (Light Athletic Palette) -->
+    <div class="mt-6 rounded-2xl bg-gradient-to-r from-orange-50 via-white to-amber-50/50 border-2 border-orange-200 p-5 text-zinc-900 shadow-sm">
+        <span class="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
             TOTAL PEMBAYARAN :
         </span>
         <div class="mt-1 flex items-baseline justify-between">
-            <span class="font-heading text-2xl sm:text-3xl font-black text-white tracking-tight" x-text="'Rp ' + total.toLocaleString('id-ID')">
+            <span class="font-heading text-2xl sm:text-3xl font-black text-[#FF5722] tracking-tight" x-text="'Rp ' + total.toLocaleString('id-ID')">
                 Rp {{ number_format($totalAmount, 0, ',', '.') }}
             </span>
-            <span class="text-[11px] text-rose-400 font-semibold">Tepat s/d 3 digit terakhir</span>
+            <span class="text-[11px] text-[#FF5722] font-semibold">Tepat s/d 3 digit terakhir</span>
         </div>
     </div>
 

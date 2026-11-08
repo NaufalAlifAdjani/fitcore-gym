@@ -50,9 +50,9 @@
          "
          {{ $attributes->merge([
             'class' => ($isFeatured 
-                ? 'relative bg-[#181622]/95 border-2 border-[#FF5722] shadow-[0_4px_15px_rgba(255,87,34,0.25)]' 
-                : 'bg-[#181622]/90 border border-gray-800/80') 
-                . ' rounded-2xl p-4 text-center flex flex-col items-center justify-center cursor-pointer select-none transition-all duration-300 ease-out transform hover:-translate-y-3 hover:scale-[1.04] hover:shadow-[0_20px_35px_rgba(0,0,0,0.7),0_0_25px_rgba(255,87,34,0.4)] hover:border-[#FF5722] hover:bg-[#221d33] group'
+                ? 'relative bg-white border-2 border-[#FF5722] shadow-[0_8px_25px_rgba(255,87,34,0.18)]' 
+                : 'bg-white/95 border border-orange-100 shadow-sm') 
+                . ' rounded-2xl p-4 text-center flex flex-col items-center justify-center cursor-pointer select-none transition-all duration-300 ease-out transform hover:-translate-y-2 hover:scale-[1.03] hover:shadow-[0_12px_30px_rgba(255,87,34,0.15)] hover:border-[#FF5722] group'
          ]) }}>
 
         @if ($badge)
@@ -61,11 +61,11 @@
             </span>
         @endif
 
-        <div class="text-3xl sm:text-4xl font-black text-white flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+        <div class="text-3xl sm:text-4xl font-black text-zinc-900 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
             <span x-text="current">0</span><span class="text-[#FF5722] font-black">+</span>
         </div>
 
-        <div class="text-[10px] sm:text-[11px] font-bold text-gray-400 mt-2 tracking-wider uppercase leading-tight transition-colors duration-300 group-hover:text-gray-200">
+        <div class="text-[10px] sm:text-[11px] font-bold text-zinc-500 mt-2 tracking-wider uppercase leading-tight transition-colors duration-300 group-hover:text-zinc-800">
             {{ $label }}
             @if ($sublabel)
                 <br>{{ $sublabel }}

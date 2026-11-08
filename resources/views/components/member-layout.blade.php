@@ -26,8 +26,8 @@
         <!-- Scripts & Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-[#0B0F17] font-sans antialiased text-slate-100 selection:bg-[#FF5722] selection:text-white">
-        <div class="min-h-screen flex flex-col justify-between bg-[#0B0F17]">
+    <body class="bg-[#F8F9FA] font-sans antialiased text-[#16151A] selection:bg-[#FF5722] selection:text-white">
+        <div class="min-h-screen flex flex-col justify-between bg-[#F8F9FA]">
             <x-member-navbar :active="$activeNav" />
 
             <main class="flex-1">

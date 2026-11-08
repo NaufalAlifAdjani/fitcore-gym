@@ -68,7 +68,7 @@
                     <span class="text-xs font-semibold text-gray-500 mr-1">Preferensi Waktu:</span>
                     <button type="button" 
                             @click="selectedPeriod = 'all'" 
-                            :class="selectedPeriod === 'all' ? 'bg-[#18181B] text-white shadow-xs' : 'bg-white text-zinc-700 hover:bg-gray-100 border border-gray-200'" 
+                            :class="selectedPeriod === 'all' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-zinc-700 hover:bg-gray-100 border border-gray-200'" 
                             class="px-3 py-1.5 rounded-full text-xs font-semibold transition">
                         Semua Waktu
                     </button>
@@ -103,7 +103,7 @@
                          class="rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col bg-white hover:shadow-md transition duration-200 group">
                         
                         {{-- Foto Portrait Pelatih (Aspect 4/5) --}}
-                        <div class="aspect-[4/5] w-full overflow-hidden bg-zinc-900 relative">
+                        <div class="aspect-[4/5] w-full overflow-hidden bg-orange-50/60 relative">
                             <img src="{{ $trainer['photo'] }}" 
                                  alt="{{ $trainer['name'] }}" 
                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -111,7 +111,7 @@
                         </div>
 
                         {{-- Body Card --}}
-                        <div class="p-5 flex-1 flex flex-col justify-between {{ !empty($trainer['is_active_highlight']) ? 'bg-[#FFF1F2] border-t border-rose-100' : 'bg-white border-t border-gray-100' }}">
+                        <div class="p-5 flex-1 flex flex-col justify-between {{ !empty($trainer['is_active_highlight']) ? 'bg-orange-50/70 border-t border-orange-200' : 'bg-white border-t border-gray-100' }}">
                             
                             <div class="mb-4">
                                 <h3 class="text-base sm:text-lg font-black text-zinc-900 leading-snug">
@@ -147,7 +147,7 @@
                                     'trainer_id' => $trainer['id'], 
                                     'sessions' => $sessionCount
                                 ]) }}" 
-                               class="w-full py-3 px-4 rounded-full font-bold text-xs text-white bg-[#18181B] hover:bg-zinc-800 active:scale-[0.99] transition text-center shadow-sm block">
+                               class="w-full py-3 px-4 rounded-full font-bold text-xs text-white bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] transition text-center shadow-md shadow-orange-500/20 block">
                                 Pilih Pelatih &rarr;
                             </a>
 
@@ -161,7 +161,7 @@
             <div x-show="visibleCount === 0" 
                  x-cloak 
                  class="bg-white rounded-2xl p-10 text-center border border-gray-200 mt-8 shadow-sm max-w-md mx-auto">
-                <div class="w-12 h-12 rounded-full bg-rose-50 text-[#FF5722] mx-auto flex items-center justify-center mb-3">
+                <div class="w-12 h-12 rounded-full bg-orange-50 text-[#FF5722] mx-auto flex items-center justify-center mb-3">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>

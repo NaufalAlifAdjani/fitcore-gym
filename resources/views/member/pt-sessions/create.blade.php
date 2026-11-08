@@ -286,10 +286,10 @@
                     </div>
 
                     <!-- Ringkasan Booking Card -->
-                    <div class="bg-[#141414] rounded-3xl p-6 relative overflow-hidden text-white shadow-xl space-y-5">
-                        <div class="absolute -top-12 -right-12 w-44 h-44 bg-[#FF5722]/20 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="bg-gradient-to-b from-orange-50/70 via-white to-white border-2 border-orange-200/80 rounded-3xl p-6 relative overflow-hidden text-zinc-900 shadow-lg shadow-orange-500/5 space-y-5">
+                        <div class="absolute -top-12 -right-12 w-44 h-44 bg-orange-400/15 rounded-full blur-3xl pointer-events-none"></div>
 
-                        <h3 class="text-base font-extrabold text-white font-heading">
+                        <h3 class="text-base font-extrabold text-zinc-900 font-heading">
                             Ringkasan Booking
                         </h3>
 
@@ -297,8 +297,8 @@
                             <!-- Tanggal Latihan -->
                             <div class="flex items-start gap-2.5">
                                 <div>
-                                    <div class="text-[#A1A1AA] text-[11px]">Tanggal Latihan</div>
-                                    <div class="font-bold text-white text-xs mt-0.5"
+                                    <div class="text-gray-500 text-[11px] font-medium">Tanggal Latihan</div>
+                                    <div class="font-bold text-zinc-900 text-xs mt-0.5"
                                         x-text="formattedSelectedDate || selectedDate || 'Pilih tanggal'"></div>
                                 </div>
                             </div>
@@ -306,8 +306,8 @@
                             <!-- Jam Sesi -->
                             <div class="flex items-start gap-2.5">
                                 <div>
-                                    <div class="text-[#A1A1AA] text-[11px]">Jam Sesi</div>
-                                    <div class="font-bold text-white text-xs mt-0.5"
+                                    <div class="text-gray-500 text-[11px] font-medium">Jam Sesi</div>
+                                    <div class="font-bold text-zinc-900 text-xs mt-0.5"
                                         x-text="selectedSlot ? (selectedSlot + ' - ' + endSlotTime + ' WIB (60 Menit)') : 'Pilih slot jam'">
                                     </div>
                                 </div>
@@ -316,8 +316,8 @@
                             <!-- Pelatih -->
                             <div class="flex items-start gap-2.5">
                                 <div>
-                                    <div class="text-[#A1A1AA] text-[11px]">Pelatih</div>
-                                    <div class="font-bold text-white text-xs mt-0.5">
+                                    <div class="text-gray-500 text-[11px] font-medium">Pelatih</div>
+                                    <div class="font-bold text-zinc-900 text-xs mt-0.5">
                                         {{ $trainer?->name ?? 'Coach Rama Prasetya' }}
                                     </div>
                                 </div>
@@ -332,8 +332,8 @@
                             <input type="hidden" name="start_time" :value="selectedSlot">
 
                             <button type="submit" :disabled="!selectedDate || !selectedSlot" :class="{
-                                        'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-lg shadow-[#FF5722]/30 cursor-pointer': selectedDate && selectedSlot,
-                                        'bg-zinc-800 text-zinc-500 cursor-not-allowed': !selectedDate || !selectedSlot
+                                        'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-lg shadow-orange-500/30 cursor-pointer': selectedDate && selectedSlot,
+                                        'bg-gray-200 text-gray-400 cursor-not-allowed': !selectedDate || !selectedSlot
                                     }"
                                 class="w-full py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2">
                                 <span>Konfirmasi Booking Sesi</span>
@@ -350,16 +350,16 @@
                 x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                 x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0"
-                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
                 style="display: none;">
 
                 <div @click.away="showSuccessModal = false" x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                    class="max-w-md w-full bg-[#161616] border border-[#2E2E2E] rounded-3xl p-8 relative text-center space-y-5 shadow-2xl">
+                    class="max-w-md w-full bg-white border border-gray-200 rounded-3xl p-8 relative text-center space-y-5 shadow-2xl">
 
                     <!-- Close Button -->
                     <button type="button" @click="window.location.href = '{{ route('pt-sessions.index') }}'"
-                        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white text-zinc-900 flex items-center justify-center font-bold text-sm hover:bg-zinc-200 transition-colors">
+                        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 text-zinc-700 flex items-center justify-center font-bold text-sm hover:bg-gray-200 transition-colors">
                         ✕
                     </button>
 
@@ -373,25 +373,25 @@
 
                     <!-- Status Pill Badge -->
                     <div>
-                        <span class="text-xs font-black uppercase tracking-wider text-amber-400">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-50 border border-amber-200 text-amber-700">
                             STATUS: MENUNGGU KONFIRMASI PT
                         </span>
                     </div>
 
                     <!-- Modal Title -->
-                    <h3 class="text-2xl font-black text-white font-heading">
+                    <h3 class="text-2xl font-black text-zinc-900 font-heading">
                         Booking Berhasil <span class="text-[#FF5722]">Diajukan!</span>
                     </h3>
 
                     <!-- Subtext -->
-                    <p class="text-xs text-[#A1A1AA] leading-relaxed max-w-xs mx-auto">
+                    <p class="text-xs text-gray-500 leading-relaxed max-w-xs mx-auto">
                         Permintaan booking sesi privat Anda telah terkirim. Status saat ini menunggu konfirmasi dari Personal Trainer Anda.
                     </p>
 
                     <!-- Action Button -->
                     <div class="pt-2">
                         <a href="{{ route('pt-sessions.index') }}"
-                            class="inline-block w-full py-3 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider transition-colors">
+                            class="inline-block w-full py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] shadow-lg shadow-orange-500/25 text-white font-bold text-xs uppercase tracking-wider transition-colors">
                             Lihat di Riwayat Sesi
                         </a>
                     </div>
