@@ -32,6 +32,7 @@ class CheckInController extends Controller
         $memberProfile = MemberProfile::with([
             'user',
             'user.memberships.package',
+            'user.memberships.payment',
             'user.memberships.payments',
         ])->where('qr_token', $qrToken)->first();
 
@@ -51,7 +52,10 @@ class CheckInController extends Controller
             ->where('status', 'active')
             ->where('start_date', '<=', $today->toDateString())
             ->where('end_date', '>=', $today->toDateString())
-            ->whereHas('payments', fn ($q) => $q->where('status', 'verified'))
+            ->where(function ($query) {
+                $query->whereHas('payment', fn ($q) => $q->where('status', 'verified'))
+                    ->orWhereHas('payments', fn ($q) => $q->where('status', 'verified'));
+            })
             ->first();
 
         if (! $activeMembership) {
