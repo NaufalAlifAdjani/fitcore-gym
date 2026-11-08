@@ -99,6 +99,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/{payment}/invoice', 'invoice')->name('invoice');
     });
+
+    Route::get('/member/payments/{payment}/invoice/download', [TransactionHistoryController::class, 'invoice'])
+        ->name('member.payments.invoice.download');
 });
 
 Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
@@ -261,6 +264,9 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
 
         return view('mobile.member.riwayat-transaksi.index', $view->getData());
     })->name('mobile.member.riwayat-transaksi.index');
+
+    Route::get('/riwayat-transaksi/{payment}/invoice', [TransactionHistoryController::class, 'invoice'])
+        ->name('mobile.member.riwayat-transaksi.invoice');
 
     Route::get('/profile', [ProfileController::class, 'mobileIndex'])->name('mobile.member.profile.index');
 });

@@ -135,6 +135,10 @@ class AutoRedirectMobile
                 }
             }
 
+            if ($request->is('member/riwayat-transaksi/*/invoice') || $request->is('*/invoice/download')) {
+                return $next($request);
+            }
+
             if ($request->is('member/riwayat-transaksi') || $request->is('member/riwayat-transaksi/*')) {
                 return redirect()->route('mobile.member.riwayat-transaksi.index');
             }
@@ -245,6 +249,10 @@ class AutoRedirectMobile
 
             if ($request->is('m/pt-sessions') || $request->is('m/member/pt-sessions')) {
                 return redirect()->route('pt-sessions.index', $query);
+            }
+
+            if (preg_match('#^m/(?:member/)?riwayat-transaksi/(\d+)/invoice#', $request->path(), $matches)) {
+                return redirect()->route('member.riwayat-transaksi.invoice', array_merge(['payment' => $matches[1]], $query));
             }
 
             if ($request->is('m/riwayat-transaksi') || $request->is('m/riwayat-transaksi/*') || $request->is('m/member/riwayat-transaksi*')) {

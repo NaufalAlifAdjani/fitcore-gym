@@ -44,8 +44,8 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             </div>
         @endif
 
-        <!-- 3. Daftar Kartu Paket Membership (Vertical Stacked Cards per Prompt #2) -->
-        <div class="space-y-4">
+        <!-- 3. Daftar Kartu Paket Membership (Grid 2 Kolom) -->
+        <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full">
             @forelse ($packages as $package)
                 @php
                     $isFeatured = str_contains(strtoupper($package->badge ?? ''), 'BEST')
@@ -77,21 +77,21 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     $checkoutUrl = route('mobile.member.packages.checkout', $package->id);
                 @endphp
 
-                <div class="bg-white rounded-2xl p-5 border {{ $isFeatured ? 'border-2 border-[#ED1B45] shadow-lg shadow-[#ED1B45]/10' : 'border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)]' }} relative flex flex-col justify-between transition-all">
+                <div class="w-full bg-white rounded-2xl p-3 sm:p-4 border {{ $isFeatured ? 'border-2 border-[#ED1B45] shadow-lg shadow-[#ED1B45]/10' : 'border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)]' }} relative flex flex-col justify-between h-full transition-all">
                     
                     @if ($package->badge)
-                        <div class="absolute -top-3 right-4 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider z-10 shadow-xs {{ $isFeatured ? 'bg-[#ED1B45] text-white shadow-[#ED1B45]/30' : 'bg-slate-100 text-[#16151A] border border-[#E5E7EB]' }}">
+                        <div class="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider z-10 shadow-xs {{ $isFeatured ? 'bg-[#ED1B45] text-white shadow-[#ED1B45]/30' : 'bg-slate-100 text-[#16151A] border border-[#E5E7EB]' }}">
                             {{ $package->badge }}
                         </div>
                     @endif
 
                     <div>
                         <!-- Header Paket -->
-                        <div class="mb-4">
-                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-[#565A66]">
+                        <div class="mb-3">
+                            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#565A66]">
                                 {{ $package->tier ?? 'Membership' }}
                             </span>
-                            <h2 class="text-xl font-black font-poppins text-[#16151A] mt-0.5">
+                            <h2 class="text-sm sm:text-base font-bold font-poppins text-[#16151A] mt-0.5 leading-tight">
                                 {{ $package->name }}
                             </h2>
                             <p class="text-xs text-[#565A66] mt-0.5">
@@ -100,45 +100,45 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                         </div>
 
                         <!-- Harga Paket -->
-                        <div class="mb-4 bg-[#F6F6F7] p-3.5 rounded-xl border border-[#E5E7EB]">
+                        <div class="mb-3 bg-[#F6F6F7] p-2 sm:p-3 rounded-xl border border-[#E5E7EB]">
                             @if ($package->promo_price && $package->promo_price < $package->price)
-                                <p class="text-[11px] font-semibold text-[#565A66] line-through">
+                                <p class="text-[10px] sm:text-[11px] font-semibold text-[#565A66] line-through">
                                     Rp {{ number_format($package->price, 0, ',', '.') }}
                                 </p>
                             @endif
                             <div class="flex items-baseline gap-1 mt-0.5">
                                 <span class="text-xs font-bold text-[#ED1B45]">Rp</span>
-                                <span class="font-poppins font-black text-2xl text-[#16151A] tracking-tight">
+                                <span class="font-poppins font-black text-base sm:text-lg text-[#16151A] tracking-tight">
                                     {{ number_format($effectivePrice, 0, ',', '.') }}
                                 </span>
-                                <span class="text-xs text-[#565A66] font-medium">
+                                <span class="text-[10px] sm:text-xs text-[#565A66] font-medium">
                                     / {{ strtolower($package->duration_unit ?? 'bln') }}
                                 </span>
                             </div>
                         </div>
 
                         <!-- Daftar Fasilitas -->
-                        <div class="mb-5">
-                            <span class="block text-[11px] font-bold uppercase tracking-wider text-[#16151A] mb-2 font-poppins">
+                        <div class="mb-4">
+                            <span class="block text-[10px] font-bold uppercase tracking-wider text-[#16151A] mb-1.5 font-poppins">
                                 Fasilitas yang Didapat:
                             </span>
-                            <ul class="space-y-2">
+                            <ul class="space-y-1.5">
                                 @foreach ($facilities as $facility)
-                                    <li class="flex items-start gap-2 text-xs text-[#565A66]">
-                                        <svg class="w-4 h-4 shrink-0 text-[#10B981] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <li class="flex items-start gap-1.5 text-xs leading-tight text-[#565A66]">
+                                        <svg class="w-3 h-3 sm:w-4 h-4 shrink-0 text-[#10B981] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                         </svg>
-                                        <span class="leading-relaxed">{{ $facility }}</span>
+                                        <span class="leading-tight">{{ $facility }}</span>
                                     </li>
                                 @endforeach
 
                                 @if ($package->pt_session_count > 0)
-                                    <li class="flex items-start gap-2 text-xs text-[#16151A] font-medium bg-rose-50/70 p-2 rounded-lg border border-rose-100">
-                                        <svg class="w-4 h-4 shrink-0 text-[#ED1B45] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <li class="flex items-start gap-1.5 text-xs leading-tight text-[#16151A] font-medium bg-rose-50/70 p-1.5 rounded-lg border border-rose-100">
+                                        <svg class="w-3 h-3 sm:w-4 h-4 shrink-0 text-[#ED1B45] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                         </svg>
-                                        <span class="leading-relaxed">
-                                            <strong class="text-[#ED1B45] font-bold">{{ $package->pt_session_count }} Sesi</strong> Personal Trainer Gratis
+                                        <span class="leading-tight">
+                                            <strong class="text-[#ED1B45] font-bold">{{ $package->pt_session_count }} Sesi</strong> PT Gratis
                                         </span>
                                     </li>
                                 @endif
@@ -150,12 +150,12 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     <div class="pt-2 border-t border-[#E5E7EB]">
                         @if ($isFeatured)
                             <a href="{{ $checkoutUrl }}"
-                               class="w-full block text-center py-3 rounded-full font-bold text-xs uppercase tracking-wider bg-[#ED1B45] hover:bg-[#D1123D] text-white shadow-md shadow-[#ED1B45]/25 active:scale-[0.98] transition">
+                               class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider bg-[#ED1B45] hover:bg-[#D1123D] text-white shadow-md shadow-[#ED1B45]/25 active:scale-[0.98] transition">
                                 Gabung Sekarang
                             </a>
                         @else
                             <a href="{{ $checkoutUrl }}"
-                               class="w-full block text-center py-3 rounded-full font-bold text-xs uppercase tracking-wider border-2 border-[#ED1B45] text-[#ED1B45] hover:bg-[#ED1B45] hover:text-white active:scale-[0.98] transition">
+                               class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider border-2 border-[#ED1B45] text-[#ED1B45] hover:bg-[#ED1B45] hover:text-white active:scale-[0.98] transition">
                                 Pilih Paket Ini
                             </a>
                         @endif

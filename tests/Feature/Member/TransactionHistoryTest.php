@@ -383,4 +383,50 @@ class TransactionHistoryTest extends TestCase
         // Eager loaded queries should be well below 10 (usually ~3-4 queries total for session/auth, years, and payments with relations)
         $this->assertLessThanOrEqual(6, $queryCount);
     }
+
+    public function test_member_can_download_invoice_via_alias_and_mobile_routes(): void
+    {
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_holder' => 'FitCore Gym',
+            'status' => 'active',
+        ]);
+
+        $package = MembershipPackage::create([
+            'name' => 'FitCore Starter Pass',
+            'tier' => 'Basic',
+            'price' => 450000,
+            'duration_in_days' => 30,
+            'is_active' => true,
+        ]);
+
+        $payment = Payment::create([
+            'invoice_id' => 'INV-ALIAS-01',
+            'member_id' => $member->id,
+            'bank_id' => $bank->id,
+            'package_id' => $package->id,
+            'package_type' => 'membership',
+            'payment_type' => 'membership',
+            'amount' => 450000,
+            'status' => 'verified',
+            'transfer_date' => now(),
+        ]);
+
+        // 1. Alias route: member.payments.invoice.download
+        $resAlias = $this->actingAs($member)->get(route('member.payments.invoice.download', $payment));
+        $resAlias->assertOk();
+        $this->assertEquals('application/pdf', $resAlias->headers->get('Content-Type'));
+
+        // 2. Mobile route: mobile.member.riwayat-transaksi.invoice
+        $resMobile = $this->actingAs($member)->get(route('mobile.member.riwayat-transaksi.invoice', $payment));
+        $resMobile->assertOk();
+        $this->assertEquals('application/pdf', $resMobile->headers->get('Content-Type'));
+
+        // 3. Mobile view renders with invoice link and does not throw 500
+        $resView = $this->actingAs($member)->get(route('mobile.member.riwayat-transaksi.index'));
+        $resView->assertOk();
+        $resView->assertSee('Invoice PDF');
+    }
 }

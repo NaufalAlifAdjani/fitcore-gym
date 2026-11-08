@@ -117,9 +117,9 @@
                                         <span class="text-[10px] text-emerald-700 font-semibold">
                                             ✓ Transaksi Selesai
                                         </span>
-                                        <a href="{{ route('member.payments.invoice.download', $payment) }}"
-                                           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 hover:bg-[#ED1B45] hover:text-white text-[#16151A] text-[11px] font-bold transition border border-[#E5E7EB]">
-                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <a href="{{ route('mobile.member.riwayat-transaksi.invoice', $payment) }}"
+                                           class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F6F6F7] hover:bg-[#ED1B45] text-[#16151A] hover:text-white text-[11px] font-bold transition border border-[#E5E7EB] shadow-2xs group">
+                                            <svg class="w-3.5 h-3.5 text-[#ED1B45] group-hover:text-white transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                             </svg>
                                             <span>Invoice PDF</span>
