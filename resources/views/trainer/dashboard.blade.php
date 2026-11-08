@@ -1,4 +1,4 @@
-﻿<x-trainer-layout>
+<x-trainer-layout>
     <div class="space-y-8">
         <!-- 1. Flash Alerts -->
         @if (session('success'))

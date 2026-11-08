@@ -1,4 +1,4 @@
-﻿<form
+<form
     method="GET"
     action="{{ route('admin.payments.index') }}"
     class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] p-6 mb-6 flex w-full flex-col gap-4 md:flex-row md:items-center"

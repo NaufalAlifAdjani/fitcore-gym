@@ -1,4 +1,4 @@
-﻿<x-fitcore-layout :title="'Booking Sesi Personal Trainer | FITCORE ATHLETIC'">
+<x-fitcore-layout :title="'Booking Sesi Personal Trainer | FITCORE ATHLETIC'">
 
     {{-- HERO SECTION (Background Putih) --}}
     <section class="bg-white border-b border-gray-100 py-12 md:py-16">

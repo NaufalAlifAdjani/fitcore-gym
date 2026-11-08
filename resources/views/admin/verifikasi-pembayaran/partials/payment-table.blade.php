@@ -1,4 +1,4 @@
-﻿<div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] overflow-hidden" aria-label="Daftar pembayaran">
+<div class="bg-white rounded-[16px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] overflow-hidden" aria-label="Daftar pembayaran">
     <div class="p-6 border-b border-[#E5E7EB]">
         <h2 class="font-poppins font-bold text-xl text-[#16151A]">Riwayat Pembayaran</h2>
         <p class="font-inter text-sm text-[#565A66] mt-1">

@@ -1,4 +1,4 @@
-﻿<div class="bg-white rounded-2xl p-10 sm:p-14 text-center shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-[#E5E7EB]">
+<div class="bg-white rounded-2xl p-10 sm:p-14 text-center shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-[#E5E7EB]">
     <!-- Icon Ilustrasi Elegan -->
     <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#FF5722]/10 text-[#FF5722] mb-5">
         <svg class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,4 +1,4 @@
-﻿<x-guest-layout>
+<x-guest-layout>
     <!-- Header Title & Subtitle -->
     <div class="mb-6">
         <h2 class="text-3xl sm:text-4xl font-black text-gray-950 leading-tight">

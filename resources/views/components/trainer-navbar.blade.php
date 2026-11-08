@@ -1,4 +1,4 @@
-﻿@php
+@php
     $user = Auth::user();
     $rawName = $user?->name ?? 'Coach Rama Prasetya, CSCS';
     

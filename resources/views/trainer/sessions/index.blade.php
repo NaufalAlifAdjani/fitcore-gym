@@ -1,4 +1,4 @@
-﻿<div class="space-y-6">
+<div class="space-y-6">
     <div class="mb-4">
         <h1 class="text-2xl sm:text-3xl font-extrabold text-[#16151A] tracking-tight uppercase font-['Poppins']">Jadwal Sesi Personal Trainer</h1>
     </div>

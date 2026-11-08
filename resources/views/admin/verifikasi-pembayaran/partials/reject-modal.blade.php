@@ -1,4 +1,4 @@
-﻿<div
+<div
     x-cloak
     x-show="showRejectModal"
     x-transition.opacity

@@ -1,4 +1,4 @@
-﻿<form
+<form
     method="GET"
     action="{{ route('member.riwayat-transaksi.index') }}"
     id="transaction-filter-form"

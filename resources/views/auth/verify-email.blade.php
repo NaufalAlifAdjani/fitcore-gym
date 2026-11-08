@@ -1,4 +1,4 @@
-﻿<x-guest-layout>
+<x-guest-layout>
     <!-- Header Icon & Title -->
     <div class="mb-6">
         <div class="w-12 h-12 bg-red-50 text-[#FF5722] rounded-2xl flex items-center justify-center mb-4 border border-red-100 shadow-sm">

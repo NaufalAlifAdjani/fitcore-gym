@@ -1,4 +1,4 @@
-﻿<div
+<div
     x-show="showModal"
     x-cloak
     x-transition.opacity

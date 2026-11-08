@@ -1,4 +1,4 @@
-﻿@props([
+@props([
     'banks' => [],
     'selectedBank' => '',
     'name' => 'bank_id',

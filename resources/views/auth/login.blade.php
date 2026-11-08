@@ -1,4 +1,4 @@
-﻿<x-guest-layout>
+<x-guest-layout>
     <!-- Role Selector Toggle (Member / Personal Trainer) -->
     <div class="flex p-1 bg-gray-100 rounded-xl mb-8 border border-gray-200/60">
         <button type="button" @click="role = 'member'"

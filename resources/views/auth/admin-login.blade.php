@@ -1,4 +1,4 @@
-﻿<x-guest-layout>
+<x-guest-layout>
     <!-- Title Heading -->
     <h2 class="text-3xl sm:text-4xl font-black text-gray-950 leading-tight mb-8">
         Masuk Akun<br>

@@ -1,4 +1,4 @@
-﻿<x-app-layout>
+<x-app-layout>
     <div
         x-data="membershipPackages({
             hasErrors: @js($errors->any()),

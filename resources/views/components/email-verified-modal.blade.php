@@ -1,4 +1,4 @@
-﻿<div
+<div
     x-data="{
         show: {{ (request()->has('verified') || session('verified')) ? 'true' : 'false' }},
         closeModal() {

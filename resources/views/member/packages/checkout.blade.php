@@ -1,4 +1,4 @@
-﻿<x-member-layout title="Detail Pembayaran & Konfirmasi - FitCore Athletic" active-nav="packages">
+<x-member-layout title="Detail Pembayaran & Konfirmasi - FitCore Athletic" active-nav="packages">
     <div class="bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8 text-slate-900 border-b border-slate-200">
         <div class="mx-auto max-w-6xl">
             <!-- Breadcrumb Navigation -->

@@ -1,4 +1,4 @@
-﻿<x-app-layout>
+<x-app-layout>
     <div
         x-data="ptPackages({
             hasErrors: @js($errors->any()),

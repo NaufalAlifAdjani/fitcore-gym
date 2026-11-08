@@ -1,4 +1,4 @@
-﻿<aside class="w-64 bg-white border-r border-[#E5E7EB] flex flex-col shrink-0 min-h-[calc(100vh-72px)]">
+<aside class="w-64 bg-white border-r border-[#E5E7EB] flex flex-col shrink-0 min-h-[calc(100vh-72px)]">
     <div class="p-4 sm:p-5 flex-1">
         <!-- Main Menu Header -->
         <div class="px-3 mb-2.5">

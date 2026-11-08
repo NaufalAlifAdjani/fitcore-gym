@@ -1,4 +1,4 @@
-﻿<x-guest-layout>
+<x-guest-layout>
     <!-- Judul & Subjudul Form -->
     <div class="mb-6">
         <h2 class="text-3xl sm:text-4xl font-black text-gray-950 leading-tight">

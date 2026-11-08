@@ -1,4 +1,4 @@
-﻿<x-trainer-layout title="Klien Saya - FitCore PT Portal">
+<x-trainer-layout title="Klien Saya - FitCore PT Portal">
     <div class="space-y-8">
         <!-- 1. Flash Alerts -->
         @if (session('success'))

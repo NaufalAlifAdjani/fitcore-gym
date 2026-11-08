@@ -1,4 +1,4 @@
-﻿@props(['session'])
+@props(['session'])
 
 @php
     $trainer = $session->trainer;

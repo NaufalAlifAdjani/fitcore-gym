@@ -1,4 +1,4 @@
-﻿@php
+@php
     $adminNavigationItems = [
         ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'active' => request()->routeIs('admin.dashboard'), 'icon' => 'dashboard'],
         ['label' => 'Paket & Harga', 'route' => 'admin.packages.index', 'active' => request()->routeIs('admin.packages.*'), 'icon' => 'packages'],

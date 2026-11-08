@@ -1,4 +1,4 @@
-﻿<x-trainer-layout :title="'Ketersediaan Waktu & Hari Kerja - PT Portal'">
+<x-trainer-layout :title="'Ketersediaan Waktu & Hari Kerja - PT Portal'">
     <div class="space-y-6" x-data="{
         activeTab: 'weekly',
         selectAllSlots(dayNum) {

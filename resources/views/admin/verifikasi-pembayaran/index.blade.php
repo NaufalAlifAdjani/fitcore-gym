@@ -1,4 +1,4 @@
-﻿<x-app-layout>
+<x-app-layout>
     <section
         x-data="paymentVerification({
             approveUrlTemplate: @js(route('admin.payments.approve', ['id' => '__PAYMENT_ID__'])),

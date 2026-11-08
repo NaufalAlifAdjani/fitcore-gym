@@ -1,4 +1,4 @@
-﻿<x-app-layout>
+<x-app-layout>
     <section class="min-h-screen bg-[#F6F6F7] px-4 py-8 text-[#16151A] sm:px-6 lg:px-10">
         <div class="mx-auto max-w-[1600px] space-y-8">
             <!-- Header & Title Section -->

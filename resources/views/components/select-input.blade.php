@@ -1,4 +1,4 @@
-﻿@props([
+@props([
     'disabled' => false,
     'options' => [],
 ])

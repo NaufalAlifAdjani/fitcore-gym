@@ -1,4 +1,4 @@
-﻿<div class="space-y-6">
+<div class="space-y-6">
     <!-- Google Calendar Container -->
     <div class="bg-white rounded-3xl border border-[#E5E7EB] p-4 sm:p-6 shadow-sm mb-8 space-y-4">
 
@@ -133,7 +133,7 @@
 
         @if($mode === 'tasks')
             <!-- Tampilan Tasks (Daftar Sesi Latihan) -->
-            <div class="pt-2 space-y-5">
+            <div wire:key="view-mode-tasks" class="pt-2 space-y-5">
                 <!-- Header Tasks & Filter Tabs -->
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3 border-b border-[#E5E7EB]">
                     <div>
@@ -299,7 +299,8 @@
             </div>
         @else
             <!-- Tampilan Kalender: Month, Week, atau Day -->
-            @if($view === 'month')
+            <div wire:key="view-mode-calendar">
+                @if($view === 'month')
                 <!-- Month Calendar Grid -->
                 <div class="rounded-2xl border border-[#E5E7EB] overflow-hidden bg-white">
                     <div class="overflow-x-auto scrollbar-thin">
@@ -606,6 +607,7 @@
                     </div>
                 </div>
             @endif
+            </div>
         @endif
     </div>
 

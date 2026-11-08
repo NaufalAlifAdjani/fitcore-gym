@@ -1,4 +1,4 @@
-﻿@props([
+@props([
     'initials',
     'color_theme' => 'red',
 ])

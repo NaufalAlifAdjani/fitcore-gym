@@ -1,4 +1,4 @@
-﻿<x-trainer-layout title="Riwayat Member: {{ $member->name }} - FitCore PT Portal">
+<x-trainer-layout title="Riwayat Member: {{ $member->name }} - FitCore PT Portal">
     <div class="space-y-8">
         <!-- 1. Breadcrumbs -->
         <nav class="flex items-center gap-2 text-xs font-inter font-medium text-gray-500">

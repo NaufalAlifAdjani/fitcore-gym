@@ -1,4 +1,4 @@
-﻿<x-trainer-layout>
+<x-trainer-layout>
     <div class="space-y-6">
         <div>
             <h1 class="font-poppins text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
