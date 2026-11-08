@@ -45,6 +45,28 @@ class PtSessionService
             return substr((string) $session->start_time, 0, 5);
         });
 
+        $isDayOff = DB::table('trainer_day_offs')
+            ->where('trainer_id', $trainerId)
+            ->whereDate('date', $dateString)
+            ->exists();
+
+        $dayOfWeek = (int) $carbonDate->dayOfWeek;
+        $trainerHasCustomSchedule = DB::table('trainer_availabilities')
+            ->where('trainer_id', $trainerId)
+            ->exists();
+
+        $dayAvailability = $trainerHasCustomSchedule
+            ? DB::table('trainer_availabilities')
+                ->where('trainer_id', $trainerId)
+                ->where('day_of_week', $dayOfWeek)
+                ->first()
+            : null;
+
+        $isWeeklyDayOff = $trainerHasCustomSchedule && (! $dayAvailability || ! $dayAvailability->is_active);
+        $allowedSlots = ($trainerHasCustomSchedule && $dayAvailability && $dayAvailability->is_active)
+            ? (json_decode($dayAvailability->slots ?? '[]', true) ?: [])
+            : null;
+
         $durationMinutes = (int) config('pt_booking.session_duration_minutes', 60);
         $now = now();
         $isToday = $carbonDate->isToday();
@@ -61,7 +83,16 @@ class PtSessionService
                 $endTime = Carbon::parse($timeShort)->addMinutes($durationMinutes)->format('H:i');
 
                 $minNoticeHours = (int) config('pt_booking.min_booking_notice_hours', 24);
-                if ($isPastDate || $slotStartCarbon->lessThan($now->copy()->addHours($minNoticeHours))) {
+                if ($isDayOff) {
+                    $status = 'off';
+                    $label = 'Libur PT';
+                } elseif ($isWeeklyDayOff) {
+                    $status = 'off';
+                    $label = 'Tidak Bertugas';
+                } elseif ($allowedSlots !== null && ! in_array($timeShort, $allowedSlots, true)) {
+                    $status = 'off';
+                    $label = 'Tidak Tersedia';
+                } elseif ($isPastDate || $slotStartCarbon->lessThan($now->copy()->addHours($minNoticeHours))) {
                     $status = 'passed';
                     $label = 'Sudah Lewat';
                 } elseif ($bookedSessions->has($timeShort)) {
@@ -112,23 +143,27 @@ class PtSessionService
             $groups = $this->getAvailableSlots($trainerId, $currentDate);
 
             $hasAvailableSlot = false;
+            $allAreOff = true;
             foreach ($groups as $slots) {
                 foreach ($slots as $slot) {
                     if ($slot['status'] === 'available') {
                         $hasAvailableSlot = true;
-                        break 2;
+                    }
+                    if ($slot['status'] !== 'off') {
+                        $allAreOff = false;
                     }
                 }
             }
 
             $dayOfWeek = (int) $currentDate->dayOfWeek;
+            $statusLabel = $hasAvailableSlot ? 'Ada slot' : ($allAreOff ? 'Libur' : 'Penuh');
 
             $daysList[] = [
                 'date' => $currentDate->toDateString(),
                 'day_name' => $dayNamesIndo[$dayOfWeek] ?? $currentDate->format('D'),
                 'day_num' => (int) $currentDate->format('d'),
                 'has_slots' => $hasAvailableSlot,
-                'status_label' => $hasAvailableSlot ? 'Ada slot' : 'Penuh',
+                'status_label' => $statusLabel,
             ];
         }
 
@@ -168,7 +203,38 @@ class PtSessionService
             throw new QuotaExceededException('Kuota sesi Anda telah habis atau tidak memiliki paket aktif.');
         }
 
-        // 2. Trainer slot check
+        // 2. Trainer availability & day off check
+        $isDayOff = DB::table('trainer_day_offs')
+            ->where('trainer_id', $trainer->id)
+            ->whereDate('date', $sessionDate->toDateString())
+            ->exists();
+
+        if ($isDayOff) {
+            throw new SlotUnavailableException('Pelatih sedang libur/cuti pada tanggal tersebut.');
+        }
+
+        $dayOfWeek = (int) $sessionDate->dayOfWeek;
+        $trainerHasCustomSchedule = DB::table('trainer_availabilities')
+            ->where('trainer_id', $trainer->id)
+            ->exists();
+
+        if ($trainerHasCustomSchedule) {
+            $dayAvailability = DB::table('trainer_availabilities')
+                ->where('trainer_id', $trainer->id)
+                ->where('day_of_week', $dayOfWeek)
+                ->first();
+
+            if (! $dayAvailability || ! $dayAvailability->is_active) {
+                throw new SlotUnavailableException('Pelatih tidak bertugas pada hari tersebut.');
+            }
+
+            $allowedSlots = json_decode($dayAvailability->slots ?? '[]', true) ?: [];
+            if (! in_array($timeShort, $allowedSlots, true)) {
+                throw new SlotUnavailableException('Pelatih tidak membuka sesi latihan pada jam yang dipilih.');
+            }
+        }
+
+        // 3. Trainer slot conflict check
         $trainerQuery = PtSession::where('trainer_id', $trainer->id)
             ->whereDate('session_date', $sessionDate->toDateString())
             ->where('start_time', $startTime)
@@ -182,7 +248,7 @@ class PtSessionService
             throw new SlotUnavailableException('Slot pelatih pada jam tersebut sudah terisi.');
         }
 
-        // 3. Member conflict check
+        // 4. Member conflict check
         $memberQuery = PtSession::where('member_id', $member->id)
             ->whereDate('session_date', $sessionDate->toDateString())
             ->where('start_time', $startTime)
