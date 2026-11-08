@@ -389,4 +389,62 @@ class PtSessionService
 
         return $cancelledCount;
     }
+
+    /**
+     * Otomatis menandai sesi-sesi terkonfirmasi yang jadwalnya telah terlewati (end_time telah lewat)
+     * menjadi berstatus 'completed' (Selesai).
+     *
+     * @param  int|null  $trainerId  Opsional, batasi pengecekan untuk trainer tertentu
+     * @param  int|null  $memberId  Opsional, batasi pengecekan untuk member tertentu
+     * @return int Jumlah sesi yang berhasil diperbarui
+     */
+    public function completePastConfirmedSessions(?int $trainerId = null, ?int $memberId = null): int
+    {
+        $now = now();
+        $today = $now->toDateString();
+        $currentTime = $now->toTimeString();
+
+        $query = PtSession::query()
+            ->whereIn('status', [PtSessionStatus::Confirmed->value, PtSessionStatus::Scheduled->value])
+            ->where(function ($q) use ($today, $currentTime) {
+                $q->where('session_date', '<', $today)
+                    ->orWhere(function ($sub) use ($today, $currentTime) {
+                        $sub->where('session_date', $today)
+                            ->where('end_time', '<=', $currentTime);
+                    });
+            });
+
+        if ($trainerId) {
+            $query->where('trainer_id', $trainerId);
+        }
+
+        if ($memberId) {
+            $query->where('member_id', $memberId);
+        }
+
+        $candidates = $query->get();
+        $completedCount = 0;
+
+        foreach ($candidates as $candidate) {
+            DB::transaction(function () use ($candidate, $now, &$completedCount) {
+                $lockedSession = PtSession::where('id', $candidate->id)
+                    ->whereIn('status', [PtSessionStatus::Confirmed->value, PtSessionStatus::Scheduled->value])
+                    ->lockForUpdate()
+                    ->first();
+
+                if (! $lockedSession) {
+                    return;
+                }
+
+                $lockedSession->update([
+                    'status' => PtSessionStatus::Completed,
+                    'completed_at' => $lockedSession->ends_at ?? $now,
+                ]);
+
+                $completedCount++;
+            });
+        }
+
+        return $completedCount;
+    }
 }
