@@ -90,6 +90,92 @@
                 <div id="scan-result" class="mt-6 rounded-2xl p-5 hidden"></div>
             </div>
 
+            <!-- Table: Daftar Kehadiran Member Hari Ini -->
+            <div class="bg-white rounded-[20px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-[#E5E7EB] p-6 sm:p-8 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E5E7EB]">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-[#ED1B45] border border-rose-200 shrink-0">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                        </span>
+                        <div>
+                            <h2 class="font-poppins text-lg font-bold text-[#16151A]">
+                                Daftar Kehadiran Member Hari Ini
+                            </h2>
+                            <p class="font-inter text-xs text-[#565A66]">
+                                Data presensi masuk gym per tanggal {{ now('Asia/Jakarta')->locale('id')->translatedFormat('d F Y') }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold font-inter bg-slate-100 text-slate-700 border border-slate-200">
+                            Total Hadir: <strong id="today-checkin-count" class="text-[#ED1B45] ml-1">{{ $todayCheckIns->count() }}</strong> Member
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Table Container -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-[#E5E7EB] text-[11px] font-bold uppercase tracking-wider text-[#565A66] font-inter bg-[#F6F6F7]/60">
+                                <th scope="col" class="py-3 px-4 rounded-l-xl">Waktu</th>
+                                <th scope="col" class="py-3 px-4">Member</th>
+                                <th scope="col" class="py-3 px-4">Paket Membership</th>
+                                <th scope="col" class="py-3 px-4">Masa Berlaku</th>
+                                <th scope="col" class="py-3 px-4">Petugas</th>
+                                <th scope="col" class="py-3 px-4 rounded-r-xl text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="today-checkin-tbody" class="divide-y divide-[#E5E7EB] text-xs font-inter text-[#16151A]">
+                            @forelse($todayCheckIns as $checkIn)
+                                <tr class="hover:bg-slate-50/80 transition-colors">
+                                    <td class="py-3.5 px-4 font-mono font-semibold text-slate-700 whitespace-nowrap">
+                                        {{ $checkIn->checked_in_at ? $checkIn->checked_in_at->locale('id')->format('H:i') : '-' }} WIB
+                                    </td>
+                                    <td class="py-3.5 px-4">
+                                        <div class="font-semibold text-[#16151A]">
+                                            {{ $checkIn->member->name ?? 'Member FitCore' }}
+                                        </div>
+                                        <div class="font-mono text-[11px] text-[#565A66]">
+                                            ID: {{ $checkIn->member?->memberProfile?->member_code ?? ('MBR-'.str_pad($checkIn->member_id, 5, '0', STR_PAD_LEFT)) }}
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-4 font-medium text-slate-700">
+                                        {{ $checkIn->membership?->package?->name ?? 'Membership FitCore' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-[#565A66] whitespace-nowrap">
+                                        {{ $checkIn->membership?->end_date ? $checkIn->membership->end_date->locale('id')->translatedFormat('d M Y') : '-' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-[#565A66]">
+                                        {{ $checkIn->checkedBy->name ?? 'Admin' }}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-center whitespace-nowrap">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Berhasil
+                                        </span>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr id="empty-checkin-row">
+                                    <td colspan="6" class="py-8 text-center text-[#565A66] font-medium">
+                                        <div class="flex flex-col items-center justify-center gap-2">
+                                            <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                            </svg>
+                                            <span>Belum ada member yang melakukan check-in hari ini.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- Panduan Penggunaan Scanner Card -->
             <div class="bg-white rounded-[20px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-[#E5E7EB] p-6 sm:p-8 space-y-4">
                 <div class="flex items-center gap-2.5">
