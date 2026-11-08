@@ -175,29 +175,6 @@ class PtPackagePurchaseController extends Controller
             ],
         ];
 
-        $dbTrainers = User::where('role', 'trainer')
-            ->with(['trainerAvailabilities'])
-            ->get()
-            ->keyBy('id');
-
-        foreach ($trainers as &$trainerItem) {
-            $dbTrainer = $dbTrainers->get($trainerItem['id']);
-            if ($dbTrainer) {
-                $summary = $dbTrainer->getWorkingScheduleSummary();
-            } else {
-                $summary = [
-                    'days_label' => 'Senin – Sabtu',
-                    'periods' => ['morning', 'afternoon', 'evening'],
-                    'periods_label' => 'Pagi – Malam',
-                    'has_custom_schedule' => false,
-                ];
-            }
-            $trainerItem['days_label'] = $summary['days_label'];
-            $trainerItem['periods'] = $summary['periods'];
-            $trainerItem['periods_label'] = $summary['periods_label'];
-        }
-        unset($trainerItem);
-
         return view('member.pt-select-trainer', compact('trainers', 'packageId', 'sessionCount', 'selectedPackage'));
     }
 

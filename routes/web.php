@@ -16,7 +16,6 @@ use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
 use App\Http\Controllers\Trainer\ClientController as TrainerClientController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
-use App\Http\Controllers\Trainer\TrainerAvailabilityController;
 use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -97,10 +96,7 @@ Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')
     Route::get('/klien-saya', [TrainerClientController::class, 'index'])->name('clients.index');
     Route::get('/klien-saya/{member}', [TrainerClientController::class, 'show'])->whereNumber('member')->name('clients.show');
     Route::post('/sessions/{ptSession}/complete', [TrainerClientController::class, 'completeSession'])->whereNumber('ptSession')->name('sessions.complete');
-    Route::get('/ketersediaan-waktu', [TrainerAvailabilityController::class, 'index'])->name('availability.index');
-    Route::post('/ketersediaan-waktu/schedule', [TrainerAvailabilityController::class, 'updateSchedule'])->name('availability.schedule.update');
-    Route::post('/ketersediaan-waktu/day-offs', [TrainerAvailabilityController::class, 'storeDayOff'])->name('availability.day-offs.store');
-    Route::delete('/ketersediaan-waktu/day-offs/{dayOff}', [TrainerAvailabilityController::class, 'destroyDayOff'])->whereNumber('dayOff')->name('availability.day-offs.destroy');
+    Route::view('/ketersediaan-waktu', 'trainer.placeholder', ['title' => 'Ketersediaan Waktu'])->name('availability.index');
     Route::view('/pendapatan-komisi', 'trainer.placeholder', ['title' => 'Pendapatan / Komisi'])->name('commissions.index');
 });
 

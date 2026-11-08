@@ -7,7 +7,6 @@ use App\Models\MemberProfile;
 use App\Models\MemberPtQuota;
 use App\Models\PtPackage;
 use App\Models\PtSession;
-use App\Models\TrainerAvailability;
 use App\Models\TrainerProfile;
 use App\Models\User;
 use Carbon\Carbon;
@@ -79,29 +78,6 @@ class PtBookingDemoSeeder extends Seeder
                 array_merge($tData['profile'], ['status' => 'active'])
             );
 
-            // Seed Jadwal Ketersediaan Trainer
-            if ($tData['email'] === 'rama@gym.test') {
-                // Coach Rama: Senin - Jumat (Siang & Malam), Sabtu & Minggu Libur
-                $afternoonEveningSlots = ['13:00', '14:00', '15:00', '16:00', '18:00', '19:00', '20:00', '21:00'];
-                foreach (range(0, 6) as $day) {
-                    $isWorkDay = ($day >= 1 && $day <= 5);
-                    TrainerAvailability::updateOrCreate(
-                        ['trainer_id' => $trainer->id, 'day_of_week' => $day],
-                        ['is_active' => $isWorkDay, 'slots' => $isWorkDay ? $afternoonEveningSlots : []]
-                    );
-                }
-            } else {
-                // Trainer Umum: Senin - Sabtu (Pagi & Siang), Minggu Libur
-                $morningAfternoonSlots = ['07:00', '08:00', '09:00', '10:00', '13:00', '14:00', '15:00'];
-                foreach (range(0, 6) as $day) {
-                    $isWorkDay = ($day >= 1 && $day <= 6);
-                    TrainerAvailability::updateOrCreate(
-                        ['trainer_id' => $trainer->id, 'day_of_week' => $day],
-                        ['is_active' => $isWorkDay, 'slots' => $isWorkDay ? $morningAfternoonSlots : []]
-                    );
-                }
-            }
-
             $trainers[] = $trainer;
         }
 
@@ -145,9 +121,9 @@ class PtBookingDemoSeeder extends Seeder
                 ],
                 [
                     'pt_package_id' => $ptPackage->id,
-                    'total_sessions' => 10,
-                    'used_sessions' => 2,
-                    'remaining_sessions' => 8,
+                    'total_sessions' => 20,
+                    'used_sessions' => 4,
+                    'remaining_sessions' => 16,
                     'start_date' => Carbon::now()->startOfMonth()->toDateString(),
                     'end_date' => Carbon::now()->addMonths(3)->endOfMonth()->toDateString(),
                     'status' => 'active',
@@ -241,21 +217,21 @@ class PtBookingDemoSeeder extends Seeder
                     'date' => $yesterday->toDateString(),
                     'start' => '09:00:00',
                     'end' => '10:00:00',
-                    'status' => PtSessionStatus::Completed,
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 [
                     'member' => $members[1],
                     'date' => $yesterday->toDateString(),
                     'start' => '13:00:00',
                     'end' => '14:00:00',
-                    'status' => PtSessionStatus::Completed,
+                    'status' => PtSessionStatus::Cancelled,
                 ],
                 [
                     'member' => $members[4],
                     'date' => $yesterday->toDateString(),
                     'start' => '16:00:00',
                     'end' => '17:00:00',
-                    'status' => PtSessionStatus::Completed,
+                    'status' => PtSessionStatus::Confirmed,
                 ],
             ];
 
@@ -333,7 +309,7 @@ class PtBookingDemoSeeder extends Seeder
                     'date' => $startOfWeek->copy()->addDays(0)->toDateString(),
                     'start' => '09:00:00',
                     'end' => '10:00:00',
-                    'status' => PtSessionStatus::Completed,
+                    'status' => PtSessionStatus::Confirmed,
                 ],
                 [
                     'member' => $members[3],
