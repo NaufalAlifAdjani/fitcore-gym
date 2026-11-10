@@ -276,4 +276,53 @@ class CheckInTest extends TestCase
         // Only one record in the database
         $this->assertDatabaseCount('check_ins', 1);
     }
+
+    /**
+     * TC-9: Valid QR + active membership linked via memberships.payment_id -> check-in succeeds.
+     */
+    public function test_valid_qr_with_active_membership_linked_via_payment_id_checks_in_successfully(): void
+    {
+        $admin = $this->adminUser();
+        $token = Str::uuid()->toString();
+        [$member] = $this->memberWithProfile($token);
+
+        $package = MembershipPackage::factory()->create([
+            'name' => 'Monthly',
+            'duration_days' => 30,
+            'price' => 200000,
+        ]);
+
+        $bank = Bank::factory()->create();
+
+        $payment = Payment::factory()->create([
+            'member_id' => $member->id,
+            'membership_id' => null, // not linked on payment side
+            'payment_type' => 'membership',
+            'amount' => 200000,
+            'bank_id' => $bank->id,
+            'status' => 'verified',
+        ]);
+
+        Membership::factory()->create([
+            'member_id' => $member->id,
+            'membership_package_id' => $package->id,
+            'payment_id' => $payment->id, // linked via memberships.payment_id
+            'start_date' => now('Asia/Jakarta')->subDays(2)->toDateString(),
+            'end_date' => now('Asia/Jakarta')->addDays(28)->toDateString(),
+            'status' => 'active',
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->postJson(route('admin.checkin.store'), ['qr_token' => $token]);
+
+        $response->assertStatus(200)
+            ->assertJson(['success' => true])
+            ->assertJsonStructure(['member_name', 'membership', 'valid_until', 'checked_in_at']);
+
+        $this->assertDatabaseHas('check_ins', [
+            'member_id' => $member->id,
+            'method' => 'qr_code',
+            'checked_by' => $admin->id,
+        ]);
+    }
 }

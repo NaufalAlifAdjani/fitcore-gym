@@ -19,7 +19,7 @@
                 name="search"
                 value="{{ request('search') }}"
                 placeholder="Cari invoice / nama member..."
-                class="w-full rounded-full border border-[#E5E7EB] bg-white pl-10 pr-4 py-2.5 text-sm font-inter text-[#16151A] placeholder-[#565A66] focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                class="w-full rounded-full border border-[#E5E7EB] bg-white pl-10 pr-4 py-2.5 text-sm font-inter text-[#16151A] placeholder-[#565A66] focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
             />
         </div>
     </div>
@@ -31,7 +31,7 @@
             <select
                 id="payment-status"
                 name="status"
-                class="w-full appearance-none rounded-full border border-[#E5E7EB] bg-white pl-4 pr-10 py-2.5 text-sm font-inter font-medium text-[#16151A] shadow-sm hover:border-[#ED1B45]/40 focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer transition"
+                class="w-full appearance-none rounded-full border border-[#E5E7EB] bg-white pl-4 pr-10 py-2.5 text-sm font-inter font-medium text-[#16151A] shadow-sm hover:border-[#FF5722]/40 focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] cursor-pointer transition"
             >
                 <option value="">Semua Status</option>
                 <option value="pending" @selected(request('status') === 'pending')>Menunggu Verifikasi</option>
@@ -50,7 +50,7 @@
     <div class="flex items-center gap-2 shrink-0">
         <button
             type="submit"
-            class="bg-[#ED1B45] text-white px-6 py-2.5 rounded-full font-inter font-semibold shadow-sm hover:bg-[#D1123D] transition shrink-0 cursor-pointer"
+            class="bg-[#FF5722] text-white px-6 py-2.5 rounded-full font-inter font-semibold shadow-sm hover:bg-[#E64A19] transition shrink-0 cursor-pointer"
         >
             Terapkan
         </button>

@@ -119,7 +119,7 @@
                                     <div 
                                         @click="!day.isPast && selectDate(day.date)"
                                         :class="{
-                                            'bg-[#ED1B45]/10 ring-2 ring-inset ring-[#ED1B45] font-bold': selectedDate === day.date,
+                                            'bg-[#FF5722]/10 ring-2 ring-inset ring-[#FF5722] font-bold': selectedDate === day.date,
                                             'bg-white hover:bg-gray-50/80 cursor-pointer': selectedDate !== day.date && !day.isPast && day.isCurrentMonth,
                                             'bg-gray-50/50 hover:bg-gray-100/70 cursor-pointer': selectedDate !== day.date && !day.isPast && !day.isCurrentMonth,
                                             'bg-gray-50/70 opacity-40 cursor-not-allowed': day.isPast
@@ -129,10 +129,10 @@
                                         <!-- Day Number Header -->
                                         <div class="flex items-center justify-center mt-0.5">
                                             <template x-if="selectedDate === day.date">
-                                                <div class="w-7 h-7 rounded-full bg-[#ED1B45] text-white font-bold text-xs sm:text-sm flex items-center justify-center shadow-xs" x-text="day.dayNum"></div>
+                                                <div class="w-7 h-7 rounded-full bg-[#FF5722] text-white font-bold text-xs sm:text-sm flex items-center justify-center shadow-xs" x-text="day.dayNum"></div>
                                             </template>
                                             <template x-if="selectedDate !== day.date && day.isToday">
-                                                <div class="w-7 h-7 rounded-full bg-white border-2 border-[#ED1B45] text-[#ED1B45] font-bold text-xs sm:text-sm flex items-center justify-center shadow-2xs" x-text="day.dayNum"></div>
+                                                <div class="w-7 h-7 rounded-full bg-white border-2 border-[#FF5722] text-[#FF5722] font-bold text-xs sm:text-sm flex items-center justify-center shadow-2xs" x-text="day.dayNum"></div>
                                             </template>
                                             <template x-if="selectedDate !== day.date && !day.isToday">
                                                 <span class="text-xs sm:text-sm font-medium" :class="day.isCurrentMonth ? 'text-[#16151A]' : 'text-gray-400'" x-text="day.dayNum"></span>
@@ -143,7 +143,7 @@
                                         <div class="mt-1 flex items-center justify-center">
                                             <template x-if="!day.isPast && availabilityMap[day.date] === true">
                                                 <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
-                                                      :class="selectedDate === day.date ? 'bg-[#ED1B45] text-white' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'">
+                                                      :class="selectedDate === day.date ? 'bg-[#FF5722] text-white' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'">
                                                     <span class="w-1.5 h-1.5 rounded-full" :class="selectedDate === day.date ? 'bg-white' : 'bg-emerald-500'"></span>
                                                     <span class="hidden sm:inline">Ada slot</span>
                                                 </span>
@@ -172,7 +172,7 @@
                         <!-- Loading Slots Indicator -->
                         <div x-show="isLoadingSlots" class="py-12 text-center space-y-3">
                             <div
-                                class="inline-block w-8 h-8 border-4 border-[#ED1B45] border-t-transparent rounded-full animate-spin">
+                                class="inline-block w-8 h-8 border-4 border-[#FF5722] border-t-transparent rounded-full animate-spin">
                             </div>
                             <p class="text-xs text-[#565A66]">Memeriksa ketersediaan jam latihan...</p>
                         </div>
@@ -188,13 +188,13 @@
                                     <template x-for="slot in slots.morning" :key="slot.time">
                                         <div class="relative">
                                             <div x-show="selectedSlot === slot.time"
-                                                class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
+                                                class="absolute -top-2.5 right-2 bg-[#FF5722] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
                                                 JADWAL BARU
                                             </div>
                                             <button type="button"
                                                 @click="slot.status === 'available' && selectSlot(slot.time)"
                                                 :disabled="slot.status !== 'available'" :class="{
-                                                        'bg-[#FFE8EC] border-2 border-[#ED1B45] text-[#ED1B45] shadow-sm': selectedSlot === slot.time,
+                                                        'bg-[#FFE8EC] border-2 border-[#FF5722] text-[#FF5722] shadow-sm': selectedSlot === slot.time,
                                                         'bg-white hover:bg-zinc-50 border border-[#E5E7EB] text-[#16151A] hover:border-teal-400': selectedSlot !== slot.time && slot.status === 'available',
                                                         'bg-[#F9FAFB] border border-[#E5E7EB] text-zinc-400 cursor-not-allowed opacity-60': slot.status !== 'available'
                                                     }"
@@ -215,13 +215,13 @@
                                     <template x-for="slot in slots.afternoon" :key="slot.time">
                                         <div class="relative">
                                             <div x-show="selectedSlot === slot.time"
-                                                class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
+                                                class="absolute -top-2.5 right-2 bg-[#FF5722] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
                                                 JADWAL BARU
                                             </div>
                                             <button type="button"
                                                 @click="slot.status === 'available' && selectSlot(slot.time)"
                                                 :disabled="slot.status !== 'available'" :class="{
-                                                        'bg-[#FFE8EC] border-2 border-[#ED1B45] text-[#ED1B45] shadow-sm': selectedSlot === slot.time,
+                                                        'bg-[#FFE8EC] border-2 border-[#FF5722] text-[#FF5722] shadow-sm': selectedSlot === slot.time,
                                                         'bg-white hover:bg-zinc-50 border border-[#E5E7EB] text-[#16151A] hover:border-teal-400': selectedSlot !== slot.time && slot.status === 'available',
                                                         'bg-[#F9FAFB] border border-[#E5E7EB] text-zinc-400 cursor-not-allowed opacity-60': slot.status !== 'available'
                                                     }"
@@ -242,13 +242,13 @@
                                     <template x-for="slot in slots.evening" :key="slot.time">
                                         <div class="relative">
                                             <div x-show="selectedSlot === slot.time"
-                                                class="absolute -top-2.5 right-2 bg-[#ED1B45] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
+                                                class="absolute -top-2.5 right-2 bg-[#FF5722] text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
                                                 JADWAL BARU
                                             </div>
                                             <button type="button"
                                                 @click="slot.status === 'available' && selectSlot(slot.time)"
                                                 :disabled="slot.status !== 'available'" :class="{
-                                                        'bg-[#FFE8EC] border-2 border-[#ED1B45] text-[#ED1B45] shadow-sm': selectedSlot === slot.time,
+                                                        'bg-[#FFE8EC] border-2 border-[#FF5722] text-[#FF5722] shadow-sm': selectedSlot === slot.time,
                                                         'bg-white hover:bg-zinc-50 border border-[#E5E7EB] text-[#16151A] hover:border-teal-400': selectedSlot !== slot.time && slot.status === 'available',
                                                         'bg-[#F9FAFB] border border-[#E5E7EB] text-zinc-400 cursor-not-allowed opacity-60': slot.status !== 'available'
                                                     }"
@@ -287,6 +287,7 @@
                         </div>
                     </div>
 
+<<<<<<< HEAD
                     <!-- Ringkasan Perubahan Jadwal (Light Theme) -->
                     <div class="bg-white rounded-2xl p-6 text-[#16151A] border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-5 relative overflow-hidden">
                         <div
@@ -302,6 +303,23 @@
                             <div>
                                 <span class="text-[#565A66] text-[11px] block">Jadwal Sebelumnya:</span>
                                 <span class="font-medium text-[#565A66]/60 line-through">
+=======
+                    <!-- Ringkasan Perubahan Jadwal -->
+                    <div class="bg-gradient-to-b from-orange-50/70 via-white to-white border-2 border-orange-200/80 rounded-2xl p-6 text-zinc-900 space-y-5 shadow-lg shadow-orange-500/5 relative overflow-hidden">
+                        <div
+                            class="absolute -top-12 -right-12 w-44 h-44 bg-orange-400/15 rounded-full blur-3xl pointer-events-none">
+                        </div>
+
+                        <h3 class="text-base font-extrabold font-heading text-zinc-900">
+                            Ringkasan Perubahan
+                        </h3>
+
+                        <div class="space-y-3.5 text-xs text-zinc-600">
+                            <!-- Jadwal Lama -->
+                            <div>
+                                <span class="text-gray-500 text-[11px] block">Jadwal Sebelumnya:</span>
+                                <span class="font-medium text-gray-400 line-through">
+>>>>>>> origin/feature/theme-blaze-orange
                                     {{ $session->session_date->locale('id')->translatedFormat('d M Y') }}
                                     ({{ substr($session->start_time, 0, 5) }})
                                 </span>
@@ -309,15 +327,25 @@
 
                             <!-- Tanggal Baru -->
                             <div>
+<<<<<<< HEAD
                                 <span class="text-[#565A66] text-[11px] block">Tanggal Baru:</span>
                                 <span class="font-bold text-[#16151A] text-xs mt-0.5"
+=======
+                                <span class="text-gray-500 text-[11px] block">Tanggal Baru:</span>
+                                <span class="font-bold text-zinc-900 text-xs mt-0.5"
+>>>>>>> origin/feature/theme-blaze-orange
                                     x-text="formattedSelectedDate || selectedDate"></span>
                             </div>
 
                             <!-- Jam Baru -->
                             <div>
+<<<<<<< HEAD
                                 <span class="text-[#565A66] text-[11px] block">Jam Sesi Baru:</span>
                                 <span class="font-bold text-[#ED1B45] text-xs mt-0.5"
+=======
+                                <span class="text-gray-500 text-[11px] block">Jam Sesi Baru:</span>
+                                <span class="font-bold text-[#FF5722] text-xs mt-0.5"
+>>>>>>> origin/feature/theme-blaze-orange
                                     x-text="selectedSlot ? (selectedSlot + ' - ' + endSlotTime + ' WIB') : 'Pilih slot jam'"></span>
                             </div>
 
@@ -332,8 +360,13 @@
                             <input type="hidden" name="start_time" :value="selectedSlot">
 
                             <button type="submit" :disabled="!selectedDate || !selectedSlot" :class="{
+<<<<<<< HEAD
                                          'bg-[#ED1B45] hover:bg-[#BA0030] text-white shadow-lg shadow-[#ED1B45]/20 cursor-pointer': selectedDate && selectedSlot,
                                          'bg-gray-100 text-[#565A66]/60 border border-[#E5E7EB] cursor-not-allowed': !selectedDate || !selectedSlot
+=======
+                                         'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-lg shadow-orange-500/30 cursor-pointer': selectedDate && selectedSlot,
+                                         'bg-gray-200 text-gray-400 cursor-not-allowed': !selectedDate || !selectedSlot
+>>>>>>> origin/feature/theme-blaze-orange
                                      }"
                                 class="w-full py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2">
                                 <span>Simpan Jadwal Baru</span>

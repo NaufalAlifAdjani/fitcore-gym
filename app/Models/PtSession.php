@@ -19,6 +19,7 @@ class PtSession extends Model
     protected $casts = [
         'session_date' => 'date',
         'status' => PtSessionStatus::class,
+        'completed_at' => 'datetime',
     ];
 
     public function setSessionDateAttribute($value): void
@@ -112,6 +113,15 @@ class PtSession extends Model
         return now()->greaterThanOrEqualTo($startsAt->copy()->subHours($cutoffHours));
     }
 
+    public function markAsCompleted(?string $notes = null): void
+    {
+        $this->update([
+            'status' => PtSessionStatus::Completed,
+            'notes' => $notes ?? $this->notes,
+            'completed_at' => now(),
+        ]);
+    }
+
     public function getTimeRangeAttribute(): string
     {
         $start = substr((string) $this->start_time, 0, 5);
@@ -123,16 +133,10 @@ class PtSession extends Model
     public function getSessionInfoAttribute(): string
     {
         if (! $this->quota) {
-            return '';
-        }
-        $sesiKe = $this->quota->used_sessions + 1;
-        $totalSesi = $this->quota->total_sessions ?? $this->quota->remaining_sessions + $this->quota->used_sessions;
-
-        if ($sesiKe === 1) {
-            return "Paket {$totalSesi} Sesi (Sesi 1 / Orientasi)";
+            return 'Sesi Private Training';
         }
 
-        return "Paket {$totalSesi} Sesi (Sesi ke-{$sesiKe})";
+        return $this->quota->ptPackage?->name ?? "Paket {$this->quota->total_sessions} Sesi";
     }
 
     public function getRelativeTimeBadgeAttribute(): string

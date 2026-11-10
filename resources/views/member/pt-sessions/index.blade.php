@@ -2,18 +2,30 @@
     <div class="py-8 sm:py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
+<<<<<<< HEAD
             <!-- Hero Section (Light Theme Card) -->
             <div class="bg-white rounded-3xl p-8 sm:p-10 relative overflow-hidden text-[#16151A] border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
                 <!-- Top-Right Red Glow Ambient -->
                 <div class="absolute -top-20 -right-20 w-80 h-80 bg-[#ED1B45]/10 rounded-full blur-3xl pointer-events-none"></div>
+=======
+            <!-- Hero Section (Light Athletic Palette) -->
+            <div class="bg-gradient-to-br from-white via-orange-50/50 to-amber-50/30 rounded-3xl p-8 sm:p-10 relative overflow-hidden text-[#16151A] border border-orange-100 shadow-[0_10px_30px_rgba(255,87,34,0.08)]">
+                <!-- Top-Right Orange Glow Ambient -->
+                <div class="absolute -top-20 -right-20 w-80 h-80 bg-[#FF5722]/15 rounded-full blur-3xl pointer-events-none"></div>
+>>>>>>> origin/feature/theme-blaze-orange
 
                 <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                     <!-- Left: Title, Subtitle, & Quota Bar -->
                     <div class="space-y-6 max-w-xl">
                         <div>
                             <h1 class="text-3xl sm:text-5xl font-extrabold font-heading text-[#16151A] tracking-tight leading-tight">
+<<<<<<< HEAD
                                 Riwayat Sesi <span class="text-[#ED1B45]">Personal</span><br>
                                 <span class="text-[#ED1B45]">Trainer</span>
+=======
+                                Riwayat Sesi <span class="text-[#FF5722]">Personal</span><br>
+                                <span class="text-[#FF5722]">Trainer</span>
+>>>>>>> origin/feature/theme-blaze-orange
                             </h1>
                             <p class="text-xs sm:text-sm text-[#565A66] mt-3 leading-relaxed">
                                 Monitoring performa latihan presisi tinggi bersama pelatih profesional bersertifikasi.
@@ -25,7 +37,11 @@
                             <div class="flex justify-between items-center text-xs">
                                 <span class="text-[#565A66] font-medium">Sisa Kuota Sesi</span>
                                 <div class="font-extrabold">
+<<<<<<< HEAD
                                     <span class="text-[#ED1B45]">{{ $quota->remaining_sessions ?? 7 }}</span>
+=======
+                                    <span class="text-[#FF5722]">{{ $quota->remaining_sessions ?? 7 }}</span>
+>>>>>>> origin/feature/theme-blaze-orange
                                     <span class="text-[#16151A]"> / {{ $quota->total_sessions ?? 16 }} Sesi Tersedia</span>
                                 </div>
                             </div>
@@ -35,8 +51,13 @@
                                 $rem = $quota->remaining_sessions ?? 7;
                                 $pct = $total > 0 ? round(($rem / $total) * 100) : 0;
                             @endphp
+<<<<<<< HEAD
                             <div class="w-full bg-[#E5E7EB] rounded-full h-2.5 overflow-hidden">
                                 <div class="bg-[#ED1B45] h-full rounded-full transition-all duration-300"
+=======
+                            <div class="w-full bg-orange-100 rounded-full h-2.5 overflow-hidden">
+                                <div class="bg-gradient-to-r from-[#FF5722] to-[#FFB703] h-full rounded-full transition-all duration-300 shadow-xs"
+>>>>>>> origin/feature/theme-blaze-orange
                                     style="width: {{ $pct }}%"></div>
                             </div>
 
@@ -49,8 +70,9 @@
 
                     <!-- Right: Stats & Action Button -->
                     <div class="flex flex-col sm:items-end gap-6 shrink-0">
-                        <!-- 3 Stat Boxes -->
+                        <!-- 3 Stat Boxes (Clean White Cards) -->
                         <div class="flex items-center gap-3">
+<<<<<<< HEAD
                             <div class="bg-[#F6F6F7] border border-[#E5E7EB] rounded-2xl p-4 text-center min-w-[90px]">
                                 <div class="text-3xl font-extrabold font-heading text-[#16151A]">{{ $counts['pending'] }}</div>
                                 <div class="text-[10px] font-extrabold text-[#565A66] uppercase tracking-wider mt-1">MENUNGGU</div>
@@ -60,6 +82,17 @@
                                 <div class="text-[10px] font-extrabold text-[#565A66] uppercase tracking-wider mt-1">TERKONFIRMASI</div>
                             </div>
                             <div class="bg-[#F6F6F7] border border-[#E5E7EB] rounded-2xl p-4 text-center min-w-[90px]">
+=======
+                            <div class="bg-white border border-orange-100 rounded-2xl p-4 text-center min-w-[90px] shadow-xs">
+                                <div class="text-3xl font-extrabold font-heading text-[#16151A]">{{ $counts['pending'] }}</div>
+                                <div class="text-[10px] font-extrabold text-[#565A66] uppercase tracking-wider mt-1">MENUNGGU</div>
+                            </div>
+                            <div class="bg-white border border-orange-100 rounded-2xl p-4 text-center min-w-[90px] shadow-xs">
+                                <div class="text-3xl font-extrabold font-heading text-[#16151A]">{{ $counts['confirmed'] }}</div>
+                                <div class="text-[10px] font-extrabold text-[#565A66] uppercase tracking-wider mt-1">TERKONFIRMASI</div>
+                            </div>
+                            <div class="bg-white border border-orange-100 rounded-2xl p-4 text-center min-w-[90px] shadow-xs">
+>>>>>>> origin/feature/theme-blaze-orange
                                 <div class="text-3xl font-extrabold font-heading text-[#16151A]">{{ $counts['cancelled'] }}</div>
                                 <div class="text-[10px] font-extrabold text-[#565A66] uppercase tracking-wider mt-1">DIBATALKAN</div>
                             </div>
@@ -67,7 +100,11 @@
 
                         <!-- + Booking Sesi Baru Button -->
                         <a href="{{ route('pt-sessions.create') }}"
+<<<<<<< HEAD
                             class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#ED1B45] hover:bg-[#BA0030] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#ED1B45]/20 hover:shadow-[#ED1B45]/40 transition-all cursor-pointer">
+=======
+                            class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF5722]/30 hover:shadow-[#FF5722]/50 transition-all">
+>>>>>>> origin/feature/theme-blaze-orange
                             <span>+</span>
                             <span>Booking Sesi Baru</span>
                         </a>

@@ -103,6 +103,114 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Rating::class, 'trainer_id');
     }
 
+    public function trainerAvailabilities(): HasMany
+    {
+        return $this->hasMany(TrainerAvailability::class, 'trainer_id');
+    }
+
+    public function trainerDayOffs(): HasMany
+    {
+        return $this->hasMany(TrainerDayOff::class, 'trainer_id');
+    }
+
+    /**
+     * Mendapatkan ringkasan jadwal kerja rutin untuk tampilan kartu PT.
+     *
+     * @return array{days_label: string, periods: array<string>, periods_label: string, has_custom_schedule: bool}
+     */
+    public function getWorkingScheduleSummary(): array
+    {
+        $availabilities = $this->relationLoaded('trainerAvailabilities')
+            ? $this->trainerAvailabilities
+            : $this->trainerAvailabilities()->get();
+
+        if ($availabilities->isEmpty()) {
+            return [
+                'days_label' => 'Senin – Sabtu',
+                'periods' => ['morning', 'afternoon', 'evening'],
+                'periods_label' => 'Pagi – Malam (07:00 – 21:00)',
+                'has_custom_schedule' => false,
+            ];
+        }
+
+        $activeDays = $availabilities->where('is_active', true)->sortBy(function ($item) {
+            // Urutkan dari Senin (1) sampai Minggu (0 diposisikan 7)
+            return $item->day_of_week === 0 ? 7 : $item->day_of_week;
+        });
+
+        if ($activeDays->isEmpty()) {
+            return [
+                'days_label' => 'Sedang Tidak Aktif',
+                'periods' => [],
+                'periods_label' => 'Tidak Ada Slot',
+                'has_custom_schedule' => true,
+            ];
+        }
+
+        $dayNamesShort = [
+            1 => 'Sen',
+            2 => 'Sel',
+            3 => 'Rab',
+            4 => 'Kam',
+            5 => 'Jum',
+            6 => 'Sab',
+            0 => 'Min',
+        ];
+
+        $activeDayNumbers = $activeDays->pluck('day_of_week')->all();
+
+        // Label Hari
+        if (count($activeDayNumbers) === 7) {
+            $daysLabel = 'Setiap Hari';
+        } elseif ($activeDayNumbers === [1, 2, 3, 4, 5]) {
+            $daysLabel = 'Senin – Jumat';
+        } elseif ($activeDayNumbers === [1, 2, 3, 4, 5, 6]) {
+            $daysLabel = 'Senin – Sabtu';
+        } else {
+            $daysLabel = implode(', ', array_map(fn ($d) => $dayNamesShort[$d] ?? (string) $d, $activeDayNumbers));
+        }
+
+        // Kumpulkan semua slot unik yang aktif
+        $allSlots = [];
+        foreach ($activeDays as $day) {
+            if (is_array($day->slots)) {
+                $allSlots = array_merge($allSlots, $day->slots);
+            }
+        }
+        $allSlots = array_unique($allSlots);
+
+        $morningSlots = config('pt_booking.slots.morning', ['07:00', '08:00', '09:00', '10:00']);
+        $afternoonSlots = config('pt_booking.slots.afternoon', ['13:00', '14:00', '15:00', '16:00']);
+        $eveningSlots = config('pt_booking.slots.evening', ['18:00', '19:00', '20:00', '21:00']);
+
+        $periods = [];
+        if (! empty(array_intersect($allSlots, $morningSlots))) {
+            $periods[] = 'morning';
+        }
+        if (! empty(array_intersect($allSlots, $afternoonSlots))) {
+            $periods[] = 'afternoon';
+        }
+        if (! empty(array_intersect($allSlots, $eveningSlots))) {
+            $periods[] = 'evening';
+        }
+
+        $periodLabels = [
+            'morning' => 'Pagi',
+            'afternoon' => 'Siang',
+            'evening' => 'Sore/Malam',
+        ];
+
+        $namedPeriods = array_map(fn ($p) => $periodLabels[$p] ?? $p, $periods);
+        $periodsLabel = ! empty($namedPeriods) ? implode(' & ', $namedPeriods) : 'Sesuai Janji Temu';
+
+        return [
+            'days_label' => $daysLabel,
+            'periods' => $periods,
+            'periods_label' => $periodsLabel,
+            'has_custom_schedule' => true,
+        ];
+    }
+
     // Native Role Authorization Helpers (No Spatie)
     public function getIsVerifiedAttribute(): bool
     {

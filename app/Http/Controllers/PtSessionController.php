@@ -27,9 +27,10 @@ class PtSessionController extends Controller
      */
     public function index(Request $request): View
     {
-        $this->ptSessionService->cancelExpiredPendingSessions();
-
         $user = $request->user();
+        $this->ptSessionService->cancelExpiredPendingSessions($user->id);
+        $this->ptSessionService->completePastConfirmedSessions(null, $user->id);
+
         $tab = $request->query('tab', 'all');
         $month = $request->query('month');
 

@@ -4,8 +4,13 @@
 
             <!-- Page Title / Header Badge -->
             <div class="text-center space-y-2">
+<<<<<<< HEAD
                 <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#ED1B45] bg-rose-50 border border-rose-200 rounded-full">
                     <span class="w-1.5 h-1.5 rounded-full bg-[#ED1B45] animate-pulse"></span>
+=======
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#FF5722] bg-orange-50 border border-orange-200 rounded-full">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#FF5722] animate-pulse"></span>
+>>>>>>> origin/feature/theme-blaze-orange
                     FitCore Digital Pass
                 </span>
                 <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-[#16151A] tracking-tight">
@@ -17,6 +22,7 @@
             </div>
 
             <!-- VIP DIGITAL MEMBERSHIP CARD -->
+<<<<<<< HEAD
             <div class="relative overflow-hidden rounded-[28px] border border-[#E5E7EB] bg-white p-6 sm:p-8 text-[#16151A] shadow-[0_4px_16px_rgba(0,0,0,0.06)]">
                 <!-- Ambient Glow Effect -->
                 <div class="absolute -top-16 -right-16 w-56 h-56 bg-[#ED1B45]/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -36,6 +42,26 @@
                                     FITCORE <span class="text-[#ED1B45]">ATHLETIC</span>
                                 </p>
                                 <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-[#565A66]">
+=======
+            <div class="relative overflow-hidden rounded-[28px] border border-white/20 bg-cover bg-center p-6 sm:p-8 text-white shadow-[0_20px_50px_rgba(235,80,0,0.28)]"
+                 style="background-image: url('{{ asset('images/membership-card/background.jpg') }}');">
+                <!-- Subtle Contrast Overlay to ensure background art shines while text is comfortable to read -->
+                <div class="absolute inset-0 bg-gradient-to-br from-black/40 via-black/20 to-black/50 pointer-events-none"></div>
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_65%)] pointer-events-none"></div>
+
+                <div class="relative z-10 flex flex-col justify-between space-y-6">
+                    <!-- Card Top Header -->
+                    <div class="flex items-center justify-between border-b border-white/20 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="h-10 w-10 rounded-xl bg-white/95 p-1.5 shadow-md flex items-center justify-center backdrop-blur-md shrink-0">
+                                <img src="{{ asset('images/logo/logo-icon.png') }}" alt="FitCore" class="h-full w-full object-contain">
+                            </div>
+                            <div>
+                                <p class="font-heading text-sm font-extrabold tracking-wider text-white drop-shadow-xs">
+                                    FITCORE <span class="text-orange-200">ATHLETIC</span>
+                                </p>
+                                <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/80">
+>>>>>>> origin/feature/theme-blaze-orange
                                     Member Identity Pass
                                 </p>
                             </div>
@@ -43,6 +69,7 @@
 
                         <!-- Status Badge -->
                         @if($activeMembership)
+<<<<<<< HEAD
                             <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 font-inter text-[11px] font-bold text-emerald-700 shadow-xs">
                                 <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                 AKTIF
@@ -50,6 +77,15 @@
                         @else
                             <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-50 border border-rose-200 px-3 py-1 font-inter text-[11px] font-bold text-rose-700 shadow-xs">
                                 <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
+=======
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/90 text-white border border-emerald-400/50 px-3 py-1 font-inter text-[11px] font-bold shadow-md backdrop-blur-md">
+                                <span class="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
+                                AKTIF
+                            </span>
+                        @else
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-500/90 text-white border border-rose-400/50 px-3 py-1 font-inter text-[11px] font-bold shadow-md backdrop-blur-md">
+                                <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
+>>>>>>> origin/feature/theme-blaze-orange
                                 NONAKTIF
                             </span>
                         @endif
@@ -60,6 +96,7 @@
                         <!-- Left Details -->
                         <div class="space-y-4">
                             <div>
+<<<<<<< HEAD
                                 <p class="text-[10px] font-bold uppercase tracking-widest text-[#565A66] font-inter">Nama Member</p>
                                 <h2 class="font-heading text-xl sm:text-2xl font-bold text-[#16151A] tracking-tight mt-0.5">
                                     {{ $user->name }}
@@ -68,10 +105,23 @@
                                     <p class="font-mono text-xs font-semibold text-[#ED1B45] mt-1 tracking-wider">
                                         ID: {{ $profile->member_code }}
                                     </p>
+=======
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-orange-200/90 font-inter">Nama Member</p>
+                                <h2 class="font-heading text-xl sm:text-2xl font-bold text-white tracking-tight mt-0.5 drop-shadow-sm">
+                                    {{ $user->name }}
+                                </h2>
+                                @if($profile && $profile->member_code)
+                                    <div class="inline-flex items-center gap-1.5 mt-1.5 px-2.5 py-0.5 rounded-md bg-white/20 backdrop-blur-md border border-white/25">
+                                        <span class="font-mono text-xs font-bold text-white tracking-wider">
+                                            ID: {{ $profile->member_code }}
+                                        </span>
+                                    </div>
+>>>>>>> origin/feature/theme-blaze-orange
                                 @endif
                             </div>
 
                             <div class="space-y-1">
+<<<<<<< HEAD
                                 <p class="text-[10px] font-bold uppercase tracking-widest text-[#565A66] font-inter">Paket Keanggotaan</p>
                                 @if($activeMembership)
                                     <p class="font-inter text-sm font-bold text-[#16151A]">
@@ -85,6 +135,21 @@
                                         Tidak ada membership aktif
                                     </p>
                                     <p class="font-inter text-xs text-[#565A66]">
+=======
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-orange-200/90 font-inter">Paket Keanggotaan</p>
+                                @if($activeMembership)
+                                    <p class="font-inter text-sm sm:text-base font-bold text-white drop-shadow-xs">
+                                        {{ $activeMembership->package->name ?? 'Membership FitCore' }}
+                                    </p>
+                                    <p class="font-inter text-xs text-white/85">
+                                        Berlaku s/d <span class="text-white font-bold">{{ $activeMembership->end_date->locale('id')->translatedFormat('d M Y') }}</span>
+                                    </p>
+                                @else
+                                    <p class="font-inter text-sm font-semibold text-rose-200">
+                                        Tidak ada membership aktif
+                                    </p>
+                                    <p class="font-inter text-xs text-white/75">
+>>>>>>> origin/feature/theme-blaze-orange
                                         Silakan berlangganan paket untuk check-in.
                                     </p>
                                 @endif
@@ -94,35 +159,61 @@
                         <!-- Right QR Container -->
                         <div class="flex flex-col items-center shrink-0 mx-auto sm:mx-0">
                             @if($qrSvg)
+<<<<<<< HEAD
                                 <div class="relative rounded-2xl bg-white p-3 shadow-md border border-[#E5E7EB] w-36 h-36 flex items-center justify-center transition duration-300 hover:scale-105">
+=======
+                                <div class="relative rounded-2xl bg-white p-3 shadow-xl border border-white/60 w-36 h-36 flex items-center justify-center transition duration-300 hover:scale-105">
+>>>>>>> origin/feature/theme-blaze-orange
                                     <div class="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
                                         {!! $qrSvg !!}
                                     </div>
                                 </div>
+<<<<<<< HEAD
                                 <span class="mt-2 text-[10px] font-bold tracking-wider text-[#565A66] uppercase flex items-center gap-1 font-inter">
                                     <svg class="w-3 h-3 text-[#ED1B45]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+=======
+                                <span class="mt-2 text-[10px] font-bold tracking-wider text-white uppercase flex items-center gap-1.5 font-inter drop-shadow-sm">
+                                    <svg class="w-3.5 h-3.5 text-orange-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+>>>>>>> origin/feature/theme-blaze-orange
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                                     </svg>
                                     Scan untuk Check-in
                                 </span>
                             @else
+<<<<<<< HEAD
                                 <div class="rounded-2xl border border-dashed border-[#E5E7EB] bg-[#F6F6F7] p-4 w-36 h-36 flex flex-col items-center justify-center text-center">
                                     <svg class="w-8 h-8 text-[#565A66] mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                     </svg>
                                     <span class="text-[11px] font-medium text-[#565A66] font-inter">QR Code belum tersedia</span>
+=======
+                                <div class="rounded-2xl border border-dashed border-white/40 bg-black/25 backdrop-blur-md p-4 w-36 h-36 flex flex-col items-center justify-center text-center text-white">
+                                    <svg class="w-8 h-8 text-white/70 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                    </svg>
+                                    <span class="text-[11px] font-medium text-white/80 font-inter">QR Code belum tersedia</span>
+>>>>>>> origin/feature/theme-blaze-orange
                                 </div>
                             @endif
                         </div>
                     </div>
 
                     <!-- Card Bottom Footer -->
+<<<<<<< HEAD
                     <div class="border-t border-[#E5E7EB] pt-4 flex items-center justify-between text-[11px] text-[#565A66] font-inter">
                         <span class="flex items-center gap-1.5">
                             <span class="h-2 w-2 rounded-full bg-[#ED1B45]"></span>
                             FitCore Performance Center
                         </span>
                         <span class="font-mono text-[10px] tracking-widest text-[#565A66] uppercase">
+=======
+                    <div class="border-t border-white/20 pt-4 flex items-center justify-between text-[11px] text-white/85 font-inter">
+                        <span class="flex items-center gap-1.5 font-medium">
+                            <span class="h-2 w-2 rounded-full bg-white shadow-xs"></span>
+                            FitCore Performance Center
+                        </span>
+                        <span class="font-mono text-[10px] tracking-widest text-white/70 uppercase">
+>>>>>>> origin/feature/theme-blaze-orange
                             CONFIDENTIAL PASS
                         </span>
                     </div>
@@ -132,7 +223,11 @@
             <!-- Petunjuk Penggunaan -->
             <div class="rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm space-y-4">
                 <div class="flex items-center gap-2.5">
+<<<<<<< HEAD
                     <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 text-[#ED1B45]">
+=======
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50 text-[#FF5722]">
+>>>>>>> origin/feature/theme-blaze-orange
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 16v-4M12 8h.01" />
@@ -145,6 +240,7 @@
 
                 <ol class="space-y-3 text-xs text-[#565A66] font-inter">
                     <li class="flex items-start gap-3">
+<<<<<<< HEAD
                         <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#ED1B45]">1</span>
                         <span>Buka halaman ini melalui smartphone Anda saat tiba di lokasi gym FitCore.</span>
                     </li>
@@ -154,6 +250,17 @@
                     </li>
                     <li class="flex items-start gap-3">
                         <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#ED1B45]">3</span>
+=======
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#FF5722]">1</span>
+                        <span>Buka halaman ini melalui smartphone Anda saat tiba di lokasi gym FitCore.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#FF5722]">2</span>
+                        <span>Tunjukkan layar QR Code ini kepada resepsionis atau arahkan ke scanner check-in otomatis.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#FF5722]">3</span>
+>>>>>>> origin/feature/theme-blaze-orange
                         <span>Sistem akan memverifikasi status keaktifan paket membership Anda secara instan (1x per hari).</span>
                     </li>
                 </ol>
@@ -163,7 +270,11 @@
                         <p class="text-xs text-rose-800 font-medium">
                             Membership Anda sedang tidak aktif. Perbarui paket untuk mulai check-in.
                         </p>
+<<<<<<< HEAD
                         <a href="{{ route('member.membership.packages') }}" class="shrink-0 rounded-full bg-[#ED1B45] px-4 py-1.5 text-xs font-bold text-white hover:bg-[#BA0030] transition shadow-xs">
+=======
+                        <a href="{{ route('member.membership.packages') }}" class="shrink-0 rounded-full bg-[#FF5722] px-4 py-1.5 text-xs font-bold text-white hover:bg-rose-700 transition shadow-xs">
+>>>>>>> origin/feature/theme-blaze-orange
                             Beli Paket
                         </a>
                     </div>

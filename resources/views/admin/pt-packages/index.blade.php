@@ -22,8 +22,8 @@
             <header class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div class="min-w-0 flex-1">
                     <div class="flex items-center gap-2">
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1 font-inter text-xs font-bold text-[#ED1B45] border border-rose-200">
-                            <span class="h-1.5 w-1.5 rounded-full bg-[#ED1B45]"></span>
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1 font-inter text-xs font-bold text-[#FF5722] border border-rose-200">
+                            <span class="h-1.5 w-1.5 rounded-full bg-[#FF5722]"></span>
                             Portal Admin
                         </span>
                         <span class="text-xs font-medium text-[#565A66] font-inter">Personal Trainer Service</span>
@@ -52,7 +52,7 @@
                                 x-on:input.debounce.400ms="$event.target.form.requestSubmit()"
                                 placeholder="Cari paket sesi PT..."
                                 aria-label="Cari nama paket sesi PT"
-                                class="w-full sm:w-48 md:w-56 rounded-full border border-[#E5E7EB] bg-white py-2 pl-10 pr-4 text-sm font-inter text-[#16151A] placeholder-[#565A66] shadow-sm focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full sm:w-48 md:w-56 rounded-full border border-[#E5E7EB] bg-white py-2 pl-10 pr-4 text-sm font-inter text-[#16151A] placeholder-[#565A66] shadow-sm focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                             >
                         </label>
 
@@ -63,7 +63,7 @@
                                 name="status"
                                 aria-label="Filter status paket"
                                 onchange="this.form.submit()"
-                                class="w-full sm:w-36 rounded-full border border-[#E5E7EB] bg-white py-2 pl-3.5 pr-8 text-sm font-inter font-medium text-[#16151A] shadow-sm focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer transition"
+                                class="w-full sm:w-36 rounded-full border border-[#E5E7EB] bg-white py-2 pl-3.5 pr-8 text-sm font-inter font-medium text-[#16151A] shadow-sm focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] cursor-pointer transition"
                             >
                                 <option value="">Semua Status</option>
                                 <option value="active" @selected(request('status') === 'active')>Aktif</option>
@@ -78,7 +78,7 @@
                     <button
                         type="button"
                         x-on:click="openCreateModal()"
-                        class="bg-[#ED1B45] text-white px-5 py-2 rounded-full font-inter font-semibold shadow-sm hover:bg-[#D1123D] transition flex items-center justify-center gap-2 shrink-0 cursor-pointer whitespace-nowrap text-sm"
+                        class="bg-[#FF5722] text-white px-5 py-2 rounded-full font-inter font-semibold shadow-sm hover:bg-[#E64A19] transition flex items-center justify-center gap-2 shrink-0 cursor-pointer whitespace-nowrap text-sm"
                     >
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -143,7 +143,7 @@
                                 <tr>
                                     <td colspan="7" class="px-4 py-16 text-center">
                                         <div class="mx-auto flex max-w-sm flex-col items-center">
-                                            <div class="flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 text-[#ED1B45] mb-4">
+                                            <div class="flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 text-[#FF5722] mb-4">
                                                 <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                                     <circle cx="12" cy="12" r="10" />
                                                     <path stroke-linecap="round" d="M12 8v4M12 16h.01" />
@@ -165,7 +165,7 @@
                                                 <button
                                                     type="button"
                                                     x-on:click="openCreateModal()"
-                                                    class="mt-4 rounded-full bg-[#ED1B45] px-5 py-2 text-xs font-semibold text-white hover:bg-[#D1123D] transition shadow-sm"
+                                                    class="mt-4 rounded-full bg-[#FF5722] px-5 py-2 text-xs font-semibold text-white hover:bg-[#E64A19] transition shadow-sm"
                                                 >
                                                     + Tambah Paket Pertama
                                                 </button>
@@ -183,7 +183,7 @@
                                         <!-- Nama Paket PT -->
                                         <td class="px-4 py-4 sm:px-5">
                                             <div class="flex items-center gap-3">
-                                                <div class="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-[#ED1B45]/10 text-[#ED1B45] font-poppins font-bold text-xs sm:text-sm">
+                                                <div class="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-xl bg-[#FF5722]/10 text-[#FF5722] font-poppins font-bold text-xs sm:text-sm">
                                                     PT
                                                 </div>
                                                 <div class="min-w-0">
@@ -200,7 +200,7 @@
                                         <!-- Jumlah Sesi -->
                                         <td class="px-3 py-4 sm:px-4 whitespace-nowrap">
                                             <span class="inline-flex items-center gap-1.5 rounded-full bg-[#16151A]/5 border border-[#E5E7EB] px-2.5 py-1 font-inter text-xs font-bold text-[#16151A]">
-                                                <svg class="h-3.5 w-3.5 text-[#ED1B45]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                                <svg class="h-3.5 w-3.5 text-[#FF5722]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                                                     <circle cx="12" cy="12" r="10" />
                                                     <path stroke-linecap="round" d="M12 6v6l4 2" />
                                                 </svg>
@@ -270,7 +270,7 @@
                                                         role="switch"
                                                         aria-label="Ubah status paket {{ $pkg->name }}"
                                                         x-bind:disabled="isSaving"
-                                                        class="relative inline-flex h-7 w-12 items-center rounded-full transition focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:ring-offset-2 disabled:cursor-wait cursor-pointer"
+                                                        class="relative inline-flex h-7 w-12 items-center rounded-full transition focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:ring-offset-2 disabled:cursor-wait cursor-pointer"
                                                         x-bind:class="isActive ? 'bg-[#10B981]' : 'bg-[#D4D4D8]'"
                                                     >
                                                         <span class="sr-only">Ubah status paket</span>
@@ -298,7 +298,7 @@
                                                 ], JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP) }}"
                                                 x-on:click="openEditModal(JSON.parse($el.dataset.package))"
                                                 aria-label="Edit paket {{ $pkg->name }}"
-                                                class="w-9 h-9 rounded-full border border-[#E5E7EB] flex items-center justify-center text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#ED1B45] transition mx-auto cursor-pointer"
+                                                class="w-9 h-9 rounded-full border border-[#E5E7EB] flex items-center justify-center text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#FF5722] transition mx-auto cursor-pointer"
                                             >
                                                 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                                     <path d="m14.5 6.5 3 3M4 20l4.3-.9L19 8.4a2.12 2.12 0 0 0-3-3L5.3 16.1 4 20Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
@@ -327,7 +327,7 @@
 
                             @for ($page = max(1, $packages->currentPage() - 2); $page <= min($packages->lastPage(), $packages->currentPage() + 2); $page++)
                                 @if ($page === $packages->currentPage())
-                                    <span aria-current="page" class="flex h-9 min-w-9 items-center justify-center rounded-full bg-[#ED1B45] text-white px-3 text-xs font-bold font-inter shadow-sm">{{ $page }}</span>
+                                    <span aria-current="page" class="flex h-9 min-w-9 items-center justify-center rounded-full bg-[#FF5722] text-white px-3 text-xs font-bold font-inter shadow-sm">{{ $page }}</span>
                                 @else
                                     <a href="{{ $packages->url($page) }}" aria-label="Halaman {{ $page }}" class="flex h-9 min-w-9 items-center justify-center rounded-full border border-[#E5E7EB] text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] px-3 text-xs font-semibold font-inter transition">{{ $page }}</a>
                                 @endif

@@ -9,7 +9,7 @@
     >
         <div class="mx-auto max-w-[1600px] space-y-6">
             <header>
-                <p class="font-inter text-xs font-bold text-[#ED1B45] tracking-wider uppercase">ADMINISTRASI GYM</p>
+                <p class="font-inter text-xs font-bold text-[#FF5722] tracking-wider uppercase">ADMINISTRASI GYM</p>
                 <h1 class="mt-2 text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">Verifikasi Pembayaran</h1>
                 <p class="mt-1 font-inter text-sm text-[#565A66]">
                     Tinjau bukti transfer dan konfirmasi pembayaran membership maupun sesi personal trainer.

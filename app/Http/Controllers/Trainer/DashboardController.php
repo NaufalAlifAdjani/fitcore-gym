@@ -6,7 +6,11 @@ use App\Enums\PtSessionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\MemberPtQuota;
 use App\Models\PtSession;
+<<<<<<< HEAD
 use App\Models\User;
+=======
+use App\Services\PtSessionService;
+>>>>>>> origin/feature/theme-blaze-orange
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +25,8 @@ class DashboardController extends Controller
     public function index(Request $request): View
     {
         $trainer = $request->user();
+        app(PtSessionService::class)->completePastConfirmedSessions($trainer->id);
+
         $trainerProfile = $trainer->trainerProfile;
 
         $startOfMonth = Carbon::now()->startOfMonth()->toDateString();

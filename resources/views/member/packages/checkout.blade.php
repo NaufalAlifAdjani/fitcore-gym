@@ -3,12 +3,21 @@
         <div class="mx-auto max-w-6xl">
             <!-- Breadcrumb Navigation -->
             <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+<<<<<<< HEAD
                 <a href="{{ route('member.membership.packages') }}" class="inline-flex items-center gap-2 text-xs font-bold text-[#565A66] hover:text-[#ED1B45] transition">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Kembali ke Katalog Paket
                 </a>
                 <div class="flex items-center gap-2 text-xs font-bold text-[#565A66]">
                     <span class="text-[#ED1B45]">Langkah 1: Konfirmasi Pembayaran</span>
+=======
+                <a href="{{ route('member.membership.packages') }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#FF5722] transition">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Kembali ke Katalog Paket
+                </a>
+                <div class="flex items-center gap-2 text-xs font-bold text-slate-500">
+                    <span class="text-[#FF5722]">Langkah 1: Konfirmasi Pembayaran</span>
+>>>>>>> origin/feature/theme-blaze-orange
                     <span>•</span>
                     <span class="text-[#565A66]/60">Langkah 2: Form Bukti Transfer</span>
                 </div>

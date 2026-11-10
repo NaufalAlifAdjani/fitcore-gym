@@ -41,8 +41,13 @@
 
         <!-- 1. Nama Pemilik Rekening Pengirim -->
         <div>
+<<<<<<< HEAD
             <label for="sender_name" class="block text-xs font-bold text-[#16151A] mb-2">
                 Nama Pengirim / Pemilik Rekening <span class="text-[#ED1B45]">*</span>
+=======
+            <label for="sender_name" class="block text-xs font-bold text-slate-700 mb-2">
+                Nama Pengirim / Pemilik Rekening <span class="text-[#FF5722]">*</span>
+>>>>>>> origin/feature/theme-blaze-orange
             </label>
             <x-text-input
                 id="sender_name"
@@ -58,8 +63,13 @@
 
         <!-- 2. Bank Pengirim -->
         <div>
+<<<<<<< HEAD
             <label for="sender_bank" class="block text-xs font-bold text-[#16151A] mb-2">
                 Bank Pengirim <span class="text-[#ED1B45]">*</span>
+=======
+            <label for="sender_bank" class="block text-xs font-bold text-slate-700 mb-2">
+                Bank Pengirim <span class="text-[#FF5722]">*</span>
+>>>>>>> origin/feature/theme-blaze-orange
             </label>
             <x-text-input
                 id="sender_bank"
@@ -74,8 +84,13 @@
 
         <!-- 3. Unggah Berkas Bukti Transfer -->
         <div>
+<<<<<<< HEAD
             <label class="block text-xs font-bold text-[#16151A] mb-2">
                 Foto / Screenshot Bukti Transfer <span class="text-[#ED1B45]">*</span>
+=======
+            <label class="block text-xs font-bold text-slate-700 mb-2">
+                Foto / Screenshot Bukti Transfer <span class="text-[#FF5722]">*</span>
+>>>>>>> origin/feature/theme-blaze-orange
             </label>
 
             <!-- Dropzone Area -->
@@ -92,7 +107,11 @@
                 />
 
                 <div class="text-center space-y-2 pointer-events-none" x-show="!fileName">
+<<<<<<< HEAD
                     <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ED1B45]/10 text-[#ED1B45] group-hover:scale-105 transition-transform">
+=======
+                    <span class="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 text-[#FF5722] group-hover:scale-105 transition-transform">
+>>>>>>> origin/feature/theme-blaze-orange
                         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
                         </svg>
@@ -148,7 +167,11 @@
         <x-button
             type="submit"
             variant="primary"
+<<<<<<< HEAD
             class="w-full !py-4 !text-sm font-bold tracking-wide shadow-lg shadow-[#ED1B45]/20 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+=======
+            class="w-full !py-4 !text-sm font-bold tracking-wide shadow-lg shadow-[#FF5722]/30 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
+>>>>>>> origin/feature/theme-blaze-orange
         >
             <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
