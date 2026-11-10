@@ -7,17 +7,17 @@
 ])
 
 <div {{ $attributes->merge(['class' => 'space-y-6']) }}>
-    <x-card :padding="false" class="!rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-sm bg-white">
-        <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+    <x-card :padding="false" class="!rounded-3xl border border-[#E5E7EB] p-6 sm:p-8 shadow-[0_4px_12px_rgba(0,0,0,0.04)] bg-white">
+        <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-4 mb-6">
             <div>
-                <h2 class="font-heading text-lg font-extrabold text-slate-900 flex items-center gap-2">
-                    <svg class="h-5 w-5 text-[#BA0030]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <h2 class="font-heading text-lg font-extrabold text-[#16151A] flex items-center gap-2">
+                    <svg class="h-5 w-5 text-[#ED1B45]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="5" width="18" height="14" rx="2" />
                         <path d="M3 10h18" />
                     </svg>
                     {{ $title }}
                 </h2>
-                <p class="mt-1 text-xs text-slate-500">{{ $subtitle }}</p>
+                <p class="mt-1 text-xs text-[#565A66]">{{ $subtitle }}</p>
             </div>
         </div>
 
@@ -26,7 +26,7 @@
             @forelse ($banks as $index => $bank)
                 <label
                     class="relative flex items-center justify-between p-4 sm:p-5 rounded-2xl border cursor-pointer transition-all duration-200"
-                    x-bind:class="selectedBank == '{{ $bank->id }}' ? 'border-[#BA0030] bg-rose-50/40 ring-2 ring-[#BA0030]/20 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50'"
+                    x-bind:class="selectedBank == '{{ $bank->id }}' ? 'border-[#ED1B45] bg-[#ED1B45]/5 ring-2 ring-[#ED1B45]/20 shadow-sm' : 'border-[#E5E7EB] bg-white hover:border-gray-300 hover:bg-gray-50/50'"
                 >
                     <div class="flex items-center gap-4">
                         <input
@@ -34,19 +34,19 @@
                             name="{{ $name }}"
                             value="{{ $bank->id }}"
                             x-model="selectedBank"
-                            class="h-4 w-4 text-[#BA0030] focus:ring-[#BA0030] border-slate-300"
+                            class="h-4 w-4 text-[#ED1B45] focus:ring-[#ED1B45] border-[#E5E7EB]"
                             {{ $selectedBank == $bank->id || ($selectedBank === '' && $index === 0) ? 'checked' : '' }}
                         />
                         <div>
                             <div class="flex items-center gap-2.5">
-                                <span class="font-heading font-extrabold text-slate-900 text-sm sm:text-base">
+                                <span class="font-heading font-extrabold text-[#16151A] text-sm sm:text-base">
                                     {{ $bank->name }}
                                 </span>
-                                <span class="rounded-md bg-slate-100 px-2 py-0.5 font-mono text-xs font-bold text-slate-700">
+                                <span class="rounded-md bg-gray-100 px-2 py-0.5 font-mono text-xs font-bold text-[#16151A]">
                                     {{ $bank->account_number }}
                                 </span>
                             </div>
-                            <p class="mt-1 text-xs text-slate-500 font-medium">
+                            <p class="mt-1 text-xs text-[#565A66] font-medium">
                                 Transfer via ATM / M-Banking / Internet Banking (a.n. {{ $bank->account_holder }})
                             </p>
                         </div>
@@ -58,8 +58,8 @@
                     </div>
                 </label>
             @empty
-                <div class="p-4 rounded-2xl border border-slate-200 bg-white">
-                    <p class="text-xs text-slate-500">Tidak ada rekening bank aktif yang tersedia.</p>
+                <div class="p-4 rounded-2xl border border-[#E5E7EB] bg-white">
+                    <p class="text-xs text-[#565A66]">Tidak ada rekening bank aktif yang tersedia.</p>
                 </div>
             @endforelse
         </div>

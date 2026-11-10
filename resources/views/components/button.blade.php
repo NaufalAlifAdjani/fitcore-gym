@@ -8,7 +8,7 @@
 
 @php
     $variantClasses = match ($variant) {
-        'primary' => 'bg-[#BA0030] text-white hover:bg-[#970027] focus:ring-[#BA0030]',
+        'primary' => 'bg-[#ED1B45] text-white hover:bg-[#BA0030] focus:ring-[#ED1B45]',
         'secondary' => 'bg-[#EEEEEF] text-[#565A66] hover:bg-[#E4E4E7] focus:ring-gray-300',
         'danger' => 'bg-rose-600 text-white hover:bg-rose-700 focus:ring-rose-500',
         'danger-outline' => 'border border-rose-200 text-rose-700 hover:bg-rose-50 focus:ring-rose-200',
@@ -16,7 +16,7 @@
         'outline' => 'border border-[#E5E5E8] text-[#565A66] hover:bg-[#F9F9FA] focus:ring-gray-200',
         'dark' => 'bg-[#1E1E1E] text-white hover:bg-black focus:ring-gray-800',
         'ghost' => 'text-[#565A66] hover:bg-[#F4F4F5] hover:text-[#16151A] focus:ring-gray-200',
-        default => 'bg-[#BA0030] text-white hover:bg-[#970027] focus:ring-[#BA0030]',
+        default => 'bg-[#ED1B45] text-white hover:bg-[#BA0030] focus:ring-[#ED1B45]',
     };
 
     $sizeClasses = match ($size) {

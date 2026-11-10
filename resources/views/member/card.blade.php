@@ -4,8 +4,8 @@
 
             <!-- Page Title / Header Badge -->
             <div class="text-center space-y-2">
-                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#BA0030] bg-rose-50 border border-rose-200 rounded-full">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#BA0030] animate-pulse"></span>
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#ED1B45] bg-rose-50 border border-rose-200 rounded-full">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#ED1B45] animate-pulse"></span>
                     FitCore Digital Pass
                 </span>
                 <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-[#16151A] tracking-tight">
@@ -17,28 +17,25 @@
             </div>
 
             <!-- VIP DIGITAL MEMBERSHIP CARD -->
-            <div class="relative overflow-hidden rounded-[28px] border border-zinc-800 bg-gradient-to-br from-[#1C1C22] via-[#141418] to-[#0A0A0E] p-6 sm:p-8 text-white shadow-[0_20px_50px_rgba(0,0,0,0.25)]">
+            <div class="relative overflow-hidden rounded-[28px] border border-[#E5E7EB] bg-white p-6 sm:p-8 text-[#16151A] shadow-[0_4px_16px_rgba(0,0,0,0.06)]">
                 <!-- Ambient Glow Effect -->
-                <div class="absolute -top-16 -right-16 w-56 h-56 bg-[#BA0030]/25 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -bottom-16 -left-16 w-56 h-56 bg-slate-800/30 rounded-full blur-3xl pointer-events-none"></div>
-
-                <!-- Subtle Grid Background -->
-                <div class="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none"></div>
+                <div class="absolute -top-16 -right-16 w-56 h-56 bg-[#ED1B45]/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-16 -left-16 w-56 h-56 bg-rose-50 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div class="relative z-10 flex flex-col justify-between space-y-6">
                     <!-- Card Top Header -->
-                    <div class="flex items-center justify-between border-b border-white/10 pb-4">
+                    <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-4">
                         <div class="flex items-center gap-2.5">
-                            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#BA0030] text-white shadow-md shadow-[#BA0030]/30">
+                            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ED1B45] text-white shadow-md shadow-[#ED1B45]/25">
                                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 012.25 13.5v-3A1.5 1.5 0 013.75 9zm15 0h1.5a1.5 1.5 0 011.5 1.5v3a1.5 1.5 0 01-1.5 1.5h-1.5A1.5 1.5 0 0117.25 13.5v-3a1.5 1.5 0 011.5-1.5zM6.75 12h10.5M5.25 7.5v9M18.75 7.5v9" />
                                 </svg>
                             </span>
                             <div>
-                                <p class="font-heading text-sm font-extrabold tracking-wider text-white">
-                                    FITCORE <span class="text-[#BA0030]">ATHLETIC</span>
+                                <p class="font-heading text-sm font-extrabold tracking-wider text-[#16151A]">
+                                    FITCORE <span class="text-[#ED1B45]">ATHLETIC</span>
                                 </p>
-                                <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">
+                                <p class="text-[9px] font-bold uppercase tracking-[0.2em] text-[#565A66]">
                                     Member Identity Pass
                                 </p>
                             </div>
@@ -46,13 +43,13 @@
 
                         <!-- Status Badge -->
                         @if($activeMembership)
-                            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 px-3 py-1 font-inter text-[11px] font-bold text-emerald-400 shadow-sm">
-                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 font-inter text-[11px] font-bold text-emerald-700 shadow-xs">
+                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                                 AKTIF
                             </span>
                         @else
-                            <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 px-3 py-1 font-inter text-[11px] font-bold text-rose-400 shadow-sm">
-                                <span class="h-1.5 w-1.5 rounded-full bg-rose-400"></span>
+                            <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-50 border border-rose-200 px-3 py-1 font-inter text-[11px] font-bold text-rose-700 shadow-xs">
+                                <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
                                 NONAKTIF
                             </span>
                         @endif
@@ -63,31 +60,31 @@
                         <!-- Left Details -->
                         <div class="space-y-4">
                             <div>
-                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-inter">Nama Member</p>
-                                <h2 class="font-heading text-xl sm:text-2xl font-bold text-white tracking-tight mt-0.5">
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-[#565A66] font-inter">Nama Member</p>
+                                <h2 class="font-heading text-xl sm:text-2xl font-bold text-[#16151A] tracking-tight mt-0.5">
                                     {{ $user->name }}
                                 </h2>
                                 @if($profile && $profile->member_code)
-                                    <p class="font-mono text-xs font-semibold text-[#BA0030] mt-1 tracking-wider">
+                                    <p class="font-mono text-xs font-semibold text-[#ED1B45] mt-1 tracking-wider">
                                         ID: {{ $profile->member_code }}
                                     </p>
                                 @endif
                             </div>
 
                             <div class="space-y-1">
-                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-400 font-inter">Paket Keanggotaan</p>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-[#565A66] font-inter">Paket Keanggotaan</p>
                                 @if($activeMembership)
-                                    <p class="font-inter text-sm font-bold text-slate-200">
+                                    <p class="font-inter text-sm font-bold text-[#16151A]">
                                         {{ $activeMembership->package->name ?? 'Membership FitCore' }}
                                     </p>
-                                    <p class="font-inter text-xs text-slate-400">
-                                        Berlaku s/d <span class="text-white font-semibold">{{ $activeMembership->end_date->locale('id')->translatedFormat('d M Y') }}</span>
+                                    <p class="font-inter text-xs text-[#565A66]">
+                                        Berlaku s/d <span class="text-[#16151A] font-semibold">{{ $activeMembership->end_date->locale('id')->translatedFormat('d M Y') }}</span>
                                     </p>
                                 @else
-                                    <p class="font-inter text-sm font-semibold text-rose-400">
+                                    <p class="font-inter text-sm font-semibold text-rose-600">
                                         Tidak ada membership aktif
                                     </p>
-                                    <p class="font-inter text-xs text-slate-500">
+                                    <p class="font-inter text-xs text-[#565A66]">
                                         Silakan berlangganan paket untuk check-in.
                                     </p>
                                 @endif
@@ -97,35 +94,35 @@
                         <!-- Right QR Container -->
                         <div class="flex flex-col items-center shrink-0 mx-auto sm:mx-0">
                             @if($qrSvg)
-                                <div class="relative rounded-2xl bg-white p-3 shadow-xl border border-white/20 w-36 h-36 flex items-center justify-center transition duration-300 hover:scale-105">
+                                <div class="relative rounded-2xl bg-white p-3 shadow-md border border-[#E5E7EB] w-36 h-36 flex items-center justify-center transition duration-300 hover:scale-105">
                                     <div class="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
                                         {!! $qrSvg !!}
                                     </div>
                                 </div>
-                                <span class="mt-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase flex items-center gap-1 font-inter">
-                                    <svg class="w-3 h-3 text-[#BA0030]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <span class="mt-2 text-[10px] font-bold tracking-wider text-[#565A66] uppercase flex items-center gap-1 font-inter">
+                                    <svg class="w-3 h-3 text-[#ED1B45]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                                     </svg>
                                     Scan untuk Check-in
                                 </span>
                             @else
-                                <div class="rounded-2xl border border-dashed border-slate-700 bg-slate-900/60 p-4 w-36 h-36 flex flex-col items-center justify-center text-center">
-                                    <svg class="w-8 h-8 text-slate-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="rounded-2xl border border-dashed border-[#E5E7EB] bg-[#F6F6F7] p-4 w-36 h-36 flex flex-col items-center justify-center text-center">
+                                    <svg class="w-8 h-8 text-[#565A66] mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                     </svg>
-                                    <span class="text-[11px] font-medium text-slate-500 font-inter">QR Code belum tersedia</span>
+                                    <span class="text-[11px] font-medium text-[#565A66] font-inter">QR Code belum tersedia</span>
                                 </div>
                             @endif
                         </div>
                     </div>
 
                     <!-- Card Bottom Footer -->
-                    <div class="border-t border-white/10 pt-4 flex items-center justify-between text-[11px] text-slate-400 font-inter">
+                    <div class="border-t border-[#E5E7EB] pt-4 flex items-center justify-between text-[11px] text-[#565A66] font-inter">
                         <span class="flex items-center gap-1.5">
-                            <span class="h-2 w-2 rounded-full bg-[#BA0030]"></span>
+                            <span class="h-2 w-2 rounded-full bg-[#ED1B45]"></span>
                             FitCore Performance Center
                         </span>
-                        <span class="font-mono text-[10px] tracking-widest text-slate-500 uppercase">
+                        <span class="font-mono text-[10px] tracking-widest text-[#565A66] uppercase">
                             CONFIDENTIAL PASS
                         </span>
                     </div>
@@ -135,7 +132,7 @@
             <!-- Petunjuk Penggunaan -->
             <div class="rounded-2xl border border-[#E5E7EB] bg-white p-6 shadow-sm space-y-4">
                 <div class="flex items-center gap-2.5">
-                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 text-[#BA0030]">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-50 text-[#ED1B45]">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 16v-4M12 8h.01" />
@@ -148,15 +145,15 @@
 
                 <ol class="space-y-3 text-xs text-[#565A66] font-inter">
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#BA0030]">1</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#ED1B45]">1</span>
                         <span>Buka halaman ini melalui smartphone Anda saat tiba di lokasi gym FitCore.</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#BA0030]">2</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#ED1B45]">2</span>
                         <span>Tunjukkan layar QR Code ini kepada resepsionis atau arahkan ke scanner check-in otomatis.</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#BA0030]">3</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#ED1B45]">3</span>
                         <span>Sistem akan memverifikasi status keaktifan paket membership Anda secara instan (1x per hari).</span>
                     </li>
                 </ol>
@@ -166,7 +163,7 @@
                         <p class="text-xs text-rose-800 font-medium">
                             Membership Anda sedang tidak aktif. Perbarui paket untuk mulai check-in.
                         </p>
-                        <a href="{{ route('member.membership.packages') }}" class="shrink-0 rounded-full bg-[#BA0030] px-4 py-1.5 text-xs font-bold text-white hover:bg-rose-700 transition shadow-xs">
+                        <a href="{{ route('member.membership.packages') }}" class="shrink-0 rounded-full bg-[#ED1B45] px-4 py-1.5 text-xs font-bold text-white hover:bg-[#BA0030] transition shadow-xs">
                             Beli Paket
                         </a>
                     </div>

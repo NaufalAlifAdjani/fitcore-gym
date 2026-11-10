@@ -285,11 +285,11 @@
                         </div>
                     </div>
 
-                    <!-- Ringkasan Booking Card -->
-                    <div class="bg-[#141414] rounded-3xl p-6 relative overflow-hidden text-white shadow-xl space-y-5">
-                        <div class="absolute -top-12 -right-12 w-44 h-44 bg-[#ED1B45]/20 rounded-full blur-3xl pointer-events-none"></div>
+                    <!-- Ringkasan Booking Card (Light Theme) -->
+                    <div class="bg-white rounded-3xl p-6 relative overflow-hidden text-[#16151A] border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-5">
+                        <div class="absolute -top-12 -right-12 w-44 h-44 bg-[#ED1B45]/10 rounded-full blur-3xl pointer-events-none"></div>
 
-                        <h3 class="text-base font-extrabold text-white font-heading">
+                        <h3 class="text-base font-extrabold text-[#16151A] font-heading">
                             Ringkasan Booking
                         </h3>
 
@@ -297,8 +297,8 @@
                             <!-- Tanggal Latihan -->
                             <div class="flex items-start gap-2.5">
                                 <div>
-                                    <div class="text-[#A1A1AA] text-[11px]">Tanggal Latihan</div>
-                                    <div class="font-bold text-white text-xs mt-0.5"
+                                    <div class="text-[#565A66] text-[11px]">Tanggal Latihan</div>
+                                    <div class="font-bold text-[#16151A] text-xs mt-0.5"
                                         x-text="formattedSelectedDate || selectedDate || 'Pilih tanggal'"></div>
                                 </div>
                             </div>
@@ -306,8 +306,8 @@
                             <!-- Jam Sesi -->
                             <div class="flex items-start gap-2.5">
                                 <div>
-                                    <div class="text-[#A1A1AA] text-[11px]">Jam Sesi</div>
-                                    <div class="font-bold text-white text-xs mt-0.5"
+                                    <div class="text-[#565A66] text-[11px]">Jam Sesi</div>
+                                    <div class="font-bold text-[#ED1B45] text-xs mt-0.5"
                                         x-text="selectedSlot ? (selectedSlot + ' - ' + endSlotTime + ' WIB (60 Menit)') : 'Pilih slot jam'">
                                     </div>
                                 </div>
@@ -316,8 +316,8 @@
                             <!-- Pelatih -->
                             <div class="flex items-start gap-2.5">
                                 <div>
-                                    <div class="text-[#A1A1AA] text-[11px]">Pelatih</div>
-                                    <div class="font-bold text-white text-xs mt-0.5">
+                                    <div class="text-[#565A66] text-[11px]">Pelatih</div>
+                                    <div class="font-bold text-[#16151A] text-xs mt-0.5">
                                         {{ $trainer?->name ?? 'Coach Rama Prasetya' }}
                                     </div>
                                 </div>
@@ -332,8 +332,8 @@
                             <input type="hidden" name="start_time" :value="selectedSlot">
 
                             <button type="submit" :disabled="!selectedDate || !selectedSlot" :class="{
-                                        'bg-[#ED1B45] hover:bg-[#D1123D] text-white shadow-lg shadow-[#ED1B45]/30 cursor-pointer': selectedDate && selectedSlot,
-                                        'bg-zinc-800 text-zinc-500 cursor-not-allowed': !selectedDate || !selectedSlot
+                                        'bg-[#ED1B45] hover:bg-[#BA0030] text-white shadow-lg shadow-[#ED1B45]/20 cursor-pointer': selectedDate && selectedSlot,
+                                        'bg-gray-100 text-[#565A66]/60 border border-[#E5E7EB] cursor-not-allowed': !selectedDate || !selectedSlot
                                     }"
                                 class="w-full py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2">
                                 <span>Konfirmasi Booking Sesi</span>

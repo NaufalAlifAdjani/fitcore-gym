@@ -1,17 +1,17 @@
 <x-fitcore-layout :title="'Booking Sesi Personal Trainer | FITCORE ATHLETIC'">
 
     {{-- HERO SECTION (Background Putih) --}}
-    <section class="bg-white border-b border-gray-100 py-12 md:py-16">
+    <section class="bg-white border-b border-[#E5E7EB] py-12 md:py-16">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-zinc-950 tracking-tight leading-tight">
-                Booking Sesi <span style="color: #C80036;">Personal</span><br>
-                <span style="color: #C80036;">Trainer</span>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#16151A] tracking-tight leading-tight">
+                Booking Sesi <span class="text-[#ED1B45]">Personal</span><br>
+                <span class="text-[#ED1B45]">Trainer</span>
             </h1>
         </div>
     </section>
 
-    {{-- MAIN SECTION (Background #F8F9FA) --}}
-    <section class="bg-[#F8F9FA] py-12 md:py-16">
+    {{-- MAIN SECTION (Background #F6F6F7) --}}
+    <section class="bg-[#F6F6F7] py-12 md:py-16">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
 
             {{-- Flash Messages --}}
@@ -107,11 +107,11 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($displayPackages as $pkg)
-                    <div class="bg-white rounded-2xl p-6 sm:p-7 shadow-sm border border-gray-100 flex flex-col justify-between relative hover:shadow-md transition-shadow duration-200">
+                    <div class="bg-white rounded-2xl p-6 sm:p-7 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-[#E5E7EB] flex flex-col justify-between relative hover:shadow-lg transition-all duration-200">
                         
                         {{-- Floating Badge Populer --}}
                         @if(!empty($pkg['is_popular']))
-                            <div class="absolute -top-3 right-4 bg-[#E11D48] text-white text-[11px] font-black tracking-wider uppercase px-3 py-1 rounded-full shadow-sm flex items-center gap-1" style="background-color: #E11D48;">
+                            <div class="absolute -top-3 right-4 bg-[#ED1B45] text-white text-[11px] font-black tracking-wider uppercase px-3 py-1 rounded-full shadow-md shadow-[#ED1B45]/20 flex items-center gap-1">
                                 <span>🔥</span>
                                 <span>PALING POPULER</span>
                             </div>
@@ -120,10 +120,10 @@
                         <div>
                             {{-- Header Paket: Angka Sesi Biru Cyan (#00A8E8) --}}
                             <div class="flex items-baseline">
-                                <span class="text-4xl sm:text-5xl font-black tracking-tight" style="color: #00A8E8;">
+                                <span class="text-4xl sm:text-5xl font-black tracking-tight text-[#00A8E8]">
                                     {{ $pkg['sessions'] }}
                                 </span>
-                                <span class="text-lg sm:text-xl font-bold ml-1.5" style="color: #00A8E8;">
+                                <span class="text-lg sm:text-xl font-bold ml-1.5 text-[#00A8E8]">
                                     Sesi
                                 </span>
                             </div>
@@ -133,7 +133,7 @@
                                 $userQuota = isset($myQuotas) ? $myQuotas->where('status', 'active')->where('remaining_sessions', '>', 0)->firstWhere('pt_package_id', $pkg['id']) : null;
                             @endphp
                             <div class="flex items-center justify-between gap-2 mt-1">
-                                <span class="text-xs font-bold text-gray-500">
+                                <span class="text-xs font-bold text-[#565A66]">
                                     {{ $pkg['name'] ?? ('PT ' . $pkg['sessions'] . ' Sesi') }}
                                 </span>
                                 @if($userQuota)
@@ -145,22 +145,22 @@
 
                             {{-- Total Harga Aktif & Coret --}}
                             <div class="mt-4">
-                                <div class="text-base font-black text-zinc-900">
+                                <div class="text-base font-black text-[#16151A]">
                                     Rp {{ number_format($pkg['price'], 0, ',', '.') }}
                                 </div>
-                                <div class="text-xs text-gray-400 line-through mt-0.5">
+                                <div class="text-xs text-[#565A66]/60 line-through mt-0.5">
                                     Rp {{ number_format($pkg['original_price'], 0, ',', '.') }}
                                 </div>
                             </div>
 
-                            <hr class="my-5 border-gray-100">
+                            <hr class="my-5 border-[#E5E7EB]">
 
                             {{-- Harga Per Sesi --}}
                             <div>
-                                <div class="text-2xl font-black text-zinc-900 tracking-tight">
+                                <div class="text-2xl font-black text-[#16151A] tracking-tight">
                                     Rp {{ number_format($pkg['per_session'], 0, ',', '.') }}
                                 </div>
-                                <div class="text-xs text-gray-400 font-semibold mt-0.5">
+                                <div class="text-xs text-[#565A66] font-semibold mt-0.5">
                                     / Sesi
                                 </div>
                             </div>
@@ -168,7 +168,7 @@
 
                         {{-- Tombol Pilih Paket --}}
                         <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $pkg['id'], 'sessions' => $pkg['sessions']]) }}" 
-                           class="mt-6 w-full py-3.5 rounded-xl font-extrabold text-xs sm:text-sm text-zinc-900 bg-[#EEF2FF] hover:bg-indigo-100 active:scale-[0.99] transition text-center block shadow-sm">
+                           class="mt-6 w-full py-3.5 rounded-xl font-extrabold text-xs sm:text-sm text-[#16151A] bg-[#F6F6F7] hover:bg-[#ED1B45] hover:text-white border border-[#E5E7EB] hover:border-[#ED1B45] active:scale-[0.99] transition text-center block shadow-2xs">
                             {{ $userQuota ? 'Beli Sesi Tambahan' : (!empty($pkg['is_popular']) ? 'Paket Terpilih' : 'Pilih Paket') }}
                         </a>
 

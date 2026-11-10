@@ -1,7 +1,7 @@
 <x-member-layout title="Status Pembayaran - FitCore Athletic" active-nav="riwayat">
-    <div class="py-16 px-4 sm:px-6 lg:px-8 bg-[#0B0F17] min-h-screen flex items-center justify-center">
+    <div class="py-16 px-4 sm:px-6 lg:px-8 bg-[#F6F6F7] min-h-[calc(100vh-80px)] flex items-center justify-center">
         <div class="mx-auto max-w-xl w-full">
-            <div class="rounded-3xl border border-slate-800 bg-slate-900/90 p-8 sm:p-10 shadow-2xl text-center">
+            <div class="rounded-3xl border border-[#E5E7EB] bg-white p-8 sm:p-10 shadow-[0_4px_12px_rgba(0,0,0,0.04)] text-center">
                 <!-- Status Icon -->
                 @if ($payment->status === 'pending')
                     <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/30">
@@ -26,7 +26,7 @@
                     </div>
                 @endif
 
-                <h1 class="font-heading text-2xl font-extrabold text-white mt-6 sm:text-3xl">
+                <h1 class="font-heading text-2xl font-extrabold text-[#16151A] mt-6 sm:text-3xl">
                     @if ($payment->status === 'pending')
                         Bukti Pembayaran Diterima
                     @elseif ($payment->status === 'verified')
@@ -36,13 +36,13 @@
                     @endif
                 </h1>
 
-                <p class="mt-2 text-xs leading-relaxed text-slate-300">
+                <p class="mt-2 text-xs leading-relaxed text-[#565A66]">
                     @if ($payment->status === 'pending')
-                        Terima kasih! Bukti pembayaran Anda sedang diproses oleh staf FitCore Gym. Verifikasi dilakukan maksimal <span class="font-bold text-amber-400">1x24 jam</span>.
+                        Terima kasih! Bukti pembayaran Anda sedang diproses oleh staf FitCore Gym. Verifikasi dilakukan maksimal <span class="font-bold text-amber-600">1x24 jam</span>.
                     @elseif ($payment->status === 'verified')
                         Selamat! Pembayaran Anda telah terkonfirmasi. Keanggotaan Anda sekarang sudah aktif dan siap digunakan.
                     @else
-                        Maaf, bukti pembayaran Anda belum dapat kami konfirmasi: <span class="font-bold text-rose-400">{{ $payment->rejection_reason }}</span>. Silakan hubungi admin kami.
+                        Maaf, bukti pembayaran Anda belum dapat kami konfirmasi: <span class="font-bold text-rose-600">{{ $payment->rejection_reason }}</span>. Silakan hubungi admin kami.
                     @endif
                 </p>
 
@@ -51,36 +51,36 @@
                     <x-badge :status="$payment->status" size="lg" />
                 </div>
 
-                <!-- Receipt Details Card -->
-                <div class="mt-8 rounded-2xl border border-slate-800 bg-slate-950 p-6 text-left space-y-3.5 text-xs">
+                <!-- Receipt Details Card (Light Theme) -->
+                <div class="mt-8 rounded-2xl border border-[#E5E7EB] bg-[#F6F6F7] p-6 text-left space-y-3.5 text-xs">
                     <div class="flex justify-between items-center">
-                        <span class="text-slate-400">Nomor Invoice</span>
-                        <span class="font-mono font-bold text-white">{{ $payment->invoice_id }}</span>
+                        <span class="text-[#565A66]">Nomor Invoice</span>
+                        <span class="font-mono font-bold text-[#16151A]">{{ $payment->invoice_id }}</span>
                     </div>
 
                     <div class="flex justify-between items-center">
-                        <span class="text-slate-400">Paket Pesanan</span>
-                        <span class="font-bold text-slate-200">{{ $payment->ptPackage?->name ?? $payment->membershipPackage?->name ?? 'Paket FitCore' }}</span>
+                        <span class="text-[#565A66]">Paket Pesanan</span>
+                        <span class="font-bold text-[#16151A]">{{ $payment->ptPackage?->name ?? $payment->membershipPackage?->name ?? 'Paket FitCore' }}</span>
                     </div>
 
                     <div class="flex justify-between items-center">
-                        <span class="text-slate-400">Nominal Transfer</span>
-                        <span class="font-bold text-[#BA0030]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</span>
+                        <span class="text-[#565A66]">Nominal Transfer</span>
+                        <span class="font-bold text-[#ED1B45]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</span>
                     </div>
 
                     <div class="flex justify-between items-center">
-                        <span class="text-slate-400">Bank Pengirim</span>
-                        <span class="font-semibold text-slate-200">{{ $payment->bank_sender }}</span>
+                        <span class="text-[#565A66]">Bank Pengirim</span>
+                        <span class="font-semibold text-[#16151A]">{{ $payment->bank_sender }}</span>
                     </div>
 
                     <div class="flex justify-between items-center">
-                        <span class="text-slate-400">Tujuan Bank Gym</span>
-                        <span class="font-semibold text-slate-200">{{ $payment->bank_destination }}</span>
+                        <span class="text-[#565A66]">Tujuan Bank Gym</span>
+                        <span class="font-semibold text-[#16151A]">{{ $payment->bank_destination }}</span>
                     </div>
 
-                    <div class="flex justify-between items-center border-t border-slate-800/80 pt-3">
-                        <span class="text-slate-400">Waktu Pengiriman</span>
-                        <span class="text-slate-300">{{ $payment->transfer_date?->timezone(config('app.timezone'))->format('d M Y, H:i') ?? '-' }} WIB</span>
+                    <div class="flex justify-between items-center border-t border-[#E5E7EB] pt-3">
+                        <span class="text-[#565A66]">Waktu Pengiriman</span>
+                        <span class="text-[#16151A]">{{ $payment->transfer_date?->timezone(config('app.timezone'))->format('d M Y, H:i') ?? '-' }} WIB</span>
                     </div>
                 </div>
 
