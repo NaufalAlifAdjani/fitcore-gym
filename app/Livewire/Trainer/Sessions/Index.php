@@ -334,6 +334,8 @@ class Index extends Component
 
     public function render()
     {
-        return view('trainer.sessions.index')->layout('layouts.app');
+        return view('trainer.sessions.index')->layout('layouts.trainer', [
+            'title' => 'Jadwal Sesi Personal Trainer - FitCore PT Portal',
+        ]);
     }
 }

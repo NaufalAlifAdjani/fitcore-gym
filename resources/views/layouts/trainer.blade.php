@@ -212,10 +212,10 @@
                         <div class="flex items-center gap-3">
                             <div class="text-right hidden sm:block">
                                 <p class="font-poppins font-bold text-sm text-gray-900 leading-tight">
-                                    {{ str_starts_with(Auth::user()->name, 'Coach') ? Auth::user()->name : 'Coach ' . Auth::user()->name }}
+                                    {{ Auth::user() ? (str_starts_with(Auth::user()->name, 'Coach') ? Auth::user()->name : 'Coach ' . Auth::user()->name) : 'Coach' }}
                                 </p>
                                 <p class="font-inter text-xs text-gray-400">
-                                    {{ Auth::user()->trainerProfile?->specialization ?: 'Master Trainer' }}
+                                    {{ Auth::user()?->trainerProfile?->specialization ?: 'Master Trainer' }}
                                 </p>
                             </div>
                             <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF5722] text-white shadow-sm ring-2 ring-rose-100">
@@ -289,5 +289,6 @@
             <x-email-verified-modal />
         </div>
         @livewireScripts
+        @stack('scripts')
     </body>
 </html>
