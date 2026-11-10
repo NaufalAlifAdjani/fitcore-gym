@@ -1,31 +1,17 @@
 <x-fitcore-layout :title="'Beli Paket Personal Trainer | FITCORE ATHLETIC'">
 
-<<<<<<< HEAD
-    {{-- HERO SECTION (Background Putih) --}}
-    <section class="bg-white border-b border-[#E5E7EB] py-12 md:py-16">
-        <div class="max-w-7xl mx-auto px-6 md:px-12">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#16151A] tracking-tight leading-tight">
-                Booking Sesi <span class="text-[#ED1B45]">Personal</span><br>
-                <span class="text-[#ED1B45]">Trainer</span>
-=======
     {{-- HERO SECTION (Clean Crisp White) --}}
     <section class="bg-white border-b border-[#E5E7EB] py-12 md:py-16">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#16151A] tracking-tight leading-tight">
                 Beli Paket <span class="text-[#FF5722]">Personal</span><br>
                 <span class="text-[#FF5722]">Trainer</span>
->>>>>>> origin/feature/theme-blaze-orange
             </h1>
         </div>
     </section>
 
-<<<<<<< HEAD
     {{-- MAIN SECTION (Background #F6F6F7) --}}
     <section class="bg-[#F6F6F7] py-12 md:py-16">
-=======
-    {{-- MAIN SECTION (Light Gray #F8F9FA) --}}
-    <section class="bg-[#F8F9FA] py-12 md:py-16">
->>>>>>> origin/feature/theme-blaze-orange
         <div class="max-w-7xl mx-auto px-6 md:px-12">
 
             {{-- Flash Messages --}}
@@ -76,7 +62,7 @@
                     </p>
                 </div>
 
-                <div class="inline-flex items-center gap-2 bg-[#FF5722]/10 border border-[#FF5722]/20 text-[#16151A] px-4 py-2 rounded-full shadow-xs self-start sm:self-center">
+                <div class="inline-flex items-center gap-2 bg-orange-50 border border-orange-200 text-[#16151A] px-4 py-2 rounded-full shadow-xs self-start sm:self-center">
                     <span class="w-4 h-4 rounded-full bg-[#FF5722] text-white flex items-center justify-center text-[10px] font-black">✓</span>
                     <span class="text-xs font-extrabold tracking-wide text-[#16151A]">1 sesi = 60 menit</span>
                 </div>
@@ -121,13 +107,6 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($displayPackages as $pkg)
-<<<<<<< HEAD
-                    <div class="bg-white rounded-2xl p-6 sm:p-7 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-[#E5E7EB] flex flex-col justify-between relative hover:shadow-lg transition-all duration-200">
-                        
-                        {{-- Floating Badge Populer --}}
-                        @if(!empty($pkg['is_popular']))
-                            <div class="absolute -top-3 right-4 bg-[#ED1B45] text-white text-[11px] font-black tracking-wider uppercase px-3 py-1 rounded-full shadow-md shadow-[#ED1B45]/20 flex items-center gap-1">
-=======
                     @php
                         $isPopular = !empty($pkg['is_popular']);
                         $userQuota = isset($myQuotas) ? $myQuotas->where('status', 'active')->where('remaining_sessions', '>', 0)->firstWhere('pt_package_id', $pkg['id']) : null;
@@ -137,7 +116,6 @@
                         {{-- Floating Badge Populer (Blaze Orange + Golden Amber Gradient) --}}
                         @if($isPopular)
                             <div class="absolute -top-3.5 right-6 bg-gradient-to-r from-[#FF5722] to-[#FFB703] text-white text-[11px] font-black tracking-wider uppercase px-3.5 py-1 rounded-full shadow-md shadow-[#FF5722]/30 flex items-center gap-1.5">
->>>>>>> origin/feature/theme-blaze-orange
                                 <span>🔥</span>
                                 <span>PALING POPULER</span>
                             </div>
@@ -146,28 +124,17 @@
                         <div>
                             {{-- Header Paket: Angka Sesi Blaze Orange (#FF5722) --}}
                             <div class="flex items-baseline">
-<<<<<<< HEAD
-                                <span class="text-4xl sm:text-5xl font-black tracking-tight text-[#00A8E8]">
-                                    {{ $pkg['sessions'] }}
-                                </span>
-                                <span class="text-lg sm:text-xl font-bold ml-1.5 text-[#00A8E8]">
-=======
                                 <span class="text-4xl sm:text-5xl font-black tracking-tight text-[#FF5722]">
                                     {{ $pkg['sessions'] }}
                                 </span>
                                 <span class="text-lg sm:text-xl font-bold ml-1.5 text-[#FF5722]">
->>>>>>> origin/feature/theme-blaze-orange
                                     Sesi
                                 </span>
                             </div>
 
                             {{-- Nama Paket --}}
                             <div class="flex items-center justify-between gap-2 mt-1">
-<<<<<<< HEAD
-                                <span class="text-xs font-bold text-[#565A66]">
-=======
                                 <span class="text-xs font-bold text-[#565A66] uppercase tracking-wider">
->>>>>>> origin/feature/theme-blaze-orange
                                     {{ $pkg['name'] ?? ('PT ' . $pkg['sessions'] . ' Sesi') }}
                                 </span>
                                 @if($userQuota)
@@ -202,13 +169,8 @@
 
                         {{-- Tombol Pilih Paket --}}
                         <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $pkg['id'], 'sessions' => $pkg['sessions']]) }}" 
-<<<<<<< HEAD
-                           class="mt-6 w-full py-3.5 rounded-xl font-extrabold text-xs sm:text-sm text-[#16151A] bg-[#F6F6F7] hover:bg-[#ED1B45] hover:text-white border border-[#E5E7EB] hover:border-[#ED1B45] active:scale-[0.99] transition text-center block shadow-2xs">
-                            {{ $userQuota ? 'Beli Sesi Tambahan' : (!empty($pkg['is_popular']) ? 'Paket Terpilih' : 'Pilih Paket') }}
-=======
                            class="mt-6 w-full py-3.5 rounded-xl font-extrabold text-xs sm:text-sm text-center block transition-all duration-200 active:scale-[0.99] {{ $isPopular ? 'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-[#FF5722]/25' : 'bg-[#16151A] hover:bg-[#FF5722] text-white shadow-xs' }}">
                             {{ $userQuota ? 'Beli Sesi Tambahan' : ($isPopular ? 'Paket Terpilih' : 'Pilih Paket') }}
->>>>>>> origin/feature/theme-blaze-orange
                         </a>
 
                     </div>

@@ -7,7 +7,7 @@
 | FILE         : resources/views/mobile/landing/about.blade.php
 | LAYOUT       : layouts/mobile-guest.blade.php
 | AKSES ROUTE  : /m/about
-| TEMA         : Light Theme (Canvas #F6F6F7, Surface #FFFFFF, Accent #ED1B45)
+| TEMA         : Light Theme (Canvas #F6F6F7, Surface #FFFFFF, Accent #FF5722)
 |--------------------------------------------------------------------------
 --}}
 
@@ -17,7 +17,7 @@
 
         <!-- Header Ringkas -->
         <div class="space-y-1">
-            <span class="text-[10px] font-bold text-[#ED1B45] uppercase tracking-wider">FILOSOFI KAMI</span>
+            <span class="text-[10px] font-bold text-[#FF5722] uppercase tracking-wider">FILOSOFI KAMI</span>
             <h1 class="font-poppins font-black text-2xl text-[#16151A]">Tentang FitCore</h1>
             <p class="text-xs text-[#565A66] leading-relaxed">
                 Pusat kebugaran premier yang didedikasikan untuk performa atletik, disiplin latihan, dan hasil nyata.
@@ -27,7 +27,7 @@
         <!-- Visi & Misi Card -->
         <div class="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] space-y-3">
             <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center font-bold shrink-0">
+                <div class="w-8 h-8 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center font-bold shrink-0">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
                 </div>
                 <h2 class="font-poppins font-bold text-base text-[#16151A]">Visi &amp; Komitmen</h2>
@@ -44,7 +44,7 @@
             <div class="space-y-3">
                 <div class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] space-y-1">
                     <div class="flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-[#ED1B45] text-white text-[10px] font-bold inline-flex items-center justify-center shadow-xs shadow-[#ED1B45]/25">1</span>
+                        <span class="w-5 h-5 rounded-full bg-[#FF5722] text-white text-[10px] font-bold inline-flex items-center justify-center shadow-xs shadow-orange-500/25">1</span>
                         <h3 class="font-poppins font-bold text-sm text-[#16151A]">Free Weights &amp; Barbell Arena</h3>
                     </div>
                     <p class="text-xs text-[#565A66] pl-7 leading-relaxed">
@@ -54,7 +54,7 @@
 
                 <div class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] space-y-1">
                     <div class="flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-[#ED1B45] text-white text-[10px] font-bold inline-flex items-center justify-center shadow-xs shadow-[#ED1B45]/25">2</span>
+                        <span class="w-5 h-5 rounded-full bg-[#FF5722] text-white text-[10px] font-bold inline-flex items-center justify-center shadow-xs shadow-orange-500/25">2</span>
                         <h3 class="font-poppins font-bold text-sm text-[#16151A]">Cardio Deck &amp; Ergometer</h3>
                     </div>
                     <p class="text-xs text-[#565A66] pl-7 leading-relaxed">
@@ -64,7 +64,7 @@
 
                 <div class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] space-y-1">
                     <div class="flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-[#ED1B45] text-white text-[10px] font-bold inline-flex items-center justify-center shadow-xs shadow-[#ED1B45]/25">3</span>
+                        <span class="w-5 h-5 rounded-full bg-[#FF5722] text-white text-[10px] font-bold inline-flex items-center justify-center shadow-xs shadow-orange-500/25">3</span>
                         <h3 class="font-poppins font-bold text-sm text-[#16151A]">Cold Plunge &amp; Infrared Sauna</h3>
                     </div>
                     <p class="text-xs text-[#565A66] pl-7 leading-relaxed">
@@ -74,7 +74,7 @@
 
                 <div class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] space-y-1">
                     <div class="flex items-center gap-2">
-                        <span class="w-5 h-5 rounded-full bg-[#ED1B45] text-white text-[10px] font-bold inline-flex items-center justify-center shadow-xs shadow-[#ED1B45]/25">4</span>
+                        <span class="w-5 h-5 rounded-full bg-[#FF5722] text-white text-[10px] font-bold inline-flex items-center justify-center shadow-xs shadow-orange-500/25">4</span>
                         <h3 class="font-poppins font-bold text-sm text-[#16151A]">Loker &amp; Rain Shower Air Panas</h3>
                     </div>
                     <p class="text-xs text-[#565A66] pl-7 leading-relaxed">
@@ -98,7 +98,7 @@
                 </div>
                 <div class="flex items-center justify-between">
                     <span>Hari Libur Nasional</span>
-                    <span class="font-bold text-[#ED1B45]">07:00 – 20:00 WIB</span>
+                    <span class="font-bold text-[#FF5722]">07:00 – 20:00 WIB</span>
                 </div>
             </div>
 
@@ -110,7 +110,7 @@
 
         <!-- Tombol CTA -->
         <div class="pt-2">
-            <a href="{{ route('mobile.landing.packages') }}" class="block w-full py-3.5 rounded-full bg-[#ED1B45] text-white text-xs font-bold text-center shadow-md shadow-[#ED1B45]/25 active:scale-98 transition">
+            <a href="{{ route('mobile.landing.packages') }}" class="block w-full py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold text-center shadow-md shadow-orange-500/25 active:scale-98 transition">
                 Lihat Paket Membership
             </a>
         </div>

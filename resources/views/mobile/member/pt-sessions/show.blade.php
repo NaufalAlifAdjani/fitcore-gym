@@ -2,7 +2,7 @@
 ROLE: MEMBER
 MODUL: Detail Sesi PT Mobile
 VIEW: mobile.member.pt-sessions.show
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 @php
@@ -160,7 +160,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
                 <div class="flex items-center justify-between py-1 border-b border-[#E5E7EB]">
                     <span class="text-[#565A66]">Jam Sesi</span>
-                    <strong class="text-[#ED1B45] font-bold font-poppins">
+                    <strong class="text-[#FF5722] font-bold font-poppins">
                         {{ substr($ptSession->start_time, 0, 5) }} - {{ substr($ptSession->end_time, 0, 5) }} WIB
                     </strong>
                 </div>
@@ -258,7 +258,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                                   name="reason"
                                   rows="2"
                                   placeholder="Contoh: Ada keperluan mendadak..."
-                                  class="w-full p-2.5 rounded-xl border border-[#E5E7EB] bg-white text-xs text-[#16151A] focus:outline-none focus:ring-2 focus:ring-[#ED1B45] shadow-xs"></textarea>
+                                  class="w-full p-2.5 rounded-xl border border-[#E5E7EB] bg-white text-xs text-[#16151A] focus:outline-none focus:ring-2 focus:ring-[#FF5722] shadow-xs"></textarea>
                     </div>
 
                     <div class="flex items-center gap-2 pt-1">

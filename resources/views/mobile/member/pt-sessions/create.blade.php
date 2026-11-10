@@ -2,7 +2,7 @@
 ROLE: MEMBER
 MODUL: Booking Sesi PT 3-Step Wizard Mobile
 VIEW: mobile.member.pt-sessions.create
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 @php
@@ -115,7 +115,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         @if ($errors->any())
             <div class="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-800 shadow-xs space-y-1">
                 <div class="font-bold flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-[#ED1B45] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                     <span>Terjadi kesalahan saat memproses booking:</span>
@@ -131,15 +131,15 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         <!-- 3. Stepper Pills Row (1. Pilih Trainer, 2. Waktu, 3. Konfirmasi) -->
         <div class="flex items-center gap-1 p-1 bg-white rounded-xl border border-[#E5E7EB] text-[11px] font-bold text-center shadow-xs">
             <div class="flex-1 py-1.5 rounded-lg transition-all"
-                 :class="step === 1 ? 'bg-[#ED1B45] text-white shadow-xs' : (step > 1 ? 'text-[#16151A] bg-gray-100' : 'text-[#565A66]')">
+                 :class="step === 1 ? 'bg-[#FF5722] text-white shadow-xs' : (step > 1 ? 'text-[#16151A] bg-gray-100' : 'text-[#565A66]')">
                 1. Pilih Trainer
             </div>
             <div class="flex-1 py-1.5 rounded-lg transition-all"
-                 :class="step === 2 ? 'bg-[#ED1B45] text-white shadow-xs' : (step > 2 ? 'text-[#16151A] bg-gray-100' : 'text-[#565A66]')">
+                 :class="step === 2 ? 'bg-[#FF5722] text-white shadow-xs' : (step > 2 ? 'text-[#16151A] bg-gray-100' : 'text-[#565A66]')">
                 2. Waktu
             </div>
             <div class="flex-1 py-1.5 rounded-lg transition-all"
-                 :class="step === 3 ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66]'">
+                 :class="step === 3 ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66]'">
                 3. Konfirmasi
             </div>
         </div>
@@ -148,14 +148,14 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         @if ($remainingQuota > 0)
             <div class="p-3.5 rounded-2xl bg-white border border-[#E5E7EB] flex items-center justify-between text-xs shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-rose-50 text-[#ED1B45] flex items-center justify-center font-bold shrink-0 border border-rose-200">
+                    <div class="w-8 h-8 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center font-bold shrink-0 border border-orange-200">
                         <svg width="18" height="18" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="#ED1B45"/>
+                            <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="#FF5722"/>
                         </svg>
                     </div>
                     <div>
                         <span class="block text-[10px] font-bold text-[#565A66] uppercase">Saldo Kuota PT Aktif</span>
-                        <span class="font-bold text-[#16151A] text-xs">Sisa Kuota: <strong class="text-[#ED1B45]">{{ $remainingQuota }} Sesi</strong></span>
+                        <span class="font-bold text-[#16151A] text-xs">Sisa Kuota: <strong class="text-[#FF5722]">{{ $remainingQuota }} Sesi</strong></span>
                     </div>
                 </div>
                 <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold text-[10px]">
@@ -174,7 +174,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     Anda belum memiliki saldo kuota sesi PT aktif. Silakan pilih paket membership yang menyertakan sesi latihan atau beli paket sesi tambahan.
                 </p>
                 <a href="{{ route('mobile.member.packages') }}"
-                   class="inline-block px-3 py-1.5 rounded-full text-[10px] font-bold bg-[#ED1B45] text-white shadow-xs">
+                   class="inline-block px-3 py-1.5 rounded-full text-[10px] font-bold bg-[#FF5722] text-white shadow-xs">
                     Lihat Paket Membership →
                 </a>
             </div>
@@ -192,22 +192,22 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 </label>
                 <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
                     <button type="button" @click="activeFilter = 'semua'"
-                        :class="activeFilter === 'semua' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
+                        :class="activeFilter === 'semua' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
                         class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs whitespace-nowrap">
                         Semua
                     </button>
                     <button type="button" @click="activeFilter = 'hypertrophy'"
-                        :class="activeFilter === 'hypertrophy' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
+                        :class="activeFilter === 'hypertrophy' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
                         class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs whitespace-nowrap">
                         Hypertrophy
                     </button>
                     <button type="button" @click="activeFilter = 'fatloss'"
-                        :class="activeFilter === 'fatloss' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
+                        :class="activeFilter === 'fatloss' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
                         class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs whitespace-nowrap">
                         Fat Loss
                     </button>
                     <button type="button" @click="activeFilter = 'rehab'"
-                        :class="activeFilter === 'rehab' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
+                        :class="activeFilter === 'rehab' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
                         class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition cursor-pointer text-xs whitespace-nowrap">
                         Rehab
                     </button>
@@ -220,10 +220,10 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     <div x-show="filterTrainer('{{ addslashes($t->trainerProfile->specialization ?? '') }}')"
                          @click="selectTrainer('{{ $t->id }}', '{{ $t->name }}', '{{ $t->trainerProfile->specialization ?? 'CSCS Certified' }}')"
                          class="min-w-[170px] max-w-[185px] p-3.5 rounded-2xl border transition-all cursor-pointer shrink-0 relative flex flex-col justify-between"
-                         :class="selectedTrainerId == '{{ $t->id }}' ? 'bg-white border-[#ED1B45] shadow-md shadow-[#ED1B45]/15 ring-2 ring-[#ED1B45]' : 'bg-white border-[#E5E7EB] hover:border-gray-300 shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
+                         :class="selectedTrainerId == '{{ $t->id }}' ? 'bg-white border-[#FF5722] shadow-md shadow-orange-500/15 ring-2 ring-[#FF5722]' : 'bg-white border-[#E5E7EB] hover:border-gray-300 shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
                         
                         <!-- Checkmark Terpilih Pill -->
-                        <div x-show="selectedTrainerId == '{{ $t->id }}'" class="absolute top-2 right-2 px-1.5 py-0.5 rounded-full bg-[#ED1B45] text-white text-[9px] font-bold">
+                        <div x-show="selectedTrainerId == '{{ $t->id }}'" class="absolute top-2 right-2 px-1.5 py-0.5 rounded-full bg-[#FF5722] text-white text-[9px] font-bold">
                             Terpilih
                         </div>
 
@@ -260,52 +260,52 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 <div class="space-y-2">
                     <div @click="selectedFocus = 'Chest & Triceps Hypertrophy'"
                          class="p-3.5 rounded-2xl border transition cursor-pointer flex items-center justify-between"
-                         :class="selectedFocus === 'Chest & Triceps Hypertrophy' ? 'bg-rose-50/50 border-[#ED1B45] ring-1 ring-[#ED1B45]' : 'bg-white border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
+                         :class="selectedFocus === 'Chest & Triceps Hypertrophy' ? 'bg-orange-50/50 border-[#FF5722] ring-1 ring-[#FF5722]' : 'bg-white border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
                         <div class="space-y-0.5">
                             <span class="text-xs font-bold text-[#16151A] block">Chest &amp; Triceps Hypertrophy</span>
                             <span class="text-[11px] text-[#565A66] block">Fokus pembentukan dada, bahu depan, &amp; tricep</span>
                         </div>
                         <div class="w-4 h-4 rounded-full border flex items-center justify-center shrink-0"
-                             :class="selectedFocus === 'Chest & Triceps Hypertrophy' ? 'border-[#ED1B45] bg-[#ED1B45]' : 'border-gray-300'">
+                             :class="selectedFocus === 'Chest & Triceps Hypertrophy' ? 'border-[#FF5722] bg-[#FF5722]' : 'border-gray-300'">
                             <div x-show="selectedFocus === 'Chest & Triceps Hypertrophy'" class="w-1.5 h-1.5 rounded-full bg-white"></div>
                         </div>
                     </div>
 
                     <div @click="selectedFocus = 'Legs & Core Power'"
                          class="p-3.5 rounded-2xl border transition cursor-pointer flex items-center justify-between"
-                         :class="selectedFocus === 'Legs & Core Power' ? 'bg-rose-50/50 border-[#ED1B45] ring-1 ring-[#ED1B45]' : 'bg-white border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
+                         :class="selectedFocus === 'Legs & Core Power' ? 'bg-orange-50/50 border-[#FF5722] ring-1 ring-[#FF5722]' : 'bg-white border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
                         <div class="space-y-0.5">
                             <span class="text-xs font-bold text-[#16151A] block">Legs &amp; Core Power</span>
                             <span class="text-[11px] text-[#565A66] block">Peningkatan kekuatan paha, glutes, &amp; otot inti</span>
                         </div>
                         <div class="w-4 h-4 rounded-full border flex items-center justify-center shrink-0"
-                             :class="selectedFocus === 'Legs & Core Power' ? 'border-[#ED1B45] bg-[#ED1B45]' : 'border-gray-300'">
+                             :class="selectedFocus === 'Legs & Core Power' ? 'border-[#FF5722] bg-[#FF5722]' : 'border-gray-300'">
                             <div x-show="selectedFocus === 'Legs & Core Power'" class="w-1.5 h-1.5 rounded-full bg-white"></div>
                         </div>
                     </div>
 
                     <div @click="selectedFocus = 'Full Body HIIT Conditioning'"
                          class="p-3.5 rounded-2xl border transition cursor-pointer flex items-center justify-between"
-                         :class="selectedFocus === 'Full Body HIIT Conditioning' ? 'bg-rose-50/50 border-[#ED1B45] ring-1 ring-[#ED1B45]' : 'bg-white border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
+                         :class="selectedFocus === 'Full Body HIIT Conditioning' ? 'bg-orange-50/50 border-[#FF5722] ring-1 ring-[#FF5722]' : 'bg-white border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
                         <div class="space-y-0.5">
                             <span class="text-xs font-bold text-[#16151A] block">Full Body HIIT Conditioning</span>
                             <span class="text-[11px] text-[#565A66] block">Kardio intensitas tinggi &amp; ketahanan metabolik</span>
                         </div>
                         <div class="w-4 h-4 rounded-full border flex items-center justify-center shrink-0"
-                             :class="selectedFocus === 'Full Body HIIT Conditioning' ? 'border-[#ED1B45] bg-[#ED1B45]' : 'border-gray-300'">
+                             :class="selectedFocus === 'Full Body HIIT Conditioning' ? 'border-[#FF5722] bg-[#FF5722]' : 'border-gray-300'">
                             <div x-show="selectedFocus === 'Full Body HIIT Conditioning'" class="w-1.5 h-1.5 rounded-full bg-white"></div>
                         </div>
                     </div>
 
                     <div @click="selectedFocus = 'Mobility & Rehab Flexibility'"
                          class="p-3.5 rounded-2xl border transition cursor-pointer flex items-center justify-between"
-                         :class="selectedFocus === 'Mobility & Rehab Flexibility' ? 'bg-rose-50/50 border-[#ED1B45] ring-1 ring-[#ED1B45]' : 'bg-white border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
+                         :class="selectedFocus === 'Mobility & Rehab Flexibility' ? 'bg-orange-50/50 border-[#FF5722] ring-1 ring-[#FF5722]' : 'bg-white border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
                         <div class="space-y-0.5">
                             <span class="text-xs font-bold text-[#16151A] block">Mobility &amp; Rehab Flexibility</span>
                             <span class="text-[11px] text-[#565A66] block">Peregangan sendi, fleksibilitas, &amp; pemulihan cedera</span>
                         </div>
                         <div class="w-4 h-4 rounded-full border flex items-center justify-center shrink-0"
-                             :class="selectedFocus === 'Mobility & Rehab Flexibility' ? 'border-[#ED1B45] bg-[#ED1B45]' : 'border-gray-300'">
+                             :class="selectedFocus === 'Mobility & Rehab Flexibility' ? 'border-[#FF5722] bg-[#FF5722]' : 'border-gray-300'">
                             <div x-show="selectedFocus === 'Mobility & Rehab Flexibility'" class="w-1.5 h-1.5 rounded-full bg-white"></div>
                         </div>
                     </div>
@@ -317,7 +317,14 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 <button type="button"
                         @click="if (selectedTrainerId && selectedFocus) { step = 2; fetchSlots(); }"
                         :disabled="!selectedTrainerId || !selectedFocus"
-                        :class="(!selectedTrainerId || !selectedFocus) ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#ED1B45] hover:bg-[#D1123D] active:scale-[0.99] cursor-pointer shadow-md shadow-[#ED1B45]/25'"
+                        :class="(!selectedTrainerId || !selectedFocus) ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] cursor-pointer shadow-md shadow-orange-500/25'"
+                        class="w-full py-3.5 rounded-full text-white font-semibold text-sm flex items-center justify-center gap-2 transition">
+                    <span>Lanjut ke Pilih Waktu</span>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </button>
+            </div>
                         class="w-full py-3.5 rounded-full text-white font-semibold text-sm flex items-center justify-center gap-2 transition">
                     <span>Lanjut ke Pilih Waktu</span>
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -335,7 +342,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             <!-- Summary Pelatih Terpilih -->
             <div class="p-3 rounded-2xl bg-white border border-[#E5E7EB] flex items-center justify-between shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-rose-50 text-[#ED1B45] flex items-center justify-center font-bold text-xs border border-rose-200">
+                    <div class="w-8 h-8 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center font-bold text-xs border border-orange-200">
                         PT
                     </div>
                     <div>
@@ -343,7 +350,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                         <span class="text-[10px] text-[#565A66] block font-sans" x-text="selectedFocus">Fokus Latihan</span>
                     </div>
                 </div>
-                <button type="button" @click="step = 1" class="text-xs text-[#ED1B45] font-semibold hover:underline cursor-pointer">
+                <button type="button" @click="step = 1" class="text-xs text-[#FF5722] font-semibold hover:underline cursor-pointer">
                     Ubah
                 </button>
             </div>
@@ -368,7 +375,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                         <button type="button"
                                 @click="selectDate('{{ $dateStr }}', '{{ $targetDate->translatedFormat('l, d M Y') }}')"
                                 class="p-2.5 rounded-2xl border transition-all flex flex-col items-center justify-center cursor-pointer"
-                                :class="selectedDate === '{{ $dateStr }}' ? 'bg-[#ED1B45] text-white border-[#ED1B45] shadow-md shadow-[#ED1B45]/25' : 'bg-white text-[#565A66] border-[#E5E7EB] hover:border-gray-300 shadow-xs'">
+                                :class="selectedDate === '{{ $dateStr }}' ? 'bg-[#FF5722] text-white border-[#FF5722] shadow-md shadow-orange-500/25' : 'bg-white text-[#565A66] border-[#E5E7EB] hover:border-gray-300 shadow-xs'">
                             <span class="text-[10px] font-medium uppercase">{{ $dayName }}</span>
                             <span class="text-base font-black font-poppins mt-0.5">{{ $dayNum }}</span>
                             <span class="text-[8px] mt-0.5 opacity-80">{{ $i === 0 ? 'Hari Ini' : ($i === 1 ? 'Besok' : 'Tersedia') }}</span>
@@ -405,7 +412,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                                     @click="selectSlot('{{ $time }}', '{{ $label }} WIB')"
                                     :disabled="getSlotStatus('{{ $time }}') !== 'available'"
                                     :class="{
-                                        'bg-[#ED1B45] text-white border-[#ED1B45] shadow-xs': selectedSlot === '{{ $time }}',
+                                        'bg-[#FF5722] text-white border-[#FF5722] shadow-xs': selectedSlot === '{{ $time }}',
                                         'bg-white text-[#16151A] border-[#E5E7EB] hover:border-gray-300 shadow-xs': selectedSlot !== '{{ $time }}' && getSlotStatus('{{ $time }}') === 'available',
                                         'bg-gray-100 text-gray-400 border-gray-200 line-through cursor-not-allowed opacity-60': getSlotStatus('{{ $time }}') !== 'available'
                                     }"
@@ -431,7 +438,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                                     @click="selectSlot('{{ $time }}', '{{ $label }} WIB')"
                                     :disabled="getSlotStatus('{{ $time }}') !== 'available'"
                                     :class="{
-                                        'bg-[#ED1B45] text-white border-[#ED1B45] shadow-xs': selectedSlot === '{{ $time }}',
+                                        'bg-[#FF5722] text-white border-[#FF5722] shadow-xs': selectedSlot === '{{ $time }}',
                                         'bg-white text-[#16151A] border-[#E5E7EB] hover:border-gray-300 shadow-xs': selectedSlot !== '{{ $time }}' && getSlotStatus('{{ $time }}') === 'available',
                                         'bg-gray-100 text-gray-400 border-gray-200 line-through cursor-not-allowed opacity-60': getSlotStatus('{{ $time }}') !== 'available'
                                     }"
@@ -457,7 +464,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                                     @click="selectSlot('{{ $time }}', '{{ $label }} WIB')"
                                     :disabled="getSlotStatus('{{ $time }}') !== 'available'"
                                     :class="{
-                                        'bg-[#ED1B45] text-white border-[#ED1B45] shadow-xs': selectedSlot === '{{ $time }}',
+                                        'bg-[#FF5722] text-white border-[#FF5722] shadow-xs': selectedSlot === '{{ $time }}',
                                         'bg-white text-[#16151A] border-[#E5E7EB] hover:border-gray-300 shadow-xs': selectedSlot !== '{{ $time }}' && getSlotStatus('{{ $time }}') === 'available',
                                         'bg-gray-100 text-gray-400 border-gray-200 line-through cursor-not-allowed opacity-60': getSlotStatus('{{ $time }}') !== 'available'
                                     }"
@@ -483,7 +490,11 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 <button type="button"
                         @click="if (selectedSlot) { step = 3; }"
                         :disabled="!selectedSlot"
-                        :class="!selectedSlot ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#ED1B45] hover:bg-[#D1123D] active:scale-[0.99] cursor-pointer shadow-md shadow-[#ED1B45]/25'"
+                        :class="!selectedSlot ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] cursor-pointer shadow-md shadow-orange-500/25'"
+                        class="w-2/3 py-3 rounded-full text-white text-xs font-semibold transition">
+                    Lanjut ke Konfirmasi →
+                </button>
+            </div>
                         class="w-2/3 py-3 rounded-full text-white text-xs font-semibold transition">
                     Lanjut ke Konfirmasi →
                 </button>
@@ -497,7 +508,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             
             <div class="p-4 rounded-2xl bg-white border border-[#E5E7EB] text-[#16151A] space-y-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
                 <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-2.5">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#ED1B45]">Tinggal 1 Langkah Lagi</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#FF5722]">Tinggal 1 Langkah Lagi</span>
                     <span class="text-xs font-bold text-[#565A66]">Ringkasan Sesi</span>
                 </div>
 
@@ -514,7 +525,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
                     <div class="flex items-center justify-between">
                         <span class="text-[#565A66]">Jam Latihan</span>
-                        <span class="font-bold text-[#ED1B45]" x-text="selectedTimeLabel">08:00 - 09:00 WIB</span>
+                        <span class="font-bold text-[#FF5722]" x-text="selectedTimeLabel">08:00 - 09:00 WIB</span>
                     </div>
 
                     <div class="flex items-center justify-between">
@@ -543,13 +554,13 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                         Catatan untuk Pelatih <span class="text-[#565A66] font-normal">(Opsional)</span>
                     </label>
                     <textarea id="notes" name="notes" rows="2" placeholder="Misal: Otot paha agak tegang, ingin fokus pemanasan lebih lama..."
-                              class="w-full p-3 rounded-xl bg-white border border-[#E5E7EB] text-xs text-[#16151A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ED1B45] shadow-xs"></textarea>
+                              class="w-full p-3 rounded-xl bg-white border border-[#E5E7EB] text-xs text-[#16151A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] shadow-xs"></textarea>
                 </div>
 
                 <!-- Checkbox Kebijakan Reschedule/Batal -->
                 <label class="flex items-start gap-2.5 cursor-pointer text-xs text-[#565A66] pt-1">
                     <input type="checkbox" required name="agreed_policy" x-model="agreedPolicy"
-                           class="w-4 h-4 mt-0.5 text-[#ED1B45] border-[#E5E7EB] bg-white rounded focus:ring-[#ED1B45] shrink-0 cursor-pointer" />
+                           class="w-4 h-4 mt-0.5 text-[#FF5722] border-[#E5E7EB] bg-white rounded focus:ring-[#FF5722] shrink-0 cursor-pointer" />
                     <span class="text-[11px] leading-tight select-none">
                         Saya menyetujui kebijakan pembatalan &amp; reschedule sesi maksimal <strong class="text-[#16151A]">24 jam sebelum jadwal latihan</strong> dimulai.
                     </span>
@@ -562,7 +573,14 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     </button>
                     <button type="submit"
                             :disabled="!agreedPolicy"
-                            :class="!agreedPolicy ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#ED1B45] hover:bg-[#D1123D] cursor-pointer shadow-md shadow-[#ED1B45]/25 active:scale-[0.98]'"
+                            :class="!agreedPolicy ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#FF5722] hover:bg-[#E64A19] cursor-pointer shadow-md shadow-orange-500/25 active:scale-[0.98]'"
+                            class="w-2/3 py-3.5 rounded-full text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                        <span>Konfirmasi Booking</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </button>
+                </div>
                             class="w-2/3 py-3.5 rounded-full text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
                         <span>Konfirmasi Booking</span>
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">

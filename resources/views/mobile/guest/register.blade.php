@@ -11,7 +11,7 @@
 |                disinkronkan dengan alur registrasi member web desktop,
 |                nomor WhatsApp (+62), validasi password, syarat & privasi,
 |                serta tombol pendaftaran dengan Google & Apple.
-|                Menggunakan token warna DESIGN.md: primary #ED1B45, card 16px,
+|                Menggunakan token warna DESIGN.md: primary #FF5722, card 16px,
 |                tombol pill full rounded, tipografi Poppins & Inter.
 |--------------------------------------------------------------------------
 --}}
@@ -19,10 +19,10 @@
 <x-layouts.mobile-guest title="Daftar Member Baru - FitCore Athletic">
     <div class="w-full flex flex-col justify-center">
 
-        <!-- 1. Header & Logo Brand (Figma Spec: 56x56px, #ED1B45, radius 16px, isolate) -->
+        <!-- 1. Header & Logo Brand (Figma Spec: 56x56px, Blaze Orange #FF5722, radius 16px, isolate) -->
         <div class="flex flex-col items-center justify-center text-center mb-5">
-            <!-- Dumbbell Red Squircle Badge (Figma CSS: w-[56px] h-[56px] bg-[#ED1B45] rounded-[16px] isolate) -->
-            <div class="w-[56px] h-[56px] rounded-[16px] bg-[#ED1B45] flex items-center justify-center isolate text-white shadow-lg shadow-[#ED1B45]/25 mb-3.5 shrink-0">
+            <!-- Dumbbell Orange Squircle Badge -->
+            <div class="w-[56px] h-[56px] rounded-[16px] bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center isolate text-white shadow-lg shadow-orange-500/25 mb-3.5 shrink-0">
                 <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
                     <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="currentColor"/>
                 </svg>
@@ -30,7 +30,7 @@
 
             <!-- Brand Name & Portal Pill -->
             <div class="flex items-center gap-2 mb-2">
-                <span class="font-poppins font-black text-lg tracking-tight text-[#16151A]">FIT <span class="text-[#ED1B45]">CORE</span></span>
+                <span class="font-poppins font-black text-lg tracking-tight text-[#16151A]">FIT <span class="text-[#FF5722]">CORE</span></span>
                 <span class="px-2 py-0.5 rounded-md bg-gray-200/80 text-[10px] font-bold tracking-wider text-[#565A66] uppercase">PORTAL</span>
             </div>
 
@@ -50,7 +50,7 @@
             @if ($errors->any())
                 <div class="mb-4 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-800">
                     <div class="flex items-center gap-2 font-bold mb-1">
-                        <svg class="w-4 h-4 text-[#ED1B45] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                         </svg>
                         <span>Terdapat kesalahan pendaftaran:</span>
@@ -85,7 +85,7 @@
                             placeholder="Alex Pratama"
                             required
                             autofocus
-                            class="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E5E7EB] rounded-[10px] text-xs sm:text-sm text-[#16151A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:border-transparent transition"
+                            class="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E5E7EB] rounded-[10px] text-xs sm:text-sm text-[#16151A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:border-transparent transition"
                         />
                     </div>
                     <x-input-error :messages="$errors->get('name')" class="mt-0.5 text-xs" />
@@ -109,7 +109,7 @@
                             value="{{ old('email') }}"
                             placeholder="alex@example.com"
                             required
-                            class="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E5E7EB] rounded-[10px] text-xs sm:text-sm text-[#16151A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:border-transparent transition"
+                            class="w-full pl-10 pr-4 py-2.5 bg-white border border-[#E5E7EB] rounded-[10px] text-xs sm:text-sm text-[#16151A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:border-transparent transition"
                         />
                     </div>
                     <x-input-error :messages="$errors->get('email')" class="mt-0.5 text-xs" />
@@ -135,7 +135,7 @@
                             value="{{ old('phone') }}"
                             placeholder="812-3456-7890"
                             required
-                            class="w-full pl-20 pr-4 py-2.5 bg-white border border-[#E5E7EB] rounded-[10px] text-xs sm:text-sm text-[#16151A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:border-transparent transition"
+                            class="w-full pl-20 pr-4 py-2.5 bg-white border border-[#E5E7EB] rounded-[10px] text-xs sm:text-sm text-[#16151A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:border-transparent transition"
                         />
                     </div>
                     <x-input-error :messages="$errors->get('phone')" class="mt-0.5 text-xs" />
@@ -161,7 +161,7 @@
                             name="password"
                             placeholder="••••••••"
                             required
-                            class="w-full pl-10 pr-10 py-2.5 bg-white border border-[#E5E7EB] rounded-[10px] text-xs sm:text-sm text-[#16151A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:border-transparent transition"
+                            class="w-full pl-10 pr-10 py-2.5 bg-white border border-[#E5E7EB] rounded-[10px] text-xs sm:text-sm text-[#16151A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:border-transparent transition"
                         />
                         <button
                             type="button"
@@ -197,7 +197,7 @@
                             name="password_confirmation"
                             placeholder="••••••••"
                             required
-                            class="w-full pl-10 pr-10 py-2.5 bg-white border border-[#E5E7EB] rounded-[10px] text-xs sm:text-sm text-[#16151A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:border-transparent transition"
+                            class="w-full pl-10 pr-10 py-2.5 bg-white border border-[#E5E7EB] rounded-[10px] text-xs sm:text-sm text-[#16151A] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:border-transparent transition"
                         />
                         <button
                             type="button"
@@ -222,20 +222,20 @@
                             type="checkbox"
                             required
                             name="terms"
-                            class="w-4 h-4 mt-0.5 text-[#ED1B45] border-[#E5E7EB] rounded focus:ring-[#ED1B45] shrink-0"
+                            class="w-4 h-4 mt-0.5 text-[#FF5722] border-[#E5E7EB] rounded focus:ring-[#FF5722] shrink-0"
                         />
                         <span class="text-[11px] text-[#565A66] leading-tight select-none font-sans">
-                            Saya menyetujui <a href="#" class="font-bold text-[#ED1B45] hover:underline">Syarat & Ketentuan</a> serta <a href="#" class="font-bold text-[#ED1B45] hover:underline">Kebijakan Privasi</a> FitCore.
+                            Saya menyetujui <a href="#" class="font-bold text-[#FF5722] hover:underline">Syarat & Ketentuan</a> serta <a href="#" class="font-bold text-[#FF5722] hover:underline">Kebijakan Privasi</a> FitCore.
                         </span>
                     </label>
                     <x-input-error :messages="$errors->get('terms')" class="mt-0.5 text-xs" />
                 </div>
 
-                <!-- Tombol Aksi: Daftar Member Sekarang (Pill Full Radius rounded-full, Maxfit Red #ED1B45) -->
+                <!-- Tombol Aksi: Daftar Member Sekarang (Pill Full Radius rounded-full, Blaze Orange #FF5722) -->
                 <div class="pt-2">
                     <button
                         type="submit"
-                        class="w-full py-3.5 px-6 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] active:scale-[0.99] text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-md shadow-[#ED1B45]/25 transition-all cursor-pointer"
+                        class="w-full py-3.5 px-6 rounded-full bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-md shadow-orange-500/25 transition-all cursor-pointer"
                     >
                         <span>Daftar Member Sekarang</span>
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -283,7 +283,7 @@
         <!-- 3. Bottom Link: Login (Gambar 2) -->
         <p class="mt-4 text-center text-xs text-[#565A66] font-medium font-sans">
             Sudah punya akun?
-            <a href="{{ url('/m/login') }}" class="font-bold text-[#ED1B45] hover:text-[#D1123D] ml-1 transition">
+            <a href="{{ url('/m/login') }}" class="font-bold text-[#FF5722] hover:text-[#E64A19] ml-1 transition">
                 Masuk di Sini
             </a>
         </p>

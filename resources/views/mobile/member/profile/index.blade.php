@@ -3,7 +3,7 @@ ROLE: MEMBER
 MODUL: Profil Pengguna Mobile
 VIEW: mobile.member.profile.index
 LAYOUT: layouts.mobile-app
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 <x-layouts.mobile-app title="Profil Saya - FitCore Athletic" active-tab="profile">
@@ -25,7 +25,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             </div>
 
             <a href="{{ route('mobile.member.card') }}"
-               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-[#ED1B45]/10 text-[#ED1B45] border border-[#ED1B45]/20 hover:bg-[#ED1B45]/20 transition">
+               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-50 text-[#FF5722] border border-orange-200 hover:bg-orange-100 transition">
                 <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                 </svg>
@@ -59,7 +59,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         @if ($errors->any())
             <div class="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold space-y-1 shadow-2xs">
                 <div class="flex items-center gap-2 font-bold text-red-800">
-                    <svg class="w-4 h-4 text-[#ED1B45] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="w-4 h-4 text-red-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                     <span>Terjadi kesalahan input:</span>
@@ -76,7 +76,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         <div class="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] relative overflow-hidden">
             <div class="flex items-center gap-4">
                 <!-- Avatar Inisial Besar -->
-                <div class="w-16 h-16 rounded-2xl bg-[#ED1B45]/10 border-2 border-[#ED1B45]/20 text-[#ED1B45] flex items-center justify-center font-poppins font-black text-2xl shadow-inner shrink-0">
+                <div class="w-16 h-16 rounded-2xl bg-orange-50 border-2 border-orange-200 text-[#FF5722] flex items-center justify-center font-poppins font-black text-2xl shadow-inner shrink-0">
                     {{ strtoupper(substr($user->name, 0, 2)) }}
                 </div>
 
@@ -124,7 +124,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                         </div>
                         <div class="text-right">
                             <span class="text-[10px] uppercase font-bold tracking-wider text-[#565A66] block">Berlaku Hingga</span>
-                            <span class="font-bold text-[#ED1B45]">{{ \Carbon\Carbon::parse($activeMembership->end_date)->translatedFormat('d M Y') }}</span>
+                            <span class="font-bold text-[#FF5722]">{{ \Carbon\Carbon::parse($activeMembership->end_date)->translatedFormat('d M Y') }}</span>
                         </div>
                     </div>
                 @else
@@ -134,7 +134,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             <span class="text-xs text-[#565A66]">Akses gym tidak aktif</span>
                         </div>
                         <a href="{{ route('mobile.packages.index') }}"
-                           class="px-3 py-1.5 rounded-full text-xs font-bold bg-[#ED1B45] text-white hover:bg-[#D1123D] transition shadow-xs">
+                           class="px-3 py-1.5 rounded-full text-xs font-bold bg-[#FF5722] text-white hover:bg-[#E64A19] transition shadow-xs">
                             Beli Paket
                         </a>
                     </div>
@@ -191,7 +191,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                                type="text"
                                required
                                value="{{ old('name', $user->name) }}"
-                               class="w-full pl-9 pr-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#ED1B45]/20 focus:border-[#ED1B45] transition">
+                               class="w-full pl-9 pr-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] transition">
                     </div>
                     @error('name')
                         <p class="text-[11px] font-semibold text-red-600 mt-1">{{ $message }}</p>
@@ -212,7 +212,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                                type="email"
                                required
                                value="{{ old('email', $user->email) }}"
-                               class="w-full pl-9 pr-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#ED1B45]/20 focus:border-[#ED1B45] transition">
+                               class="w-full pl-9 pr-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] transition">
                     </div>
                     @error('email')
                         <p class="text-[11px] font-semibold text-red-600 mt-1">{{ $message }}</p>
@@ -238,7 +238,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
                 <div class="pt-2">
                     <button type="submit"
-                            class="w-full py-3 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] active:scale-[0.99] text-white font-poppins font-bold text-xs uppercase tracking-wider transition shadow-md shadow-[#ED1B45]/20 flex items-center justify-center gap-2">
+                            class="w-full py-3 rounded-full bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-poppins font-bold text-xs uppercase tracking-wider transition shadow-md shadow-orange-500/20 flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
@@ -267,7 +267,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                            type="password"
                            required
                            autocomplete="current-password"
-                           class="w-full px-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#ED1B45]/20 focus:border-[#ED1B45] transition">
+                           class="w-full px-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] transition">
                     @error('current_password', 'updatePassword')
                         <p class="text-[11px] font-semibold text-red-600 mt-1">{{ $message }}</p>
                     @enderror
@@ -281,7 +281,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                            type="password"
                            required
                            autocomplete="new-password"
-                           class="w-full px-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#ED1B45]/20 focus:border-[#ED1B45] transition">
+                           class="w-full px-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] transition">
                     @error('password', 'updatePassword')
                         <p class="text-[11px] font-semibold text-red-600 mt-1">{{ $message }}</p>
                     @enderror
@@ -295,7 +295,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                            type="password"
                            required
                            autocomplete="new-password"
-                           class="w-full px-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#ED1B45]/20 focus:border-[#ED1B45] transition">
+                           class="w-full px-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] transition">
                     @error('password_confirmation', 'updatePassword')
                         <p class="text-[11px] font-semibold text-red-600 mt-1">{{ $message }}</p>
                     @enderror
@@ -303,7 +303,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
                 <div class="pt-2">
                     <button type="submit"
-                            class="w-full py-3 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] active:scale-[0.99] text-white font-poppins font-bold text-xs uppercase tracking-wider transition shadow-md shadow-[#ED1B45]/20 flex items-center justify-center gap-2">
+                            class="w-full py-3 rounded-full bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-poppins font-bold text-xs uppercase tracking-wider transition shadow-md shadow-orange-500/20 flex items-center justify-center gap-2">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
@@ -325,11 +325,11 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             </svg>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#ED1B45] transition">Riwayat Transaksi</span>
+                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Riwayat Transaksi</span>
                             <span class="text-[11px] text-[#565A66]">Cek status invoice dan bukti transfer</span>
                         </div>
                     </div>
-                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#ED1B45] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                 </a>
@@ -343,11 +343,11 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             </svg>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#ED1B45] transition">Jadwal Sesi PT</span>
+                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Jadwal Sesi PT</span>
                             <span class="text-[11px] text-[#565A66]">Daftar sesi latihan & riwayat booking</span>
                         </div>
                     </div>
-                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#ED1B45] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                 </a>
@@ -361,11 +361,11 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             </svg>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#ED1B45] transition">Katalog Paket Gym</span>
+                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Katalog Paket Gym</span>
                             <span class="text-[11px] text-[#565A66]">Langganan paket keanggotaan baru</span>
                         </div>
                     </div>
-                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#ED1B45] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
                 </a>
@@ -382,11 +382,11 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             </svg>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#ED1B45] transition">Pusat Bantuan & CS</span>
+                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Pusat Bantuan & CS</span>
                             <span class="text-[11px] text-[#565A66]">Hubungi WhatsApp customer support</span>
                         </div>
                     </div>
-                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#ED1B45] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                 </a>
@@ -397,7 +397,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
             <button type="button"
                     @click="showLogoutModal = true"
-                    class="w-full py-2.5 px-4 rounded-full border border-red-200 bg-red-50/50 hover:bg-red-50 active:scale-[0.99] text-[#ED1B45] font-poppins font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2">
+                    class="w-full py-2.5 px-4 rounded-full border border-red-200 bg-red-50/50 hover:bg-red-50 active:scale-[0.99] text-red-600 font-poppins font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
@@ -418,7 +418,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <div class="bg-white rounded-2xl max-w-xs w-full p-5 shadow-2xl border border-[#E5E7EB] text-center space-y-4"
                  @click.away="showLogoutModal = false">
-                <div class="w-12 h-12 rounded-full bg-red-100 text-[#ED1B45] flex items-center justify-center mx-auto">
+                <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
@@ -439,7 +439,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     <form method="POST" action="{{ route('logout') }}" class="flex-1">
                         @csrf
                         <button type="submit"
-                                class="w-full py-2.5 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white text-xs font-bold font-poppins transition shadow-sm">
+                                class="w-full py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold font-poppins transition shadow-sm">
                             Ya, Keluar
                         </button>
                     </form>

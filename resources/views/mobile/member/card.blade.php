@@ -7,11 +7,7 @@
 | FILE         : resources/views/mobile/member/card.blade.php
 | LAYOUT       : layouts/mobile-app.blade.php
 | AKSES ROUTE  : /m/card atau /member/card (name: mobile.member.card)
-| DESKRIPSI    : Tampilan kartu identitas digital member khusus layar HP
-|                menggunakan Light Theme (background #F6F6F7, surface white #FFFFFF,
-|                border #E5E7EB, teks #16151A & #565A66, aksen primary #ED1B45).
-|                Menampilkan kode QR dinamis dengan animasi pulsing border,
-|                status aktif, masa berlaku, dan instruksi check-in instan.
+| TEMA         : Light Theme (Canvas #F6F6F7, Surface #FFFFFF, Accent #FF5722)
 |--------------------------------------------------------------------------
 --}}
 
@@ -20,8 +16,8 @@
 
         <!-- 1. Header Informasi Singkat -->
         <div class="text-center space-y-1">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#ED1B45] bg-rose-50 border border-rose-200 rounded-full shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#ED1B45] animate-pulse"></span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-[#FF5722] bg-orange-50 border border-orange-200 rounded-full shadow-2xs">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#FF5722] animate-pulse"></span>
                 FitCore Digital Pass
             </span>
             <h1 class="text-xl sm:text-2xl font-black font-poppins text-[#16151A] tracking-tight">
@@ -35,7 +31,7 @@
         <!-- 2. VIP Member Digital Card Shell (Light Theme: White Card, Border #E5E7EB, Radius 16px) -->
         <div class="relative overflow-hidden rounded-2xl border border-[#E5E7EB] bg-white p-6 text-[#16151A] shadow-[0_12px_36px_rgba(0,0,0,0.06)]">
             <!-- Subtle Ambient Glow -->
-            <div class="absolute -top-12 -right-12 w-44 h-44 bg-[#ED1B45]/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -top-12 -right-12 w-44 h-44 bg-[#FF5722]/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute -bottom-12 -left-12 w-44 h-44 bg-gray-100 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="relative z-10 flex flex-col items-center text-center space-y-5">
@@ -43,7 +39,7 @@
                 <!-- Card Header (Brand Logo & Status Badge) -->
                 <div class="w-full flex items-center justify-between border-b border-[#E5E7EB] pb-3.5">
                     <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-lg bg-[#ED1B45] flex items-center justify-center text-white font-black text-xs shadow-xs">
+                        <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white font-black text-xs shadow-xs">
                             <svg width="16" height="16" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="white"/>
                             </svg>
@@ -70,8 +66,8 @@
 
                 <!-- Center Large QR Code with Pulsing Border Animation (Prompt #4) -->
                 <div class="relative my-2">
-                    <!-- Subtle Pulsing Live Ring in Primary Red -->
-                    <div class="absolute -inset-2.5 rounded-2xl bg-gradient-to-r from-[#ED1B45] to-[#B50E32] opacity-40 blur-xs animate-pulse"></div>
+                    <!-- Subtle Pulsing Live Ring in Blaze Orange -->
+                    <div class="absolute -inset-2.5 rounded-2xl bg-gradient-to-r from-[#FF5722] to-[#FFB703] opacity-40 blur-xs animate-pulse"></div>
                     
                     <!-- White Card Container for High-Contrast QR Scanning -->
                     <div class="relative bg-white p-4 rounded-xl shadow-md border border-[#E5E7EB] flex items-center justify-center">
@@ -111,7 +107,7 @@
                     </div>
                     <div class="p-2.5 bg-[#F6F6F7] rounded-xl border border-[#E5E7EB]">
                         <span class="block text-[9px] font-bold uppercase tracking-wider text-[#565A66]">Masa Berlaku</span>
-                        <span class="text-xs font-bold text-[#ED1B45] block mt-0.5">
+                        <span class="text-xs font-bold text-[#FF5722] block mt-0.5">
                             @if ($activeMembership && $activeMembership->end_date)
                                 {{ \Carbon\Carbon::parse($activeMembership->end_date)->translatedFormat('d M Y') }}
                             @else

@@ -2,7 +2,7 @@
 ROLE: MEMBER
 MODUL: Checkout & Pembayaran Paket Membership Mobile
 VIEW: mobile.member.packages.checkout
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 @php
@@ -72,7 +72,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         @if ($errors->any())
             <div class="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-800 shadow-xs space-y-1">
                 <div class="font-bold flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-[#ED1B45] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                     <span>Mohon lengkapi formulir pembayaran:</span>
@@ -95,7 +95,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         <div class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-3">
             <div class="flex items-start justify-between">
                 <div>
-                    <span class="inline-flex px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-rose-50 text-[#ED1B45] border border-rose-200 mb-1">
+                    <span class="inline-flex px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-orange-50 text-[#FF5722] border border-orange-200 mb-1">
                         {{ $package->tier ?? 'PAKET MEMBERSHIP' }}
                     </span>
                     <h2 class="text-lg font-black font-poppins text-[#16151A]">
@@ -107,7 +107,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 </div>
 
                 @if ($package->badge)
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#ED1B45] text-white shadow-xs">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#FF5722] text-white shadow-xs">
                         {{ $package->badge }}
                     </span>
                 @endif
@@ -129,7 +129,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 <div class="pt-2 border-t border-[#E5E7EB] flex items-center justify-between font-bold">
                     <span class="text-xs text-[#16151A] uppercase tracking-wider">Total Transfer Tepat</span>
                     <div class="text-right">
-                        <span class="font-poppins font-black text-lg text-[#ED1B45]">
+                        <span class="font-poppins font-black text-lg text-[#FF5722]">
                             Rp {{ number_format($totalAmount, 0, ',', '.') }}
                         </span>
                     </div>
@@ -152,11 +152,11 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     <button type="button"
                             @click="selectedBankId = '{{ $bank->id }}'"
                             class="p-3 rounded-xl border text-left transition flex flex-col justify-between cursor-pointer"
-                            :class="selectedBankId == '{{ $bank->id }}' ? 'border-[#ED1B45] bg-rose-50/50 ring-2 ring-[#ED1B45] text-[#16151A]' : 'border-[#E5E7EB] bg-white text-[#565A66] hover:border-gray-300 shadow-xs'">
+                            :class="selectedBankId == '{{ $bank->id }}' ? 'border-[#FF5722] bg-orange-50/50 ring-2 ring-[#FF5722] text-[#16151A]' : 'border-[#E5E7EB] bg-white text-[#565A66] hover:border-gray-300 shadow-xs'">
                         <div class="flex items-center justify-between mb-1">
                             <span class="font-poppins font-bold text-xs uppercase" x-text="'{{ $bank->name }}'">{{ $bank->name }}</span>
                             <div class="w-3.5 h-3.5 rounded-full border flex items-center justify-center"
-                                 :class="selectedBankId == '{{ $bank->id }}' ? 'border-[#ED1B45] bg-[#ED1B45]' : 'border-gray-300'">
+                                 :class="selectedBankId == '{{ $bank->id }}' ? 'border-[#FF5722] bg-[#FF5722]' : 'border-gray-300'">
                                 <div x-show="selectedBankId == '{{ $bank->id }}'" class="w-1.5 h-1.5 rounded-full bg-white"></div>
                             </div>
                         </div>
@@ -177,7 +177,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     <button type="button"
                             @click="copyAccount()"
                             class="px-3 py-1.5 rounded-full text-[11px] font-bold border transition flex items-center gap-1 cursor-pointer"
-                            :class="copied ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-[#16151A] border-[#E5E7EB] hover:border-[#ED1B45]'">
+                            :class="copied ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-[#16151A] border-[#E5E7EB] hover:border-[#FF5722]'">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                         </svg>
@@ -209,7 +209,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             <!-- Input Nama Pengirim -->
             <div class="space-y-1">
                 <label for="sender_name" class="block text-xs font-bold text-[#16151A]">
-                    Nama Pemilik Rekening / Pengirim <span class="text-[#ED1B45]">*</span>
+                    Nama Pemilik Rekening / Pengirim <span class="text-[#FF5722]">*</span>
                 </label>
                 <input type="text"
                        id="sender_name"
@@ -217,17 +217,17 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                        value="{{ old('sender_name', auth()->user()->name) }}"
                        required
                        placeholder="Contoh: Budi Santoso"
-                       class="w-full px-3.5 py-2.5 rounded-xl border border-[#E5E7EB] bg-white text-xs text-[#16151A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ED1B45] shadow-xs">
+                       class="w-full px-3.5 py-2.5 rounded-xl border border-[#E5E7EB] bg-white text-xs text-[#16151A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] shadow-xs">
             </div>
 
             <!-- Upload File Bukti Bayar -->
             <div class="space-y-1.5">
                 <label class="block text-xs font-bold text-[#16151A]">
-                    Foto / Struk Bukti Transfer <span class="text-[#ED1B45]">*</span>
+                    Foto / Struk Bukti Transfer <span class="text-[#FF5722]">*</span>
                 </label>
 
                 <!-- Dropzone / Picker -->
-                <div class="relative border-2 border-dashed border-[#E5E7EB] hover:border-[#ED1B45]/50 rounded-2xl p-4 text-center bg-[#F6F6F7] transition cursor-pointer">
+                <div class="relative border-2 border-dashed border-[#E5E7EB] hover:border-[#FF5722]/50 rounded-2xl p-4 text-center bg-[#F6F6F7] transition cursor-pointer">
                     <input type="file"
                            name="proof_image"
                            id="proof_image"
@@ -247,7 +247,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     <!-- Placeholder Mode -->
                     <template x-if="!previewUrl">
                         <div class="space-y-1.5 py-2">
-                            <div class="w-10 h-10 rounded-xl bg-white text-[#ED1B45] border border-[#E5E7EB] flex items-center justify-center mx-auto shadow-xs">
+                            <div class="w-10 h-10 rounded-xl bg-white text-[#FF5722] border border-[#E5E7EB] flex items-center justify-center mx-auto shadow-xs">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
@@ -262,16 +262,16 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             <!-- Checkbox Kebijakan & Kebenaran Data -->
             <label class="flex items-start gap-2.5 cursor-pointer text-xs text-[#565A66] pt-1">
                 <input type="checkbox" required name="agreed_policy"
-                       class="w-4 h-4 mt-0.5 text-[#ED1B45] border-[#E5E7EB] bg-white rounded focus:ring-[#ED1B45] shrink-0" />
+                       class="w-4 h-4 mt-0.5 text-[#FF5722] border-[#E5E7EB] bg-white rounded focus:ring-[#FF5722] shrink-0" />
                 <span class="text-[11px] leading-tight select-none">
                     Saya menyatakan telah mentransfer sejumlah <strong class="text-[#16151A]">Rp {{ number_format($totalAmount, 0, ',', '.') }}</strong> dengan benar dan sah ke rekening resmi FitCore.
                 </span>
             </label>
 
-            <!-- Tombol Aksi Utama Pill (DESIGN.md #ED1B45) -->
+            <!-- Tombol Aksi Utama Pill (DESIGN.md Blaze Orange) -->
             <div class="pt-2">
                 <button type="submit"
-                        class="w-full py-3.5 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-[#ED1B45]/25 flex items-center justify-center gap-2 cursor-pointer transition active:scale-[0.98]">
+                        class="w-full py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-500/25 flex items-center justify-center gap-2 cursor-pointer transition active:scale-[0.98]">
                     <span>Kirim Bukti Pembayaran</span>
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>

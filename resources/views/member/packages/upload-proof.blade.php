@@ -3,22 +3,14 @@
         <div class="mx-auto max-w-6xl">
             <!-- Breadcrumb Navigation -->
             <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-<<<<<<< HEAD
-                <a href="{{ route('member.membership.checkout', $package->id) }}" class="inline-flex items-center gap-2 text-xs font-bold text-[#565A66] hover:text-[#ED1B45] transition">
-=======
-                <a href="{{ route('member.membership.checkout', $package->id) }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#FF5722] transition">
->>>>>>> origin/feature/theme-blaze-orange
+                <a href="{{ route('member.membership.checkout', $package->id) }}" class="inline-flex items-center gap-2 text-xs font-bold text-[#565A66] hover:text-[#FF5722] transition">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Kembali ke Detail Pembayaran
                 </a>
                 <div class="flex items-center gap-2 text-xs font-bold text-[#565A66]">
                     <span class="text-[#565A66]/60">Langkah 1: Konfirmasi Pembayaran</span>
                     <span>•</span>
-<<<<<<< HEAD
-                    <span class="text-[#ED1B45]">Langkah 2: Form Bukti Transfer</span>
-=======
                     <span class="text-[#FF5722]">Langkah 2: Form Bukti Transfer</span>
->>>>>>> origin/feature/theme-blaze-orange
                 </div>
             </div>
 
@@ -53,17 +45,6 @@
                         </h2>
 
                         <div class="flex items-center gap-4">
-<<<<<<< HEAD
-                            <div class="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#F6F6F7] flex items-center justify-center border border-[#E5E7EB]">
-                                <svg class="h-8 w-8 text-[#ED1B45]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M6.5 6.5h11M6.5 17.5h11M4 9.5h16M4 14.5h16M8.5 4.5v15M15.5 4.5v15" stroke-linecap="round"/>
-                                </svg>
-                                <span class="absolute bottom-1 right-1.5 text-[8px] font-black text-[#ED1B45]">FITCORE</span>
-                            </div>
-
-                            <div class="flex-1 min-w-0">
-                                <span class="inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-[#ED1B45]/10 text-[#ED1B45] mb-1">
-=======
                             <div class="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-orange-50 border border-orange-200/80 flex items-center justify-center shadow-xs">
                                 <svg class="h-8 w-8 text-[#FF5722]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6.5 6.5h11M6.5 17.5h11M4 9.5h16M4 14.5h16M8.5 4.5v15M15.5 4.5v15" stroke-linecap="round"/>
@@ -73,7 +54,6 @@
 
                             <div class="flex-1 min-w-0">
                                 <span class="inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-orange-100 text-[#FF5722] mb-1">
->>>>>>> origin/feature/theme-blaze-orange
                                     PAKET MEMBERSHIP
                                 </span>
                                 <h3 class="font-heading text-lg font-extrabold text-[#16151A] truncate">
@@ -85,21 +65,9 @@
                             </div>
                         </div>
 
-<<<<<<< HEAD
-                        <!-- Box Total Pembayaran (Light Theme) -->
-                        <div class="mt-5 rounded-2xl bg-[#F6F6F7] border border-[#E5E7EB] p-5 text-[#16151A] shadow-sm">
-                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#565A66]">
-                                TOTAL PEMBAYARAN :
-                            </span>
-                            <div class="mt-1 flex items-baseline justify-between">
-                                <span class="font-heading text-2xl sm:text-3xl font-black text-[#16151A] tracking-tight">
-                                    Rp {{ number_format($totalAmount, 0, ',', '.') }}
-                                </span>
-                                <span class="text-[11px] text-[#ED1B45] font-semibold">Termasuk kode unik: +{{ $uniqueCode }}</span>
-=======
                         <!-- Box Total Pembayaran (Light Athletic Palette) -->
-                        <div class="mt-5 rounded-2xl bg-gradient-to-r from-orange-50 via-white to-amber-50/50 border-2 border-orange-200 p-5 text-zinc-900 shadow-sm">
-                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
+                        <div class="mt-5 rounded-2xl bg-gradient-to-r from-orange-50 via-white to-amber-50/50 border border-orange-200 p-5 text-[#16151A] shadow-xs">
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#565A66]">
                                 TOTAL PEMBAYARAN :
                             </span>
                             <div class="mt-1 flex items-baseline justify-between">
@@ -107,7 +75,6 @@
                                     Rp {{ number_format($totalAmount, 0, ',', '.') }}
                                 </span>
                                 <span class="text-[11px] text-[#FF5722] font-semibold">Termasuk kode unik: +{{ $uniqueCode }}</span>
->>>>>>> origin/feature/theme-blaze-orange
                             </div>
                         </div>
                     </x-card>

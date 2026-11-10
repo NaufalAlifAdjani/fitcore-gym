@@ -2,7 +2,7 @@
 ROLE: MEMBER
 MODUL: Katalog Paket Membership Mobile
 VIEW: mobile.member.packages.index
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 <x-layouts.mobile-app title="Katalog Paket Membership - FitCore Athletic" active-tab="packages">
@@ -11,7 +11,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         <!-- 1. Header Banner (Clean Light Theme) -->
         <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] relative overflow-hidden">
             <div class="relative z-10">
-                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-[#ED1B45] bg-[#ED1B45]/10 border border-[#ED1B45]/20 mb-2">
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-[#FF5722] bg-orange-50 border border-orange-200 mb-2">
                     FITCORE MEMBERSHIP
                 </span>
                 <h1 class="font-poppins text-lg font-black text-[#16151A] tracking-tight">
@@ -22,7 +22,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 </p>
             </div>
             <!-- Subtle decorative background accent -->
-            <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-[#ED1B45]/5 blur-xl pointer-events-none"></div>
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-[#FF5722]/5 blur-xl pointer-events-none"></div>
         </div>
 
         <!-- 2. Alert Notifikasi -->
@@ -37,7 +37,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
         @if (session('error'))
             <div class="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs text-rose-800 flex items-start gap-2.5 shadow-xs">
-                <svg class="w-4 h-4 text-[#ED1B45] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-4 h-4 text-rose-600 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
                 <span>{{ session('error') }}</span>
@@ -77,10 +77,10 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     $checkoutUrl = route('mobile.member.packages.checkout', $package->id);
                 @endphp
 
-                <div class="w-full bg-white rounded-2xl p-3 sm:p-4 border {{ $isFeatured ? 'border-2 border-[#ED1B45] shadow-lg shadow-[#ED1B45]/10' : 'border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)]' }} relative flex flex-col justify-between h-full transition-all">
+                <div class="w-full bg-white rounded-2xl p-3 sm:p-4 border {{ $isFeatured ? 'border-2 border-[#FF5722] shadow-lg shadow-orange-500/10' : 'border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)]' }} relative flex flex-col justify-between h-full transition-all">
                     
                     @if ($package->badge)
-                        <div class="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider z-10 shadow-xs {{ $isFeatured ? 'bg-[#ED1B45] text-white shadow-[#ED1B45]/30' : 'bg-slate-100 text-[#16151A] border border-[#E5E7EB]' }}">
+                        <div class="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider z-10 shadow-xs {{ $isFeatured ? 'bg-[#FF5722] text-white shadow-orange-500/25' : 'bg-slate-100 text-[#16151A] border border-[#E5E7EB]' }}">
                             {{ $package->badge }}
                         </div>
                     @endif
@@ -107,7 +107,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                                 </p>
                             @endif
                             <div class="flex items-baseline gap-1 mt-0.5">
-                                <span class="text-xs font-bold text-[#ED1B45]">Rp</span>
+                                <span class="text-xs font-bold text-[#FF5722]">Rp</span>
                                 <span class="font-poppins font-black text-base sm:text-lg text-[#16151A] tracking-tight">
                                     {{ number_format($effectivePrice, 0, ',', '.') }}
                                 </span>
@@ -133,12 +133,12 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                                 @endforeach
 
                                 @if ($package->pt_session_count > 0)
-                                    <li class="flex items-start gap-1.5 text-xs leading-tight text-[#16151A] font-medium bg-rose-50/70 p-1.5 rounded-lg border border-rose-100">
-                                        <svg class="w-3 h-3 sm:w-4 h-4 shrink-0 text-[#ED1B45] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <li class="flex items-start gap-1.5 text-xs leading-tight text-[#16151A] font-medium bg-orange-50/70 p-1.5 rounded-lg border border-orange-100">
+                                        <svg class="w-3 h-3 sm:w-4 h-4 shrink-0 text-[#FF5722] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                         </svg>
                                         <span class="leading-tight">
-                                            <strong class="text-[#ED1B45] font-bold">{{ $package->pt_session_count }} Sesi</strong> PT Gratis
+                                            <strong class="text-[#FF5722] font-bold">{{ $package->pt_session_count }} Sesi</strong> PT Gratis
                                         </span>
                                     </li>
                                 @endif
@@ -150,12 +150,12 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     <div class="pt-2 border-t border-[#E5E7EB]">
                         @if ($isFeatured)
                             <a href="{{ $checkoutUrl }}"
-                               class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider bg-[#ED1B45] hover:bg-[#D1123D] text-white shadow-md shadow-[#ED1B45]/25 active:scale-[0.98] transition">
+                               class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
                                 Gabung Sekarang
                             </a>
                         @else
                             <a href="{{ $checkoutUrl }}"
-                               class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider border-2 border-[#ED1B45] text-[#ED1B45] hover:bg-[#ED1B45] hover:text-white active:scale-[0.98] transition">
+                               class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider border-2 border-[#FF5722] text-[#FF5722] hover:bg-[#FF5722] hover:text-white active:scale-[0.98] transition">
                                 Pilih Paket Ini
                             </a>
                         @endif
@@ -183,7 +183,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <div class="grid grid-cols-2 gap-2.5">
                 <div class="p-2.5 rounded-xl bg-[#F6F6F7] border border-[#E5E7EB] flex items-start gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center shrink-0 mt-0.5">
+                    <div class="w-6 h-6 rounded-lg bg-orange-50 text-[#FF5722] border border-orange-100 flex items-center justify-center shrink-0 mt-0.5">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
@@ -195,7 +195,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 </div>
 
                 <div class="p-2.5 rounded-xl bg-[#F6F6F7] border border-[#E5E7EB] flex items-start gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center shrink-0 mt-0.5">
+                    <div class="w-6 h-6 rounded-lg bg-orange-50 text-[#FF5722] border border-orange-100 flex items-center justify-center shrink-0 mt-0.5">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                         </svg>
@@ -207,7 +207,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 </div>
 
                 <div class="p-2.5 rounded-xl bg-[#F6F6F7] border border-[#E5E7EB] flex items-start gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center shrink-0 mt-0.5">
+                    <div class="w-6 h-6 rounded-lg bg-orange-50 text-[#FF5722] border border-orange-100 flex items-center justify-center shrink-0 mt-0.5">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                         </svg>
@@ -219,7 +219,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 </div>
 
                 <div class="p-2.5 rounded-xl bg-[#F6F6F7] border border-[#E5E7EB] flex items-start gap-2">
-                    <div class="w-6 h-6 rounded-lg bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center shrink-0 mt-0.5">
+                    <div class="w-6 h-6 rounded-lg bg-orange-50 text-[#FF5722] border border-orange-100 flex items-center justify-center shrink-0 mt-0.5">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
@@ -254,4 +254,3 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
     </div>
 </x-layouts.mobile-app>
-

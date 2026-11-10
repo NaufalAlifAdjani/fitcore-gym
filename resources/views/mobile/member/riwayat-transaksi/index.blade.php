@@ -10,7 +10,7 @@
 | DESKRIPSI    : Tampilan daftar riwayat transaksi member dalam bentuk stacked cards
 |                dikelompokkan per bulan/tahun, lengkap dengan badge status pembayaran
 |                dan tombol download invoice PDF resmi.
-|                Menggunakan token warna DESIGN.md Light Theme: primary #ED1B45,
+|                Menggunakan token warna DESIGN.md Light Theme: primary #FF5722,
 |                surface white #FFFFFF, background #F6F6F7, border #E5E7EB,
 |                tombol pill full rounded, tipografi Poppins & Inter.
 |--------------------------------------------------------------------------
@@ -32,19 +32,19 @@
         <!-- 2. Filter Status Cepat (Pill Buttons per stitch-prompts #Shared Patterns) -->
         <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] font-bold no-scrollbar">
             <a href="{{ route('mobile.member.riwayat-transaksi.index', ['status' => 'all']) }}"
-               class="px-3.5 py-1.5 rounded-full transition shrink-0 {{ $currentStatus === 'all' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]' }}">
+               class="px-3.5 py-1.5 rounded-full transition shrink-0 {{ $currentStatus === 'all' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]' }}">
                 Semua
             </a>
             <a href="{{ route('mobile.member.riwayat-transaksi.index', ['status' => 'verified']) }}"
-               class="px-3.5 py-1.5 rounded-full transition shrink-0 {{ $currentStatus === 'verified' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]' }}">
+               class="px-3.5 py-1.5 rounded-full transition shrink-0 {{ $currentStatus === 'verified' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]' }}">
                 Berhasil
             </a>
             <a href="{{ route('mobile.member.riwayat-transaksi.index', ['status' => 'pending']) }}"
-               class="px-3.5 py-1.5 rounded-full transition shrink-0 {{ $currentStatus === 'pending' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]' }}">
+               class="px-3.5 py-1.5 rounded-full transition shrink-0 {{ $currentStatus === 'pending' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]' }}">
                 Menunggu
             </a>
             <a href="{{ route('mobile.member.riwayat-transaksi.index', ['status' => 'rejected']) }}"
-               class="px-3.5 py-1.5 rounded-full transition shrink-0 {{ $currentStatus === 'rejected' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]' }}">
+               class="px-3.5 py-1.5 rounded-full transition shrink-0 {{ $currentStatus === 'rejected' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]' }}">
                 Ditolak
             </a>
         </div>
@@ -118,8 +118,8 @@
                                             ✓ Transaksi Selesai
                                         </span>
                                         <a href="{{ route('mobile.member.riwayat-transaksi.invoice', $payment) }}"
-                                           class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F6F6F7] hover:bg-[#ED1B45] text-[#16151A] hover:text-white text-[11px] font-bold transition border border-[#E5E7EB] shadow-2xs group">
-                                            <svg class="w-3.5 h-3.5 text-[#ED1B45] group-hover:text-white transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                           class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F6F6F7] hover:bg-[#FF5722] text-[#16151A] hover:text-white text-[11px] font-bold transition border border-[#E5E7EB] shadow-2xs group">
+                                            <svg class="w-3.5 h-3.5 text-[#FF5722] group-hover:text-white transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                             </svg>
                                             <span>Invoice PDF</span>
@@ -141,7 +141,7 @@
                         Riwayat pembayaran paket membership atau sesi PT akan tampil di sini.
                     </p>
                     <div class="pt-2">
-                        <a href="{{ route('member.membership.packages') }}" class="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-[#ED1B45] text-white text-xs font-bold shadow-md hover:bg-[#D1123D] transition">
+                        <a href="{{ route('member.membership.packages') }}" class="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold shadow-md shadow-orange-500/25 transition">
                             Lihat Paket Membership
                         </a>
                     </div>

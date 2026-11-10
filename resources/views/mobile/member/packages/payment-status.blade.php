@@ -2,7 +2,7 @@
 ROLE: MEMBER
 MODUL: Status Pembayaran Paket Membership Mobile
 VIEW: mobile.member.packages.payment-status
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 <x-layouts.mobile-app title="Status Pembayaran - FitCore Athletic" active-tab="packages">
@@ -47,7 +47,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     </p>
                 </div>
             @else
-                <div class="w-16 h-16 rounded-full bg-rose-50 text-[#ED1B45] border border-rose-200 flex items-center justify-center mx-auto shadow-xs">
+                <div class="w-16 h-16 rounded-full bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center mx-auto shadow-xs">
                     <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -77,7 +77,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="text-[#565A66]">Total Pembayaran</span>
-                    <span class="font-poppins font-bold text-[#ED1B45]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</span>
+                    <span class="font-poppins font-bold text-[#FF5722]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <span class="text-[#565A66]">Tujuan Rekening</span>
@@ -88,7 +88,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             <!-- Tombol Aksi Navigasi Mobile -->
             <div class="pt-2 space-y-2">
                 <a href="{{ route('mobile.member.dashboard') }}"
-                   class="w-full block text-center py-3 rounded-full font-bold text-xs uppercase tracking-wider bg-[#ED1B45] hover:bg-[#D1123D] text-white shadow-md shadow-[#ED1B45]/25 transition">
+                   class="w-full block text-center py-3 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 transition">
                     Kembali ke Beranda
                 </a>
                 <a href="{{ route('mobile.member.riwayat-transaksi.index') }}"

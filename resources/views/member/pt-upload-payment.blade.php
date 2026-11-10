@@ -3,22 +3,14 @@
         <div class="mx-auto max-w-6xl">
             <!-- Breadcrumb Navigation -->
             <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-<<<<<<< HEAD
-                <a href="{{ route('member.pt-packages.checkout', ['package_id' => $payment?->pt_package_id ?? request('package_id'), 'trainer_id' => request('trainer_id', 1)]) }}" class="inline-flex items-center gap-2 text-xs font-bold text-[#565A66] hover:text-[#ED1B45] transition">
-=======
-                <a href="{{ route('member.pt-packages.checkout', ['package_id' => $payment?->pt_package_id ?? request('package_id'), 'trainer_id' => request('trainer_id', 1)]) }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#FF5722] transition">
->>>>>>> origin/feature/theme-blaze-orange
+                <a href="{{ route('member.pt-packages.checkout', ['package_id' => $payment?->pt_package_id ?? request('package_id'), 'trainer_id' => request('trainer_id', 1)]) }}" class="inline-flex items-center gap-2 text-xs font-bold text-[#565A66] hover:text-[#FF5722] transition">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Kembali ke Rincian Pesanan
                 </a>
                 <div class="flex items-center gap-2 text-xs font-bold text-[#565A66]">
                     <span class="text-[#565A66]/60">Langkah 1: Konfirmasi Pembayaran</span>
                     <span>•</span>
-<<<<<<< HEAD
-                    <span class="text-[#ED1B45]">Langkah 2: Form Bukti Transfer</span>
-=======
                     <span class="text-[#FF5722]">Langkah 2: Form Bukti Transfer</span>
->>>>>>> origin/feature/theme-blaze-orange
                 </div>
             </div>
 
@@ -33,13 +25,8 @@
                     </p>
                 </div>
 
-<<<<<<< HEAD
                 <!-- Pill Countdown Timer (Light Theme) -->
                 <div class="bg-white text-[#16151A] rounded-2xl px-5 py-3 flex items-center gap-3.5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] self-start md:self-auto shrink-0 border border-[#E5E7EB]"
-=======
-                <!-- Pill Countdown Timer (Light Athletic Palette) -->
-                <div class="bg-orange-50 border border-orange-200 text-zinc-900 rounded-2xl px-5 py-3 flex items-center gap-3.5 shadow-sm self-start md:self-auto shrink-0"
->>>>>>> origin/feature/theme-blaze-orange
                      x-data="{ 
                          hours: 23, 
                          minutes: 59, 
@@ -59,28 +46,17 @@
                              }, 1000);
                          }
                      }">
-<<<<<<< HEAD
-                    <div class="w-8 h-8 rounded-xl bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center">
-=======
                     <div class="w-8 h-8 rounded-xl bg-orange-100 text-[#FF5722] flex items-center justify-center">
->>>>>>> origin/feature/theme-blaze-orange
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <circle cx="12" cy="12" r="10" stroke-width="2"/>
                             <path stroke-linecap="round" stroke-width="2" d="M12 6v6l4 2"/>
                         </svg>
                     </div>
                     <div>
-<<<<<<< HEAD
                         <span class="text-[9px] font-bold text-[#565A66] uppercase tracking-widest block leading-none">
                             BATAS WAKTU TRANSFER
                         </span>
-                        <span class="text-sm font-black text-[#ED1B45] tracking-widest block font-mono mt-0.5" 
-=======
-                        <span class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest block leading-none">
-                            BATAS WAKTU TRANSFER
-                        </span>
                         <span class="text-sm font-black text-[#FF5722] tracking-widest block font-mono mt-0.5" 
->>>>>>> origin/feature/theme-blaze-orange
                               x-text="String(hours).padStart(2,'0') + ':' + String(minutes).padStart(2,'0') + ':' + String(seconds).padStart(2,'0')">
                             23:59:59
                         </span>
@@ -114,17 +90,6 @@
                         </div>
 
                         <div class="flex items-center gap-4">
-<<<<<<< HEAD
-                            <div class="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-[#F6F6F7] flex items-center justify-center border border-[#E5E7EB]">
-                                <svg class="h-8 w-8 text-[#ED1B45]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M6.5 6.5h11M6.5 17.5h11M4 9.5h16M4 14.5h16M8.5 4.5v15M15.5 4.5v15" stroke-linecap="round"/>
-                                </svg>
-                                <span class="absolute bottom-1 right-1.5 text-[8px] font-black text-[#ED1B45]">PT SESI</span>
-                            </div>
-
-                            <div class="flex-1 min-w-0">
-                                <span class="inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-[#ED1B45]/10 text-[#ED1B45] mb-1">
-=======
                             <div class="relative h-20 w-24 shrink-0 overflow-hidden rounded-2xl bg-orange-50 border border-orange-200/80 flex items-center justify-center shadow-xs">
                                 <svg class="h-8 w-8 text-[#FF5722]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M6.5 6.5h11M6.5 17.5h11M4 9.5h16M4 14.5h16M8.5 4.5v15M15.5 4.5v15" stroke-linecap="round"/>
@@ -134,7 +99,6 @@
 
                             <div class="flex-1 min-w-0">
                                 <span class="inline-block px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-orange-100 text-[#FF5722] mb-1">
->>>>>>> origin/feature/theme-blaze-orange
                                     PERSONAL TRAINER
                                 </span>
                                 <h3 class="font-heading text-lg font-extrabold text-[#16151A] truncate">
@@ -146,21 +110,9 @@
                             </div>
                         </div>
 
-<<<<<<< HEAD
-                        <!-- Box Total Pembayaran (Light Theme) -->
-                        <div class="mt-5 rounded-2xl bg-[#F6F6F7] border border-[#E5E7EB] p-5 text-[#16151A] shadow-sm">
-                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#565A66]">
-                                TOTAL PEMBAYARAN :
-                            </span>
-                            <div class="mt-1 flex items-baseline justify-between">
-                                <span class="font-heading text-2xl sm:text-3xl font-black text-[#16151A] tracking-tight">
-                                    Rp {{ number_format($totalAmount, 0, ',', '.') }}
-                                </span>
-                                <span class="text-[11px] text-[#ED1B45] font-semibold">Termasuk kode unik: +{{ $uniqueCode }}</span>
-=======
                         <!-- Box Total Pembayaran (Light Athletic Palette) -->
-                        <div class="mt-5 rounded-2xl bg-gradient-to-r from-orange-50 via-white to-amber-50/50 border-2 border-orange-200 p-5 text-zinc-900 shadow-sm">
-                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
+                        <div class="mt-5 rounded-2xl bg-gradient-to-r from-orange-50 via-white to-amber-50/50 border border-orange-200 p-5 text-[#16151A] shadow-xs">
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#565A66]">
                                 TOTAL PEMBAYARAN :
                             </span>
                             <div class="mt-1 flex items-baseline justify-between">
@@ -168,7 +120,6 @@
                                     Rp {{ number_format($totalAmount, 0, ',', '.') }}
                                 </span>
                                 <span class="text-[11px] text-[#FF5722] font-semibold">Termasuk kode unik: +{{ $uniqueCode }}</span>
->>>>>>> origin/feature/theme-blaze-orange
                             </div>
                         </div>
                     </x-card>

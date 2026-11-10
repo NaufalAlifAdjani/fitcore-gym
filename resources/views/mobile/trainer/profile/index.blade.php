@@ -3,7 +3,7 @@ ROLE: PERSONAL TRAINER (PT)
 MODUL: Profil Pelatih Mobile
 VIEW: mobile.trainer.profile.index
 LAYOUT: layouts.mobile-trainer
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 <x-layouts.mobile-trainer title="Profil Pelatih - FitCore Coach" active="profile">
@@ -34,7 +34,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         <div class="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] relative overflow-hidden space-y-4">
             <div class="flex items-center gap-4">
                 <!-- Avatar Inisial Besar -->
-                <div class="w-16 h-16 rounded-2xl bg-[#ED1B45]/10 border-2 border-[#ED1B45]/20 text-[#ED1B45] flex items-center justify-center font-poppins font-black text-2xl shadow-inner shrink-0">
+                <div class="w-16 h-16 rounded-2xl bg-orange-50 border-2 border-orange-200 text-[#FF5722] flex items-center justify-center font-poppins font-black text-2xl shadow-inner shrink-0">
                     {{ strtoupper(substr($trainer->name, 0, 2)) }}
                 </div>
 
@@ -51,7 +51,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     </div>
 
                     <div class="flex items-center gap-2 mt-2">
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ED1B45]/10 text-[#ED1B45] border border-[#ED1B45]/20">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 text-[#FF5722] border border-orange-200">
                             {{ $profile->tier ?? 'Personal Trainer' }}
                         </span>
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
@@ -109,7 +109,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 </div>
 
                 <div class="p-3 rounded-xl bg-[#F6F6F7] border border-[#E5E7EB]">
-                    <span class="text-sm font-black font-poppins text-[#ED1B45] block truncate">Rp {{ number_format($estimatedCommission, 0, ',', '.') }}</span>
+                    <span class="text-sm font-black font-poppins text-[#FF5722] block truncate">Rp {{ number_format($estimatedCommission, 0, ',', '.') }}</span>
                     <span class="text-[9px] uppercase font-bold text-[#565A66] block mt-0.5">Estimasi Komisi</span>
                 </div>
             </div>
@@ -120,17 +120,17 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             <!-- Link 1: Jadwal Sesi -->
             <a href="{{ route('mobile.trainer.sessions.index') }}" class="py-3 flex items-center justify-between group first:pt-0">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-rose-50 text-[#ED1B45] flex items-center justify-center shrink-0">
+                    <div class="w-9 h-9 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                     </div>
                     <div>
-                        <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#ED1B45] transition">Jadwal Sesi Klien</span>
+                        <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Jadwal Sesi Klien</span>
                         <span class="text-[11px] text-[#565A66]">Cek jadwal latihan aktif dan riwayat</span>
                     </div>
                 </div>
-                <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#ED1B45] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
             </a>
@@ -144,11 +144,11 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                         </svg>
                     </div>
                     <div>
-                        <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#ED1B45] transition">Member &amp; Klien Saya</span>
+                        <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Member &amp; Klien Saya</span>
                         <span class="text-[11px] text-[#565A66]">Daftar member dalam bimbingan latihan Anda</span>
                     </div>
                 </div>
-                <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#ED1B45] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
             </a>
@@ -158,7 +158,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
             <button type="button"
                     @click="showLogoutModal = true"
-                    class="w-full py-2.5 px-4 rounded-full border border-red-200 bg-red-50/50 hover:bg-red-50 active:scale-[0.99] text-[#ED1B45] font-poppins font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer">
+                    class="w-full py-2.5 px-4 rounded-full border border-rose-200 bg-rose-50/50 hover:bg-rose-50 active:scale-[0.99] text-rose-600 font-poppins font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
@@ -179,7 +179,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <div class="bg-white rounded-2xl max-w-xs w-full p-5 shadow-2xl border border-[#E5E7EB] text-center space-y-4"
                  @click.away="showLogoutModal = false">
-                <div class="w-12 h-12 rounded-full bg-red-100 text-[#ED1B45] flex items-center justify-center mx-auto">
+                <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
@@ -200,7 +200,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     <form method="POST" action="{{ route('logout') }}" class="flex-1">
                         @csrf
                         <button type="submit"
-                                class="w-full py-2.5 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white text-xs font-bold font-poppins transition shadow-sm">
+                                class="w-full py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-poppins transition shadow-sm">
                             Ya, Keluar
                         </button>
                     </form>

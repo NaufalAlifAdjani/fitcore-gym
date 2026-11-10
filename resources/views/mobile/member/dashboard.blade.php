@@ -7,11 +7,7 @@
 | FILE         : resources/views/mobile/member/dashboard.blade.php
 | LAYOUT       : layouts/mobile-app.blade.php
 | AKSES ROUTE  : /m/dashboard atau /member/dashboard (name: mobile.member.dashboard)
-| DESKRIPSI    : Beranda mobile member mengacu pada token DESIGN.md Light Theme
-|                (primary #ED1B45, background #F6F6F7, surface white #FFFFFF,
-|                card 16px, pill rounded-full, tipografi Poppins & Inter).
-|                Menampilkan sambutan personal, ringkasan kuota PT, kartu sesi latihan
-|                terdekat, shortcut VIP QR pass, dan aksi cepat layanan gym.
+| TEMA         : Light Theme (Canvas #F6F6F7, Surface #FFFFFF, Accent #FF5722)
 |--------------------------------------------------------------------------
 --}}
 
@@ -41,7 +37,7 @@
         </div>
 
         <!-- 2. Shortcut VIP QR Pass Card (Akses Cepat Turnstile / Pintu Masuk) -->
-        <a href="{{ route('mobile.member.card') }}" class="block relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#ED1B45] via-[#D1123D] to-[#B50E32] p-4 text-white shadow-md shadow-[#ED1B45]/20 transition active:scale-[0.99] group">
+        <a href="{{ route('mobile.member.card') }}" class="block relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#FF5722] via-[#F4511E] to-[#E64A19] p-4 text-white shadow-md shadow-orange-500/20 transition active:scale-[0.99] group">
             <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
             
             <div class="flex items-center justify-between">
@@ -67,13 +63,13 @@
             </div>
         </a>
 
-        <!-- 3. Ringkasan Kuota & Metrik Statistik (DESIGN.md Grid 2-kolom, White Card #FFFFFF, Border #E5E7EB, Radius 16px) -->
+        <!-- 3. Ringkasan Kuota & Metrik Statistik -->
         <div class="grid grid-cols-2 gap-3">
             <!-- Stat 1: Sisa Sesi PT -->
             <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 flex flex-col justify-between shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
                 <div class="flex items-center justify-between">
                     <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66]">Sisa Kuota PT</span>
-                    <span class="w-2 h-2 rounded-full bg-[#ED1B45]"></span>
+                    <span class="w-2 h-2 rounded-full bg-[#FF5722]"></span>
                 </div>
                 <div class="mt-3">
                     <div class="font-poppins font-black text-2xl text-[#16151A]">
@@ -116,7 +112,7 @@
                 <h3 class="text-xs font-bold uppercase tracking-wider text-[#16151A] font-poppins">
                     Jadwal Sesi Terdekat
                 </h3>
-                <a href="{{ route('mobile.member.pt-sessions.index') }}" class="text-xs text-[#ED1B45] font-semibold hover:underline">
+                <a href="{{ route('mobile.member.pt-sessions.index') }}" class="text-xs text-[#FF5722] font-semibold hover:underline">
                     Lihat Semua
                 </a>
             </div>
@@ -133,7 +129,7 @@
                     </div>
 
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-rose-50 text-[#ED1B45] flex items-center justify-center font-bold text-xs shrink-0 border border-rose-200">
+                        <div class="w-10 h-10 rounded-full bg-orange-50 text-[#FF5722] flex items-center justify-center font-bold text-xs shrink-0 border border-orange-200">
                             {{ strtoupper(substr($upcomingSession->trainer->name ?? 'PT', 0, 2)) }}
                         </div>
                         <div class="min-w-0 flex-1">
@@ -159,7 +155,7 @@
                         Gunakan kuota Anda untuk menjadwalkan latihan bersama Personal Trainer pilihan.
                     </p>
                     <div class="pt-1">
-                        <a href="{{ route('mobile.member.pt-sessions.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#ED1B45] text-white text-xs font-bold shadow-md hover:bg-[#D1123D] transition">
+                        <a href="{{ route('mobile.member.pt-sessions.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-md shadow-orange-500/20 hover:bg-[#E64A19] transition">
                             <span>+ Booking Sesi Baru</span>
                         </a>
                     </div>
@@ -174,8 +170,8 @@
             </h3>
             
             <div class="grid grid-cols-2 gap-3">
-                <a href="{{ route('mobile.member.pt-sessions.create') }}" class="p-3.5 bg-white border border-[#E5E7EB] rounded-2xl hover:border-[#ED1B45]/50 transition flex items-center gap-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-                    <div class="w-8 h-8 rounded-xl bg-rose-50 text-[#ED1B45] flex items-center justify-center shrink-0">
+                <a href="{{ route('mobile.member.pt-sessions.create') }}" class="p-3.5 bg-white border border-[#E5E7EB] rounded-2xl hover:border-[#FF5722]/50 transition flex items-center gap-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+                    <div class="w-8 h-8 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center shrink-0">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                         </svg>

@@ -5,7 +5,7 @@
 | ROLE         : GUEST / PUBLIK & AUTHENTICATED
 | MODUL        : Public Desktop Layout Shell
 | FILE         : resources/views/layouts/public.blade.php
-| TEMA         : Light Theme (Canvas #F6F6F7, Surface #FFFFFF, Accent #ED1B45)
+| TEMA         : Light Theme (Canvas #F6F6F7, Surface #FFFFFF, Accent #FF5722)
 | DESKRIPSI    : Layout shell web desktop untuk halaman informasi publik
 |                (Landing Page, Katalog Paket, Profil Trainer, Tentang Kami).
 |--------------------------------------------------------------------------
@@ -43,21 +43,21 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen flex flex-col bg-[#F6F6F7] text-[#16151A] font-sans antialiased selection:bg-[#ED1B45] selection:text-white">
+<body class="min-h-screen flex flex-col bg-[#F6F6F7] text-[#16151A] font-sans antialiased selection:bg-[#FF5722] selection:text-white">
 
     <!-- 1. STICKY TOP NAVBAR DESKTOP -->
     <header class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] shadow-xs" x-data="{ mobileMenuOpen: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
             <!-- Brand Logo -->
             <a href="{{ route('landing.index') }}" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-[#ED1B45] flex items-center justify-center text-white shadow-md shadow-[#ED1B45]/30 transition group-hover:scale-105 shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white shadow-md shadow-[#FF5722]/30 transition group-hover:scale-105 shrink-0">
                     <svg width="22" height="22" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
                         <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="currentColor"/>
                     </svg>
                 </div>
                 <div class="flex flex-col">
                     <span class="font-poppins font-black text-xl tracking-tight text-[#16151A]">
-                        FIT <span class="text-[#ED1B45]">CORE</span>
+                        FIT <span class="text-[#FF5722]">CORE</span>
                     </span>
                     <span class="text-[9px] font-bold uppercase tracking-[0.25em] text-[#565A66]">ATHLETIC CENTER</span>
                 </div>
@@ -66,19 +66,19 @@
             <!-- Navigation Links -->
             <nav class="hidden md:flex items-center gap-1 bg-[#F6F6F7] p-1.5 rounded-full border border-[#E5E7EB]">
                 <a href="{{ route('landing.index') }}"
-                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isHome ? 'bg-[#ED1B45] text-white shadow-sm shadow-[#ED1B45]/25' : 'text-[#565A66] hover:text-[#ED1B45]' }}">
+                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isHome ? 'bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25' : 'text-[#565A66] hover:text-[#FF5722]' }}">
                     Beranda
                 </a>
                 <a href="{{ route('landing.packages') }}"
-                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isPackages ? 'bg-[#ED1B45] text-white shadow-sm shadow-[#ED1B45]/25' : 'text-[#565A66] hover:text-[#ED1B45]' }}">
+                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isPackages ? 'bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25' : 'text-[#565A66] hover:text-[#FF5722]' }}">
                     Paket Gym
                 </a>
                 <a href="{{ route('landing.trainers') }}"
-                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isTrainers ? 'bg-[#ED1B45] text-white shadow-sm shadow-[#ED1B45]/25' : 'text-[#565A66] hover:text-[#ED1B45]' }}">
+                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isTrainers ? 'bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25' : 'text-[#565A66] hover:text-[#FF5722]' }}">
                     Pelatih PT
                 </a>
                 <a href="{{ route('landing.about') }}"
-                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isAbout ? 'bg-[#ED1B45] text-white shadow-sm shadow-[#ED1B45]/25' : 'text-[#565A66] hover:text-[#ED1B45]' }}">
+                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isAbout ? 'bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25' : 'text-[#565A66] hover:text-[#FF5722]' }}">
                     Tentang Kami
                 </a>
             </nav>
@@ -86,17 +86,17 @@
             <!-- Action Buttons (Masuk / Daftar / Dashboard) -->
             <div class="hidden md:flex items-center gap-3">
                 @auth
-                    <a href="{{ route('dashboard') }}" class="px-5 py-2.5 rounded-full bg-[#ED1B45] hover:bg-[#d1123d] text-white text-xs font-bold transition shadow-sm shadow-[#ED1B45]/30">
+                    <a href="{{ route('dashboard') }}" class="px-5 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold transition shadow-sm shadow-[#FF5722]/30">
                         Ke Dashboard ({{ Auth::user()->name }})
                     </a>
                 @else
                     @if (! request()->routeIs('login'))
-                        <a href="{{ route('login') }}" class="px-4 py-2.5 text-xs font-bold text-[#565A66] hover:text-[#ED1B45] transition">
+                        <a href="{{ route('login') }}" class="px-4 py-2.5 text-xs font-bold text-[#565A66] hover:text-[#FF5722] transition">
                             Masuk
                         </a>
                     @endif
                     @if (Route::has('register') && ! request()->routeIs('register'))
-                        <a href="{{ route('register') }}" class="px-5 py-2.5 rounded-full bg-[#ED1B45] hover:bg-[#d1123d] text-white text-xs font-bold transition shadow-sm shadow-[#ED1B45]/30">
+                        <a href="{{ route('register') }}" class="px-5 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold transition shadow-sm shadow-[#FF5722]/30">
                             Daftar Member
                         </a>
                     @endif
@@ -115,19 +115,19 @@
 
         <!-- Mobile Drawer Menu Dropdown -->
         <div x-cloak x-show="mobileMenuOpen" class="md:hidden border-t border-[#E5E7EB] bg-white px-4 py-4 space-y-2">
-            <a href="{{ route('landing.index') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isHome ? 'bg-[#ED1B45] text-white' : 'text-[#565A66]' }}">Beranda</a>
-            <a href="{{ route('landing.packages') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isPackages ? 'bg-[#ED1B45] text-white' : 'text-[#565A66]' }}">Paket Gym</a>
-            <a href="{{ route('landing.trainers') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isTrainers ? 'bg-[#ED1B45] text-white' : 'text-[#565A66]' }}">Pelatih PT</a>
-            <a href="{{ route('landing.about') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isAbout ? 'bg-[#ED1B45] text-white' : 'text-[#565A66]' }}">Tentang Kami</a>
+            <a href="{{ route('landing.index') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isHome ? 'bg-[#FF5722] text-white' : 'text-[#565A66]' }}">Beranda</a>
+            <a href="{{ route('landing.packages') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isPackages ? 'bg-[#FF5722] text-white' : 'text-[#565A66]' }}">Paket Gym</a>
+            <a href="{{ route('landing.trainers') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isTrainers ? 'bg-[#FF5722] text-white' : 'text-[#565A66]' }}">Pelatih PT</a>
+            <a href="{{ route('landing.about') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isAbout ? 'bg-[#FF5722] text-white' : 'text-[#565A66]' }}">Tentang Kami</a>
             <div class="pt-3 border-t border-[#E5E7EB] flex flex-col gap-2">
                 @auth
-                    <a href="{{ route('dashboard') }}" class="block text-center py-2.5 rounded-full bg-[#ED1B45] text-white text-xs font-bold shadow-sm shadow-[#ED1B45]/30">Ke Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="block text-center py-2.5 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-sm shadow-[#FF5722]/30">Ke Dashboard</a>
                 @else
                     @if (! request()->routeIs('login'))
-                        <a href="{{ route('login') }}" class="block text-center py-2.5 rounded-full border border-[#E5E7EB] text-xs font-bold text-[#16151A] hover:border-[#ED1B45] hover:text-[#ED1B45]">Masuk</a>
+                        <a href="{{ route('login') }}" class="block text-center py-2.5 rounded-full border border-[#E5E7EB] text-xs font-bold text-[#16151A] hover:border-[#FF5722] hover:text-[#FF5722]">Masuk</a>
                     @endif
                     @if (Route::has('register') && ! request()->routeIs('register'))
-                        <a href="{{ route('register') }}" class="block text-center py-2.5 rounded-full bg-[#ED1B45] text-white text-xs font-bold shadow-sm shadow-[#ED1B45]/30">Daftar Member</a>
+                        <a href="{{ route('register') }}" class="block text-center py-2.5 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-sm shadow-[#FF5722]/30">Daftar Member</a>
                     @endif
                 @endauth
             </div>
@@ -146,7 +146,7 @@
                 <!-- Kolom 1: Brand & Filosofi -->
                 <div class="md:col-span-1 space-y-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-[#ED1B45] flex items-center justify-center text-white shadow-md">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white shadow-md">
                             <svg width="20" height="20" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
                                 <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="currentColor"/>
                             </svg>
@@ -172,7 +172,7 @@
                         </div>
                         <div class="flex justify-between">
                             <span>Hari Libur Nasional</span>
-                            <span class="font-bold text-[#ED1B45]">07:00 – 20:00 WIB</span>
+                            <span class="font-bold text-[#FF5722]">07:00 – 20:00 WIB</span>
                         </div>
                     </div>
                 </div>
@@ -181,10 +181,10 @@
                 <div class="space-y-3">
                     <h4 class="font-poppins font-bold text-sm text-white uppercase tracking-wider">Navigasi</h4>
                     <ul class="space-y-2 text-xs text-zinc-400">
-                        <li><a href="{{ route('landing.packages') }}" class="hover:text-[#ED1B45] transition">Katalog Paket Membership</a></li>
-                        <li><a href="{{ route('landing.trainers') }}" class="hover:text-[#ED1B45] transition">Daftar Personal Trainer</a></li>
-                        <li><a href="{{ route('landing.about') }}" class="hover:text-[#ED1B45] transition">Visi & Galeri Fasilitas</a></li>
-                        <li><a href="{{ route('login') }}" class="hover:text-[#ED1B45] transition">Portal Masuk Member</a></li>
+                        <li><a href="{{ route('landing.packages') }}" class="hover:text-[#FF5722] transition">Katalog Paket Membership</a></li>
+                        <li><a href="{{ route('landing.trainers') }}" class="hover:text-[#FF5722] transition">Daftar Personal Trainer</a></li>
+                        <li><a href="{{ route('landing.about') }}" class="hover:text-[#FF5722] transition">Visi & Galeri Fasilitas</a></li>
+                        <li><a href="{{ route('login') }}" class="hover:text-[#FF5722] transition">Portal Masuk Member</a></li>
                     </ul>
                 </div>
 
@@ -216,4 +216,3 @@
 
 </body>
 </html>
-

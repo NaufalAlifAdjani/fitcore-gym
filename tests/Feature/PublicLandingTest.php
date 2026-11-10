@@ -191,28 +191,28 @@ class PublicLandingTest extends TestCase
 
     public function test_mobile_guest_chips_active_state_matches_current_page(): void
     {
-        // 1. Pada /m/trainers, chip Pelatih PT harus aktif (memuat kelas active chip Maxfit Red)
+        // 1. Pada /m/trainers, chip Pelatih PT harus aktif (memuat kelas active chip Blaze Orange)
         $responseTrainers = $this->get('/m/trainers');
         $responseTrainers->assertStatus(200);
-        $responseTrainers->assertSee('bg-[#ED1B45] text-white shadow-sm', false);
+        $responseTrainers->assertSee('bg-[#FF5722] text-white shadow-sm', false);
         $responseTrainers->assertSee('Pelatih PT');
 
         // 2. Pada /m/packages-info, chip Paket Gym harus aktif
         $responsePackages = $this->get('/m/packages-info');
         $responsePackages->assertStatus(200);
-        $responsePackages->assertSee('bg-[#ED1B45] text-white shadow-sm', false);
+        $responsePackages->assertSee('bg-[#FF5722] text-white shadow-sm', false);
         $responsePackages->assertSee('Paket Gym');
 
         // 3. Pada /m, chip Beranda harus aktif
         $responseHome = $this->get('/m');
         $responseHome->assertStatus(200);
-        $responseHome->assertSee('bg-[#ED1B45] text-white shadow-sm', false);
+        $responseHome->assertSee('bg-[#FF5722] text-white shadow-sm', false);
         $responseHome->assertSee('Beranda');
 
         // 4. Pada /m/about, chip Tentang Kami harus aktif
         $responseAbout = $this->get('/m/about');
         $responseAbout->assertStatus(200);
-        $responseAbout->assertSee('bg-[#ED1B45] text-white shadow-sm', false);
+        $responseAbout->assertSee('bg-[#FF5722] text-white shadow-sm', false);
         $responseAbout->assertSee('Tentang Kami');
     }
 

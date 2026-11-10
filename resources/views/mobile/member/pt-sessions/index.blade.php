@@ -3,7 +3,7 @@ ROLE: MEMBER
 MODUL: Daftar Riwayat & Jadwal Sesi PT Mobile
 VIEW: mobile.member.pt-sessions.index
 LAYOUT: layouts.mobile-app
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 @php
@@ -32,13 +32,13 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 <div class="min-w-0">
                     <span class="text-[10px] uppercase font-bold text-[#565A66] tracking-wider block">Saldo Kuota PT</span>
                     <div class="flex items-baseline gap-1.5 mt-0.5">
-                        <span class="text-2xl font-black font-poppins text-[#ED1B45]">{{ $remainingSessions }}</span>
+                        <span class="text-2xl font-black font-poppins text-[#FF5722]">{{ $remainingSessions }}</span>
                         <span class="text-xs font-semibold text-[#565A66]">/ {{ $totalSessions }} Sesi</span>
                     </div>
                 </div>
 
                 <a href="{{ route('mobile.member.pt-sessions.create') }}"
-                   class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] active:scale-[0.98] text-white text-xs font-bold font-poppins shadow-md shadow-[#ED1B45]/25 transition shrink-0">
+                   class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.98] text-white text-xs font-bold font-poppins shadow-md shadow-orange-500/25 transition shrink-0">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                     </svg>
@@ -49,7 +49,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             <!-- Progress Bar Kuota Latihan -->
             <div class="space-y-1">
                 <div class="w-full bg-[#F6F6F7] rounded-full h-2 overflow-hidden border border-[#E5E7EB]">
-                    <div class="bg-[#ED1B45] h-full rounded-full transition-all duration-300"
+                    <div class="bg-gradient-to-r from-[#FF5722] to-[#FFB703] h-full rounded-full transition-all duration-300"
                          style="width: {{ $quotaPercent }}%"></div>
                 </div>
             </div>
@@ -70,7 +70,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 -mx-4 px-4 sm:mx-0 sm:px-0">
             <!-- Filter Semua -->
             <a href="{{ route('mobile.member.pt-sessions.index', ['tab' => 'all']) }}"
-               class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $currentTab === 'all' ? 'bg-[#ED1B45] text-white shadow-sm shadow-[#ED1B45]/20' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
+               class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $currentTab === 'all' ? 'bg-[#FF5722] text-white shadow-sm shadow-orange-500/20' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
                 <span>Semua</span>
                 <span class="inline-flex items-center justify-center min-w-4 px-1.5 py-0.2 rounded-full text-[10px] {{ $currentTab === 'all' ? 'bg-white/25 text-white' : 'bg-gray-100 text-[#565A66]' }}">
                     {{ $counts['all'] ?? 0 }}
@@ -79,7 +79,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <!-- Filter Menunggu -->
             <a href="{{ route('mobile.member.pt-sessions.index', ['tab' => 'pending']) }}"
-               class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $currentTab === 'pending' ? 'bg-[#ED1B45] text-white shadow-sm shadow-[#ED1B45]/20' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
+               class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $currentTab === 'pending' ? 'bg-[#FF5722] text-white shadow-sm shadow-orange-500/20' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
                 <span>Menunggu</span>
                 <span class="inline-flex items-center justify-center min-w-4 px-1.5 py-0.2 rounded-full text-[10px] {{ $currentTab === 'pending' ? 'bg-white/25 text-white' : 'bg-gray-100 text-[#565A66]' }}">
                     {{ $counts['pending'] ?? 0 }}
@@ -88,7 +88,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <!-- Filter Terkonfirmasi -->
             <a href="{{ route('mobile.member.pt-sessions.index', ['tab' => 'confirmed']) }}"
-               class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $currentTab === 'confirmed' || $currentTab === 'scheduled' ? 'bg-[#ED1B45] text-white shadow-sm shadow-[#ED1B45]/20' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
+               class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $currentTab === 'confirmed' || $currentTab === 'scheduled' ? 'bg-[#FF5722] text-white shadow-sm shadow-orange-500/20' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
                 <span>Terkonfirmasi</span>
                 <span class="inline-flex items-center justify-center min-w-4 px-1.5 py-0.2 rounded-full text-[10px] {{ $currentTab === 'confirmed' || $currentTab === 'scheduled' ? 'bg-white/25 text-white' : 'bg-gray-100 text-[#565A66]' }}">
                     {{ $counts['confirmed'] ?? 0 }}
@@ -97,7 +97,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <!-- Filter Dibatalkan -->
             <a href="{{ route('mobile.member.pt-sessions.index', ['tab' => 'cancelled']) }}"
-               class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $currentTab === 'cancelled' ? 'bg-[#ED1B45] text-white shadow-sm shadow-[#ED1B45]/20' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
+               class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $currentTab === 'cancelled' ? 'bg-[#FF5722] text-white shadow-sm shadow-orange-500/20' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
                 <span>Dibatalkan</span>
                 <span class="inline-flex items-center justify-center min-w-4 px-1.5 py-0.2 rounded-full text-[10px] {{ $currentTab === 'cancelled' ? 'bg-white/25 text-white' : 'bg-gray-100 text-[#565A66]' }}">
                     {{ $counts['cancelled'] ?? 0 }}
@@ -115,7 +115,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 @endphp
 
                 <a href="{{ route('mobile.member.pt-sessions.show', $session->id) }}"
-                   class="block p-4 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#ED1B45]/40 space-y-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition active:scale-[0.99] group">
+                   class="block p-4 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#FF5722]/40 space-y-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition active:scale-[0.99] group">
                     <div class="flex items-center justify-between">
                         @if ($isPending)
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
@@ -139,7 +139,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     </div>
 
                     <div class="flex items-center gap-3">
-                        <div class="w-11 h-11 rounded-xl bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center font-bold font-poppins text-xs shrink-0 border border-[#ED1B45]/20 group-hover:scale-105 transition-transform">
+                        <div class="w-11 h-11 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center font-bold font-poppins text-xs shrink-0 border border-orange-200 group-hover:scale-105 transition-transform">
                             {{ strtoupper(substr($session->trainer->name ?? 'PT', 0, 2)) }}
                         </div>
                         <div class="min-w-0 flex-1">
@@ -148,12 +148,12 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             </h4>
                             <p class="text-[11px] text-[#565A66] font-sans flex items-center gap-1 mt-0.5">
                                 <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <span>Pukul {{ substr($session->start_time, 0, 5) }} - {{ substr($session->end_time, 0, 5) }} WIB</span>
                             </p>
                         </div>
-                        <svg class="w-4 h-4 text-[#565A66] group-hover:text-[#ED1B45] group-hover:translate-x-0.5 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg class="w-4 h-4 text-[#565A66] group-hover:text-[#FF5722] group-hover:translate-x-0.5 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
                     </div>
@@ -166,7 +166,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 </a>
             @empty
                 <div class="p-8 rounded-2xl bg-white border border-dashed border-[#E5E7EB] text-center space-y-2 shadow-[0_4px_12px_rgba(0,0,0,0.02)]">
-                    <div class="w-12 h-12 rounded-2xl bg-[#ED1B45]/10 text-[#ED1B45] flex items-center justify-center mx-auto mb-2 border border-[#ED1B45]/20">
+                    <div class="w-12 h-12 rounded-2xl bg-orange-50 text-[#FF5722] flex items-center justify-center mx-auto mb-2 border border-orange-200">
                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
@@ -177,7 +177,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     </p>
                     <div class="pt-2">
                         <a href="{{ route('mobile.member.pt-sessions.create') }}"
-                           class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white text-xs font-bold font-poppins shadow-md shadow-[#ED1B45]/25 transition">
+                           class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold font-poppins shadow-md shadow-orange-500/25 transition">
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                             </svg>

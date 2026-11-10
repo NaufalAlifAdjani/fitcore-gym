@@ -2,7 +2,7 @@
 ROLE: PERSONAL TRAINER (PT)
 MODUL: Mobile Trainer Layout Shell
 VIEW: layouts.mobile-trainer
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 @props([
@@ -49,17 +49,17 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="h-full bg-[#F6F6F7] text-[#16151A] font-sans antialiased selection:bg-[#ED1B45] selection:text-white flex flex-col overscroll-y-none">
+<body class="h-full bg-[#F6F6F7] text-[#16151A] font-sans antialiased selection:bg-[#FF5722] selection:text-white flex flex-col overscroll-y-none">
 
     <!-- Sticky Mobile Top Bar (Clean Light Background with subtle border) -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] pt-safe px-4 py-3 flex items-center justify-between shadow-xs">
         <a href="{{ route('mobile.trainer.dashboard') }}" class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-[#ED1B45] flex items-center justify-center text-white shadow-md shadow-[#ED1B45]/25 shrink-0 font-poppins font-black text-xs">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white shadow-md shadow-[#FF5722]/25 shrink-0 font-poppins font-black text-xs">
                 PT
             </div>
             <div class="flex flex-col">
                 <span class="font-poppins text-sm font-extrabold tracking-wider text-[#16151A]">
-                    FITCORE <span class="text-[#ED1B45]">COACH</span>
+                    FITCORE <span class="text-[#FF5722]">COACH</span>
                 </span>
                 <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-[#565A66]">Trainer Portal</span>
             </div>
@@ -84,8 +84,8 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <!-- 1. Dashboard -->
             <a href="{{ route('mobile.trainer.dashboard') }}"
-               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'dashboard' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]' }}"
-               :class="currentNavTab === 'dashboard' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
+               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'dashboard' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]' }}"
+               :class="currentNavTab === 'dashboard' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]'">
                 <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
@@ -94,8 +94,8 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <!-- 2. Jadwal Sesi -->
             <a href="{{ route('mobile.trainer.sessions.index') }}"
-               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'sessions' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]' }}"
-               :class="currentNavTab === 'sessions' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
+               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'sessions' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]' }}"
+               :class="currentNavTab === 'sessions' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]'">
                 <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
@@ -104,8 +104,8 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <!-- 3. Klien Saya -->
             <a href="{{ route('mobile.trainer.clients.index') }}"
-               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'clients' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]' }}"
-               :class="currentNavTab === 'clients' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
+               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'clients' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]' }}"
+               :class="currentNavTab === 'clients' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]'">
                 <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
@@ -114,8 +114,8 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <!-- 4. Profil -->
             <a href="{{ route('mobile.trainer.profile.index') }}"
-               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'profile' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]' }}"
-               :class="currentNavTab === 'profile' ? 'text-[#ED1B45]' : 'text-[#565A66] hover:text-[#16151A]'">
+               class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'profile' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]' }}"
+               :class="currentNavTab === 'profile' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]'">
                 <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>

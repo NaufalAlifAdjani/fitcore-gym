@@ -3,7 +3,7 @@ ROLE: PERSONAL TRAINER (PT)
 MODUL: Jadwal & Riwayat Sesi Pelatih Mobile
 VIEW: mobile.trainer.sessions.index
 LAYOUT: layouts.mobile-trainer
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 <x-layouts.mobile-trainer title="Jadwal Sesi - FitCore Coach" active="sessions">
@@ -34,42 +34,42 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 -mx-4 px-4 sm:mx-0 sm:px-0">
             <!-- Filter Semua -->
             <a href="{{ route('mobile.trainer.sessions.index', ['tab' => 'all', 'date' => $selectedDate]) }}"
-               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'all' ? 'bg-[#ED1B45] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
+               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'all' ? 'bg-[#FF5722] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
                 <span>Semua</span>
                 <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $tab === 'all' ? 'bg-white/20 text-white' : 'bg-gray-100 text-[#565A66]' }}">{{ $counts['all'] ?? 0 }}</span>
             </a>
 
             <!-- Filter Hari Ini -->
             <a href="{{ route('mobile.trainer.sessions.index', ['tab' => 'today']) }}"
-               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'today' ? 'bg-[#ED1B45] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
+               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'today' ? 'bg-[#FF5722] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
                 <span>Hari Ini</span>
                 <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $tab === 'today' ? 'bg-white/20 text-white' : 'bg-gray-100 text-[#565A66]' }}">{{ $counts['today'] ?? 0 }}</span>
             </a>
 
             <!-- Filter Menunggu -->
             <a href="{{ route('mobile.trainer.sessions.index', ['tab' => 'pending', 'date' => $selectedDate]) }}"
-               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'pending' ? 'bg-[#ED1B45] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
+               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'pending' ? 'bg-[#FF5722] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
                 <span>Menunggu</span>
                 <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $tab === 'pending' ? 'bg-white/20 text-white' : 'bg-gray-100 text-[#565A66]' }}">{{ $counts['pending'] ?? 0 }}</span>
             </a>
 
             <!-- Filter Terkonfirmasi -->
             <a href="{{ route('mobile.trainer.sessions.index', ['tab' => 'confirmed', 'date' => $selectedDate]) }}"
-               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'confirmed' ? 'bg-[#ED1B45] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
+               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'confirmed' ? 'bg-[#FF5722] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
                 <span>Terkonfirmasi</span>
                 <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $tab === 'confirmed' ? 'bg-white/20 text-white' : 'bg-gray-100 text-[#565A66]' }}">{{ $counts['confirmed'] ?? 0 }}</span>
             </a>
 
             <!-- Filter Selesai -->
             <a href="{{ route('mobile.trainer.sessions.index', ['tab' => 'completed', 'date' => $selectedDate]) }}"
-               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'completed' ? 'bg-[#ED1B45] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
+               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'completed' ? 'bg-[#FF5722] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
                 <span>Selesai</span>
                 <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $tab === 'completed' ? 'bg-white/20 text-white' : 'bg-gray-100 text-[#565A66]' }}">{{ $counts['completed'] ?? 0 }}</span>
             </a>
 
             <!-- Filter Dibatalkan -->
             <a href="{{ route('mobile.trainer.sessions.index', ['tab' => 'cancelled', 'date' => $selectedDate]) }}"
-               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'cancelled' ? 'bg-[#ED1B45] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
+               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition shrink-0 whitespace-nowrap {{ $tab === 'cancelled' ? 'bg-[#FF5722] text-white shadow-sm' : 'bg-white border border-[#E5E7EB] text-[#565A66] hover:text-[#16151A]' }}">
                 <span>Dibatalkan</span>
                 <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $tab === 'cancelled' ? 'bg-white/20 text-white' : 'bg-gray-100 text-[#565A66]' }}">{{ $counts['cancelled'] ?? 0 }}</span>
             </a>
@@ -91,7 +91,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             <span class="text-xs font-bold text-[#16151A]">
                                 {{ \Carbon\Carbon::parse($session->session_date)->translatedFormat('l, d M Y') }}
                             </span>
-                            <span class="text-xs font-bold text-[#ED1B45]">
+                            <span class="text-xs font-bold text-[#FF5722]">
                                 • {{ substr($session->start_time, 0, 5) }} - {{ substr($session->end_time, 0, 5) }} WIB
                             </span>
                         </div>
@@ -118,18 +118,18 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     </div>
 
                     <a href="{{ route('mobile.trainer.sessions.show', $session) }}" class="flex items-center gap-3 group">
-                        <div class="w-11 h-11 rounded-xl bg-gray-100 text-[#16151A] flex items-center justify-center font-bold text-xs shrink-0 border border-[#E5E7EB] group-hover:border-[#ED1B45]/40 transition">
+                        <div class="w-11 h-11 rounded-xl bg-gray-100 text-[#16151A] flex items-center justify-center font-bold text-xs shrink-0 border border-[#E5E7EB] group-hover:border-[#FF5722]/40 transition">
                             {{ strtoupper(substr($session->member->name ?? 'M', 0, 2)) }}
                         </div>
                         <div class="min-w-0 flex-1">
-                            <h4 class="text-xs sm:text-sm font-bold text-[#16151A] truncate font-poppins group-hover:text-[#ED1B45] transition">
+                            <h4 class="text-xs sm:text-sm font-bold text-[#16151A] truncate font-poppins group-hover:text-[#FF5722] transition">
                                 {{ $session->member->name ?? 'Member FitCore' }}
                             </h4>
                             <p class="text-[11px] text-[#565A66] truncate font-sans">
                                 {{ $session->quota->ptPackage->name ?? 'Paket Sesi PT' }}
                             </p>
                         </div>
-                        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#ED1B45] group-hover:translate-x-0.5 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#FF5722] group-hover:translate-x-0.5 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
                     </a>
@@ -146,7 +146,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             <form method="POST" action="{{ route('mobile.trainer.sessions.confirm', $session) }}" class="flex-1">
                                 @csrf
                                 <button type="submit"
-                                        class="w-full py-2 rounded-full bg-[#ED1B45] text-white text-xs font-bold shadow-md shadow-[#ED1B45]/20 hover:bg-[#D1123D] active:scale-[0.98] transition cursor-pointer">
+                                        class="w-full py-2 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-md shadow-orange-500/20 hover:bg-[#E64A19] active:scale-[0.98] transition cursor-pointer">
                                     Konfirmasi
                                 </button>
                             </form>
@@ -188,7 +188,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-[#E5E7EB] space-y-4"
                  @click.away="showRejectModal = false">
-                <div class="w-12 h-12 rounded-full bg-rose-50 text-[#ED1B45] flex items-center justify-center mx-auto border border-rose-200">
+                <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -208,7 +208,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             Alasan Penolakan <span class="text-[#565A66] font-normal">(Opsional)</span>
                         </label>
                         <textarea id="modal_reason" name="reason" rows="2" placeholder="Misal: Sedang berhalangan karena jadwal kompetisi..."
-                                  class="w-full p-2.5 rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-xs text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#ED1B45]/20 focus:border-[#ED1B45]"></textarea>
+                                  class="w-full p-2.5 rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-xs text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722]"></textarea>
                     </div>
 
                     <div class="flex items-center gap-2 pt-1">
@@ -218,7 +218,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             Batal
                         </button>
                         <button type="submit"
-                                class="flex-1 py-2.5 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white text-xs font-bold font-poppins transition shadow-sm">
+                                class="flex-1 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-poppins transition shadow-sm">
                             Ya, Tolak Sesi
                         </button>
                     </div>

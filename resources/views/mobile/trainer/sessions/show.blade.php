@@ -3,7 +3,7 @@ ROLE: PERSONAL TRAINER (PT)
 MODUL: Detail Sesi Latihan Klien Mobile
 VIEW: mobile.trainer.sessions.show
 LAYOUT: layouts.mobile-trainer
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 @php
@@ -64,7 +64,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             <span class="text-[10px] uppercase font-bold tracking-wider text-[#565A66] block">Profil Klien Latihan</span>
 
             <div class="flex items-center gap-3.5">
-                <div class="w-14 h-14 rounded-2xl bg-[#ED1B45]/10 border-2 border-[#ED1B45]/20 text-[#ED1B45] flex items-center justify-center font-poppins font-black text-xl shrink-0 shadow-inner">
+                <div class="w-14 h-14 rounded-2xl bg-orange-50 border-2 border-orange-200 text-[#FF5722] flex items-center justify-center font-poppins font-black text-xl shrink-0 shadow-inner">
                     {{ strtoupper(substr($member->name ?? 'M', 0, 2)) }}
                 </div>
 
@@ -114,7 +114,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
                 <div class="p-3 rounded-xl bg-[#F6F6F7] border border-[#E5E7EB]">
                     <span class="text-[10px] uppercase font-bold text-[#565A66] block">Jam Sesi</span>
-                    <span class="font-bold text-[#ED1B45] mt-0.5 block font-poppins">
+                    <span class="font-bold text-[#FF5722] mt-0.5 block font-poppins">
                         {{ substr($ptSession->start_time, 0, 5) }} - {{ substr($ptSession->end_time, 0, 5) }} WIB
                     </span>
                 </div>
@@ -161,7 +161,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     <form method="POST" action="{{ route('mobile.trainer.sessions.confirm', $ptSession) }}" class="flex-1">
                         @csrf
                         <button type="submit"
-                                class="w-full py-3 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] active:scale-[0.99] text-white font-poppins font-bold text-xs uppercase tracking-wider transition shadow-md shadow-[#ED1B45]/20 cursor-pointer">
+                                class="w-full py-3 rounded-full bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-poppins font-bold text-xs uppercase tracking-wider transition shadow-md shadow-orange-500/20 cursor-pointer">
                             Konfirmasi Sesi
                         </button>
                     </form>
@@ -192,7 +192,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-[#E5E7EB] space-y-4"
                  @click.away="showRejectModal = false">
-                <div class="w-12 h-12 rounded-full bg-rose-50 text-[#ED1B45] flex items-center justify-center mx-auto border border-rose-200">
+                <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -212,7 +212,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             Alasan Penolakan <span class="text-[#565A66] font-normal">(Opsional)</span>
                         </label>
                         <textarea id="show_reason" name="reason" rows="2" placeholder="Misal: Sedang berhalangan karena jadwal kompetisi..."
-                                  class="w-full p-2.5 rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-xs text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#ED1B45]/20 focus:border-[#ED1B45]"></textarea>
+                                  class="w-full p-2.5 rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-xs text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722]"></textarea>
                     </div>
 
                     <div class="flex items-center gap-2 pt-1">
@@ -222,7 +222,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             Batal
                         </button>
                         <button type="submit"
-                                class="flex-1 py-2.5 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white text-xs font-bold font-poppins transition shadow-sm">
+                                class="flex-1 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-poppins transition shadow-sm">
                             Ya, Tolak Sesi
                         </button>
                     </div>

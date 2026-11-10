@@ -3,7 +3,7 @@ ROLE: PERSONAL TRAINER (PT)
 MODUL: Daftar Klien & Member Bimbingan Mobile
 VIEW: mobile.trainer.clients.index
 LAYOUT: layouts.mobile-trainer
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 <x-layouts.mobile-trainer title="Klien Saya - FitCore Coach" active="clients">
@@ -32,7 +32,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
                 <div class="p-4 rounded-2xl bg-white border border-[#E5E7EB] space-y-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
                     <div class="flex items-center gap-3.5">
-                        <div class="w-12 h-12 rounded-2xl bg-[#ED1B45]/10 border border-[#ED1B45]/20 text-[#ED1B45] flex items-center justify-center font-bold text-sm shrink-0">
+                        <div class="w-12 h-12 rounded-2xl bg-orange-50 border border-orange-200 text-[#FF5722] flex items-center justify-center font-bold text-sm shrink-0">
                             {{ strtoupper(substr($client->name ?? 'M', 0, 2)) }}
                         </div>
 
@@ -53,7 +53,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                         <div>
                             <span class="text-[10px] uppercase font-bold text-[#565A66] block">Sisa Kuota PT</span>
                             @if ($activeQuota)
-                                <span class="font-bold text-[#ED1B45] font-poppins">{{ $activeQuota->remaining_sessions }} Sesi Aktif</span>
+                                <span class="font-bold text-[#FF5722] font-poppins">{{ $activeQuota->remaining_sessions }} Sesi Aktif</span>
                             @else
                                 <span class="font-semibold text-gray-400">Tidak ada paket</span>
                             @endif

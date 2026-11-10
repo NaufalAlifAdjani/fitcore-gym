@@ -3,7 +3,7 @@ ROLE: PERSONAL TRAINER (PT)
 MODUL: Dashboard Harian & Permintaan Sesi Mobile (Fitur #9)
 VIEW: mobile.trainer.dashboard
 LAYOUT: layouts.mobile-trainer
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #565A66)
+TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
 <x-layouts.mobile-trainer title="Dashboard Pelatih - FitCore Coach" active="dashboard">
@@ -60,7 +60,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
             <!-- Stat 4: Total Member Aktif -->
             <div class="min-w-[140px] p-4 rounded-2xl bg-white border border-[#E5E7EB] shrink-0 space-y-1 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
                 <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66] block">Klien Aktif</span>
-                <span class="text-2xl font-black font-poppins text-[#ED1B45] block">{{ $activeMembersCount }}</span>
+                <span class="text-2xl font-black font-poppins text-[#FF5722] block">{{ $activeMembersCount }}</span>
                 <span class="text-[10px] text-[#565A66] font-semibold block">Member dibimbing</span>
             </div>
         </div>
@@ -80,7 +80,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                         <span class="text-xs font-bold text-[#16151A]">
                             {{ \Carbon\Carbon::parse($pending->session_date)->translatedFormat('l, d M Y') }}
                         </span>
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#ED1B45]/10 text-[#ED1B45] border border-[#ED1B45]/20">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 text-[#FF5722] border border-orange-200">
                             {{ substr($pending->start_time, 0, 5) }} - {{ substr($pending->end_time, 0, 5) }} WIB
                         </span>
                     </div>
@@ -97,7 +97,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                                 Paket: {{ $pending->quota->ptPackage->name ?? 'Paket Sesi PT' }}
                             </p>
                         </div>
-                        <a href="{{ route('mobile.trainer.sessions.show', $pending) }}" class="text-[#565A66] hover:text-[#ED1B45] p-1" title="Lihat Detail">
+                        <a href="{{ route('mobile.trainer.sessions.show', $pending) }}" class="text-[#565A66] hover:text-[#FF5722] p-1" title="Lihat Detail">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                             </svg>
@@ -115,7 +115,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                         <form method="POST" action="{{ route('mobile.trainer.sessions.confirm', $pending) }}" class="flex-1">
                             @csrf
                             <button type="submit"
-                                    class="w-full py-2 rounded-full bg-[#ED1B45] text-white text-xs font-bold shadow-md shadow-[#ED1B45]/20 hover:bg-[#D1123D] active:scale-[0.98] transition cursor-pointer">
+                                    class="w-full py-2 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-md shadow-orange-500/20 hover:bg-[#E64A19] active:scale-[0.98] transition cursor-pointer">
                                 Konfirmasi
                             </button>
                         </form>
@@ -138,16 +138,16 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                 <h3 class="text-xs font-bold uppercase tracking-wider text-[#16151A] font-poppins">
                     Jadwal Hari Ini ({{ \Carbon\Carbon::today()->translatedFormat('d M Y') }})
                 </h3>
-                <a href="{{ route('mobile.trainer.sessions.index', ['tab' => 'today']) }}" class="text-xs text-[#ED1B45] font-bold hover:underline">
+                <a href="{{ route('mobile.trainer.sessions.index', ['tab' => 'today']) }}" class="text-xs text-[#FF5722] font-bold hover:underline">
                     Lihat Semua
                 </a>
             </div>
 
             @forelse ($todaySessions as $session)
                 <a href="{{ route('mobile.trainer.sessions.show', $session) }}"
-                   class="block p-4 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#ED1B45]/40 space-y-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition active:scale-[0.99] group">
+                   class="block p-4 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#FF5722]/40 space-y-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition active:scale-[0.99] group">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-[#ED1B45]">
+                        <span class="text-xs font-bold text-[#FF5722]">
                             {{ substr($session->start_time, 0, 5) }} - {{ substr($session->end_time, 0, 5) }} WIB
                         </span>
                         @if ($session->status === \App\Enums\PtSessionStatus::Confirmed)
@@ -166,7 +166,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                     </div>
 
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gray-100 text-[#16151A] flex items-center justify-center font-bold text-xs shrink-0 border border-[#E5E7EB] group-hover:border-[#ED1B45]/40 transition">
+                        <div class="w-10 h-10 rounded-xl bg-gray-100 text-[#16151A] flex items-center justify-center font-bold text-xs shrink-0 border border-[#E5E7EB] group-hover:border-[#FF5722]/40 transition">
                             {{ strtoupper(substr($session->member->name ?? 'M', 0, 2)) }}
                         </div>
                         <div class="min-w-0 flex-1">
@@ -177,7 +177,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                                 {{ $session->quota->ptPackage->name ?? 'Sesi Pelatihan PT' }}
                             </p>
                         </div>
-                        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#ED1B45] group-hover:translate-x-0.5 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <svg class="w-4 h-4 text-gray-400 group-hover:text-[#FF5722] group-hover:translate-x-0.5 transition shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
                     </div>
@@ -203,7 +203,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
 
             <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-[#E5E7EB] space-y-4"
                  @click.away="showRejectModal = false">
-                <div class="w-12 h-12 rounded-full bg-rose-50 text-[#ED1B45] flex items-center justify-center mx-auto border border-rose-200">
+                <div class="w-12 h-12 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -223,7 +223,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             Alasan Penolakan <span class="text-[#565A66] font-normal">(Opsional)</span>
                         </label>
                         <textarea id="reject_reason" name="reason" rows="2" placeholder="Misal: Sedang berhalangan karena jadwal kompetisi..."
-                                  class="w-full p-2.5 rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-xs text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#ED1B45]/20 focus:border-[#ED1B45]"></textarea>
+                                  class="w-full p-2.5 rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-xs text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722]"></textarea>
                     </div>
 
                     <div class="flex items-center gap-2 pt-1">
@@ -233,7 +233,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #ED1B45, Text #16151A / #56
                             Batal
                         </button>
                         <button type="submit"
-                                class="flex-1 py-2.5 rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white text-xs font-bold font-poppins transition shadow-sm">
+                                class="flex-1 py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-poppins transition shadow-sm">
                             Ya, Tolak Sesi
                         </button>
                     </div>

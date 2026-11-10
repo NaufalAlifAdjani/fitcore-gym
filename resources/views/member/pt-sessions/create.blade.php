@@ -285,19 +285,11 @@
                         </div>
                     </div>
 
-<<<<<<< HEAD
                     <!-- Ringkasan Booking Card (Light Theme) -->
                     <div class="bg-white rounded-3xl p-6 relative overflow-hidden text-[#16151A] border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-5">
-                        <div class="absolute -top-12 -right-12 w-44 h-44 bg-[#ED1B45]/10 rounded-full blur-3xl pointer-events-none"></div>
-
-                        <h3 class="text-base font-extrabold text-[#16151A] font-heading">
-=======
-                    <!-- Ringkasan Booking Card -->
-                    <div class="bg-gradient-to-b from-orange-50/70 via-white to-white border-2 border-orange-200/80 rounded-3xl p-6 relative overflow-hidden text-zinc-900 shadow-lg shadow-orange-500/5 space-y-5">
                         <div class="absolute -top-12 -right-12 w-44 h-44 bg-orange-400/15 rounded-full blur-3xl pointer-events-none"></div>
 
-                        <h3 class="text-base font-extrabold text-zinc-900 font-heading">
->>>>>>> origin/feature/theme-blaze-orange
+                        <h3 class="text-base font-extrabold text-[#16151A] font-heading">
                             Ringkasan Booking
                         </h3>
 
@@ -305,13 +297,8 @@
                             <!-- Tanggal Latihan -->
                             <div class="flex items-start gap-2.5">
                                 <div>
-<<<<<<< HEAD
                                     <div class="text-[#565A66] text-[11px]">Tanggal Latihan</div>
                                     <div class="font-bold text-[#16151A] text-xs mt-0.5"
-=======
-                                    <div class="text-gray-500 text-[11px] font-medium">Tanggal Latihan</div>
-                                    <div class="font-bold text-zinc-900 text-xs mt-0.5"
->>>>>>> origin/feature/theme-blaze-orange
                                         x-text="formattedSelectedDate || selectedDate || 'Pilih tanggal'"></div>
                                 </div>
                             </div>
@@ -319,13 +306,8 @@
                             <!-- Jam Sesi -->
                             <div class="flex items-start gap-2.5">
                                 <div>
-<<<<<<< HEAD
                                     <div class="text-[#565A66] text-[11px]">Jam Sesi</div>
-                                    <div class="font-bold text-[#ED1B45] text-xs mt-0.5"
-=======
-                                    <div class="text-gray-500 text-[11px] font-medium">Jam Sesi</div>
-                                    <div class="font-bold text-zinc-900 text-xs mt-0.5"
->>>>>>> origin/feature/theme-blaze-orange
+                                    <div class="font-bold text-[#FF5722] text-xs mt-0.5"
                                         x-text="selectedSlot ? (selectedSlot + ' - ' + endSlotTime + ' WIB (60 Menit)') : 'Pilih slot jam'">
                                     </div>
                                 </div>
@@ -334,13 +316,8 @@
                             <!-- Pelatih -->
                             <div class="flex items-start gap-2.5">
                                 <div>
-<<<<<<< HEAD
                                     <div class="text-[#565A66] text-[11px]">Pelatih</div>
                                     <div class="font-bold text-[#16151A] text-xs mt-0.5">
-=======
-                                    <div class="text-gray-500 text-[11px] font-medium">Pelatih</div>
-                                    <div class="font-bold text-zinc-900 text-xs mt-0.5">
->>>>>>> origin/feature/theme-blaze-orange
                                         {{ $trainer?->name ?? 'Coach Rama Prasetya' }}
                                     </div>
                                 </div>
@@ -355,13 +332,8 @@
                             <input type="hidden" name="start_time" :value="selectedSlot">
 
                             <button type="submit" :disabled="!selectedDate || !selectedSlot" :class="{
-<<<<<<< HEAD
-                                        'bg-[#ED1B45] hover:bg-[#BA0030] text-white shadow-lg shadow-[#ED1B45]/20 cursor-pointer': selectedDate && selectedSlot,
+                                        'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-lg shadow-orange-500/25 cursor-pointer': selectedDate && selectedSlot,
                                         'bg-gray-100 text-[#565A66]/60 border border-[#E5E7EB] cursor-not-allowed': !selectedDate || !selectedSlot
-=======
-                                        'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-lg shadow-orange-500/30 cursor-pointer': selectedDate && selectedSlot,
-                                        'bg-gray-200 text-gray-400 cursor-not-allowed': !selectedDate || !selectedSlot
->>>>>>> origin/feature/theme-blaze-orange
                                     }"
                                 class="w-full py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2">
                                 <span>Konfirmasi Booking Sesi</span>
