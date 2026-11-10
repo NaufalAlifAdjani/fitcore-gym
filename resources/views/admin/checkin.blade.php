@@ -9,8 +9,8 @@
             <header class="flex flex-col gap-4">
                 <div class="min-w-0 flex-1">
                     <div class="flex items-center gap-2">
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1 font-inter text-xs font-bold text-[#ED1B45] border border-rose-200">
-                            <span class="h-1.5 w-1.5 rounded-full bg-[#ED1B45]"></span>
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 font-inter text-xs font-bold text-[#FF5722] border border-orange-200">
+                            <span class="h-1.5 w-1.5 rounded-full bg-[#FF5722]"></span>
                             Portal Admin
                         </span>
                         <span class="text-xs font-medium text-[#565A66] font-inter">Presensi &amp; Check-In</span>
@@ -34,7 +34,7 @@
                         </label>
                         <select
                             id="camera-select"
-                            class="w-full sm:max-w-md rounded-xl border border-[#E5E7EB] bg-white py-2.5 pl-4 pr-10 text-sm font-inter text-[#16151A] shadow-sm focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition cursor-pointer"
+                            class="w-full sm:max-w-md rounded-xl border border-[#E5E7EB] bg-white py-2.5 pl-4 pr-10 text-sm font-inter text-[#16151A] shadow-sm focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition cursor-pointer"
                         >
                             <option value="">Memuat daftar kamera…</option>
                         </select>
@@ -44,7 +44,7 @@
                         <button
                             id="btn-start-scanner"
                             type="button"
-                            class="bg-[#ED1B45] text-white px-6 py-2.5 rounded-full font-inter font-semibold shadow-sm hover:bg-[#D1123D] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                            class="bg-[#FF5722] text-white px-6 py-2.5 rounded-full font-inter font-semibold shadow-sm hover:bg-[#E64A19] transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                         >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
@@ -94,7 +94,7 @@
             <div class="bg-white rounded-[20px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-[#E5E7EB] p-6 sm:p-8 space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E5E7EB]">
                     <div class="flex items-center gap-3">
-                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-[#ED1B45] border border-rose-200 shrink-0">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-50 text-[#FF5722] border border-orange-200 shrink-0">
                             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                             </svg>
@@ -111,7 +111,7 @@
 
                     <div class="flex items-center gap-2">
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold font-inter bg-slate-100 text-slate-700 border border-slate-200">
-                            Total Hadir: <strong id="today-checkin-count" class="text-[#ED1B45] ml-1">{{ $todayCheckIns->count() }}</strong> Member
+                            Total Hadir: <strong id="today-checkin-count" class="text-[#FF5722] ml-1">{{ $todayCheckIns->count() }}</strong> Member
                         </span>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
             <!-- Panduan Penggunaan Scanner Card -->
             <div class="bg-white rounded-[20px] shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-[#E5E7EB] p-6 sm:p-8 space-y-4">
                 <div class="flex items-center gap-2.5">
-                    <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-[#ED1B45]/10 text-[#ED1B45]">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-[#FF5722]/10 text-[#FF5722]">
                         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
@@ -191,19 +191,19 @@
 
                 <div class="grid gap-3 sm:grid-cols-2 text-xs font-inter text-[#565A66]">
                     <div class="flex items-start gap-2.5 p-3 rounded-xl bg-[#F6F6F7]">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#ED1B45] text-[10px] shadow-xs">1</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#FF5722] text-[10px] shadow-xs">1</span>
                         <span>Berikan izin kamera browser dan pilih kamera belakang jika menggunakan tablet/hp.</span>
                     </div>
                     <div class="flex items-start gap-2.5 p-3 rounded-xl bg-[#F6F6F7]">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#ED1B45] text-[10px] shadow-xs">2</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#FF5722] text-[10px] shadow-xs">2</span>
                         <span>Klik <strong>Mulai Scanner</strong>, lalu arahkan kamera ke layar QR Code member.</span>
                     </div>
                     <div class="flex items-start gap-2.5 p-3 rounded-xl bg-[#F6F6F7]">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#ED1B45] text-[10px] shadow-xs">3</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#FF5722] text-[10px] shadow-xs">3</span>
                         <span>Sistem otomatis memverifikasi masa aktif membership dan status verifikasi bayar.</span>
                     </div>
                     <div class="flex items-start gap-2.5 p-3 rounded-xl bg-[#F6F6F7]">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#ED1B45] text-[10px] shadow-xs">4</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white font-bold text-[#FF5722] text-[10px] shadow-xs">4</span>
                         <span>Check-in berlaku maksimal 1x per hari per member untuk mencegah penyalahgunaan pass.</span>
                     </div>
                 </div>

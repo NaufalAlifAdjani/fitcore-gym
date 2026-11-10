@@ -35,7 +35,7 @@
             <a href="{{ route('trainer.sessions.index') }}" class="flex items-center gap-4 group select-none">
                 <!-- Barbell Icon + MAXFIT. -->
                 <div class="flex items-center gap-2">
-                    <div class="flex items-center text-[#ED1B45] group-hover:scale-105 transition-transform duration-200">
+                    <div class="flex items-center text-[#FF5722] group-hover:scale-105 transition-transform duration-200">
                         <svg class="h-6 w-auto" viewBox="0 0 32 16" fill="currentColor">
                             <!-- Left Plate -->
                             <rect x="0" y="0" width="4" height="16" rx="2" />
@@ -48,7 +48,7 @@
                         </svg>
                     </div>
                     <span class="text-lg sm:text-xl font-extrabold tracking-tight text-[#16151A] font-heading uppercase">
-                        MAXFIT<span class="text-[#ED1B45]">.</span>
+                        MAXFIT<span class="text-[#FF5722]">.</span>
                     </span>
                 </div>
 
@@ -57,7 +57,7 @@
                     <span class="text-base sm:text-lg font-black tracking-tight text-[#16151A] font-heading uppercase">
                         MAXFIT
                     </span>
-                    <span class="text-[10px] sm:text-[11px] tracking-wider text-[#ED1B45] font-extrabold uppercase mt-0.5">
+                    <span class="text-[10px] sm:text-[11px] tracking-wider text-[#FF5722] font-extrabold uppercase mt-0.5">
                         TRAINER PORTAL
                     </span>
                 </div>
@@ -79,7 +79,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                     </svg>
                     <!-- Red Notification Dot -->
-                    <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-[#ED1B45] rounded-full ring-2 ring-white"></span>
+                    <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-[#FF5722] rounded-full ring-2 ring-white"></span>
                 </button>
 
                 <!-- Notifications Dropdown -->
@@ -97,11 +97,11 @@
                 >
                     <div class="flex items-center justify-between pb-2 border-b border-[#E5E7EB]">
                         <span class="font-bold text-[#16151A] font-heading">Notifikasi Sesi</span>
-                        <span class="text-[11px] bg-red-50 text-[#ED1B45] font-extrabold px-2 py-0.5 rounded-full">Baru</span>
+                        <span class="text-[11px] bg-red-50 text-[#FF5722] font-extrabold px-2 py-0.5 rounded-full">Baru</span>
                     </div>
                     <div class="py-3 space-y-2.5">
                         <div class="flex items-start gap-2.5 text-xs text-[#565A66]">
-                            <span class="w-2 h-2 rounded-full bg-[#ED1B45] mt-1.5 shrink-0"></span>
+                            <span class="w-2 h-2 rounded-full bg-[#FF5722] mt-1.5 shrink-0"></span>
                             <div>
                                 <p class="font-semibold text-[#16151A]">Permintaan booking baru</p>
                                 <p class="text-[11px] text-[#565A66]">Member telah mengajukan sesi latihan personal.</p>
@@ -123,7 +123,7 @@
                 >
                     <!-- Trainer Name & Title -->
                     <div class="text-right hidden sm:block">
-                        <div class="text-sm font-bold text-[#16151A] font-heading leading-tight group-hover:text-[#ED1B45] transition-colors">
+                        <div class="text-sm font-bold text-[#16151A] font-heading leading-tight group-hover:text-[#FF5722] transition-colors">
                             {{ $displayName }}
                         </div>
                         <div class="text-xs text-[#565A66] font-medium leading-tight mt-0.5">
@@ -137,16 +137,16 @@
                             <img 
                                 src="{{ asset('storage/' . $user->trainerProfile->photo_path) }}" 
                                 alt="{{ $displayName }}" 
-                                class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ED1B45]/20 shadow-xs"
+                                class="w-10 h-10 rounded-full object-cover ring-2 ring-[#FF5722]/20 shadow-xs"
                             >
                         @else
                             <img 
                                 src="https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=120&auto=format&fit=crop&q=80" 
                                 alt="{{ $displayName }}" 
-                                class="w-10 h-10 rounded-full object-cover ring-2 ring-[#ED1B45]/20 shadow-xs"
+                                class="w-10 h-10 rounded-full object-cover ring-2 ring-[#FF5722]/20 shadow-xs"
                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                             >
-                            <div class="w-10 h-10 rounded-full bg-[#16151A] text-white font-bold text-xs items-center justify-center ring-2 ring-[#ED1B45]/20 shadow-xs hidden">
+                            <div class="w-10 h-10 rounded-full bg-[#16151A] text-white font-bold text-xs items-center justify-center ring-2 ring-[#FF5722]/20 shadow-xs hidden">
                                 {{ strtoupper(substr($displayName, 0, 2)) }}
                             </div>
                         @endif
@@ -182,8 +182,8 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" 
-                                class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[#ED1B45] hover:bg-red-50 transition-colors text-left font-semibold cursor-pointer">
-                            <svg class="w-4 h-4 text-[#ED1B45]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[#FF5722] hover:bg-red-50 transition-colors text-left font-semibold cursor-pointer">
+                            <svg class="w-4 h-4 text-[#FF5722]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                             </svg>
                             <span>Keluar (Logout)</span>

@@ -30,8 +30,8 @@
         <div class="mx-auto max-w-6xl space-y-8">
             <!-- Header Halaman Riwayat Transaksi -->
             <header class="space-y-2">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ED1B45]/10 text-[#ED1B45] text-xs font-inter font-bold uppercase tracking-wider">
-                    <span class="h-1.5 w-1.5 rounded-full bg-[#ED1B45]"></span>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FF5722]/10 text-[#FF5722] text-xs font-inter font-bold uppercase tracking-wider">
+                    <span class="h-1.5 w-1.5 rounded-full bg-[#FF5722]"></span>
                     Member Portal FitCore
                 </div>
                 <h1 class="font-poppins font-extrabold text-3xl sm:text-4xl lg:text-[3.25rem] text-[#16151A] tracking-tight leading-tight">
@@ -50,7 +50,7 @@
                 <section class="space-y-4 mb-10">
                     <!-- Header Grup Tanggal dengan aksen border merah di kiri dan badge count di kanan -->
                     <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
-                        <div class="border-l-4 border-[#ED1B45] pl-3.5">
+                        <div class="border-l-4 border-[#FF5722] pl-3.5">
                             <h2 class="font-poppins text-lg sm:text-xl font-bold uppercase tracking-wider text-[#16151A]">
                                 {{ $monthYear }}
                             </h2>
@@ -90,7 +90,7 @@
             >
                 <div class="flex items-center justify-between border-b border-[#E5E7EB] px-6 py-4 bg-white">
                     <div>
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#ED1B45]">Rincian Transaksi</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#FF5722]">Rincian Transaksi</span>
                         <h3 class="font-poppins text-lg font-bold text-[#16151A]" x-text="selectedDetail?.package_name || 'Detail Paket'"></h3>
                     </div>
                     <button
@@ -134,7 +134,7 @@
                         </div>
                         <div class="flex justify-between border-t border-[#E5E7EB] pt-2.5 items-center">
                             <span class="font-bold text-[#16151A]">Total Dibayar</span>
-                            <span class="font-poppins text-base font-bold text-[#ED1B45]" x-text="'Rp ' + (selectedDetail?.amount || '0')"></span>
+                            <span class="font-poppins text-base font-bold text-[#FF5722]" x-text="'Rp ' + (selectedDetail?.amount || '0')"></span>
                         </div>
                     </div>
 
@@ -157,9 +157,9 @@
                     <template x-if="selectedDetail?.status === 'verified' && selectedDetail?.invoice_url">
                         <a
                             x-bind:href="selectedDetail.invoice_url"
-                            class="rounded-full bg-[#141414] hover:bg-black text-white px-5 py-2 text-xs font-inter font-semibold transition inline-flex items-center gap-1.5"
+                            class="rounded-full bg-[#FF5722] hover:bg-[#E64A19] shadow-md shadow-orange-500/20 text-white px-5 py-2 text-xs font-inter font-semibold transition inline-flex items-center gap-1.5"
                         >
-                            <svg class="h-3.5 w-3.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             <span>Unduh Invoice PDF</span>
                         </a>
                     </template>
@@ -184,7 +184,7 @@
             >
                 <div class="flex items-center justify-between border-b border-[#E5E7EB] px-6 py-4 bg-white">
                     <div>
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#ED1B45]">Pemeriksaan Transfer</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#FF5722]">Pemeriksaan Transfer</span>
                         <h3 class="font-poppins text-base font-bold text-[#16151A]" x-text="'Bukti Transfer: ' + (selectedReceipt?.invoice_id || '')"></h3>
                     </div>
                     <button
@@ -220,7 +220,7 @@
                     <div class="grid grid-cols-2 gap-3 rounded-xl bg-[#F6F6F7] p-3 text-xs">
                         <div>
                             <span class="text-[#565A66] text-[10px] uppercase font-bold">Nominal</span>
-                            <p class="font-poppins font-bold text-[#ED1B45]" x-text="'Rp ' + (selectedReceipt?.amount || '0')"></p>
+                            <p class="font-poppins font-bold text-[#FF5722]" x-text="'Rp ' + (selectedReceipt?.amount || '0')"></p>
                         </div>
                         <div>
                             <span class="text-[#565A66] text-[10px] uppercase font-bold">Bank Pengirim</span>
@@ -233,7 +233,7 @@
                     <button
                         type="button"
                         x-on:click="closeReceiptModal()"
-                        class="rounded-full bg-[#16151A] hover:bg-black text-white px-5 py-2 text-xs font-inter font-semibold transition cursor-pointer"
+                        class="rounded-full border border-gray-200 bg-white hover:bg-gray-100 text-gray-700 px-5 py-2 text-xs font-inter font-semibold transition cursor-pointer"
                     >
                         Tutup
                     </button>

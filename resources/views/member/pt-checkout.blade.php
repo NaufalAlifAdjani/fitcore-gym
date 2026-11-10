@@ -3,12 +3,12 @@
         <div class="mx-auto max-w-6xl">
             <!-- Breadcrumb Navigation -->
             <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $packageId, 'sessions' => $sessionCount]) }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#BA0030] transition">
+                <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $packageId, 'sessions' => $sessionCount]) }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#FF5722] transition">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Kembali ke Pilih Pelatih
                 </a>
                 <div class="flex items-center gap-2 text-xs font-bold text-slate-500">
-                    <span class="text-[#BA0030]">Langkah 1: Konfirmasi Pembayaran</span>
+                    <span class="text-[#FF5722]">Langkah 1: Konfirmasi Pembayaran</span>
                     <span>•</span>
                     <span class="text-slate-400">Langkah 2: Form Bukti Transfer</span>
                 </div>

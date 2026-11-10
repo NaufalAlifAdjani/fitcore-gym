@@ -7,6 +7,10 @@
 
         <title>{{ $title ?? 'FitCore PT Portal - Personal Trainer' }}</title>
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,26 +50,11 @@
             >
                 <div class="flex flex-col">
                     <!-- Brand Logo -->
-                    <div class="flex items-center gap-3 px-6 pt-6 pb-5">
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ED1B45] text-white shadow-sm">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="m6.5 6.5 11 11" />
-                                <path d="m21 21-1-1" />
-                                <path d="m3 3 1 1" />
-                                <path d="m18 22 4-4" />
-                                <path d="m2 6 4-4" />
-                                <path d="m3 10 7-7" />
-                                <path d="m14 21 7-7" />
-                            </svg>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-poppins font-extrabold text-xl leading-tight text-gray-900 tracking-tight">
-                                FitCore
-                            </span>
-                            <span class="font-inter text-[10px] font-extrabold tracking-wider text-[#ED1B45] uppercase">
-                                PT PORTAL
-                            </span>
-                        </div>
+                    <div class="flex items-center justify-between gap-3 px-6 pt-6 pb-5 border-b border-gray-100">
+                        <img src="{{ asset('images/logo/logo.png') }}" alt="FitCore" class="h-7 w-auto object-contain">
+                        <span class="font-inter text-[9px] font-extrabold tracking-wider text-[#FF5722] uppercase bg-orange-50 px-2 py-0.5 rounded-full border border-orange-200">
+                            PT PORTAL
+                        </span>
                     </div>
 
                     <!-- Floor Active Status Pill -->
@@ -100,7 +89,7 @@
                         <!-- 1. Dashboard -->
                         <a
                             href="{{ route('trainer.dashboard') }}"
-                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.dashboard') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#ED1B45]' }}"
+                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.dashboard') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#FF5722]' }}"
                         >
                             <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.dashboard') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
@@ -111,7 +100,7 @@
                         <!-- 2. Jadwal Sesi PT -->
                         <a
                             href="{{ route('trainer.sessions.index') }}"
-                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.sessions.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#ED1B45]' }}"
+                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.sessions.*') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#FF5722]' }}"
                         >
                             <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.sessions.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -122,7 +111,7 @@
                         <!-- 3. Klien Saya -->
                         <a
                             href="{{ route('trainer.clients.index') }}"
-                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.clients.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#ED1B45]' }}"
+                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.clients.*') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#FF5722]' }}"
                         >
                             <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.clients.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -133,7 +122,7 @@
                         <!-- 4. Ketersediaan Waktu -->
                         <a
                             href="{{ route('trainer.availability.index') }}"
-                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.availability.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#ED1B45]' }}"
+                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.availability.*') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#FF5722]' }}"
                         >
                             <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.availability.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -144,7 +133,7 @@
                         <!-- 5. Pendapatan / Komisi -->
                         <a
                             href="{{ route('trainer.commissions.index') }}"
-                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.commissions.*') ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#ED1B45]' }}"
+                            class="flex items-center gap-3.5 rounded-xl px-4 py-3 font-inter text-sm font-semibold transition duration-150 {{ request()->routeIs('trainer.commissions.*') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#FF5722]' }}"
                         >
                             <svg class="h-5 w-5 shrink-0 {{ request()->routeIs('trainer.commissions.*') ? 'text-white' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -172,9 +161,9 @@
                         <button
                             type="button"
                             x-on:click="showLogoutModal = true"
-                            class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 font-inter text-xs font-semibold text-gray-700 transition hover:bg-rose-50 hover:text-[#ED1B45] cursor-pointer"
+                            class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 font-inter text-xs font-semibold text-gray-700 transition hover:bg-rose-50 hover:text-[#FF5722] cursor-pointer"
                         >
-                            <svg class="h-4 w-4 shrink-0 text-gray-500 hover:text-[#ED1B45]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <svg class="h-4 w-4 shrink-0 text-gray-500 hover:text-[#FF5722]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                                 <polyline points="16 17 21 12 16 7" />
                                 <line x1="21" y1="12" x2="9" y2="12" />
@@ -216,20 +205,20 @@
                                 <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                             <!-- Red indicator dot -->
-                            <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#ED1B45] ring-2 ring-white"></span>
+                            <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#FF5722] ring-2 ring-white"></span>
                         </button>
 
                         <!-- Coach Profile -->
                         <div class="flex items-center gap-3">
                             <div class="text-right hidden sm:block">
                                 <p class="font-poppins font-bold text-sm text-gray-900 leading-tight">
-                                    {{ str_starts_with(Auth::user()->name, 'Coach') ? Auth::user()->name : 'Coach ' . Auth::user()->name }}
+                                    {{ Auth::user() ? (str_starts_with(Auth::user()->name, 'Coach') ? Auth::user()->name : 'Coach ' . Auth::user()->name) : 'Coach' }}
                                 </p>
                                 <p class="font-inter text-xs text-gray-400">
-                                    {{ Auth::user()->trainerProfile?->specialization ?: 'Master Trainer' }}
+                                    {{ Auth::user()?->trainerProfile?->specialization ?: 'Master Trainer' }}
                                 </p>
                             </div>
-                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#BA0030] text-white shadow-sm ring-2 ring-rose-100">
+                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF5722] text-white shadow-sm ring-2 ring-rose-100">
                                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                                     <circle cx="12" cy="7" r="4" />
@@ -260,9 +249,9 @@
             >
                 <div
                     x-transition
-                    class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl sm:p-8 border-t-4 border-[#ED1B45]"
+                    class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl sm:p-8 border-t-4 border-[#FF5722]"
                 >
-                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 text-[#ED1B45]">
+                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 text-[#FF5722]">
                         <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M12 3.5 2.9 19.25a1.5 1.5 0 0 0 1.3 2.25h15.6a1.5 1.5 0 0 0 1.3-2.25L12 3.5Z" stroke-linejoin="round" />
                             <path d="M12 9v5m0 3h.01" stroke-linecap="round" />
@@ -288,7 +277,7 @@
                             @csrf
                             <button
                                 type="submit"
-                                class="w-full rounded-full bg-[#ED1B45] px-5 py-2.5 font-inter text-sm font-semibold text-white transition hover:bg-[#D1123D] shadow-sm cursor-pointer"
+                                class="w-full rounded-full bg-[#FF5722] px-5 py-2.5 font-inter text-sm font-semibold text-white transition hover:bg-[#E64A19] shadow-sm cursor-pointer"
                             >
                                 Ya, Keluar
                             </button>
@@ -300,5 +289,6 @@
             <x-email-verified-modal />
         </div>
         @livewireScripts
+        @stack('scripts')
     </body>
 </html>

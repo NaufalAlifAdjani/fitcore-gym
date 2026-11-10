@@ -19,7 +19,7 @@
     <div class="mt-5 flex items-start justify-between gap-3">
         <div>
             @if ($badge)
-                <span class="inline-block px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider bg-rose-100 text-[#BA0030]">
+                <span class="inline-block px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider bg-rose-100 text-[#FF5722]">
                     {{ $badge }}
                 </span>
             @endif
@@ -31,7 +31,7 @@
                     Pelatih: <span class="text-slate-800">{{ $trainerName }}</span>
                 </p>
             @endif
-            <a href="{{ $changeUrl }}" class="inline-block text-xs font-bold text-[#BA0030] hover:underline mt-1.5">
+            <a href="{{ $changeUrl }}" class="inline-block text-xs font-bold text-[#FF5722] hover:underline mt-1.5">
                 Ubah Paket
             </a>
         </div>
@@ -95,16 +95,16 @@
         </div>
     </div>
 
-    <!-- Box Hitam Pekat Total Pembayaran -->
-    <div class="mt-6 rounded-2xl bg-[#0B0F17] p-5 text-white shadow-md">
-        <span class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
+    <!-- Box Total Pembayaran (Light Athletic Palette) -->
+    <div class="mt-6 rounded-2xl bg-gradient-to-r from-orange-50 via-white to-amber-50/50 border-2 border-orange-200 p-5 text-zinc-900 shadow-sm">
+        <span class="text-[10px] font-extrabold uppercase tracking-widest text-zinc-500">
             TOTAL PEMBAYARAN :
         </span>
         <div class="mt-1 flex items-baseline justify-between">
-            <span class="font-heading text-2xl sm:text-3xl font-black text-white tracking-tight" x-text="'Rp ' + total.toLocaleString('id-ID')">
+            <span class="font-heading text-2xl sm:text-3xl font-black text-[#FF5722] tracking-tight" x-text="'Rp ' + total.toLocaleString('id-ID')">
                 Rp {{ number_format($totalAmount, 0, ',', '.') }}
             </span>
-            <span class="text-[11px] text-rose-400 font-semibold">Tepat s/d 3 digit terakhir</span>
+            <span class="text-[11px] text-[#FF5722] font-semibold">Tepat s/d 3 digit terakhir</span>
         </div>
     </div>
 
@@ -114,7 +114,7 @@
             <input
                 type="checkbox"
                 required
-                class="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#BA0030] focus:ring-[#BA0030]"
+                class="mt-0.5 h-4 w-4 rounded border-slate-300 text-[#FF5722] focus:ring-[#FF5722]"
             />
             <span class="leading-relaxed">
                 {{ $termsText }}
@@ -127,7 +127,7 @@
         <x-button
             type="submit"
             variant="primary"
-            class="w-full !py-4 !text-sm font-bold tracking-wide shadow-lg shadow-[#BA0030]/30 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
+            class="w-full !py-4 !text-sm font-bold tracking-wide shadow-lg shadow-[#FF5722]/30 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
         >
             <span>{{ $submitLabel }}</span>
             <span class="text-lg">→</span>

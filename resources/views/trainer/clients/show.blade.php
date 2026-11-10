@@ -40,7 +40,7 @@
                 @if ($member->avatar)
                     <img src="{{ $member->avatar }}" alt="{{ $member->name }}" class="h-20 w-20 rounded-2xl object-cover border-2 border-gray-100 shadow-xs">
                 @else
-                    <div class="h-20 w-20 rounded-2xl bg-gradient-to-br from-rose-500 to-[#ED1B45] text-white font-poppins font-extrabold flex items-center justify-center text-2xl shadow-sm">
+                    <div class="h-20 w-20 rounded-2xl bg-gradient-to-br from-rose-500 to-[#FF5722] text-white font-poppins font-extrabold flex items-center justify-center text-2xl shadow-sm">
                         {{ strtoupper(substr($member->name, 0, 2)) }}
                     </div>
                 @endif
@@ -99,7 +99,7 @@
                 <div class="h-8 w-px bg-gray-100"></div>
                 <div class="text-center sm:text-left">
                     <span class="block text-[11px] font-bold text-gray-400 uppercase font-inter">Sisa Kuota</span>
-                    <span class="font-poppins text-2xl font-extrabold {{ $remainingActiveQuota > 0 ? 'text-[#ED1B45]' : 'text-gray-400' }}">
+                    <span class="font-poppins text-2xl font-extrabold {{ $remainingActiveQuota > 0 ? 'text-[#FF5722]' : 'text-gray-400' }}">
                         {{ $remainingActiveQuota }}
                     </span>
                 </div>
@@ -112,7 +112,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#ED1B45] text-white">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#FF5722] text-white">
                                 PAKET AKTIF
                             </span>
                             <h3 class="font-poppins text-base font-bold text-gray-900">
@@ -133,7 +133,7 @@
                             $percentage = $activeQuota->total_sessions > 0 ? round(($activeQuota->used_sessions / $activeQuota->total_sessions) * 100) : 0;
                         @endphp
                         <div class="mt-1.5 w-full sm:w-48 bg-gray-200 rounded-full h-2 overflow-hidden">
-                            <div class="bg-[#ED1B45] h-2 rounded-full transition-all duration-300" style="width: {{ $percentage }}%"></div>
+                            <div class="bg-[#FF5722] h-2 rounded-full transition-all duration-300" style="width: {{ $percentage }}%"></div>
                         </div>
                     </div>
                 </div>
@@ -252,7 +252,7 @@
                             @if ($session->notes)
                                 <div class="mt-3.5 rounded-xl bg-gray-50/90 p-3 border border-gray-100 text-xs font-inter text-gray-700">
                                     <div class="flex items-center gap-1.5 font-bold text-gray-800 mb-1 text-[11px] uppercase tracking-wider">
-                                        <svg class="h-3.5 w-3.5 text-[#ED1B45]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <svg class="h-3.5 w-3.5 text-[#FF5722]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                                         </svg>
                                         Catatan Latihan PT:

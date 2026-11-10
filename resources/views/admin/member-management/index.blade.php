@@ -66,12 +66,12 @@
                             name="search"
                             value="{{ request('search') }}"
                             placeholder="Cari nama, email, ID..."
-                            class="w-full rounded-full border border-[#E5E7EB] bg-white py-2 pl-10 pr-9 text-xs font-inter text-[#16151A] placeholder-[#565A66] shadow-xs focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45]"
+                            class="w-full rounded-full border border-[#E5E7EB] bg-white py-2 pl-10 pr-9 text-xs font-inter text-[#16151A] placeholder-[#565A66] shadow-xs focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722]"
                         >
                         @if(request('search'))
                             <a
                                 href="{{ route('admin.members.index', request()->except(['search', 'page'])) }}"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#ED1B45] transition"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FF5722] transition"
                                 title="Hapus kata kunci pencarian"
                             >
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,7 +89,7 @@
                         <select
                             name="status"
                             onchange="this.form.submit()"
-                            class="rounded-full border border-[#E5E7EB] bg-white py-2 px-3 text-xs font-inter text-[#16151A] shadow-xs focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer"
+                            class="rounded-full border border-[#E5E7EB] bg-white py-2 px-3 text-xs font-inter text-[#16151A] shadow-xs focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] cursor-pointer"
                         >
                             <option value="all" {{ request('status') === 'all' || !request('status') ? 'selected' : '' }}>Semua Status</option>
                             <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Aktif</option>
@@ -113,7 +113,7 @@
                     <button
                         type="button"
                         x-on:click="showAddModal = true"
-                        class="inline-flex items-center gap-2 rounded-full bg-[#ED1B45] px-4 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-[#D1123D] focus:outline-none cursor-pointer"
+                        class="inline-flex items-center gap-2 rounded-full bg-[#FF5722] px-4 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-[#E64A19] focus:outline-none cursor-pointer"
                     >
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -227,7 +227,7 @@
                 <div class="flex flex-wrap items-center gap-2">
                     <a
                         href="{{ route('admin.members.index') }}"
-                        class="rounded-full px-4 py-2 text-xs font-semibold transition {{ ($statusFilter === 'all' && !request('status')) ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:bg-gray-50' }}"
+                        class="rounded-full px-4 py-2 text-xs font-semibold transition {{ ($statusFilter === 'all' && !request('status')) ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:bg-gray-50' }}"
                         title="Tampilkan semua data anggota tanpa filter"
                     >
                         Semua ({{ number_format($totalMembers, 0, ',', '.') }})
@@ -235,21 +235,21 @@
 
                     <a
                         href="{{ route('admin.members.index', array_filter(['status' => 'active', 'search' => request('search')])) }}"
-                        class="rounded-full px-4 py-2 text-xs font-semibold transition {{ $statusFilter === 'active' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:bg-gray-50' }}"
+                        class="rounded-full px-4 py-2 text-xs font-semibold transition {{ $statusFilter === 'active' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:bg-gray-50' }}"
                     >
                         Aktif ({{ number_format($activeMembers, 0, ',', '.') }})
                     </a>
 
                     <a
                         href="{{ route('admin.members.index', array_filter(['status' => 'expiring', 'search' => request('search')])) }}"
-                        class="rounded-full px-4 py-2 text-xs font-semibold transition {{ $statusFilter === 'expiring' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:bg-gray-50' }}"
+                        class="rounded-full px-4 py-2 text-xs font-semibold transition {{ $statusFilter === 'expiring' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:bg-gray-50' }}"
                     >
                         Akan Berakhir ({{ number_format($expiringMembers, 0, ',', '.') }})
                     </a>
 
                     <a
                         href="{{ route('admin.members.index', array_filter(['status' => 'inactive', 'search' => request('search')])) }}"
-                        class="rounded-full px-4 py-2 text-xs font-semibold transition {{ $statusFilter === 'inactive' ? 'bg-[#ED1B45] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:bg-gray-50' }}"
+                        class="rounded-full px-4 py-2 text-xs font-semibold transition {{ $statusFilter === 'inactive' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:bg-gray-50' }}"
                     >
                         Nonaktif ({{ number_format($inactiveMembers, 0, ',', '.') }})
                     </a>
@@ -269,7 +269,7 @@
                         <select
                             name="package"
                             onchange="this.form.submit()"
-                            class="rounded-full border border-[#E5E7EB] bg-white py-2 px-3 text-xs font-inter text-[#16151A] shadow-xs focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer"
+                            class="rounded-full border border-[#E5E7EB] bg-white py-2 px-3 text-xs font-inter text-[#16151A] shadow-xs focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] cursor-pointer"
                         >
                             <option value="all" {{ !request('package') || request('package') === 'all' ? 'selected' : '' }}>Semua Paket</option>
                             @foreach ($packages as $pkg)
@@ -283,7 +283,7 @@
                         <select
                             name="sort"
                             onchange="this.form.submit()"
-                            class="rounded-full border border-[#E5E7EB] bg-white py-2 px-3 text-xs font-inter text-[#16151A] shadow-xs focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] cursor-pointer"
+                            class="rounded-full border border-[#E5E7EB] bg-white py-2 px-3 text-xs font-inter text-[#16151A] shadow-xs focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] cursor-pointer"
                         >
                             <option value="latest" {{ !request('sort') || request('sort') === 'latest' ? 'selected' : '' }}>Urutkan: Terbaru</option>
                             <option value="oldest" {{ request('sort') === 'oldest' ? 'selected' : '' }}>Urutkan: Terlama</option>
@@ -295,7 +295,7 @@
                         @if(request('search') || (request('package') && request('package') !== 'all') || (request('status') && request('status') !== 'all') || (request('sort') && request('sort') !== 'latest'))
                             <a
                                 href="{{ route('admin.members.index') }}"
-                                class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-3.5 py-2 text-xs font-semibold text-[#ED1B45] hover:bg-red-100 transition shadow-xs"
+                                class="inline-flex items-center gap-1.5 rounded-full border border-red-200 bg-red-50 px-3.5 py-2 text-xs font-semibold text-[#FF5722] hover:bg-red-100 transition shadow-xs"
                                 title="Kembalikan semua filter ke tampilan awal"
                             >
                                 <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -320,7 +320,7 @@
             @if($hasActiveFilters)
                 <div class="flex flex-wrap items-center gap-2 rounded-xl bg-gray-50 border border-[#E5E7EB] p-2.5 px-4 text-xs font-inter text-[#565A66]">
                     <span class="font-semibold text-[#16151A] flex items-center gap-1.5 mr-1">
-                        <svg class="h-4 w-4 text-[#ED1B45]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="h-4 w-4 text-[#FF5722]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                         </svg>
                         Filter Aktif:
@@ -329,7 +329,7 @@
                     @if(request('search'))
                         <span class="inline-flex items-center gap-1.5 rounded-full bg-white border border-[#E5E7EB] px-3 py-1 text-xs text-[#16151A] shadow-xs">
                             <span class="text-gray-400">Pencarian:</span>
-                            <span class="font-semibold text-[#ED1B45]">"{{ request('search') }}"</span>
+                            <span class="font-semibold text-[#FF5722]">"{{ request('search') }}"</span>
                             <a href="{{ route('admin.members.index', request()->except(['search', 'page'])) }}" class="text-gray-400 hover:text-red-500 ml-0.5" title="Hapus pencarian ini">
                                 <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                             </a>
@@ -381,7 +381,7 @@
 
                     <a
                         href="{{ route('admin.members.index') }}"
-                        class="ml-auto inline-flex items-center gap-1 font-semibold text-[#ED1B45] hover:underline cursor-pointer"
+                        class="ml-auto inline-flex items-center gap-1 font-semibold text-[#FF5722] hover:underline cursor-pointer"
                         title="Kembalikan semua filter ke awal"
                     >
                         <span>Hapus Semua Filter</span>
@@ -519,7 +519,7 @@
                                                 'package_name' => $pkg?->name ?? 'Belum Ada',
                                                 'end_date' => $latest?->end_date ? \Carbon\Carbon::parse($latest->end_date)->format('Y-m-d') : null,
                                             ]) }})"
-                                            class="inline-flex items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#16151A] shadow-xs transition hover:bg-gray-50 hover:text-[#ED1B45] cursor-pointer"
+                                            class="inline-flex items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#16151A] shadow-xs transition hover:bg-gray-50 hover:text-[#FF5722] cursor-pointer"
                                         >
                                             <svg class="h-3.5 w-3.5 text-[#565A66]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -532,7 +532,7 @@
                             @empty
                                 <tr>
                                     <td colspan="5" class="py-14 text-center text-[#565A66]">
-                                        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-[#ED1B45] mb-3">
+                                        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-[#FF5722] mb-3">
                                             <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                             </svg>
@@ -542,7 +542,7 @@
                                             <p class="text-xs text-[#565A66] mt-1.5 max-w-md mx-auto">
                                                 Tidak ada member yang cocok dengan filter aktif
                                                 @if(request('search'))
-                                                    pencarian <span class="font-bold text-[#ED1B45]">"{{ request('search') }}"</span>
+                                                    pencarian <span class="font-bold text-[#FF5722]">"{{ request('search') }}"</span>
                                                 @endif
                                                 @if($activePackage)
                                                     pada paket <span class="font-bold text-blue-600">{{ $activePackage->name }}</span>
@@ -560,7 +560,7 @@
                                                 @endif
                                                 <a
                                                     href="{{ route('admin.members.index') }}"
-                                                    class="inline-flex items-center gap-2 rounded-full bg-[#ED1B45] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-[#D1123D] transition"
+                                                    class="inline-flex items-center gap-2 rounded-full bg-[#FF5722] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-[#E64A19] transition"
                                                 >
                                                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -574,7 +574,7 @@
                                             <button
                                                 type="button"
                                                 x-on:click="showAddModal = true"
-                                                class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#ED1B45] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-[#D1123D]"
+                                                class="mt-3 inline-flex items-center gap-2 rounded-full bg-[#FF5722] px-4 py-2 text-xs font-semibold text-white shadow-xs hover:bg-[#E64A19]"
                                             >
                                                 <span>+ Tambah Anggota Sekarang</span>
                                             </button>
@@ -638,7 +638,7 @@
                     <!-- Detail Header -->
                     <div class="p-6 border-b border-[#E5E7EB]">
                         <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-white bg-[#ED1B45] px-2.5 py-1 rounded-full font-inter">
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-white bg-[#FF5722] px-2.5 py-1 rounded-full font-inter">
                                 PROFIL MEMBER FITCORE
                             </span>
                             <button
@@ -698,7 +698,7 @@
                             <button
                                 type="button"
                                 x-on:click="openEditFromDetail()"
-                                class="inline-flex items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-3 py-2 text-xs font-semibold text-[#16151A] transition hover:bg-gray-50 hover:text-[#ED1B45] cursor-pointer"
+                                class="inline-flex items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] bg-white px-3 py-2 text-xs font-semibold text-[#16151A] transition hover:bg-gray-50 hover:text-[#FF5722] cursor-pointer"
                             >
                                 <svg class="h-4 w-4 text-[#565A66]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -745,7 +745,7 @@
                                 </div>
                                 <div class="h-2 w-full rounded-full bg-gray-200 overflow-hidden">
                                     <div
-                                        class="h-full bg-[#ED1B45] rounded-full transition-all duration-300"
+                                        class="h-full bg-[#FF5722] rounded-full transition-all duration-300"
                                         :style="'width: ' + (selectedMember?.package?.progress_percentage || 0) + '%'"
                                     ></div>
                                 </div>
@@ -755,7 +755,7 @@
                             <button
                                 type="button"
                                 x-on:click="openEditFromDetail()"
-                                class="w-full mt-4 flex items-center justify-center gap-2 rounded-xl bg-[#ED1B45] py-2.5 text-xs font-semibold text-white transition hover:bg-[#D1123D]"
+                                class="w-full mt-4 flex items-center justify-center gap-2 rounded-xl bg-[#FF5722] py-2.5 text-xs font-semibold text-white transition hover:bg-[#E64A19]"
                             >
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -878,7 +878,7 @@
                             <button
                                 type="button"
                                 x-on:click="openDeleteFromDetail('hard')"
-                                class="inline-flex items-center gap-1.5 rounded-full bg-[#ED1B45] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#D1123D]"
+                                class="inline-flex items-center gap-1.5 rounded-full bg-[#FF5722] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#E64A19]"
                             >
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -938,7 +938,7 @@
                                 value="{{ old('name') }}"
                                 required
                                 placeholder="Contoh: Nama Lengkap Member"
-                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                             >
                             @error('name') <p class="text-rose-600 mt-1">{{ $message }}</p> @enderror
                         </div>
@@ -953,7 +953,7 @@
                                     value="{{ old('email') }}"
                                     required
                                     placeholder="nama@email.com"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                                 @error('email') <p class="text-rose-600 mt-1">{{ $message }}</p> @enderror
                             </div>
@@ -965,7 +965,7 @@
                                     value="{{ old('phone') }}"
                                     required
                                     placeholder="08123456789"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                                 @error('phone') <p class="text-rose-600 mt-1">{{ $message }}</p> @enderror
                             </div>
@@ -977,7 +977,7 @@
                                 <label class="block font-semibold text-[#16151A] mb-1">Jenis Kelamin</label>
                                 <select
                                     name="gender"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                                     <option value="Laki-laki">Laki-laki</option>
                                     <option value="Perempuan">Perempuan</option>
@@ -987,7 +987,7 @@
                                 <label class="block font-semibold text-[#16151A] mb-1">Pilih Paket Membership</label>
                                 <select
                                     name="membership_package_id"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                                     <option value="">-- Tanpa Paket Langsung --</option>
                                     @foreach ($packages as $pkg)
@@ -1006,7 +1006,7 @@
                                 type="date"
                                 name="start_date"
                                 value="{{ old('start_date', now()->format('Y-m-d')) }}"
-                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                             >
                         </div>
 
@@ -1017,7 +1017,7 @@
                                 name="address"
                                 rows="2"
                                 placeholder="Alamat domisili anggota..."
-                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                             >{{ old('address') }}</textarea>
                         </div>
 
@@ -1031,7 +1031,7 @@
                             </button>
                             <button
                                 type="submit"
-                                class="rounded-full bg-[#ED1B45] px-6 py-2.5 text-xs font-semibold text-white hover:bg-[#D1123D] transition shadow-xs"
+                                class="rounded-full bg-[#FF5722] px-6 py-2.5 text-xs font-semibold text-white hover:bg-[#E64A19] transition shadow-xs"
                             >
                                 Simpan Member Baru
                             </button>
@@ -1091,7 +1091,7 @@
                                 name="name"
                                 :value="selectedMember?.name"
                                 required
-                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                             >
                         </div>
 
@@ -1104,7 +1104,7 @@
                                     name="email"
                                     :value="selectedMember?.email"
                                     required
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                             </div>
                             <div>
@@ -1114,7 +1114,7 @@
                                     name="phone"
                                     :value="selectedMember?.phone"
                                     required
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                             </div>
                         </div>
@@ -1125,7 +1125,7 @@
                                 <label class="block font-semibold text-[#16151A] mb-1">Status Keanggotaan</label>
                                 <select
                                     name="status"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                                     <option value="active" :selected="selectedMember?.status === 'active'">Aktif</option>
                                     <option value="inactive" :selected="selectedMember?.status === 'inactive'">Nonaktif</option>
@@ -1135,7 +1135,7 @@
                                 <label class="block font-semibold text-[#16151A] mb-1">Jenis Kelamin</label>
                                 <select
                                     name="gender"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                                     <option value="Laki-laki" :selected="selectedMember?.gender === 'Laki-laki'">Laki-laki</option>
                                     <option value="Perempuan" :selected="selectedMember?.gender === 'Perempuan'">Perempuan</option>
@@ -1149,7 +1149,7 @@
                                 <label class="block font-semibold text-[#16151A] mb-1">Paket Membership</label>
                                 <select
                                     name="membership_package_id"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                                     <option value="">-- Tetap / Tidak Ada --</option>
                                     @foreach ($packages as $pkg)
@@ -1165,7 +1165,7 @@
                                     type="date"
                                     name="end_date"
                                     :value="selectedMember?.end_date"
-                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                    class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                             </div>
                         </div>
@@ -1177,7 +1177,7 @@
                                 name="address"
                                 rows="2"
                                 :value="selectedMember?.address"
-                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2 text-xs text-[#16151A] focus:border-[#ED1B45] focus:ring-1 focus:ring-[#ED1B45] outline-none"
+                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                             ></textarea>
                         </div>
 
@@ -1191,7 +1191,7 @@
                             </button>
                             <button
                                 type="submit"
-                                class="rounded-full bg-[#ED1B45] px-6 py-2.5 text-xs font-semibold text-white hover:bg-[#D1123D] transition shadow-xs"
+                                class="rounded-full bg-[#FF5722] px-6 py-2.5 text-xs font-semibold text-white hover:bg-[#E64A19] transition shadow-xs"
                             >
                                 Simpan Perubahan
                             </button>
@@ -1264,7 +1264,7 @@
                     <!-- Hard Delete Modal Content -->
                     <template x-if="deleteType === 'hard'">
                         <div>
-                            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 text-[#ED1B45]">
+                            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 text-[#FF5722]">
                                 <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                 </svg>
@@ -1287,7 +1287,7 @@
                                 </button>
                                 <button
                                     type="submit"
-                                    class="w-full rounded-full bg-[#ED1B45] py-2.5 text-xs font-semibold text-white hover:bg-[#D1123D] transition shadow-xs"
+                                    class="w-full rounded-full bg-[#FF5722] py-2.5 text-xs font-semibold text-white hover:bg-[#E64A19] transition shadow-xs"
                                 >
                                     Hapus Permanen
                                 </button>

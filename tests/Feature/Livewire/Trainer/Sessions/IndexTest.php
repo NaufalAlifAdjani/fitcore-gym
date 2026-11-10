@@ -456,8 +456,8 @@ class IndexTest extends TestCase
 
         $response->assertStatus(200);
         // Brand & Portal
-        $response->assertSee('MAXFIT');
-        $response->assertSee('TRAINER PORTAL');
+        $response->assertSee('FitCore');
+        $response->assertSee('PT PORTAL');
         // Trainer Name & Subtitle
         $response->assertSee('Coach Rama Prasetya');
         $response->assertSee('CSCS - Head Trainer');

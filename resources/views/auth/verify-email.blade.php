@@ -1,7 +1,7 @@
 <x-guest-layout>
     <!-- Header Icon & Title -->
     <div class="mb-6">
-        <div class="w-12 h-12 bg-red-50 text-[#be0a32] rounded-2xl flex items-center justify-center mb-4 border border-red-100 shadow-sm">
+        <div class="w-12 h-12 bg-red-50 text-[#FF5722] rounded-2xl flex items-center justify-center mb-4 border border-red-100 shadow-sm">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
             </svg>
@@ -11,7 +11,7 @@
         </h2>
         <p class="text-gray-500 text-xs sm:text-sm mt-2 leading-relaxed">
             Terima kasih telah bergabung dengan <strong class="text-gray-900">{{ config('app.name', 'FitCore Gym') }}</strong>! Kami telah mengirimkan tautan verifikasi ke:
-            <span class="block mt-1 font-bold text-[#ED1B45]">{{ auth()->user()?->email }}</span>
+            <span class="block mt-1 font-bold text-[#FF5722]">{{ auth()->user()?->email }}</span>
             Silakan buka kotak masuk email Anda (atau folder spam) dan klik tautan tersebut untuk mengaktifkan akun Anda.
         </p>
     </div>
