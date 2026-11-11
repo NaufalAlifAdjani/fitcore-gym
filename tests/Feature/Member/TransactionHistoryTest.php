@@ -380,8 +380,8 @@ class TransactionHistoryTest extends TestCase
         $response->assertOk();
 
         $queryCount = count(DB::getQueryLog());
-        // Eager loaded queries should be well below 10 (usually ~3-4 queries total for session/auth, years, and payments with relations)
-        $this->assertLessThanOrEqual(6, $queryCount);
+        // Eager loaded queries should be well below 10 (session/auth, years, payments with relations, plus 2 for navbar notifications)
+        $this->assertLessThanOrEqual(8, $queryCount);
     }
 
     public function test_member_can_download_invoice_via_alias_and_mobile_routes(): void
