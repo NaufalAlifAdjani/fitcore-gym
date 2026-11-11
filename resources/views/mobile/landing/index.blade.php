@@ -16,21 +16,21 @@
     <div class="px-4 py-5 space-y-6">
 
         <!-- 1. HERO BANNER MOBILE -->
-        <div class="relative overflow-hidden bg-[#141414] rounded-2xl p-6 text-white shadow-lg border border-white/10">
-            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-[#FF5722]/20 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="relative overflow-hidden bg-white rounded-2xl p-6 text-[#16151A] shadow-[0_4px_16px_rgba(0,0,0,0.06)] border border-[#E5E7EB]">
+            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-[#FF5722]/10 rounded-full blur-2xl pointer-events-none"></div>
 
             <div class="relative space-y-3">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[10px] font-bold uppercase tracking-wider text-white border border-white/15">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 text-[10px] font-bold uppercase tracking-wider text-[#FF5722] border border-orange-200/80">
                     <span class="w-1.5 h-1.5 rounded-full bg-[#FF5722] animate-pulse"></span>
                     PREMIER ATHLETIC GYM
                 </span>
 
-                <h1 class="font-poppins font-black text-2xl tracking-tight leading-tight">
+                <h1 class="font-poppins font-black text-2xl tracking-tight leading-tight text-[#16151A]">
                     TRANSFORMASI TOTAL <br>
                     <span class="text-[#FF5722]">KEKUATAN ANDA</span>
                 </h1>
 
-                <p class="text-xs text-slate-300 leading-relaxed font-normal">
+                <p class="text-xs text-[#565A66] leading-relaxed font-normal">
                     Fasilitas standar kejuaraan dunia, pelatih berlisensi, dan kultur disiplin tanpa kompromi.
                 </p>
 
@@ -38,7 +38,7 @@
                     <a href="{{ route('mobile.landing.packages') }}" class="w-full py-3 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold text-center shadow-md shadow-orange-500/25 active:scale-98 transition">
                         Pilih Paket Membership
                     </a>
-                    <a href="{{ route('mobile.landing.trainers') }}" class="w-full py-2.5 rounded-full bg-white/10 text-white text-xs font-bold text-center border border-white/20 active:scale-98 transition">
+                    <a href="{{ route('mobile.landing.trainers') }}" class="w-full py-2.5 rounded-full bg-white hover:bg-gray-50 text-[#16151A] text-xs font-bold text-center border border-[#E5E7EB] hover:border-[#FF5722] hover:text-[#FF5722] shadow-xs active:scale-98 transition">
                         Lihat Pelatih PT
                     </a>
                 </div>
@@ -262,11 +262,11 @@
         </div>
 
         <!-- 7. BOTTOM CTA CARD -->
-        <div class="bg-[#141414] rounded-2xl p-6 text-white text-center space-y-3">
-            <h3 class="font-poppins font-black text-xl text-white">Mulai Latihan Hari Ini</h3>
-            <p class="text-xs text-slate-300 leading-relaxed">Pilih paket dan nikmati fasilitas kelas dunia di FitCore Athletic.</p>
+        <div class="bg-gradient-to-tr from-orange-50 to-amber-50 rounded-2xl p-6 text-center space-y-3 border border-orange-200/80 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+            <h3 class="font-poppins font-black text-xl text-[#16151A]">Mulai Latihan Hari Ini</h3>
+            <p class="text-xs text-[#565A66] leading-relaxed">Pilih paket dan nikmati fasilitas kelas dunia di FitCore Athletic.</p>
             <div class="pt-2">
-                <a href="{{ route('mobile.login') }}" class="block w-full py-3 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold shadow-md shadow-orange-500/25">
+                <a href="{{ route('mobile.login') }}" class="block w-full py-3 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold shadow-md shadow-orange-500/25 active:scale-98 transition">
                     Masuk atau Daftar
                 </a>
             </div>

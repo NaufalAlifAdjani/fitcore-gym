@@ -14,40 +14,40 @@
 <x-layouts.public title="FitCore Athletic - Pusat Kebugaran & Pelatihan Performa Tinggi" active-tab="home">
 
     <!-- 1. HERO SECTION -->
-    <section class="relative overflow-hidden bg-[#141414] text-white py-20 lg:py-28">
+    <section class="relative overflow-hidden bg-gradient-to-b from-white via-[#F6F6F7] to-[#F6F6F7] text-[#16151A] py-20 lg:py-28 border-b border-[#E5E7EB]">
         <!-- Background Radial Glow Effect -->
-        <div class="absolute inset-0 bg-gradient-to-r from-black via-[#141414] to-[#2B1140]/60 opacity-90"></div>
-        <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-[#FF5722]/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-orange-400/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-[#FF5722]/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <!-- Kolom Kiri: Teks & CTA -->
                 <div class="lg:col-span-7 space-y-6">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-white">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200/80 text-xs font-bold text-[#FF5722]">
                         <span class="w-2 h-2 rounded-full bg-[#FF5722] animate-pulse"></span>
                         PUSAT KEBUGARAN PREMIER &amp; HIGH PERFORMANCE
                     </div>
 
-                    <h1 class="font-poppins font-black text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.1] text-white">
+                    <h1 class="font-poppins font-black text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.1] text-[#16151A]">
                         TRANSFORMASI TOTAL <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-[#FF5722]">KEKUATAN &amp; PERFORMA</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#16151A] via-[#FF5722] to-[#FF8A00]">KEKUATAN &amp; PERFORMA</span>
                     </h1>
 
-                    <p class="text-base sm:text-lg text-slate-300 max-w-xl font-normal leading-relaxed">
+                    <p class="text-base sm:text-lg text-[#565A66] max-w-xl font-normal leading-relaxed">
                         Fasilitas berstandar kejuaraan dunia, pelatih berlisensi internasional, dan kultur disiplin tanpa kompromi untuk mencapai potensi fisik tertinggi Anda.
                     </p>
 
                     <div class="flex flex-wrap items-center gap-4 pt-2">
-                        <a href="{{ route('landing.packages') }}" class="px-8 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-sm font-bold shadow-lg shadow-orange-500/30 transition transform hover:-translate-y-0.5 active:translate-y-0">
+                        <a href="{{ route('landing.packages') }}" class="px-8 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-sm font-bold shadow-lg shadow-orange-500/25 transition transform hover:-translate-y-0.5 active:translate-y-0">
                             Pilih Paket Membership
                         </a>
-                        <a href="{{ route('landing.trainers') }}" class="px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-bold transition">
+                        <a href="{{ route('landing.trainers') }}" class="px-7 py-3.5 rounded-full bg-white hover:bg-gray-50 border border-[#E5E7EB] text-[#16151A] hover:border-[#FF5722] hover:text-[#FF5722] text-sm font-bold shadow-xs transition">
                             Lihat Pelatih Kami
                         </a>
                     </div>
 
                     <!-- Highlight Tags -->
-                    <div class="pt-4 flex flex-wrap items-center gap-6 text-xs text-slate-400 font-medium">
+                    <div class="pt-4 flex flex-wrap items-center gap-6 text-xs text-[#565A66] font-medium">
                         <div class="flex items-center gap-2">
                             <svg class="w-4 h-4 text-[#FF5722]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
                             Peralatan Hammer Strength &amp; Eleiko
@@ -65,35 +65,35 @@
 
                 <!-- Kolom Kanan: Athletic Stat Hero Card -->
                 <div class="lg:col-span-5">
-                    <div class="relative bg-gradient-to-b from-[#1E1E24] to-[#141416] p-8 rounded-3xl border border-white/10 shadow-2xl">
-                        <div class="flex items-center justify-between pb-6 border-b border-white/10">
+                    <div class="relative bg-white p-8 rounded-3xl border border-[#E5E7EB] shadow-[0_12px_32px_rgba(0,0,0,0.06)]">
+                        <div class="flex items-center justify-between pb-6 border-b border-[#E5E7EB]">
                             <div>
-                                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">STATUS PUSAT KEBUGARAN</span>
-                                <h3 class="text-xl font-poppins font-black text-white mt-1">FitCore SCBD Arena</h3>
+                                <span class="text-xs font-bold uppercase tracking-wider text-[#565A66]">STATUS PUSAT KEBUGARAN</span>
+                                <h3 class="text-xl font-poppins font-black text-[#16151A] mt-1">FitCore SCBD Arena</h3>
                             </div>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Buka 05:30 - 22:00
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Buka 05:30 - 22:00
                             </span>
                         </div>
 
                         <!-- Ringkasan Fitur Unggulan -->
                         <div class="grid grid-cols-2 gap-4 my-6">
-                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                                <span class="text-2xl font-poppins font-black text-white">1.800+ m²</span>
-                                <p class="text-xs text-slate-400 mt-1">Luas Area Training Terbuka</p>
+                            <div class="bg-[#F6F6F7] p-4 rounded-2xl border border-[#E5E7EB]">
+                                <span class="text-2xl font-poppins font-black text-[#16151A]">1.800+ m²</span>
+                                <p class="text-xs text-[#565A66] mt-1">Luas Area Training Terbuka</p>
                             </div>
-                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <div class="bg-[#F6F6F7] p-4 rounded-2xl border border-[#E5E7EB]">
                                 <span class="text-2xl font-poppins font-black text-[#FF5722]">100%</span>
-                                <p class="text-xs text-slate-400 mt-1">Peralatan Terkalibrasi</p>
+                                <p class="text-xs text-[#565A66] mt-1">Peralatan Terkalibrasi</p>
                             </div>
                         </div>
 
                         <div class="space-y-3 pt-2">
-                            <div class="flex items-center justify-between text-xs text-slate-300">
+                            <div class="flex items-center justify-between text-xs text-[#565A66]">
                                 <span>Kapasitas Latihan Real-time</span>
-                                <span class="font-bold text-white">42% (Optimal)</span>
+                                <span class="font-bold text-[#16151A]">42% (Optimal)</span>
                             </div>
-                            <div class="w-full bg-white/10 rounded-full h-2">
+                            <div class="w-full bg-[#E5E7EB] rounded-full h-2">
                                 <div class="bg-[#FF5722] h-2 rounded-full" style="width: 42%"></div>
                             </div>
                         </div>
@@ -300,7 +300,7 @@
                                 <div class="flex items-center gap-1 font-bold text-amber-500">
                                     <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                                     <span class="text-[#16151A]">{{ $trainer->trainerProfile->rating ?? '4.98' }}</span>
-                                    <span class="text-slate-400 font-normal">({{ $trainer->trainerProfile->review_count ?? '150+' }})</span>
+                                    <span class="text-[#565A66] font-normal">({{ $trainer->trainerProfile->review_count ?? '150+' }})</span>
                                 </div>
                                 <span class="font-bold text-[#16151A]">{{ $trainer->trainerProfile->experience ?? 4 }}+ Tahun Pengalaman</span>
                             </div>
@@ -394,19 +394,19 @@
     </section>
 
     <!-- 7. BOTTOM CALL TO ACTION BANNER -->
-    <section class="py-16 bg-[#141414] text-white">
+    <section class="py-16 bg-gradient-to-r from-orange-50/70 via-amber-50/40 to-orange-50/70 border-t border-[#E5E7EB] text-[#16151A]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-            <span class="inline-block px-4 py-1 rounded-full bg-[#FF5722]/20 text-[#FF5722] text-xs font-black uppercase tracking-widest border border-[#FF5722]/30">
+            <span class="inline-block px-4 py-1 rounded-full bg-white text-[#FF5722] text-xs font-black uppercase tracking-widest border border-orange-200 shadow-xs">
                 MULAI HARI INI
             </span>
-            <h2 class="font-poppins font-black text-3xl sm:text-5xl tracking-tight text-white max-w-2xl mx-auto">
+            <h2 class="font-poppins font-black text-3xl sm:text-5xl tracking-tight text-[#16151A] max-w-2xl mx-auto">
                 Siap Mengubah Batasan Diri Anda?
             </h2>
-            <p class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto font-normal">
+            <p class="text-[#565A66] text-sm sm:text-base max-w-xl mx-auto font-normal">
                 Bergabunglah bersama ribuan member lain yang telah membuktikan transformasi kekuatan nyata di FitCore Athletic.
             </p>
             <div class="pt-4 flex items-center justify-center gap-4">
-                <a href="{{ route('landing.packages') }}" class="px-8 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-sm font-bold shadow-lg shadow-orange-500/30 transition transform hover:-translate-y-0.5">
+                <a href="{{ route('landing.packages') }}" class="px-8 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-sm font-bold shadow-lg shadow-orange-500/25 transition transform hover:-translate-y-0.5">
                     Daftar Sekarang
                 </a>
             </div>
