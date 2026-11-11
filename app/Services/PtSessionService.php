@@ -285,6 +285,8 @@ class PtSessionService
             $quota->increment('used_sessions');
             $quota->decrement('remaining_sessions');
 
+            $sessionPrice = (float) ($quota->ptPackage?->price ? ($quota->ptPackage->price / max(1, $quota->total_sessions)) : 250000);
+
             return PtSession::create([
                 'member_pt_quota_id' => $quota->id,
                 'member_id' => $member->id,
@@ -293,6 +295,9 @@ class PtSessionService
                 'start_time' => $startTime,
                 'end_time' => $endTime,
                 'status' => PtSessionStatus::Pending,
+                'trainer_revenue' => round($sessionPrice * 0.70, 2),
+                'gym_revenue' => round($sessionPrice * 0.30, 2),
+                'payout_status' => 'pending',
             ]);
         });
     }

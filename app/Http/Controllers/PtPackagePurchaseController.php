@@ -306,6 +306,7 @@ class PtPackagePurchaseController extends Controller
         $payment = Payment::create([
             'invoice_id' => $invoiceId,
             'member_id' => $user->id,
+            'trainer_id' => $trainerId,
             'membership_id' => $user->memberships()->where('status', 'active')->latest()->first()?->id,
             'package_id' => $ptPackage?->id,
             'pt_package_id' => $ptPackage?->id,
@@ -540,6 +541,7 @@ class PtPackagePurchaseController extends Controller
             $payment = Payment::create([
                 'invoice_id' => $invoiceId,
                 'member_id' => $user->id,
+                'trainer_id' => $validated['trainer_id'] ?? User::where('role', 'trainer')->first()?->id,
                 'membership_id' => $activeMembership?->id,
                 'package_id' => $ptPackage->id,
                 'pt_package_id' => $ptPackage->id,

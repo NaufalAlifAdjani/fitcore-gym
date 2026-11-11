@@ -31,11 +31,28 @@ class PaymentVerificationService
                 $this->activatePtPackage($lockedPayment);
             }
 
+            $isPtPayment = ! $isMembershipPayment
+                || $lockedPayment->pt_package_id !== null
+                || $lockedPayment->package_type === 'pt_session';
+
+            $amount = (float) $lockedPayment->amount;
+            $trainerRevenue = $isPtPayment ? round($amount * 0.70, 2) : 0;
+            $gymRevenue = $isPtPayment ? round($amount * 0.30, 2) : $amount;
+
+            $trainerId = $lockedPayment->trainer_id;
+            if ($isPtPayment && ! $trainerId) {
+                $trainerId = User::where('role', 'trainer')->first()?->id;
+            }
+
             $lockedPayment->forceFill([
                 'status' => 'verified',
                 'verified_at' => now(),
                 'verified_by' => $adminId,
                 'rejection_reason' => null,
+                'trainer_id' => $trainerId,
+                'trainer_revenue' => $trainerRevenue,
+                'gym_revenue' => $gymRevenue,
+                'payout_status' => $lockedPayment->payout_status ?: 'pending',
             ])->save();
 
             $lockedPayment->verificationLogs()->create([

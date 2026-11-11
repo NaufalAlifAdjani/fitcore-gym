@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 #[Fillable([
     'invoice_id',
     'member_id',
+    'trainer_id',
     'membership_id',
     'pt_package_id',
     'bank_id',
@@ -20,6 +21,10 @@ use Illuminate\Support\Facades\Storage;
     'package_id',
     'package_type',
     'amount',
+    'gym_revenue',
+    'trainer_revenue',
+    'payout_status',
+    'payout_date',
     'bank_sender',
     'bank_destination',
     'proof_image_path',
@@ -34,10 +39,32 @@ class Payment extends Model
 {
     use HasFactory;
 
+    protected static function booted(): void
+    {
+        static::saving(function (Payment $payment): void {
+            $isPt = $payment->package_type === 'pt_session'
+                || $payment->payment_type === 'pt_package'
+                || $payment->pt_package_id !== null;
+
+            if ($payment->status === 'verified' && $isPt && (float) $payment->trainer_revenue == 0 && (float) $payment->amount > 0) {
+                $amount = (float) $payment->amount;
+                $payment->trainer_revenue = round($amount * 0.70, 2);
+                $payment->gym_revenue = round($amount * 0.30, 2);
+            }
+
+            if (! $payment->payout_status) {
+                $payment->payout_status = 'pending';
+            }
+        });
+    }
+
     protected function casts(): array
     {
         return [
             'amount' => 'integer',
+            'gym_revenue' => 'decimal:2',
+            'trainer_revenue' => 'decimal:2',
+            'payout_date' => 'datetime',
             'transfer_date' => 'datetime',
             'verified_at' => 'datetime',
         ];
@@ -46,6 +73,11 @@ class Payment extends Model
     public function member(): BelongsTo
     {
         return $this->belongsTo(User::class, 'member_id');
+    }
+
+    public function trainer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'trainer_id');
     }
 
     public function admin(): BelongsTo

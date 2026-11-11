@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\PtSessionStatus;
+use App\Filament\Pages\Settings;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MemberManagementController;
 use App\Http\Controllers\Admin\MembershipPackageController;
@@ -153,7 +154,8 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
         Route::patch('/{member}/deactivate', 'deactivate')->whereNumber('member')->name('deactivate');
         Route::delete('/{member}', 'destroy')->whereNumber('member')->name('destroy');
     });
-    Route::view('/settings', 'admin.placeholder', ['title' => 'Pengaturan'])->name('settings.index');
+    Route::get('/settings', Settings::class)->name('settings.index');
+    Route::post('/settings/{payment}/payout', [Settings::class, 'payout'])->name('settings.payout');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');
 });
 
