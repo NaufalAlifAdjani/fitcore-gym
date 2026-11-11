@@ -10,8 +10,8 @@
         </div>
     </section>
 
-    {{-- MAIN SECTION (Light Gray #F8F9FA) --}}
-    <section class="bg-[#F8F9FA] py-12 md:py-16">
+    {{-- MAIN SECTION (Background #F6F6F7) --}}
+    <section class="bg-[#F6F6F7] py-12 md:py-16">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
 
             {{-- Flash Messages --}}
@@ -62,7 +62,7 @@
                     </p>
                 </div>
 
-                <div class="inline-flex items-center gap-2 bg-[#FF5722]/10 border border-[#FF5722]/20 text-[#16151A] px-4 py-2 rounded-full shadow-xs self-start sm:self-center">
+                <div class="inline-flex items-center gap-2 bg-orange-50 border border-orange-200 text-[#16151A] px-4 py-2 rounded-full shadow-xs self-start sm:self-center">
                     <span class="w-4 h-4 rounded-full bg-[#FF5722] text-white flex items-center justify-center text-[10px] font-black">✓</span>
                     <span class="text-xs font-extrabold tracking-wide text-[#16151A]">1 sesi = 60 menit</span>
                 </div>

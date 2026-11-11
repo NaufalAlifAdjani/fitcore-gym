@@ -59,27 +59,25 @@
                         <!-- Left Details -->
                         <div class="space-y-4">
                             <div>
-                                <p class="text-[10px] font-bold uppercase tracking-widest text-orange-200/90 font-inter">Nama Member</p>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-white/75 font-inter">Nama Member</p>
                                 <h2 class="font-heading text-xl sm:text-2xl font-bold text-white tracking-tight mt-0.5 drop-shadow-sm">
                                     {{ $user->name }}
                                 </h2>
                                 @if($profile && $profile->member_code)
-                                    <div class="inline-flex items-center gap-1.5 mt-1.5 px-2.5 py-0.5 rounded-md bg-white/20 backdrop-blur-md border border-white/25">
-                                        <span class="font-mono text-xs font-bold text-white tracking-wider">
-                                            ID: {{ $profile->member_code }}
-                                        </span>
-                                    </div>
+                                    <p class="font-mono text-xs font-bold text-orange-200 mt-1 tracking-wider drop-shadow-xs">
+                                        ID: {{ $profile->member_code }}
+                                    </p>
                                 @endif
                             </div>
 
                             <div class="space-y-1">
-                                <p class="text-[10px] font-bold uppercase tracking-widest text-orange-200/90 font-inter">Paket Keanggotaan</p>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-white/75 font-inter">Paket Keanggotaan</p>
                                 @if($activeMembership)
-                                    <p class="font-inter text-sm sm:text-base font-bold text-white drop-shadow-xs">
+                                    <p class="font-inter text-sm font-bold text-white drop-shadow-xs">
                                         {{ $activeMembership->package->name ?? 'Membership FitCore' }}
                                     </p>
                                     <p class="font-inter text-xs text-white/85">
-                                        Berlaku s/d <span class="text-white font-bold">{{ $activeMembership->end_date->locale('id')->translatedFormat('d M Y') }}</span>
+                                        Berlaku s/d <span class="text-orange-200 font-bold">{{ $activeMembership->end_date->locale('id')->translatedFormat('d M Y') }}</span>
                                     </p>
                                 @else
                                     <p class="font-inter text-sm font-semibold text-rose-200">
@@ -146,15 +144,15 @@
 
                 <ol class="space-y-3 text-xs text-[#565A66] font-inter">
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#FF5722]">1</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-[10px] font-bold text-[#FF5722]">1</span>
                         <span>Buka halaman ini melalui smartphone Anda saat tiba di lokasi gym FitCore.</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#FF5722]">2</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-[10px] font-bold text-[#FF5722]">2</span>
                         <span>Tunjukkan layar QR Code ini kepada resepsionis atau arahkan ke scanner check-in otomatis.</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[10px] font-bold text-[#FF5722]">3</span>
+                        <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-[10px] font-bold text-[#FF5722]">3</span>
                         <span>Sistem akan memverifikasi status keaktifan paket membership Anda secara instan (1x per hari).</span>
                     </li>
                 </ol>
@@ -164,7 +162,7 @@
                         <p class="text-xs text-rose-800 font-medium">
                             Membership Anda sedang tidak aktif. Perbarui paket untuk mulai check-in.
                         </p>
-                        <a href="{{ route('member.membership.packages') }}" class="shrink-0 rounded-full bg-[#FF5722] px-4 py-1.5 text-xs font-bold text-white hover:bg-rose-700 transition shadow-xs">
+                        <a href="{{ route('member.membership.packages') }}" class="shrink-0 rounded-full bg-[#FF5722] hover:bg-[#E64A19] px-4 py-1.5 text-xs font-bold text-white transition shadow-xs">
                             Beli Paket
                         </a>
                     </div>

@@ -2,10 +2,10 @@
     <div class="py-8 sm:py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
-            <!-- Hero Section (Light Athletic Palette) -->
-            <div class="bg-gradient-to-br from-white via-orange-50/50 to-amber-50/30 rounded-3xl p-8 sm:p-10 relative overflow-hidden text-[#16151A] border border-orange-100 shadow-[0_10px_30px_rgba(255,87,34,0.08)]">
+            <!-- Hero Section (Light Theme Card) -->
+            <div class="bg-white rounded-3xl p-8 sm:p-10 relative overflow-hidden text-[#16151A] border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
                 <!-- Top-Right Orange Glow Ambient -->
-                <div class="absolute -top-20 -right-20 w-80 h-80 bg-[#FF5722]/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -top-20 -right-20 w-80 h-80 bg-[#FF5722]/10 rounded-full blur-3xl pointer-events-none"></div>
 
                 <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                     <!-- Left: Title, Subtitle, & Quota Bar -->
@@ -51,15 +51,15 @@
                     <div class="flex flex-col sm:items-end gap-6 shrink-0">
                         <!-- 3 Stat Boxes (Clean White Cards) -->
                         <div class="flex items-center gap-3">
-                            <div class="bg-white border border-orange-100 rounded-2xl p-4 text-center min-w-[90px] shadow-xs">
+                            <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 text-center min-w-[90px] shadow-xs">
                                 <div class="text-3xl font-extrabold font-heading text-[#16151A]">{{ $counts['pending'] }}</div>
                                 <div class="text-[10px] font-extrabold text-[#565A66] uppercase tracking-wider mt-1">MENUNGGU</div>
                             </div>
-                            <div class="bg-white border border-orange-100 rounded-2xl p-4 text-center min-w-[90px] shadow-xs">
+                            <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 text-center min-w-[90px] shadow-xs">
                                 <div class="text-3xl font-extrabold font-heading text-[#16151A]">{{ $counts['confirmed'] }}</div>
                                 <div class="text-[10px] font-extrabold text-[#565A66] uppercase tracking-wider mt-1">TERKONFIRMASI</div>
                             </div>
-                            <div class="bg-white border border-orange-100 rounded-2xl p-4 text-center min-w-[90px] shadow-xs">
+                            <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 text-center min-w-[90px] shadow-xs">
                                 <div class="text-3xl font-extrabold font-heading text-[#16151A]">{{ $counts['cancelled'] }}</div>
                                 <div class="text-[10px] font-extrabold text-[#565A66] uppercase tracking-wider mt-1">DIBATALKAN</div>
                             </div>
@@ -67,7 +67,7 @@
 
                         <!-- + Booking Sesi Baru Button -->
                         <a href="{{ route('pt-sessions.create') }}"
-                            class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF5722]/30 hover:shadow-[#FF5722]/50 transition-all">
+                            class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF5722]/25 hover:shadow-[#FF5722]/40 transition-all cursor-pointer">
                             <span>+</span>
                             <span>Booking Sesi Baru</span>
                         </a>
@@ -75,7 +75,7 @@
                 </div>
             </div>
 
-            <!-- Kalendar & Jadwal Sesi (Sama dengan Tampilan Dashboard Trainer) -->
+            <!-- Kalendar & Jadwal Sesi -->
             <div>
                 <livewire:member.sessions.index />
             </div>

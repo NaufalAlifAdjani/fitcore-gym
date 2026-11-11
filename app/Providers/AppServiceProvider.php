@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\User;
+use App\View\Components\PublicLayout;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +25,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Blade::component('layouts.public', PublicLayout::class);
+        Blade::component('public-layout', PublicLayout::class);
+
+        Blade::component('layouts.public', PublicLayout::class);
+        Blade::component('public-layout', PublicLayout::class);
+
         // Pure Laravel Native Authorization (Gates) - No third-party / Spatie
         // Roles
         Gate::define('admin', fn (User $user): bool => $user->isAdmin());

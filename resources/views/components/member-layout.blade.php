@@ -4,7 +4,7 @@
 ])
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-[#F6F6F7]">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,8 +30,8 @@
         <!-- Scripts & Styles -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-[#F8F9FA] font-sans antialiased text-[#16151A] selection:bg-[#FF5722] selection:text-white">
-        <div class="min-h-screen flex flex-col justify-between bg-[#F8F9FA]">
+    <body class="bg-[#F6F6F7] font-sans antialiased text-[#16151A] selection:bg-[#FF5722] selection:text-white flex flex-col min-h-screen">
+        <div class="min-h-screen flex flex-col justify-between bg-[#F6F6F7]">
             <x-member-navbar :active="$activeNav" />
 
             <main class="flex-1">

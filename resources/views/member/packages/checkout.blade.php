@@ -1,25 +1,25 @@
 <x-member-layout title="Detail Pembayaran & Konfirmasi - FitCore Athletic" active-nav="packages">
-    <div class="bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8 text-slate-900 border-b border-slate-200">
+    <div class="bg-[#F6F6F7] min-h-[calc(100vh-80px)] py-12 px-4 sm:px-6 lg:px-8 text-[#16151A] border-b border-[#E5E7EB]">
         <div class="mx-auto max-w-6xl">
             <!-- Breadcrumb Navigation -->
             <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
-                <a href="{{ route('member.membership.packages') }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-[#FF5722] transition">
+                <a href="{{ route('member.membership.packages') }}" class="inline-flex items-center gap-2 text-xs font-bold text-[#565A66] hover:text-[#FF5722] transition">
                     <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"><path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Kembali ke Katalog Paket
                 </a>
-                <div class="flex items-center gap-2 text-xs font-bold text-slate-500">
+                <div class="flex items-center gap-2 text-xs font-bold text-[#565A66]">
                     <span class="text-[#FF5722]">Langkah 1: Konfirmasi Pembayaran</span>
                     <span>•</span>
-                    <span class="text-slate-400">Langkah 2: Form Bukti Transfer</span>
+                    <span class="text-[#565A66]/60">Langkah 2: Form Bukti Transfer</span>
                 </div>
             </div>
 
             <!-- Header Section -->
             <div class="mb-10">
-                <h1 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+                <h1 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#16151A] tracking-tight">
                     Detail Pembayaran &amp; Konfirmasi
                 </h1>
-                <p class="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                <p class="mt-2 text-xs sm:text-sm text-[#565A66] leading-relaxed font-medium">
                     Pilih rekening bank tujuan transfer resmi FitCore Athletic untuk menyelesaikan aktivasi paket keanggotaan Anda.
                 </p>
             </div>

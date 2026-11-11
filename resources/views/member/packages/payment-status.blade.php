@@ -1,7 +1,7 @@
 <x-member-layout title="Status Pembayaran - FitCore Athletic" active-nav="riwayat">
-    <div class="py-16 px-4 sm:px-6 lg:px-8 bg-[#F8F9FA] min-h-screen flex items-center justify-center">
+    <div class="py-16 px-4 sm:px-6 lg:px-8 bg-[#F6F6F7] min-h-[calc(100vh-80px)] flex items-center justify-center">
         <div class="mx-auto max-w-xl w-full">
-            <div class="rounded-3xl border border-gray-200 bg-white p-8 sm:p-10 shadow-xl text-center">
+            <div class="rounded-3xl border border-[#E5E7EB] bg-white p-8 sm:p-10 shadow-[0_4px_12px_rgba(0,0,0,0.04)] text-center">
                 <!-- Status Icon -->
                 @if ($payment->status === 'pending')
                     <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-amber-50 text-amber-600 border border-amber-200">
@@ -26,7 +26,7 @@
                     </div>
                 @endif
 
-                <h1 class="font-heading text-2xl font-extrabold text-zinc-900 mt-6 sm:text-3xl">
+                <h1 class="font-heading text-2xl font-extrabold text-[#16151A] mt-6 sm:text-3xl">
                     @if ($payment->status === 'pending')
                         Bukti Pembayaran Diterima
                     @elseif ($payment->status === 'verified')
@@ -36,7 +36,7 @@
                     @endif
                 </h1>
 
-                <p class="mt-2 text-xs leading-relaxed text-zinc-600">
+                <p class="mt-2 text-xs leading-relaxed text-[#565A66]">
                     @if ($payment->status === 'pending')
                         Terima kasih! Bukti pembayaran Anda sedang diproses oleh staf FitCore Gym. Verifikasi dilakukan maksimal <span class="font-bold text-amber-600">1x24 jam</span>.
                     @elseif ($payment->status === 'verified')
@@ -54,33 +54,33 @@
                 <!-- Receipt Details Card (Light Athletic Box) -->
                 <div class="mt-8 rounded-2xl border border-orange-100 bg-orange-50/50 p-6 text-left space-y-3.5 text-xs">
                     <div class="flex justify-between items-center">
-                        <span class="text-zinc-500">Nomor Invoice</span>
-                        <span class="font-mono font-bold text-zinc-900">{{ $payment->invoice_id }}</span>
+                        <span class="text-[#565A66]">Nomor Invoice</span>
+                        <span class="font-mono font-bold text-[#16151A]">{{ $payment->invoice_id }}</span>
                     </div>
 
                     <div class="flex justify-between items-center">
-                        <span class="text-zinc-500">Paket Pesanan</span>
-                        <span class="font-bold text-zinc-800">{{ $payment->ptPackage?->name ?? $payment->membershipPackage?->name ?? 'Paket FitCore' }}</span>
+                        <span class="text-[#565A66]">Paket Pesanan</span>
+                        <span class="font-bold text-[#16151A]">{{ $payment->ptPackage?->name ?? $payment->membershipPackage?->name ?? 'Paket FitCore' }}</span>
                     </div>
 
                     <div class="flex justify-between items-center">
-                        <span class="text-zinc-500">Nominal Transfer</span>
+                        <span class="text-[#565A66]">Nominal Transfer</span>
                         <span class="font-bold text-[#FF5722]">Rp {{ number_format($payment->amount, 0, ',', '.') }}</span>
                     </div>
 
                     <div class="flex justify-between items-center">
-                        <span class="text-zinc-500">Bank Pengirim</span>
-                        <span class="font-semibold text-zinc-800">{{ $payment->bank_sender }}</span>
+                        <span class="text-[#565A66]">Bank Pengirim</span>
+                        <span class="font-semibold text-[#16151A]">{{ $payment->bank_sender }}</span>
                     </div>
 
                     <div class="flex justify-between items-center">
-                        <span class="text-zinc-500">Tujuan Bank Gym</span>
-                        <span class="font-semibold text-zinc-800">{{ $payment->bank_destination }}</span>
+                        <span class="text-[#565A66]">Tujuan Bank Gym</span>
+                        <span class="font-semibold text-[#16151A]">{{ $payment->bank_destination }}</span>
                     </div>
 
-                    <div class="flex justify-between items-center border-t border-orange-200/60 pt-3">
-                        <span class="text-zinc-500">Waktu Pengiriman</span>
-                        <span class="text-zinc-700">{{ $payment->transfer_date?->timezone(config('app.timezone'))->format('d M Y, H:i') ?? '-' }} WIB</span>
+                    <div class="flex justify-between items-center border-t border-[#E5E7EB] pt-3">
+                        <span class="text-[#565A66]">Waktu Pengiriman</span>
+                        <span class="text-[#16151A]">{{ $payment->transfer_date?->timezone(config('app.timezone'))->format('d M Y, H:i') ?? '-' }} WIB</span>
                     </div>
                 </div>
 

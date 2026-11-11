@@ -2,7 +2,7 @@
     <!-- Header Section (Nuansa Putih / Light Bersih) -->
     <section class="bg-white border-b border-[#E5E7EB] pt-14 pb-20 px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-5xl text-center">
-            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#FF5722] bg-[#FF5722]/10 border border-[#FF5722]/20 rounded-full mb-4">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#FF5722] bg-orange-50 border border-orange-200 rounded-full mb-4">
                 FITCORE ATHLETIC MEMBERSHIP
             </span>
             <h1 class="font-poppins text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#16151A] tracking-tight">
@@ -63,11 +63,11 @@
                     @endphp
 
                     <!-- Card Paket (Kondisional: Best Seller vs Standard/VIP) -->
-                    <div class="relative flex flex-col justify-between rounded-3xl p-8 transition-all duration-300 {{ $isFeatured ? 'bg-gradient-to-b from-orange-50/70 via-white to-white border-2 border-[#FF5722] text-[#16151A] shadow-[0_12px_36px_rgba(255,87,34,0.18)] md:-translate-y-2 md:scale-[1.03] z-10' : 'bg-white border border-[#E5E7EB] text-[#16151A] shadow-[0_4px_12px_rgba(0,0,0,0.06)] hover:shadow-xl hover:border-[#FF5722]/40' }}">
+                    <div class="relative flex flex-col justify-between rounded-3xl p-8 transition-all duration-300 {{ $isFeatured ? 'bg-white border-2 border-[#FF5722] text-[#16151A] shadow-xl md:-translate-y-2 md:scale-[1.03] z-10' : 'bg-white border border-[#E5E7EB] text-[#16151A] shadow-[0_4px_12px_rgba(0,0,0,0.06)] hover:shadow-xl hover:border-[#FF5722]/40' }}">
                         
                         @if ($package->badge)
                             <!-- Badge Paket -->
-                            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-wider whitespace-nowrap z-20 shadow-md {{ $isFeatured ? 'bg-[#FF5722] text-white shadow-[#FF5722]/30' : 'bg-slate-100 text-slate-700 border border-slate-200' }}">
+                            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-[10px] font-black uppercase tracking-wider whitespace-nowrap z-20 shadow-md {{ $isFeatured ? 'bg-[#FF5722] text-white shadow-[#FF5722]/30' : 'bg-orange-50 text-[#FF5722] border border-orange-200' }}">
                                 {{ $package->badge }}
                             </div>
                         @endif
@@ -75,7 +75,7 @@
                         <div>
                             <!-- Header Paket -->
                             <div class="mb-6 mt-1">
-                                <span class="text-xs font-bold tracking-wider uppercase text-[#565A66]">
+                                <span class="text-xs font-bold tracking-wider uppercase {{ $isFeatured ? 'text-[#FF5722]' : 'text-[#565A66]' }}">
                                     {{ $package->tier ?? 'Membership' }}
                                 </span>
                                 <h3 class="text-2xl font-bold mt-2 font-poppins tracking-tight text-[#16151A]">
@@ -89,7 +89,7 @@
                             <!-- Harga -->
                             <div class="mb-8">
                                 @if ($package->promo_price && $package->promo_price < $package->price)
-                                    <p class="text-xs font-semibold text-slate-400 line-through mb-1">
+                                    <p class="text-xs font-semibold text-[#565A66]/60 line-through mb-1">
                                         Rp {{ number_format($package->price, 0, ',', '.') }}
                                     </p>
                                 @endif
@@ -155,8 +155,8 @@
         </div>
     </section>
 
-    <!-- Section Bawah: "SEMUA MEMBERSHIP SUDAH TERMASUK" (Light Athletic Style) -->
-    <section class="bg-gradient-to-b from-orange-50/40 via-white to-orange-50/20 py-20 px-4 sm:px-6 lg:px-8 border-t border-gray-200 text-[#16151A]">
+    <!-- Section Bawah: Fasilitas Standar Internasional (Light Theme) -->
+    <section class="bg-[#F6F6F7] py-20 px-4 sm:px-6 lg:px-8 border-t border-[#E5E7EB] text-[#16151A]">
         <div class="mx-auto max-w-7xl">
             <div class="text-center max-w-3xl mx-auto">
                 <span class="inline-block text-[11px] font-extrabold uppercase tracking-widest text-[#FF5722] mb-2">
@@ -170,10 +170,10 @@
                 </p>
             </div>
 
-            <!-- 4 Box Benefit (Clean White Cards) -->
+            <!-- 4 Box Benefit (Light Card Surface) -->
             <div class="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 <!-- Benefit 1 -->
-                <div class="rounded-2xl bg-white border border-orange-100 p-6 transition duration-200 hover:-translate-y-1 hover:shadow-lg shadow-sm">
+                <div class="rounded-2xl bg-white border border-[#E5E7EB] p-6 shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition duration-200 hover:shadow-lg hover:-translate-y-1">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-[#FF5722] shadow-xs border border-orange-100">
                         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M6.5 6.5h11M6.5 17.5h11M4 9.5h16M4 14.5h16M8.5 4.5v15M15.5 4.5v15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -186,7 +186,7 @@
                 </div>
 
                 <!-- Benefit 2 -->
-                <div class="rounded-2xl bg-white border border-orange-100 p-6 transition duration-200 hover:-translate-y-1 hover:shadow-lg shadow-sm">
+                <div class="rounded-2xl bg-white border border-[#E5E7EB] p-6 shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition duration-200 hover:shadow-lg hover:-translate-y-1">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-[#FF5722] shadow-xs border border-orange-100">
                         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M12 3v18M5 8h14M8 13h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
@@ -199,7 +199,7 @@
                 </div>
 
                 <!-- Benefit 3 -->
-                <div class="rounded-2xl bg-white border border-orange-100 p-6 transition duration-200 hover:-translate-y-1 hover:shadow-lg shadow-sm">
+                <div class="rounded-2xl bg-white border border-[#E5E7EB] p-6 shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition duration-200 hover:shadow-lg hover:-translate-y-1">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-[#FF5722] shadow-xs border border-orange-100">
                         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <rect x="5" y="5" width="14" height="14" rx="2" stroke="currentColor" stroke-width="2" />
@@ -213,7 +213,7 @@
                 </div>
 
                 <!-- Benefit 4 -->
-                <div class="rounded-2xl bg-white border border-orange-100 p-6 transition duration-200 hover:-translate-y-1 hover:shadow-lg shadow-sm">
+                <div class="rounded-2xl bg-white border border-[#E5E7EB] p-6 shadow-[0_4px_12px_rgba(0,0,0,0.04)] transition duration-200 hover:shadow-lg hover:-translate-y-1">
                     <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-[#FF5722] shadow-xs border border-orange-100">
                         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 7-3 9h18c0-2-3-2-3-9Z" stroke="currentColor" stroke-width="2" />
@@ -228,8 +228,8 @@
         </div>
     </section>
 
-    <!-- Footer Resmi FitCore Athletic (Light Athletic Style) -->
-    <footer class="border-t border-gray-200 bg-[#F8F9FA] text-zinc-600 text-xs py-14 px-4 sm:px-6 lg:px-8">
+    <!-- Footer Resmi FitCore Athletic (Light Theme) -->
+    <footer class="border-t border-[#E5E7EB] bg-white text-[#565A66] text-xs py-14 px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-10">
             <div class="space-y-3.5 md:col-span-2">
                 <div class="flex items-center gap-3">
@@ -255,10 +255,10 @@
                 <h4 class="font-poppins font-bold text-[#16151A] uppercase text-xs tracking-wider mb-3.5">Kontak &amp; Bantuan</h4>
                 <p class="text-[#565A66]">WhatsApp: +62 812-3456-7890</p>
                 <p class="mt-1 text-[#565A66]">Email: cs@fitcoreathletic.id</p>
-                <p class="mt-2.5 text-[11px] text-zinc-500">Layanan CS beroperasi setiap hari 24 jam.</p>
+                <p class="mt-2.5 text-[11px] text-[#565A66]">Layanan CS beroperasi setiap hari 24 jam.</p>
             </div>
         </div>
-        <div class="mx-auto max-w-7xl mt-10 border-t border-gray-200 pt-6 text-center text-zinc-500 text-[11px]">
+        <div class="mx-auto max-w-7xl mt-10 border-t border-[#E5E7EB] pt-6 text-center text-[#565A66] text-[11px]">
             &copy; {{ date('Y') }} FitCore Athletic Gym &amp; Performance Center. Seluruh hak cipta dilindungi undang-undang.
         </div>
     </footer>
