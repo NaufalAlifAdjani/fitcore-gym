@@ -163,16 +163,16 @@
                     <h4 class="font-poppins font-bold text-sm text-white uppercase tracking-wider">Jam Operasional</h4>
                     <div class="space-y-2 text-xs text-zinc-400">
                         <div class="flex justify-between border-b border-zinc-800/80 pb-1.5">
-                            <span>Senin – Jumat</span>
-                            <span class="font-bold text-white">05:30 – 22:00 WIB</span>
+                            <span>Akses Member</span>
+                            <span class="font-bold text-emerald-400">24 Jam Nonstop (24/7)</span>
                         </div>
                         <div class="flex justify-between border-b border-zinc-800/80 pb-1.5">
-                            <span>Sabtu – Minggu</span>
-                            <span class="font-bold text-white">06:00 – 21:00 WIB</span>
+                            <span>Sesi Personal Trainer</span>
+                            <span class="font-bold text-white">06:00 – 22:00 WIB</span>
                         </div>
                         <div class="flex justify-between">
                             <span>Hari Libur Nasional</span>
-                            <span class="font-bold text-[#FF5722]">07:00 – 20:00 WIB</span>
+                            <span class="font-bold text-emerald-400">Tetap Buka 24 Jam</span>
                         </div>
                     </div>
                 </div>

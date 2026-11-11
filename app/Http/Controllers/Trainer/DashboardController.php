@@ -49,9 +49,16 @@ class DashboardController extends Controller
             ->whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value])
             ->count();
 
-        // 3. Estimasi Komisi (Default per sesi selesai)
-        $commissionRate = (int) config('pt_booking.default_commission_rate', 60000);
-        $estimatedCommission = $completedSessionsMonth * $commissionRate;
+        // 3. Estimasi Komisi (Berdasarkan tarif pelatih / sesi)
+        $commissionRate = $trainerProfile?->commission_rate
+            ?? (int) config('pt_booking.default_commission_rate', 60000);
+
+        $monthEarnings = $trainer->trainerSessions()
+            ->whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value])
+            ->whereBetween('session_date', [$startOfMonth, $endOfMonth])
+            ->sum('trainer_earnings');
+
+        $estimatedCommission = $monthEarnings > 0 ? $monthEarnings : ($completedSessionsMonth * $commissionRate);
 
         // 4. Total Member Aktif (Murni akumulasi tanpa target)
         $activeMembersCount = $trainer->trainerSessions()

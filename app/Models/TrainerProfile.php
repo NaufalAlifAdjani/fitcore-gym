@@ -14,6 +14,7 @@ class TrainerProfile extends Model
 
     protected $casts = [
         'experience' => 'integer',
+        'commission_rate' => 'integer',
     ];
 
     public function user(): BelongsTo

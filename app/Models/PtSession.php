@@ -20,6 +20,7 @@ class PtSession extends Model
         'session_date' => 'date',
         'status' => PtSessionStatus::class,
         'completed_at' => 'datetime',
+        'trainer_earnings' => 'integer',
     ];
 
     public function setSessionDateAttribute($value): void
@@ -115,10 +116,18 @@ class PtSession extends Model
 
     public function markAsCompleted(?string $notes = null): void
     {
+        $rate = $this->trainer?->trainerProfile?->commission_rate
+            ?? (int) config('pt_booking.default_commission_rate', 60000);
+
+        $earnings = ($this->trainer_earnings && $this->trainer_earnings > 0)
+            ? (int) $this->trainer_earnings
+            : $rate;
+
         $this->update([
             'status' => PtSessionStatus::Completed,
             'notes' => $notes ?? $this->notes,
             'completed_at' => now(),
+            'trainer_earnings' => $earnings,
         ]);
     }
 

@@ -72,12 +72,12 @@
                         </div>
                         <div class="space-y-1.5 text-xs">
                             <div class="flex items-center justify-between">
-                                <span class="text-zinc-500">Senin – Jumat</span>
-                                <span class="font-extrabold text-zinc-900">05:30 – 22:00 WIB</span>
+                                <span class="text-zinc-500">Akses Member</span>
+                                <span class="font-extrabold text-emerald-600">24 Jam Nonstop (24/7)</span>
                             </div>
                             <div class="flex items-center justify-between">
-                                <span class="text-zinc-500">Sabtu – Minggu</span>
-                                <span class="font-extrabold text-zinc-900">06:00 – 21:00 WIB</span>
+                                <span class="text-zinc-500">Sesi Personal Trainer</span>
+                                <span class="font-extrabold text-zinc-900">06:00 – 22:00 WIB</span>
                             </div>
                         </div>
                     </div>

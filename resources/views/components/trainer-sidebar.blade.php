@@ -36,16 +36,7 @@
                 <span>Klien Saya</span>
             </a>
 
-            <!-- 4. Ketersediaan Waktu -->
-            <a href="{{ route('trainer.availability.index') }}" 
-               class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 {{ request()->routeIs('trainer.availability.*') ? 'bg-[#FF5722]/10 text-[#FF5722]' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#FF5722]' }}">
-                <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('trainer.availability.*') ? 'text-[#FF5722]' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span>Ketersediaan Waktu</span>
-            </a>
-
-            <!-- 5. Pendapatan / Komisi -->
+            <!-- 4. Pendapatan / Komisi -->
             <a href="{{ route('trainer.commissions.index') }}" 
                class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 {{ request()->routeIs('trainer.commissions.*') ? 'bg-[#FF5722]/10 text-[#FF5722]' : 'text-[#16151A] hover:bg-gray-50 hover:text-[#FF5722]' }}">
                 <svg class="w-5 h-5 shrink-0 {{ request()->routeIs('trainer.commissions.*') ? 'text-[#FF5722]' : 'text-[#565A66]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">

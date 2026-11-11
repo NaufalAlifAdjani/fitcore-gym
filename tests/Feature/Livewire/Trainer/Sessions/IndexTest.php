@@ -466,7 +466,6 @@ class IndexTest extends TestCase
         $response->assertSee('Dashboard');
         $response->assertSee('Jadwal Sesi PT');
         $response->assertSee('Klien Saya');
-        $response->assertSee('Ketersediaan Waktu');
         $response->assertSee('Pendapatan / Komisi');
     }
 
