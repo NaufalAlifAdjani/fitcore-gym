@@ -2,7 +2,8 @@
     'active' => null,
 ])
 
-<header class="sticky top-0 z-50 w-full border-b border-gray-200/80 bg-white/95 backdrop-blur-md shadow-xs" x-data="{ mobileMenuOpen: false }">
+<header class="sticky top-0 z-50 w-full border-b border-gray-200/80 bg-white/95 backdrop-blur-md shadow-xs"
+    x-data="{ mobileMenuOpen: false }">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
         <!-- Logo -->
         <a href="{{ url('/') }}" class="flex items-center gap-2 group">
@@ -29,12 +30,11 @@
                 ])>
                 Personal Trainer
             </a>
-            <a href="{{ Route::has('landing.about') ? route('landing.about') : '#' }}"
-                @class([
-                    'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/30' => request()->routeIs('landing.about') || $active === 'about',
-                    'text-zinc-600 hover:text-zinc-900 hover:bg-white/80' => !request()->routeIs('landing.about') && $active !== 'about',
-                ])>
+            <a href="{{ Route::has('landing.about') ? route('landing.about') : '#' }}" @class([
+                'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
+                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/30' => request()->routeIs('landing.about') || $active === 'about',
+                'text-zinc-600 hover:text-zinc-900 hover:bg-white/80' => !request()->routeIs('landing.about') && $active !== 'about',
+            ])>
                 Tentang Kami
             </a>
         </nav>
@@ -109,8 +109,9 @@
                             Masuk
                         </a>
                     @endif
-                    @if (Route::has('register') && ! request()->routeIs('register'))
-                        <a href="{{ route('register') }}" class="rounded-full bg-[#FF5722] px-4 sm:px-5 py-2 text-xs font-bold text-white shadow-md shadow-[#FF5722]/30 transition hover:bg-[#E64A19] hover:shadow-lg">
+                    @if (Route::has('register') && !request()->routeIs('register'))
+                        <a href="{{ route('register') }}"
+                            class="rounded-full bg-[#FF5722] px-4 sm:px-5 py-2 text-xs font-bold text-white shadow-md shadow-[#FF5722]/30 transition hover:bg-[#E64A19] hover:shadow-lg">
                             Daftar
                         </a>
                     @endif
@@ -118,12 +119,9 @@
             @endauth
 
             <!-- Mobile Menu Toggle Button -->
-            <button
-                type="button"
-                x-on:click="mobileMenuOpen = !mobileMenuOpen"
+            <button type="button" x-on:click="mobileMenuOpen = !mobileMenuOpen"
                 class="inline-flex md:hidden items-center justify-center rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 transition cursor-pointer"
-                aria-label="Toggle Navigation"
-            >
+                aria-label="Toggle Navigation">
                 <svg x-show="!mobileMenuOpen" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
@@ -136,12 +134,8 @@
     </div>
 
     <!-- Mobile Navigation Drawer -->
-    <div
-        x-cloak
-        x-show="mobileMenuOpen"
-        x-transition
-        class="md:hidden border-t border-gray-200 bg-white px-4 pt-3 pb-5 space-y-2 shadow-lg"
-    >
+    <div x-cloak x-show="mobileMenuOpen" x-transition
+        class="md:hidden border-t border-gray-200 bg-white px-4 pt-3 pb-5 space-y-2 shadow-lg">
         <a href="{{ Route::has('landing.packages') ? route('landing.packages') : (Route::has('member.membership.packages') ? route('member.membership.packages') : '#') }}"
             class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('landing.packages') || request()->routeIs('member.membership.*') || $active === 'packages') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-zinc-700 hover:bg-orange-50 hover:text-zinc-900' }}">
             Paket Membership
@@ -157,11 +151,13 @@
 
         @guest
             <div class="pt-3 border-t border-gray-200 flex flex-col gap-2">
-                @if (! request()->routeIs('login'))
-                    <a href="{{ route('login') }}" class="block text-center py-2 text-xs font-bold text-zinc-600 hover:text-zinc-900">Masuk</a>
+                @if (!request()->routeIs('login'))
+                    <a href="{{ route('login') }}"
+                        class="block text-center py-2 text-xs font-bold text-zinc-600 hover:text-zinc-900">Masuk</a>
                 @endif
-                @if (Route::has('register') && ! request()->routeIs('register'))
-                    <a href="{{ route('register') }}" class="block text-center py-2 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-xs hover:bg-[#E64A19]">Daftar</a>
+                @if (Route::has('register') && !request()->routeIs('register'))
+                    <a href="{{ route('register') }}"
+                        class="block text-center py-2 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-xs hover:bg-[#E64A19]">Daftar</a>
                 @endif
             </div>
         @endguest

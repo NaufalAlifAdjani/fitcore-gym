@@ -14,7 +14,6 @@
         ['label' => 'Dashboard', 'route' => 'trainer.dashboard', 'active' => request()->routeIs('trainer.dashboard'), 'icon' => 'dashboard'],
         ['label' => 'Jadwal Sesi PT', 'route' => 'trainer.sessions.index', 'active' => request()->routeIs('trainer.sessions.*'), 'icon' => 'calendar'],
         ['label' => 'Klien Saya', 'route' => 'trainer.clients.index', 'active' => request()->routeIs('trainer.clients.*'), 'icon' => 'members'],
-        ['label' => 'Ketersediaan Waktu', 'route' => 'trainer.availability.index', 'active' => request()->routeIs('trainer.availability.*'), 'icon' => 'clock'],
         ['label' => 'Pendapatan / Komisi', 'route' => 'trainer.commissions.index', 'active' => request()->routeIs('trainer.commissions.*'), 'icon' => 'payments'],
         ['label' => 'Scanner Check-in', 'route' => 'admin.checkin.index', 'active' => request()->routeIs('admin.checkin.*'), 'icon' => 'scan'],
     ];

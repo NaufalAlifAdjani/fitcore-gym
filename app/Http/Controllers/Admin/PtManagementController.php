@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\PtSessionStatus;
 use App\Http\Controllers\Controller;
 use App\Mail\TrainerCredentialsMail;
+use App\Models\PtSession;
 use App\Models\TrainerProfile;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -25,10 +27,21 @@ class PtManagementController extends Controller
         $search = trim((string) $request->input('search', ''));
         $status = $request->input('status', 'all');
         $specialization = $request->input('specialization', 'all');
+        $shift = $request->input('shift', 'all');
 
         $query = User::where('role', 'trainer')
             ->with(['trainerProfile', 'trainerSessions'])
-            ->withCount('trainerSessions');
+            ->withCount([
+                'trainerSessions',
+                'trainerSessions as completed_sessions_count' => function ($q) {
+                    $q->whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value]);
+                },
+            ])
+            ->withSum([
+                'trainerSessions as total_earnings' => function ($q) {
+                    $q->whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value]);
+                },
+            ], 'trainer_earnings');
 
         // Pencarian berdasarkan nama, email, no telepon, atau spesialisasi
         if ($search !== '') {
@@ -48,6 +61,11 @@ class PtManagementController extends Controller
             $query->where('status', $status);
         }
 
+        // Filter shift (pagi/sore/fleksibel)
+        if (in_array($shift, ['pagi', 'sore', 'fleksibel'], true)) {
+            $query->where('shift', $shift);
+        }
+
         // Filter spesialisasi
         if ($specialization !== 'all' && ! empty($specialization)) {
             $query->whereHas('trainerProfile', function ($profileQ) use ($specialization) {
@@ -60,6 +78,8 @@ class PtManagementController extends Controller
         $activeTrainers = User::where('role', 'trainer')->where('status', 'active')->count();
         $inactiveTrainers = User::where('role', 'trainer')->where('status', 'inactive')->count();
         $totalSessionsHandled = DB::table('pt_sessions')->count();
+        $totalCommissionsPaid = (int) PtSession::whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value])
+            ->sum('trainer_earnings');
 
         // Daftar spesialisasi unik untuk filter dropdown
         $availableSpecializations = TrainerProfile::whereNotNull('specialization')
@@ -75,9 +95,11 @@ class PtManagementController extends Controller
             'activeTrainers' => $activeTrainers,
             'inactiveTrainers' => $inactiveTrainers,
             'totalSessionsHandled' => $totalSessionsHandled,
+            'totalCommissionsPaid' => $totalCommissionsPaid,
             'availableSpecializations' => $availableSpecializations,
             'currentSearch' => $search,
             'currentStatus' => $status,
+            'currentShift' => $shift,
             'currentSpecialization' => $specialization,
         ]);
     }
@@ -91,8 +113,10 @@ class PtManagementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['required', 'string', 'max:20'],
+            'shift' => ['required', 'string', 'in:pagi,sore,fleksibel'],
             'specialization' => ['required', 'string', 'max:100'],
             'experience' => ['required', 'integer', 'min:0', 'max:50'],
+            'commission_rate' => ['required', 'integer', 'min:0'],
             'bio' => ['nullable', 'string', 'max:1000'],
             'password' => ['nullable', 'string', 'min:8'],
             'send_email' => ['nullable'],
@@ -102,9 +126,13 @@ class PtManagementController extends Controller
             'email.email' => 'Format email yang dimasukkan tidak valid.',
             'email.unique' => 'Email sudah digunakan oleh akun lain. Silakan gunakan email yang berbeda.',
             'phone.required' => 'Nomor telepon/WhatsApp wajib diisi.',
+            'shift.required' => 'Shift kerja pelatih wajib dipilih.',
+            'shift.in' => 'Pilihan shift tidak valid (pilih: pagi, sore, atau fleksibel).',
             'specialization.required' => 'Spesialisasi keahlian wajib dipilih atau diisi.',
             'experience.required' => 'Pengalaman kerja kepelatihan wajib diisi.',
             'experience.integer' => 'Pengalaman harus berupa angka tahun.',
+            'commission_rate.required' => 'Tarif komisi per sesi wajib diisi.',
+            'commission_rate.integer' => 'Tarif komisi harus berupa nominal angka rupiah.',
             'password.min' => 'Kata sandi minimal harus 8 karakter.',
         ]);
 
@@ -124,6 +152,7 @@ class PtManagementController extends Controller
                 'phone' => trim($validated['phone']),
                 'password' => Hash::make($plainPassword),
                 'role' => 'trainer',
+                'shift' => $validated['shift'],
                 'status' => 'active',
                 'email_verified_at' => now(),
             ]);
@@ -132,6 +161,7 @@ class PtManagementController extends Controller
                 'user_id' => $trainer->id,
                 'specialization' => trim($validated['specialization']),
                 'experience' => (int) $validated['experience'],
+                'commission_rate' => (int) $validated['commission_rate'],
                 'bio' => $validated['bio'] ?? null,
                 'status' => 'active',
             ]);
@@ -169,6 +199,14 @@ class PtManagementController extends Controller
             $q->latest()->take(5);
         }]);
 
+        $totalEarnings = (int) $trainer->trainerSessions()
+            ->whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value])
+            ->sum('trainer_earnings');
+
+        $completedSessionsCount = $trainer->trainerSessions()
+            ->whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value])
+            ->count();
+
         if (request()->wantsJson() || request()->ajax()) {
             return response()->json([
                 'success' => true,
@@ -178,9 +216,15 @@ class PtManagementController extends Controller
                     'email' => $trainer->email,
                     'phone' => $trainer->phone,
                     'status' => $trainer->status,
+                    'shift' => $trainer->shift ?? 'pagi',
+                    'shift_label' => $trainer->shift_label,
+                    'shift_hours_text' => $trainer->shift_hours_text,
                     'avatar' => $trainer->avatar,
                     'specialization' => $trainer->trainerProfile?->specialization ?? '-',
                     'experience' => $trainer->trainerProfile?->experience ?? 0,
+                    'commission_rate' => $trainer->trainerProfile?->commission_rate ?? config('pt_booking.default_commission_rate', 60000),
+                    'total_earnings' => $totalEarnings,
+                    'completed_sessions' => $completedSessionsCount,
                     'bio' => $trainer->trainerProfile?->bio ?? '',
                     'total_sessions' => $trainer->trainerSessions()->count(),
                     'created_at' => $trainer->created_at?->format('d M Y'),
@@ -204,8 +248,10 @@ class PtManagementController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$trainer->id],
             'phone' => ['required', 'string', 'max:20'],
+            'shift' => ['required', 'string', 'in:pagi,sore,fleksibel'],
             'specialization' => ['required', 'string', 'max:100'],
             'experience' => ['required', 'integer', 'min:0', 'max:50'],
+            'commission_rate' => ['required', 'integer', 'min:0'],
             'bio' => ['nullable', 'string', 'max:1000'],
             'password' => ['nullable', 'string', 'min:8'],
             'status' => ['required', 'in:active,inactive'],
@@ -215,8 +261,12 @@ class PtManagementController extends Controller
             'email.email' => 'Format email yang dimasukkan tidak valid.',
             'email.unique' => 'Email sudah digunakan oleh akun lain. Silakan gunakan email yang berbeda.',
             'phone.required' => 'Nomor telepon/WhatsApp wajib diisi.',
+            'shift.required' => 'Shift kerja pelatih wajib dipilih.',
+            'shift.in' => 'Pilihan shift tidak valid (pilih: pagi, sore, atau fleksibel).',
             'specialization.required' => 'Spesialisasi keahlian wajib dipilih atau diisi.',
             'experience.required' => 'Pengalaman kerja kepelatihan wajib diisi.',
+            'commission_rate.required' => 'Tarif komisi per sesi wajib diisi.',
+            'commission_rate.integer' => 'Tarif komisi harus berupa nominal angka rupiah.',
             'status.in' => 'Status akun harus aktif atau non-aktif.',
             'password.min' => 'Kata sandi minimal harus 8 karakter jika ingin diubah.',
         ]);
@@ -226,6 +276,7 @@ class PtManagementController extends Controller
                 'name' => $validated['name'],
                 'email' => strtolower(trim($validated['email'])),
                 'phone' => trim($validated['phone']),
+                'shift' => $validated['shift'],
                 'status' => $validated['status'],
             ];
 
@@ -240,6 +291,7 @@ class PtManagementController extends Controller
                 [
                     'specialization' => trim($validated['specialization']),
                     'experience' => (int) $validated['experience'],
+                    'commission_rate' => (int) $validated['commission_rate'],
                     'bio' => $validated['bio'] ?? null,
                     'status' => $validated['status'],
                 ]

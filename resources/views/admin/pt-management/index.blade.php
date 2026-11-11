@@ -11,8 +11,10 @@
                 name: '',
                 email: '',
                 phone: '',
+                shift: 'pagi',
                 specialization: '',
                 experience: 0,
+                commission_rate: 60000,
                 status: 'active',
                 bio: '',
                 password: '',
@@ -28,8 +30,10 @@
                     name: trainer?.name || '',
                     email: trainer?.email || '',
                     phone: trainer?.phone || '',
+                    shift: trainer?.shift || 'pagi',
                     specialization: trainer?.specialization || '',
                     experience: trainer?.experience || 0,
+                    commission_rate: trainer?.commission_rate || 60000,
                     status: trainer?.status || 'active',
                     bio: trainer?.bio || '',
                     password: '',
@@ -161,19 +165,16 @@
                     </div>
                 </div>
 
-                <!-- Card 3: Trainer Nonaktif -->
+                <!-- Card 3: Total Komisi Pelatih -->
                 <div class="rounded-[20px] bg-white p-5 border border-[#E5E7EB] shadow-[0px_1px_3px_rgba(0,0,0,0.05)] flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-bold text-[#565A66] uppercase tracking-wider font-inter">Trainer Nonaktif</p>
-                        <h3 class="text-3xl font-extrabold font-poppins text-[#16151A] mt-1">{{ number_format($inactiveTrainers) }}</h3>
-                        <p class="text-xs font-medium text-[#D97706] mt-1 flex items-center gap-1">
-                            <span class="inline-block w-2 h-2 rounded-full bg-[#D97706]"></span>
-                            <span>Perlu tinjauan status</span>
-                        </p>
+                        <p class="text-xs font-bold text-[#565A66] uppercase tracking-wider font-inter">Total Komisi Pelatih</p>
+                        <h3 class="text-2xl font-extrabold font-poppins text-[#10B981] mt-1">Rp {{ number_format($totalCommissionsPaid, 0, ',', '.') }}</h3>
+                        <p class="text-xs font-medium text-[#565A66] mt-1">Akumulasi sesi selesai</p>
                     </div>
-                    <div class="h-12 w-12 rounded-2xl bg-[#FEF3C7] flex items-center justify-center text-[#D97706]">
+                    <div class="h-12 w-12 rounded-2xl bg-[#DCFCE7] flex items-center justify-center text-[#16A34A]">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                 </div>
@@ -250,12 +251,24 @@
                             @endforeach
                         </select>
 
+                        <!-- Filter Shift -->
+                        <select 
+                            name="shift" 
+                            onchange="this.form.submit()"
+                            class="text-xs font-inter rounded-full border border-[#E5E7EB] bg-[#F6F6F7] px-4 py-2 text-[#565A66] focus:border-[#FF5722] focus:bg-white focus:outline-none transition cursor-pointer"
+                        >
+                            <option value="all">Semua Shift</option>
+                            <option value="pagi" {{ ($currentShift ?? 'all') === 'pagi' ? 'selected' : '' }}>Shift Pagi (06:00 – 14:00)</option>
+                            <option value="sore" {{ ($currentShift ?? 'all') === 'sore' ? 'selected' : '' }}>Shift Sore (14:00 – 22:00)</option>
+                            <option value="fleksibel" {{ ($currentShift ?? 'all') === 'fleksibel' ? 'selected' : '' }}>Shift Fleksibel</option>
+                        </select>
+
                         <!-- Tombol Cari -->
                         <button type="submit" class="rounded-full bg-[#16151A] text-white px-4 py-2 text-xs font-bold hover:bg-black transition cursor-pointer">
                             Filter
                         </button>
 
-                        @if ($currentSearch || $currentStatus !== 'all' || $currentSpecialization !== 'all')
+                        @if ($currentSearch || $currentStatus !== 'all' || $currentSpecialization !== 'all' || ($currentShift ?? 'all') !== 'all')
                             <a href="{{ route('admin.trainers.index') }}" class="text-xs font-semibold text-[#FF5722] hover:underline">
                                 Reset
                             </a>
@@ -272,6 +285,8 @@
                             <tr class="border-b border-[#E5E7EB] bg-[#FAFAFA] text-[11px] font-bold text-[#565A66] uppercase tracking-wider font-inter">
                                 <th class="py-4 px-6">Trainer</th>
                                 <th class="py-4 px-6">Spesialisasi &amp; Pengalaman</th>
+                                <th class="py-4 px-6">Shift Kerja</th>
+                                <th class="py-4 px-6">Tarif Komisi</th>
                                 <th class="py-4 px-6">Total Sesi Dilatih</th>
                                 <th class="py-4 px-6">Status Akun</th>
                                 <th class="py-4 px-6 text-right">Aksi</th>
@@ -308,6 +323,34 @@
                                         </div>
                                     </td>
 
+                                    <!-- Kolom Shift Kerja -->
+                                    <td class="py-4 px-6">
+                                        @if ($trainer->shift === 'sore')
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-bold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                                Sore (14:00 – 22:00)
+                                            </span>
+                                        @elseif ($trainer->shift === 'fleksibel')
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                Fleksibel (06:00 – 22:00)
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-bold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                                Pagi (06:00 – 14:00)
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <!-- Kolom Tarif Komisi -->
+                                    <td class="py-4 px-6">
+                                        <div class="font-bold text-[#16151A] text-xs">
+                                            Rp {{ number_format($trainer->trainerProfile?->commission_rate ?? config('pt_booking.default_commission_rate', 60000), 0, ',', '.') }}
+                                        </div>
+                                        <div class="text-[10px] text-[#6B7280]">per sesi selesai</div>
+                                    </td>
+
                                     <!-- Kolom Sesi Dilatih -->
                                     <td class="py-4 px-6">
                                         <span class="font-bold text-[#16151A]">{{ $trainer->trainer_sessions_count ?? 0 }}</span>
@@ -339,6 +382,11 @@
                                                 'email' => $trainer->email,
                                                 'phone' => $trainer->phone,
                                                 'status' => $trainer->status,
+                                                'shift' => $trainer->shift ?? 'pagi',
+                                                'shift_label' => $trainer->shift_label,
+                                                'shift_hours_text' => $trainer->shift_hours_text,
+                                                'commission_rate' => $trainer->trainerProfile?->commission_rate ?? config('pt_booking.default_commission_rate', 60000),
+                                                'total_earnings' => $trainer->total_earnings ?? 0,
                                                 'avatar' => $trainer->avatar,
                                                 'specialization' => $trainer->trainerProfile?->specialization ?? 'Umum',
                                                 'experience' => $trainer->trainerProfile?->experience ?? 0,
@@ -361,7 +409,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="py-12 text-center text-[#9CA3AF]">
+                                    <td colspan="7" class="py-12 text-center text-[#9CA3AF]">
                                         <div class="flex flex-col items-center justify-center">
                                             <div class="h-14 w-14 rounded-full bg-[#F3F4F6] flex items-center justify-center mb-3 text-[#9CA3AF]">
                                                 <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -495,8 +543,20 @@
                             <span class="font-bold text-[#16151A]" x-text="(selectedTrainer?.experience || 0) + ' Tahun'"></span>
                         </div>
                         <div class="flex justify-between py-1.5 border-b border-[#F1F2F4]">
+                            <span class="text-[#565A66]">Shift Kerja</span>
+                            <span class="font-bold text-[#16151A]" x-text="(selectedTrainer?.shift_label || 'Pagi') + ' (' + (selectedTrainer?.shift_hours_text || '06:00 – 14:00 WIB') + ')'"></span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-[#F1F2F4]">
+                            <span class="text-[#565A66]">Tarif Komisi / Sesi</span>
+                            <span class="font-bold text-[#10B981]" x-text="'Rp ' + Number(selectedTrainer?.commission_rate || 60000).toLocaleString('id-ID')"></span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-[#F1F2F4]">
                             <span class="text-[#565A66]">Total Sesi Selesai</span>
                             <span class="font-bold text-[#16151A]" x-text="(selectedTrainer?.sessions_count || 0) + ' Sesi PT'"></span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-[#F1F2F4]">
+                            <span class="text-[#565A66]">Total Komisi Diperoleh</span>
+                            <span class="font-bold text-[#10B981]" x-text="'Rp ' + Number(selectedTrainer?.total_earnings || 0).toLocaleString('id-ID')"></span>
                         </div>
                         <div class="py-1.5">
                             <span class="text-[#565A66] block mb-1">Bio / Profil Singkat:</span>
@@ -668,6 +728,36 @@
                             </div>
                         </div>
 
+                        <!-- Shift Kerja & Tarif Komisi Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Shift Kerja <span class="text-[#FF5722]">*</span></label>
+                                <select 
+                                    name="shift" 
+                                    required
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
+                                >
+                                    <option value="pagi" {{ old('shift', 'pagi') === 'pagi' ? 'selected' : '' }}>Shift Pagi (06:00 – 14:00 WIB)</option>
+                                    <option value="sore" {{ old('shift') === 'sore' ? 'selected' : '' }}>Shift Sore (14:00 – 22:00 WIB)</option>
+                                    <option value="fleksibel" {{ old('shift') === 'fleksibel' ? 'selected' : '' }}>Shift Fleksibel (06:00 – 22:00 WIB)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Tarif Komisi per Sesi (Rp) <span class="text-[#FF5722]">*</span></label>
+                                <input 
+                                    type="number" 
+                                    name="commission_rate" 
+                                    min="0" 
+                                    step="5000"
+                                    required
+                                    placeholder="Contoh: 60000"
+                                    value="{{ old('commission_rate', 60000) }}"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
+                                />
+                            </div>
+                        </div>
+
                         <!-- Password Opsional -->
                         <div>
                             <div class="flex items-center justify-between mb-1">
@@ -833,6 +923,36 @@
                                     max="50" 
                                     required
                                     x-model="editForm.experience"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Shift Kerja & Tarif Komisi Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Shift Kerja <span class="text-[#FF5722]">*</span></label>
+                                <select 
+                                    name="shift" 
+                                    required
+                                    x-model="editForm.shift"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
+                                >
+                                    <option value="pagi">Shift Pagi (06:00 – 14:00 WIB)</option>
+                                    <option value="sore">Shift Sore (14:00 – 22:00 WIB)</option>
+                                    <option value="fleksibel">Shift Fleksibel (06:00 – 22:00 WIB)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Tarif Komisi per Sesi (Rp) <span class="text-[#FF5722]">*</span></label>
+                                <input 
+                                    type="number" 
+                                    name="commission_rate" 
+                                    min="0" 
+                                    step="5000"
+                                    required
+                                    x-model="editForm.commission_rate"
                                     class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                                 />
                             </div>

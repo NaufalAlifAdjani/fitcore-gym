@@ -48,27 +48,8 @@ class PtSessionService
             return substr((string) $session->start_time, 0, 5);
         });
 
-        $isDayOff = DB::table('trainer_day_offs')
-            ->where('trainer_id', $trainerId)
-            ->whereDate('date', $dateString)
-            ->exists();
-
-        $dayOfWeek = (int) $carbonDate->dayOfWeek;
-        $trainerHasCustomSchedule = DB::table('trainer_availabilities')
-            ->where('trainer_id', $trainerId)
-            ->exists();
-
-        $dayAvailability = $trainerHasCustomSchedule
-            ? DB::table('trainer_availabilities')
-                ->where('trainer_id', $trainerId)
-                ->where('day_of_week', $dayOfWeek)
-                ->first()
-            : null;
-
-        $isWeeklyDayOff = $trainerHasCustomSchedule && (! $dayAvailability || ! $dayAvailability->is_active);
-        $allowedSlots = ($trainerHasCustomSchedule && $dayAvailability && $dayAvailability->is_active)
-            ? (json_decode($dayAvailability->slots ?? '[]', true) ?: [])
-            : null;
+        $trainerUser = $trainer instanceof User ? $trainer : User::find($trainerId);
+        $trainerShift = $trainerUser?->shift ?? 'pagi';
 
         $durationMinutes = (int) config('pt_booking.session_duration_minutes', 60);
         $now = now();
@@ -76,6 +57,8 @@ class PtSessionService
         $isPastDate = $carbonDate->isPast() && ! $isToday;
 
         $groups = [];
+        $pagiSlots = ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00'];
+        $soreSlots = ['14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
 
         foreach ($configuredSlots as $groupKey => $times) {
             $groups[$groupKey] = [];
@@ -85,16 +68,17 @@ class PtSessionService
                 $slotStartCarbon = Carbon::parse($dateString.' '.$timeShort);
                 $endTime = Carbon::parse($timeShort)->addMinutes($durationMinutes)->format('H:i');
 
+                $isWithinTrainerShift = match ($trainerShift) {
+                    'pagi' => in_array($timeShort, $pagiSlots, true),
+                    'sore' => in_array($timeShort, $soreSlots, true),
+                    'fleksibel' => true,
+                    default => in_array($timeShort, $pagiSlots, true),
+                };
+
                 $minNoticeHours = (int) config('pt_booking.min_booking_notice_hours', 24);
-                if ($isDayOff) {
+                if (! $isWithinTrainerShift) {
                     $status = 'off';
-                    $label = 'Libur PT';
-                } elseif ($isWeeklyDayOff) {
-                    $status = 'off';
-                    $label = 'Tidak Bertugas';
-                } elseif ($allowedSlots !== null && ! in_array($timeShort, $allowedSlots, true)) {
-                    $status = 'off';
-                    $label = 'Tidak Tersedia';
+                    $label = 'Di Luar Shift';
                 } elseif ($isPastDate || $slotStartCarbon->lessThan($now->copy()->addHours($minNoticeHours))) {
                     $status = 'passed';
                     $label = 'Sudah Lewat';
@@ -206,35 +190,17 @@ class PtSessionService
             throw new QuotaExceededException('Kuota sesi Anda telah habis atau tidak memiliki paket aktif.');
         }
 
-        // 2. Trainer availability & day off check
-        $isDayOff = DB::table('trainer_day_offs')
-            ->where('trainer_id', $trainer->id)
-            ->whereDate('date', $sessionDate->toDateString())
-            ->exists();
+        // 2. Trainer Shift validation
+        $trainerShift = $trainer->shift ?? 'pagi';
+        $morningSlots = config('pt_booking.slots.morning', ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00']);
+        $afternoonSlots = config('pt_booking.slots.afternoon', ['14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']);
 
-        if ($isDayOff) {
-            throw new SlotUnavailableException('Pelatih sedang libur/cuti pada tanggal tersebut.');
-        }
-
-        $dayOfWeek = (int) $sessionDate->dayOfWeek;
-        $trainerHasCustomSchedule = DB::table('trainer_availabilities')
-            ->where('trainer_id', $trainer->id)
-            ->exists();
-
-        if ($trainerHasCustomSchedule) {
-            $dayAvailability = DB::table('trainer_availabilities')
-                ->where('trainer_id', $trainer->id)
-                ->where('day_of_week', $dayOfWeek)
-                ->first();
-
-            if (! $dayAvailability || ! $dayAvailability->is_active) {
-                throw new SlotUnavailableException('Pelatih tidak bertugas pada hari tersebut.');
-            }
-
-            $allowedSlots = json_decode($dayAvailability->slots ?? '[]', true) ?: [];
-            if (! in_array($timeShort, $allowedSlots, true)) {
-                throw new SlotUnavailableException('Pelatih tidak membuka sesi latihan pada jam yang dipilih.');
-            }
+        if ($trainerShift === 'pagi' && ! in_array($timeShort, $morningSlots, true)) {
+            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam shift bertugas pelatih (Shift Pagi: 06:00 – 14:00 WIB).');
+        } elseif ($trainerShift === 'sore' && ! in_array($timeShort, $afternoonSlots, true)) {
+            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam shift bertugas pelatih (Shift Sore: 14:00 – 22:00 WIB).');
+        } elseif ($trainerShift === 'fleksibel' && ! in_array($timeShort, array_merge($morningSlots, $afternoonSlots), true)) {
+            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam operasional sesi PT (06:00 – 22:00 WIB).');
         }
 
         // 3. Trainer slot conflict check
@@ -550,9 +516,17 @@ class PtSessionService
                     return;
                 }
 
+                $rate = $lockedSession->trainer?->trainerProfile?->commission_rate
+                    ?? (int) config('pt_booking.default_commission_rate', 60000);
+
+                $earnings = ($lockedSession->trainer_earnings && $lockedSession->trainer_earnings > 0)
+                    ? (int) $lockedSession->trainer_earnings
+                    : $rate;
+
                 $lockedSession->update([
                     'status' => PtSessionStatus::Completed,
                     'completed_at' => $lockedSession->ends_at ?? $now,
+                    'trainer_earnings' => $earnings,
                 ]);
 
                 $completedCount++;
