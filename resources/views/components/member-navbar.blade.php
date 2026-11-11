@@ -67,9 +67,11 @@
             </a>
         </nav>
 
-        <!-- User Profile Avatar -->
-        <div class="flex items-center gap-3" x-data="{ userMenuOpen: false }">
-            <div class="relative" x-on:click.outside="userMenuOpen = false">
+        <!-- User Profile Avatar & Notifications -->
+        <div class="flex items-center gap-3">
+            <x-notification-dropdown theme="light" />
+
+            <div class="relative" x-data="{ userMenuOpen: false }" x-on:click.outside="userMenuOpen = false">
                 <button type="button" x-on:click="userMenuOpen = !userMenuOpen"
                     class="flex items-center gap-2.5 rounded-full bg-white border border-gray-200 p-1.5 pr-3 transition hover:border-[#FF5722]/50 shadow-xs">
                     <span
