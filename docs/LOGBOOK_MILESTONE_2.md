@@ -2,7 +2,7 @@
 
 **Nama Sistem**: FitCore (Sistem Informasi Manajemen dan Reservasi Gym Berbasis Web)  
 **Repositori**: [NaufalAlifAdjani/fitcore-gym](https://github.com/NaufalAlifAdjani/fitcore-gym)  
-**Fase Milestone 2**: Transaksi Pembayaran Manual, Verifikasi Admin, Kalender Sesi & Ketersediaan PT, Auto-Plotting, Rating PT, Cetak Invoice, UI Mobile-First Light Mode, Shift Trainer 24 Jam & Komisi PT, CI/CD, dan Pengujian PMPL  
+**Fase Milestone 2**: Transaksi Pembayaran Manual, Verifikasi Admin, Kalender Sesi & Ketersediaan PT, Auto-Plotting, Rating PT, Cetak Invoice, UI Mobile-First Light Mode, Shift Trainer 24 Jam & Komisi PT, CI/CD, Pengujian PMPL, dan Evolusi Skema Database  
 **Tim Pengembang (SIB-3A)**:
 - **Naufal Alif Adjani** (244107060090) — Full-stack Developer (Booking & Penjadwalan)
 - **Achmad Alfi Maksum** (244107060009) — Full-stack Developer (Pembayaran & Paket)
@@ -15,14 +15,62 @@
 
 | Minggu | Pekerjaan Selesai | Dikerjakan Oleh | Kendala | Rencana Berikutnya |
 | :--- | :--- | :--- | :--- | :--- |
-| **Minggu 9**<br>(19–25 Okt 2026) | Alur pembayaran transfer manual & upload bukti bayar, verifikasi pembayaran admin (approve/reject), manajemen master paket PT admin, integrasi booking sesi PT & auto-plotting awal. | Achmad Alfi Maksum, Siti Aisyah, Naufal Alif Adjani | Mencegah race condition ketika 2 member memilih slot jam pelatih yang sama, dan validasi berkas gambar bukti bayar. | Mengembangkan modul rating PT, cetak invoice kwitansi, dan notifikasi email queue. |
+| **Minggu 9**<br>(19–25 Okt 2026) | Alur pembayaran transfer manual & upload bukti bayar, verifikasi pembayaran admin (approve/reject), manajemen master paket PT admin, integrasi booking sesi PT & auto-plotting awal, penambahan kolom ulasan rating. | Achmad Alfi Maksum, Siti Aisyah, Naufal Alif Adjani | Mencegah race condition ketika 2 member memilih slot jam pelatih yang sama, dan validasi berkas gambar bukti bayar. | Mengembangkan modul rating PT, cetak invoice kwitansi, dan notifikasi email queue. |
 | **Minggu 10**<br>(26 Okt–01 Nov 2026) | Fitur rating & ulasan bintang PT, perubahan alur auto-plotting booking, migrasi tabel bank dinamis, fitur cetak invoice PDF/HTML, background queue email reminder masa aktif, penyusunan RAB M10. | Muhammad Rif’at Syamlan, Achmad Alfi Maksum, Naufal, Aisyah | Sinkronisasi rekening bank multi-tujuan dan penyesuaian query filter riwayat transaksi. | Integrasi CI/CD workflow GitHub Actions dan optimasi antarmuka mobile responsive. |
-| **Minggu 11**<br>(02–08 Nov 2026) | Setup CI/CD GitHub Actions, dashboard trainer (estimasi komisi, jadwal harian), riwayat member PT, notifikasi sesi, hardware QR scanner, tema Blaze Orange, mobile light theme, pengujian PMPL E2E. | Seluruh Tim (Naufal, Alfi, Rif’at, Aisyah) | Perbedaan rendering Livewire morphing saat perubahan DOM dan deteksi mobile device yang ringan tanpa library berat. | Integrasi fitur shift trainer 24 jam gym, pembaruan metrik dashboard admin, dan finalisasi dokumentasi. |
-| **Minggu 12**<br>(09–15 Nov 2026) | Fitur shift trainer 24 jam gym & komisi sesi PT di manajemen trainer, pembaruan 4 card dashboard admin & sinkronisasi filter bar chart, sinkronisasi proposal dan dokumen test plan ke GitHub Project. | Naufal Alif Adjani, Achmad Alfi Maksum | Penyesuaian query limit riwayat transaksi dengan komponen badge notifikasi navbar. | Finalisasi dokumentasi rilis dan persiapan demo evaluasi akhir semester. |
+| **Minggu 11**<br>(02–08 Nov 2026) | Setup CI/CD GitHub Actions, dashboard trainer (estimasi komisi, jadwal harian), riwayat member PT, notifikasi sesi, hardware QR scanner, tema Blaze Orange, mobile light theme, migrasi kolom notes & completed_at sesi, pengujian PMPL E2E. | Seluruh Tim (Naufal, Alfi, Rif’at, Aisyah) | Perbedaan rendering Livewire morphing saat perubahan DOM dan deteksi mobile device yang ringan tanpa library berat. | Integrasi fitur shift trainer 24 jam gym, pembaruan metrik dashboard admin, dan finalisasi dokumentasi. |
+| **Minggu 12**<br>(09–15 Nov 2026) | Fitur shift trainer 24 jam gym & komisi sesi PT di manajemen trainer, pembaruan 4 card dashboard admin & sinkronisasi filter bar chart, migrasi kolom shift, commission_rate & trainer_earnings, sinkronisasi proposal dan dokumen test plan ke GitHub Project. | Naufal Alif Adjani, Achmad Alfi Maksum | Penyesuaian query limit riwayat transaksi dengan komponen badge notifikasi navbar. | Finalisasi dokumentasi rilis dan persiapan demo evaluasi akhir semester. |
 
 ---
 
-## 📅 II. Logbook Harian Detail per Minggu — Milestone 2 (Minggu 9 – 12)
+## 🗄️ II. Log Perubahan Skema Basis Data (Database Schema & Migration Changes) — Milestone 2
+
+Pada fase Milestone 2 (Minggu 9 – 12), skema basis data FitCore mengalami penyempurnaan signifikan untuk mendukung kebutuhan transaksi riil, audit sesi latihan, penilaian kualitatif, serta model operasional **Gym 24 Jam** dan **Kompensasi Finansial Pelatih**.
+
+### 📋 Tabel Matriks Perubahan Database (Milestone 2 vs Milestone 1)
+
+| Tanggal | Tabel Target | Jenis Perubahan | Kolom / Struktur Baru | Tipe Data & Default | Alasan Bisnis & Teknis |
+| :---: | :--- | :---: | :--- | :--- | :--- |
+| **22 Okt 2026** | `ratings` | **Tambah Kolom** | `comment` | `TEXT`, nullable | Memberikan ulasan kualitatif pasca-latihan selain rating angka 1–5 bintang untuk evaluasi performa pelatih. |
+| **28 Okt 2026** | `banks` | **Aktivasi Tabel** | `bank_name`, `account_number`, `account_holder`, `is_active` | `VARCHAR`, `BOOLEAN` | Menghilangkan hardcoded rekening gym pada Blade. Admin dapat mengelola multi-rekening pembayaran dinamis (BCA, Mandiri, BRI). |
+| **28 Okt 2026** | `pt_sessions` | **Modifikasi Indeks** | `unique_trainer_date_time` | `UNIQUE INDEX` | Mencegah race condition / double-booking jadwal trainer pada tanggal dan slot jam yang sama oleh 2 member. |
+| **05 Nov 2026** | `pt_sessions` | **Tambah Kolom** | `notes`, `completed_at` | `TEXT`, `TIMESTAMP` | Pelatih dapat mencatat log beban latihan/progres fisik member, serta mencatat audit timestamp penyelesaian sesi latihan secara akurat. |
+| **07 Nov 2026** | `trainer_availabilities` | **Tabel Baru** | `trainer_id`, `day_of_week`, `is_active`, `slots` | `FOREIGN KEY`, `JSON` | Menyimpan preferensi hari kerja mingguan trainer sebelum transisi ke model shift terstandarisasi. |
+| **07 Nov 2026** | `trainer_day_offs` | **Tabel Baru** | `trainer_id`, `date`, `reason` | `FOREIGN KEY`, `DATE` | Mengizinkan personal trainer mengajukan tanggal libur/cuti spesifik agar slot booking tidak muncul. |
+| **11 Nov 2026** | `users` | **Tambah Kolom** | `shift` | `VARCHAR(20)`, default `'pagi'` | Mendukung operasional gym 24 jam. Staf dan pelatih diklasifikasikan ke dalam shift kerja (`pagi`, `siang`, `malam`). |
+| **11 Nov 2026** | `trainer_profiles` | **Tambah Kolom** | `commission_rate` | `UNSIGNED INT`, default `60000` | Menyimpan tarif honor komisi dasar per sesi latihan untuk masing-masing trainer sesuai kebijakan manajemen gym. |
+| **11 Nov 2026** | `pt_sessions` | **Tambah Kolom** | `trainer_earnings` | `UNSIGNED INT`, nullable | Menyimpan *snapshot* nominal komisi yang didapat trainer saat sesi berstatus Selesai (*immutable historical record*). |
+| **11 Nov 2026** | `trainer_availabilities` & `trainer_day_offs` | **Drop Tabel** | *Seluruh tabel dihapus* | *Refactor Arsitektur* | Menggantikan model slot JSON yang kompleks dengan model shift kerja terstandarisasi 24 jam gym. |
+
+### 🔍 Detail Penjelasan Perubahan Database per Minggu
+
+#### 1. Minggu 9: Penilaian Kualitatif Member (`ratings.comment`)
+- **File Migrasi**: `database/migrations/2026_10_22_172127_add_comment_to_ratings_table.php`
+- **Struktur**: `$table->text('comment')->nullable()->after('rating');`
+- **Urgensi Perubahan**: Pada Milestone 1, tabel `ratings` hanya menampung angka bintang 1–5. Evaluasi mutu layanan personal trainer membutuhkan umpan balik tekstual spesifik dari member mengenai ketepatan waktu, keramahan, dan metode latihan.
+
+#### 2. Minggu 10: Pengelolaan Rekening Bank Dinamis & Integritas Sesi
+- **Perubahan**: Aktivasi penuh tabel `banks` (Issue #71) dan deduplikasi indeks pada `pt_sessions`.
+- **Urgensi Perubahan**: Gym mitra sering mengubah rekening operasional kasir untuk membedakan penerimaan membership gym dan paket sesi pelatih. Kolom `is_active` memudahkan admin menonaktifkan rekening yang sedang rekonsiliasi tanpa menghapus riwayat transaksi lama.
+
+#### 3. Minggu 11: Riwayat Progres Klien (`pt_sessions.notes` & `completed_at`)
+- **File Migrasi**: `database/migrations/2026_11_05_073036_add_notes_and_completed_at_to_pt_sessions_table.php`
+- **Struktur**: `$table->text('notes')->nullable()->after('status'); $table->timestamp('completed_at')->nullable()->after('notes');`
+- **Urgensi Perubahan**: Sesuai masukan wawancara trainer Mas K, pelatih membutuhkan catatan progres fisik (reps, beban dumbbell, cardio time) yang tersimpan di sistem agar sesi berikutnya dapat melanjutkan program latihan member tanpa buku saku manual.
+
+#### 4. Minggu 12: Arsitektur Gym 24 Jam & Sistem Komisi Trainer
+- **File Migrasi**:
+  - `database/migrations/2026_11_11_145147_add_shift_to_users_table.php`
+  - `database/migrations/2026_11_11_145152_add_commission_rate_and_earnings_columns.php`
+  - `database/migrations/2026_11_11_145158_drop_trainer_availabilities_and_day_offs_tables.php`
+- **Struktur Kolom**:
+  - `users.shift`: Menentukan jam operasional kerja trainer (Pagi: 06:00–14:00, Siang: 14:00–22:00, Malam: 22:00–06:00).
+  - `trainer_profiles.commission_rate`: Tarif komisi nominal per sesi (default Rp 60.000).
+  - `pt_sessions.trainer_earnings`: Menyimpan nilai komisi riil saat sesi disetujui/diselesaikan.
+- **Alasan Arsitektural Drop Tabel**: Tabel ketersediaan hari kerja berbasis JSON di-drop karena menghasilkan bottleneck performa kueri dan rawan desinkronisasi. Digantikan oleh validasi shift deterministik yang menyatu pada tabel `users`, menghasilkan kueri penjadwalan yang jauh lebih cepat dan andal.
+
+---
+
+## 📅 III. Logbook Harian Detail per Minggu — Milestone 2 (Minggu 9 – 12)
 *(Menjabarkan tanggal, commit, author, detail teknis yang berubah, dan alasan perubahannya secara mendalam)*
 
 ### 🔹 MINGGU 9 (19–25 Oktober 2026) — Modul Pembayaran Manual, Verifikasi Transfer & Kalender PT (43 Commits)
@@ -57,7 +105,7 @@
 
 #### 📅 Tanggal 2026-10-22 — Dashboard Sesi Latihan PT, Manajemen Trainer & Transisi Status Sesi (24 Commits)
 - **Apa Saja yang Berubah (Teknis & Arsitektur)**:
-  Penyelesaian dashboard personal trainer untuk menampilkan ringkasan jadwal sesi harian dan mingguan, implementasi aksi konfirmasi (Setujui / Tolak permohonan reservasi member), penambahan modul CRUD data pelatih pada portal Admin (`TrainerController`), dan pembuatan scheduler transisi status sesi dari *Terkonfirmasi* menjadi *Selesai* berdasarkan batas waktu jam sesi.
+  Penyelesaian dashboard personal trainer untuk menampilkan ringkasan jadwal sesi harian dan mingguan, implementasi aksi konfirmasi (Setujui / Tolak permohonan reservasi member), penambahan modul CRUD data pelatih pada portal Admin (`TrainerController`), pembuatan scheduler transisi status sesi dari Terkonfirmasi menjadi Selesai berdasarkan batas waktu jam sesi, serta penambahan kolom ulasan pada tabel ratings.
 - **Alasan Perubahan Secara Detail (Rasional Bisnis & Masalah yang Diselesaikan)**:
   Pelatih memerlukan visibilitas jadwal yang jelas agar tidak terjadi kebingungan di gym. Transisi status otomatis diperlukan agar kuota sesi member berkurang secara tepat waktu dan perhitungan komisi pelatih dapat terakumulasi tanpa intervensi manual.
 - **Daftar Commit Terkait**:
@@ -209,9 +257,9 @@
   - [`49a63a8`](https://github.com/NaufalAlifAdjani/fitcore-gym/commit/49a63a8) (**Naufal Alif Adjani**): docs: add ALL diagram (Use case, activity, ERD, class diagram)
   - [`c4e31db`](https://github.com/NaufalAlifAdjani/fitcore-gym/commit/c4e31db) (**Naufal Alif Adjani**): docs: add PMPL testing suite (Modul A - D)
 
-#### 📅 Tanggal 2026-11-05 — Peningkatan Dashboard Trainer & Pengujian E2E PMPL (4 Commits)
+#### 📅 Tanggal 2026-11-05 — Peningkatan Dashboard Trainer, Kolom Catatan Sesi & Pengujian E2E PMPL (4 Commits)
 - **Apa Saja yang Berubah (Teknis & Arsitektur)**:
-  Pembaruan dashboard trainer dengan penambahan kartu estimasi komisi bulanan, daftar sesi hari ini dengan tombol quick-approval, penambahan fitur daftar riwayat klien per sesi sisi trainer, serta implementasi rangkaian uji E2E FitCore (PMPL Test Suite).
+  Pembaruan dashboard trainer dengan kartu estimasi komisi bulanan, daftar sesi hari ini dengan tombol quick-approval, penambahan fitur daftar riwayat klien per sesi sisi trainer, penambahan kolom notes dan completed_at pada tabel pt_sessions, serta implementasi rangkaian uji E2E FitCore (PMPL Test Suite).
 - **Alasan Perubahan Secara Detail (Rasional Bisnis & Masalah yang Diselesaikan)**:
   Trainer membutuhkan transparansi nominal honor komisi yang akan mereka terima berdasarkan akumulasi sesi yang berstatus selesai. Rangkaian uji E2E ditambahkan untuk memenuhi kepatuhan standar penjaminan mutu perangkat lunak.
 - **Daftar Commit Terkait**:
@@ -230,7 +278,7 @@
 
 #### 📅 Tanggal 2026-11-07 — Master Hari Kerja PT, Layout Publik & Navigasi Mobile (7 Commits)
 - **Apa Saja yang Berubah (Teknis & Arsitektur)**:
-  Pembuatan fitur pengaturan hari kerja dan ketersediaan waktu per trainer (trainer dapat memilih hari aktif Senin-Minggu dan rentang jam kerja), penataan ulang landing page publik dan funnel pendaftaran, serta penyelesaian mobile trainer views.
+  Pembuatan tabel trainer_availabilities dan trainer_day_offs untuk pengaturan hari kerja dan ketersediaan waktu per trainer, penataan ulang landing page publik dan funnel pendaftaran, serta penyelesaian mobile trainer views.
 - **Alasan Perubahan Secara Detail (Rasional Bisnis & Masalah yang Diselesaikan)**:
   Setiap personal trainer memiliki jadwal kuliah atau kesibukan yang berbeda. Fitur master hari kerja memastikan member tidak dapat memesan sesi di hari libur pelatih.
 - **Daftar Commit Terkait**:
@@ -266,7 +314,7 @@
   - [`7d99a11`](https://github.com/NaufalAlifAdjani/fitcore-gym/commit/7d99a11) (**Naufal Alif Adjani**): refactor(trainer): pisahkan fitur ketersediaan waktu PT ke dedicated branch terpisah
   - [`b4b75e2`](https://github.com/NaufalAlifAdjani/fitcore-gym/commit/b4b75e2) (**Naufal Alif Adjani**): feat(trainer): implement master hari kerja ketersediaan waktu PT dan penyelarasan jadwal booking
 
-### 🔹 MINGGU 12 (09–15 November 2026) — Shift Trainer 24 Jam Gym, Dashboard Admin & Finalisasi Dokumentasi (14 Commits)
+### 🔹 MINGGU 12 (09–15 November 2026) — Shift Trainer 24 Jam Gym, Dashboard Admin & Finalisasi Dokumentasi (15 Commits)
 
 #### 📅 Tanggal 2026-11-09 — Penyelarasan Warna Palette & Naming Label Beli Paket (1 Commits)
 - **Apa Saja yang Berubah (Teknis & Arsitektur)**:
@@ -290,7 +338,7 @@
 
 #### 📅 Tanggal 2026-11-11 — Fitur Shift Trainer 24 Jam Gym, Komisi PT & Pembaruan Dashboard Admin (6 Commits)
 - **Apa Saja yang Berubah (Teknis & Arsitektur)**:
-  Pengembangan fitur shift kerja pelatih untuk gym operasional 24 jam (pembagian shift pagi, sore, dan malam), modul pengaturan dan rekapitulasi komisi sesi PT di halaman manajemen trainer Admin, pembaruan 4 card indikator utama pada dashboard admin (Total Member Aktif, Pendapatan Bulan Ini, Sesi PT Terlaksana, Transaksi Pending), sinkronisasi filter rentang tanggal pada bar chart analitik, serta penyesuaian limit riwayat transaksi pada komponen lonceng notifikasi navbar.
+  Pengembangan fitur shift kerja pelatih untuk gym operasional 24 jam (pembagian shift pagi, sore, dan malam via kolom users.shift), modul pengaturan dan rekapitulasi komisi sesi PT di halaman manajemen trainer Admin (trainer_profiles.commission_rate & pt_sessions.trainer_earnings), pembaruan 4 card indikator utama pada dashboard admin, sinkronisasi filter rentang tanggal pada bar chart analitik, serta drop tabel ketersediaan JSON untuk beralih ke arsitektur shift.
 - **Alasan Perubahan Secara Detail (Rasional Bisnis & Masalah yang Diselesaikan)**:
   Gym mitra merencanakan perluasan operasional menjadi gym 24 jam sehingga pembagian shift trainer sangat krusial. Pemilik gym juga menuntut laporan keuangan dan aktivitas latihan real-time yang dapat difilter per minggu atau per bulan pada halaman depan dashboard.
 - **Daftar Commit Terkait**:
@@ -301,11 +349,12 @@
   - [`5216f78`](https://github.com/NaufalAlifAdjani/fitcore-gym/commit/5216f78) (**Naufal Alif Adjani**): merge: integrasikan mobile UI/UX dan web light mode ke develop
   - [`d14a3d4`](https://github.com/NaufalAlifAdjani/fitcore-gym/commit/d14a3d4) (**Naufal Alif Adjani**): merge: integrasikan sistem notifikasi sesi PT ke develop dengan tema Blaze Orange
 
-#### 📅 Tanggal 2026-11-12 — Sinkronisasi Dokumentasi Lengkap Proposal PBL & Dokumen Pengujian PMPL (2 Commits)
+#### 📅 Tanggal 2026-11-12 — Sinkronisasi Dokumentasi Lengkap Proposal PBL & Dokumen Pengujian PMPL (3 Commits)
 - **Apa Saja yang Berubah (Teknis & Arsitektur)**:
-  Penyusunan dan pengarsipan Proposal Lengkap PBL (BAB I – IX), Dokumen Test Plan v1.0 standar IEEE 829, Dokumen Test Scenario & Test Case Execution Record (25 Test Cases 100% Pass) ke dalam folder `docs/` repositori, publikasi dokumen ke papan GitHub Project PBL FITCORE (Issue #90, #91, #92), serta pembagian logbook Milestone 1 (#93) dan Milestone 2.
+  Penyusunan dan pengarsipan Proposal Lengkap PBL (BAB I – IX), Dokumen Test Plan v1.0 standar IEEE 829, Dokumen Test Scenario & Test Case Execution Record (25 Test Cases 100% Pass) ke dalam folder `docs/` repositori, publikasi dokumen ke papan GitHub Project PBL FITCORE (Issue #90, #91, #92), serta pembagian logbook Milestone 1 (#93) dan Milestone 2 (#94).
 - **Alasan Perubahan Secara Detail (Rasional Bisnis & Masalah yang Diselesaikan)**:
   Memastikan seluruh artefak luaran proyek terdokumentasi secara transparan, memiliki ketertelusuran (*traceability*) ke kode WBS, dan siap dipresentasikan pada evaluasi akhir mata kuliah Penjaminan Mutu Perangkat Lunak dan Manajemen Proyek.
 - **Daftar Commit Terkait**:
+  - [`204c06c`](https://github.com/NaufalAlifAdjani/fitcore-gym/commit/204c06c) (**Naufal Alif Adjani**): docs: update logbook to milestone 1 and milestone 2
   - [`f9ef72b`](https://github.com/NaufalAlifAdjani/fitcore-gym/commit/f9ef72b) (**Naufal Alif Adjani**): docs: add project logbook weeks 1 to 12
   - [`4f1637d`](https://github.com/NaufalAlifAdjani/fitcore-gym/commit/4f1637d) (**Naufal Alif Adjani**): docs: add full proposal PBL, Test Plan v1.0, and Test Execution Record
