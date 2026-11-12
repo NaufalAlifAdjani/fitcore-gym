@@ -93,11 +93,49 @@ class AdminDashboardTest extends TestCase
             ->assertViewHas('pendingVerificationsCount', 1)
             ->assertSee('Dashboard Performa Gym')
             ->assertSee('TOTAL MEMBER AKTIF')
+            ->assertSee('PENDAPATAN MEMBERSHIP')
+            ->assertSee('PENDAPATAN SESI PT')
+            ->assertSee('TOTAL CHECKIN')
+            ->assertSee('Menampilkan data performa periode:')
             ->assertSee('Antrean Menunggu Verifikasi')
             ->assertSee('INV-TEST-002')
             ->assertSee('Perhatian: Ada 1 pembayaran baru menunggu verifikasi!')
             ->assertSee('adminRevenueChart')
             ->assertSee('https://cdn.jsdelivr.net/npm/chart.js', false);
+    }
+
+    public function test_dashboard_date_filter_filters_revenue_and_metrics(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $member = User::factory()->create(['role' => 'member']);
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_holder' => 'FitCore Gym',
+            'status' => 'active',
+        ]);
+
+        $twoMonthsAgo = now()->subMonths(2);
+
+        Payment::create([
+            'invoice_id' => 'INV-FILTER-001',
+            'member_id' => $member->id,
+            'bank_id' => $bank->id,
+            'package_type' => 'membership',
+            'payment_type' => 'membership',
+            'amount' => 450000,
+            'status' => 'verified',
+            'verified_at' => $twoMonthsAgo,
+            'created_at' => $twoMonthsAgo,
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.dashboard', [
+            'start_date' => $twoMonthsAgo->copy()->startOfMonth()->toDateString(),
+            'end_date' => $twoMonthsAgo->copy()->endOfMonth()->toDateString(),
+        ]));
+
+        $response->assertOk()
+            ->assertSee('Rp 450.000');
     }
 
     public function test_dashboard_pending_payments_queue_only_contains_pending_payments(): void
@@ -188,7 +226,7 @@ class AdminDashboardTest extends TestCase
             ->assertViewHas('currentRange', '7_days')
             ->assertViewHas('chartTitle', 'Pendapatan 7 Hari Terakhir')
             ->assertSee('Pendapatan 7 Hari Terakhir')
-            ->assertSee('onchange="window.location.href=\'?range=\' + this.value"', false);
+            ->assertSee('adminRevenueChart');
 
         $labels7 = $response7->viewData('chartLabels');
         $data7 = $response7->viewData('chartData');

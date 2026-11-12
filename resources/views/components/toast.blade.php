@@ -28,12 +28,12 @@
      x-transition:leave-end="opacity-0 -translate-y-4 scale-95"
      x-cloak
      class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-md shadow-2xl rounded-2xl p-4 border backdrop-blur-md transition-all pointer-events-auto"
-     :class="type === 'success' ? 'bg-zinc-900/95 border-emerald-500/40 text-zinc-100' : 'bg-zinc-900/95 border-red-500/40 text-zinc-100'">
+     :class="type === 'success' ? 'bg-white/95 border-emerald-500/30 text-zinc-900 shadow-[0_10px_30px_rgba(16,185,129,0.12)]' : 'bg-white/95 border-red-500/30 text-zinc-900 shadow-[0_10px_30px_rgba(239,68,68,0.12)]'">
 
     <div class="flex items-start gap-3">
         <!-- Success Icon -->
         <template x-if="type === 'success'">
-            <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+            <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                 </svg>
@@ -42,7 +42,7 @@
 
         <!-- Error Icon -->
         <template x-if="type !== 'success'">
-            <div class="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center shrink-0 border border-red-500/30">
+            <div class="w-8 h-8 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0 border border-red-200">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                 </svg>
@@ -50,11 +50,11 @@
         </template>
 
         <div class="flex-1">
-            <h5 class="text-xs font-bold uppercase tracking-wider" :class="type === 'success' ? 'text-emerald-400' : 'text-red-400'" x-text="title"></h5>
-            <p class="text-xs text-zinc-200 mt-0.5 leading-relaxed" x-text="message"></p>
+            <h5 class="text-xs font-bold uppercase tracking-wider" :class="type === 'success' ? 'text-emerald-700' : 'text-red-700'" x-text="title"></h5>
+            <p class="text-xs text-zinc-600 mt-0.5 leading-relaxed" x-text="message"></p>
         </div>
 
-        <button type="button" @click="show = false" class="text-zinc-500 hover:text-zinc-300 p-1 rounded-lg transition-colors cursor-pointer">
+        <button type="button" @click="show = false" class="text-zinc-400 hover:text-zinc-600 p-1 rounded-lg transition-colors cursor-pointer">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>

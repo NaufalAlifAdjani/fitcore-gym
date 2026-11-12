@@ -64,8 +64,10 @@ class TrainerManagementTest extends TestCase
             'name' => 'Coach Doni Pratama',
             'email' => 'donipratama@fitcore.my.id',
             'phone' => '081298765432',
+            'shift' => 'pagi',
             'specialization' => 'Strength & Conditioning',
             'experience' => 5,
+            'commission_rate' => 60000,
             'bio' => 'Pelatih bersertifikasi dengan fokus strength training.',
             'password' => 'RahasiaTrainer123',
             'send_email' => '1',
@@ -138,8 +140,10 @@ class TrainerManagementTest extends TestCase
             'name' => 'Coach Baru Diperbarui',
             'email' => 'coach.baru@fitcore.my.id',
             'phone' => '0822222222',
+            'shift' => 'sore',
             'specialization' => 'Weight Loss Specialist',
             'experience' => 4,
+            'commission_rate' => 75000,
             'bio' => 'Bio baru yang diperbarui.',
             'status' => 'active',
         ];
@@ -153,12 +157,14 @@ class TrainerManagementTest extends TestCase
             'id' => $trainer->id,
             'name' => 'Coach Baru Diperbarui',
             'email' => 'coach.baru@fitcore.my.id',
+            'shift' => 'sore',
         ]);
 
         $this->assertDatabaseHas('trainer_profiles', [
             'user_id' => $trainer->id,
             'specialization' => 'Weight Loss Specialist',
             'experience' => 4,
+            'commission_rate' => 75000,
         ]);
     }
 
@@ -168,6 +174,7 @@ class TrainerManagementTest extends TestCase
             'name' => 'Trainer Utama',
             'email' => 'trainer@fitcore.test',
             'phone' => '081299990005',
+            'shift' => 'pagi',
             'status' => 'active',
         ]);
 
@@ -175,6 +182,7 @@ class TrainerManagementTest extends TestCase
             'user_id' => $trainer->id,
             'specialization' => 'Fat Loss & Functional Fitness',
             'experience' => 5,
+            'commission_rate' => 60000,
             'status' => 'active',
         ]);
 
@@ -182,8 +190,10 @@ class TrainerManagementTest extends TestCase
             'name' => 'Trainer Utama',
             'email' => 'trainer@fitcore.test',
             'phone' => '081234567890',
+            'shift' => 'pagi',
             'specialization' => 'Fat Loss & Functional Fitness',
             'experience' => 5,
+            'commission_rate' => 60000,
             'status' => 'active',
         ];
 

@@ -87,7 +87,7 @@
         <button
             type="button"
             x-on:click="closeModal()"
-            class="mt-6 w-full inline-flex justify-center items-center gap-2 rounded-xl bg-gradient-to-r from-[#BA0030] to-[#E6003D] hover:from-[#A00029] hover:to-[#C90035] text-white px-5 py-3.5 text-sm font-bold shadow-lg shadow-[#BA0030]/25 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#BA0030] focus:ring-offset-2 focus:ring-offset-[#111622]"
+            class="mt-6 w-full inline-flex justify-center items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF5722] to-[#E6003D] hover:from-[#A00029] hover:to-[#C90035] text-white px-5 py-3.5 text-sm font-bold shadow-lg shadow-[#FF5722]/25 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:ring-offset-2 focus:ring-offset-[#111622]"
         >
             <span>Mulai Eksplorasi Dashboard</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

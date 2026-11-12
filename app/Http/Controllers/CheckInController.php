@@ -16,7 +16,19 @@ class CheckInController extends Controller
      */
     public function index(): View
     {
-        return view('admin.checkin');
+        $today = now('Asia/Jakarta')->toDateString();
+
+        $todayCheckIns = CheckIn::with([
+            'member:id,name,email',
+            'member.memberProfile:id,user_id,member_code',
+            'membership.package:id,name',
+            'checkedBy:id,name',
+        ])
+            ->whereDate('check_in_date', $today)
+            ->latest('checked_in_at')
+            ->get();
+
+        return view('admin.checkin', compact('todayCheckIns'));
     }
 
     /**
@@ -32,6 +44,7 @@ class CheckInController extends Controller
         $memberProfile = MemberProfile::with([
             'user',
             'user.memberships.package',
+            'user.memberships.payment',
             'user.memberships.payments',
         ])->where('qr_token', $qrToken)->first();
 
@@ -51,7 +64,10 @@ class CheckInController extends Controller
             ->where('status', 'active')
             ->where('start_date', '<=', $today->toDateString())
             ->where('end_date', '>=', $today->toDateString())
-            ->whereHas('payments', fn ($q) => $q->where('status', 'verified'))
+            ->where(function ($query) {
+                $query->whereHas('payment', fn ($q) => $q->where('status', 'verified'))
+                    ->orWhereHas('payments', fn ($q) => $q->where('status', 'verified'));
+            })
             ->first();
 
         if (! $activeMembership) {
@@ -116,13 +132,21 @@ class CheckInController extends Controller
         }
 
         // ── E. Return Success Response ────────────────────────────────────────
+        $memberCode = $memberProfile->member_code ?? ('MBR-'.str_pad((string) $member->id, 5, '0', STR_PAD_LEFT));
+        $operatorName = $request->user()?->name ?? 'Admin';
+        $packageName = $activeMembership->package->name ?? 'Membership FitCore';
+        $validUntil = $activeMembership->end_date->locale('id')->translatedFormat('d F Y');
+        $checkedInTime = $today->format('H:i');
+
         return response()->json([
             'success' => true,
             'message' => 'Check-in berhasil!',
             'member_name' => $member->name,
-            'membership' => $activeMembership->package->name ?? 'N/A',
-            'valid_until' => $activeMembership->end_date->locale('id')->translatedFormat('d F Y'),
-            'checked_in_at' => $today->format('H:i'),
+            'member_code' => $memberCode,
+            'membership' => $packageName,
+            'valid_until' => $validUntil,
+            'checked_in_at' => $checkedInTime,
+            'checked_by_name' => $operatorName,
         ]);
     }
 }

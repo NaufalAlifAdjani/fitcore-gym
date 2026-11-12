@@ -1,6 +1,6 @@
 <div class="bg-white rounded-2xl p-10 sm:p-14 text-center shadow-[0_4px_12px_rgba(0,0,0,0.06)] border border-[#E5E7EB]">
     <!-- Icon Ilustrasi Elegan -->
-    <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#ED1B45]/10 text-[#ED1B45] mb-5">
+    <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#FF5722]/10 text-[#FF5722] mb-5">
         <svg class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
@@ -32,7 +32,7 @@
         @else
             <a
                 href="{{ route('member.membership.packages') }}"
-                class="rounded-full bg-[#ED1B45] hover:bg-[#D1123D] text-white px-6 py-2.5 font-inter text-xs font-semibold shadow-sm transition inline-flex items-center gap-2 cursor-pointer"
+                class="rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white px-6 py-2.5 font-inter text-xs font-semibold shadow-sm transition inline-flex items-center gap-2 cursor-pointer"
             >
                 <span>Lihat Paket Membership</span>
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -36,7 +36,7 @@
         <!-- Footer Link Balik ke Halaman Login -->
         <div class="text-center text-xs text-gray-600 pt-3">
             Ingat kata sandi akun Anda? 
-            <a href="{{ route('login') }}" class="text-[#be0a32] font-bold hover:underline">
+            <a href="{{ route('login') }}" class="text-[#FF5722] font-bold hover:underline">
                 Masuk di sini
             </a>
         </div>

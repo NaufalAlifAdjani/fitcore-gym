@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PtSessionStatus;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MemberManagementController;
 use App\Http\Controllers\Admin\MembershipPackageController;
@@ -7,20 +8,32 @@ use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\PtManagementController;
 use App\Http\Controllers\Admin\PtPackageController;
 use App\Http\Controllers\CheckInController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
 use App\Http\Controllers\Member\TransactionHistoryController;
 use App\Http\Controllers\MemberCardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PtPackagePurchaseController;
 use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
+use App\Http\Controllers\Trainer\ClientController as TrainerClientController;
+use App\Http\Controllers\Trainer\CommissionController as TrainerCommissionController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
+use App\Models\MemberPtQuota;
+use App\Models\MembershipPackage;
+use App\Models\Payment;
+use App\Models\PtSession;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/login');
+Route::get('/', [LandingController::class, 'index'])->name('landing.index');
+Route::get('/packages', [LandingController::class, 'packages'])->name('landing.packages');
+Route::get('/trainers', [LandingController::class, 'trainers'])->name('landing.trainers');
+Route::get('/about', [LandingController::class, 'about'])->name('landing.about');
 
 Route::get('/dashboard', function (Request $request) {
     $role = auth()->user()?->role;
@@ -45,6 +58,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Notifications
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.mark-all-read');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
 
     // Member Dashboard
     Route::get('/member/dashboard', [MemberDashboardController::class, 'index'])
@@ -74,6 +93,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/pt-sessions', [PtSessionController::class, 'store'])
         ->name('pt-sessions.store');
 
+    Route::get('/pt-sessions/{ptSession}', function (PtSession $ptSession) {
+        return redirect()->route('pt-sessions.index');
+    })->name('pt-sessions.show');
+
     Route::get('/pt-sessions/{ptSession}/edit', [PtSessionController::class, 'edit'])
         ->name('pt-sessions.edit');
     Route::put('/pt-sessions/{ptSession}', [PtSessionController::class, 'update'])
@@ -86,6 +109,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/{payment}/invoice', 'invoice')->name('invoice');
     });
+
+    Route::get('/member/payments/{payment}/invoice/download', [TransactionHistoryController::class, 'invoice'])
+        ->name('member.payments.invoice.download');
 });
 
 Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')->group(function () {
@@ -93,9 +119,10 @@ Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')
     Route::post('/sessions/{ptSession}/confirm', [TrainerDashboardController::class, 'confirmSession'])->name('sessions.confirm');
     Route::post('/sessions/{ptSession}/reject', [TrainerDashboardController::class, 'rejectSession'])->name('sessions.reject');
     Route::get('/jadwal-sesi', TrainerSessionsIndex::class)->name('sessions.index');
-    Route::view('/klien-saya', 'trainer.placeholder', ['title' => 'Klien Saya'])->name('clients.index');
-    Route::view('/ketersediaan-waktu', 'trainer.placeholder', ['title' => 'Ketersediaan Waktu'])->name('availability.index');
-    Route::view('/pendapatan-komisi', 'trainer.placeholder', ['title' => 'Pendapatan / Komisi'])->name('commissions.index');
+    Route::get('/klien-saya', [TrainerClientController::class, 'index'])->name('clients.index');
+    Route::get('/klien-saya/{member}', [TrainerClientController::class, 'show'])->whereNumber('member')->name('clients.show');
+    Route::post('/sessions/{ptSession}/complete', [TrainerClientController::class, 'completeSession'])->whereNumber('ptSession')->name('sessions.complete');
+    Route::get('/pendapatan-komisi', [TrainerCommissionController::class, 'index'])->name('commissions.index');
 });
 
 Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->name('admin.')->group(function () {
@@ -141,6 +168,7 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
         Route::patch('/{trainer}/toggle-status', 'toggleStatus')->name('toggle-status');
         Route::delete('/{trainer}', 'destroy')->name('destroy');
     });
+
     Route::view('/settings', 'admin.placeholder', ['title' => 'Pengaturan'])->name('settings.index');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');
 });
@@ -174,4 +202,144 @@ Route::middleware(['auth', 'role:admin,trainer'])->prefix('admin')->name('admin.
     Route::post('/checkin', [CheckInController::class, 'store'])->name('checkin.store');
 });
 
+Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
+    Route::get('/dashboard', function (Request $request) {
+        $user = $request->user()->load([
+            'memberProfile',
+            'memberships' => fn ($q) => $q->where('status', 'active')->with('package')->latest('start_date'),
+        ]);
+
+        $activeMembership = $user->memberships->first();
+
+        $quota = MemberPtQuota::where('member_id', $user->id)
+            ->where('status', 'active')
+            ->where('end_date', '>=', now()->toDateString())
+            ->first();
+
+        $upcomingSession = PtSession::with('trainer.trainerProfile')
+            ->where('member_id', $user->id)
+            ->whereIn('status', [PtSessionStatus::Confirmed->value, PtSessionStatus::Pending->value])
+            ->where('session_date', '>=', now()->toDateString())
+            ->orderBy('session_date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->first();
+
+        return view('mobile.member.dashboard', compact('user', 'activeMembership', 'quota', 'upcomingSession'));
+    })->name('mobile.member.dashboard');
+
+    Route::get('/card', function (Request $request, MemberCardController $controller) {
+        $view = $controller->show($request);
+
+        return view('mobile.member.card', $view->getData());
+    })->name('mobile.member.card');
+
+    Route::get('/packages', function (Request $request, MemberMembershipPackageController $controller) {
+        $view = $controller->index();
+
+        return view('mobile.member.packages.index', $view->getData());
+    })->name('mobile.member.packages');
+
+    Route::get('/packages-catalog', function (Request $request, MemberMembershipPackageController $controller) {
+        $view = $controller->index();
+
+        return view('mobile.member.packages.index', $view->getData());
+    })->name('mobile.packages.index');
+
+    Route::get('/packages/{package}/checkout', function (MembershipPackage $package, Request $request, MemberMembershipPackageController $controller) {
+        $view = $controller->checkout($package);
+        if ($view instanceof RedirectResponse) {
+            return $view;
+        }
+
+        return view('mobile.member.packages.checkout', $view->getData());
+    })->name('mobile.member.packages.checkout');
+
+    Route::get('/payment-status/{payment}', function (Payment $payment, Request $request, MemberMembershipPackageController $controller) {
+        $view = $controller->paymentStatus($payment);
+
+        return view('mobile.member.packages.payment-status', $view->getData());
+    })->name('mobile.member.packages.payment-status');
+
+    Route::get('/pt-sessions', function (Request $request, PtSessionController $controller) {
+        $view = $controller->index($request);
+
+        return view('mobile.member.pt-sessions.index', $view->getData());
+    })->name('mobile.member.pt-sessions.index');
+
+    Route::get('/pt-sessions/booking', function (Request $request, PtSessionController $controller) {
+        $view = $controller->create($request);
+
+        return view('mobile.member.pt-sessions.create', $view->getData());
+    })->name('mobile.member.pt-sessions.create');
+
+    Route::get('/pt-sessions/{ptSession}', function (PtSession $ptSession, Request $request) {
+        if ($ptSession->member_id !== $request->user()->id && $request->user()->role !== 'admin') {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $ptSession->load(['trainer.trainerProfile', 'quota']);
+
+        return view('mobile.member.pt-sessions.show', compact('ptSession'));
+    })->name('mobile.member.pt-sessions.show');
+
+    Route::get('/riwayat-transaksi', function (Request $request, TransactionHistoryController $controller) {
+        $view = $controller->index($request);
+
+        return view('mobile.member.riwayat-transaksi.index', $view->getData());
+    })->name('mobile.member.riwayat-transaksi.index');
+
+    Route::get('/riwayat-transaksi/{payment}/invoice', [TransactionHistoryController::class, 'invoice'])
+        ->name('mobile.member.riwayat-transaksi.invoice');
+
+    Route::get('/profile', [ProfileController::class, 'mobileIndex'])->name('mobile.member.profile.index');
+});
+
+Route::prefix('m/trainer')->name('mobile.trainer.')->middleware(['auth', 'role:trainer'])->group(function () {
+    Route::get('/dashboard', [TrainerDashboardController::class, 'mobileDashboard'])->name('dashboard');
+    Route::get('/sessions', [TrainerDashboardController::class, 'mobileSessionsIndex'])->name('sessions.index');
+    Route::get('/sessions/{ptSession}', [TrainerDashboardController::class, 'mobileSessionShow'])->name('sessions.show');
+    Route::post('/sessions/{ptSession}/confirm', [TrainerDashboardController::class, 'confirmSession'])->name('sessions.confirm');
+    Route::post('/sessions/{ptSession}/reject', [TrainerDashboardController::class, 'rejectSession'])->name('sessions.reject');
+    Route::get('/clients', [TrainerDashboardController::class, 'mobileClientsIndex'])->name('clients.index');
+    Route::get('/profile', [TrainerDashboardController::class, 'mobileProfileIndex'])->name('profile.index');
+});
+
+Route::prefix('m')->group(function () {
+    Route::get('/', [LandingController::class, 'mobileIndex'])->name('mobile.landing.index');
+    Route::get('/packages-info', [LandingController::class, 'mobilePackages'])->name('mobile.landing.packages');
+    Route::get('/trainers', [LandingController::class, 'mobileTrainers'])->name('mobile.landing.trainers');
+    Route::get('/about', [LandingController::class, 'mobileAbout'])->name('mobile.landing.about');
+});
+
+Route::prefix('m')->middleware('guest')->group(function () {
+    Route::get('/login', function (Request $request) {
+        if ($request->has('redirect')) {
+            session()->put('url.intended', $request->query('redirect'));
+        }
+
+        return view('mobile.guest.login');
+    })->name('mobile.login');
+
+    Route::get('/register', function (Request $request) {
+        if ($request->has('redirect')) {
+            session()->put('url.intended', $request->query('redirect'));
+        }
+
+        return view('mobile.guest.register');
+    })->name('mobile.register');
+});
+
 require __DIR__.'/auth.php';
+
+// Fallback untuk rute /m/* yang tidak terdaftar agar tetap diproses oleh AutoRedirectMobile
+Route::get('/m/{any}', function (Request $request) {
+    if ($request->user()) {
+        return match ($request->user()->role) {
+            'trainer' => redirect()->route('mobile.trainer.dashboard'),
+            'admin' => redirect()->route('admin.dashboard'),
+            default => redirect()->route('mobile.member.dashboard'),
+        };
+    }
+
+    return redirect()->route('mobile.landing.index');
+})->where('any', '.*')->name('mobile.fallback');

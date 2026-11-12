@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'phone', 'status', 'google_id', 'avatar'])]
+#[Fillable(['name', 'email', 'password', 'role', 'shift', 'phone', 'status', 'google_id', 'avatar'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -29,6 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
+        'shift',
         'phone',
         'status',
         'google_id',
@@ -101,6 +102,55 @@ class User extends Authenticatable implements MustVerifyEmail
     public function receivedRatings(): HasMany
     {
         return $this->hasMany(Rating::class, 'trainer_id');
+    }
+
+    public function getShiftLabelAttribute(): string
+    {
+        return match ($this->shift) {
+            'sore' => 'Sore',
+            'fleksibel' => 'Fleksibel',
+            default => 'Pagi',
+        };
+    }
+
+    public function getShiftHoursTextAttribute(): string
+    {
+        return match ($this->shift) {
+            'sore' => '14:00 – 22:00 WIB',
+            'fleksibel' => '06:00 – 22:00 WIB',
+            default => '06:00 – 14:00 WIB',
+        };
+    }
+
+    /**
+     * Mendapatkan ringkasan jadwal kerja rutin untuk tampilan kartu PT berdasarkan shift.
+     *
+     * @return array{days_label: string, periods: array<string>, periods_label: string, has_custom_schedule: bool}
+     */
+    public function getWorkingScheduleSummary(): array
+    {
+        $shift = $this->shift ?? 'pagi';
+
+        return match ($shift) {
+            'sore' => [
+                'days_label' => 'Setiap Hari',
+                'periods' => ['afternoon', 'evening'],
+                'periods_label' => 'Sore / Malam (14:00 – 22:00)',
+                'has_custom_schedule' => false,
+            ],
+            'fleksibel' => [
+                'days_label' => 'Setiap Hari',
+                'periods' => ['morning', 'afternoon', 'evening'],
+                'periods_label' => 'Fleksibel (06:00 – 22:00)',
+                'has_custom_schedule' => false,
+            ],
+            default => [
+                'days_label' => 'Setiap Hari',
+                'periods' => ['morning'],
+                'periods_label' => 'Pagi (06:00 – 14:00)',
+                'has_custom_schedule' => false,
+            ],
+        };
     }
 
     // Native Role Authorization Helpers (No Spatie)

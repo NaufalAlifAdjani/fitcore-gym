@@ -27,9 +27,10 @@ class PtSessionController extends Controller
      */
     public function index(Request $request): View
     {
-        $this->ptSessionService->cancelExpiredPendingSessions();
-
         $user = $request->user();
+        $this->ptSessionService->cancelExpiredPendingSessions($user->id);
+        $this->ptSessionService->completePastConfirmedSessions(null, $user->id);
+
         $tab = $request->query('tab', 'all');
         $month = $request->query('month');
 
@@ -103,16 +104,29 @@ class PtSessionController extends Controller
             ->orderBy('end_date', 'asc')
             ->first();
 
-        // Default trainer (Coach Rama jika ada, atau trainer aktif pertama)
-        $trainer = User::where('role', 'trainer')
-            ->whereHas('trainerProfile')
-            ->with('trainerProfile')
-            ->where('email', 'rama@gym.test')
-            ->first()
-            ?? User::where('role', 'trainer')
+        // Trainer terpilih dari parameter atau default (Coach Rama jika ada, atau trainer aktif pertama)
+        $selectedTrainerId = $request->query('trainer_id');
+        $trainer = null;
+
+        if ($selectedTrainerId) {
+            $trainer = User::where('role', 'trainer')
+                ->where('id', $selectedTrainerId)
                 ->whereHas('trainerProfile')
                 ->with('trainerProfile')
                 ->first();
+        }
+
+        if (! $trainer) {
+            $trainer = User::where('role', 'trainer')
+                ->whereHas('trainerProfile')
+                ->with('trainerProfile')
+                ->where('email', 'rama@gym.test')
+                ->first()
+                ?? User::where('role', 'trainer')
+                    ->whereHas('trainerProfile')
+                    ->with('trainerProfile')
+                    ->first();
+        }
 
         $trainers = User::where('role', 'trainer')
             ->whereHas('trainerProfile')
@@ -202,7 +216,8 @@ class PtSessionController extends Controller
         try {
             $this->ptSessionService->cancel(
                 $ptSession,
-                $request->input('reason')
+                $request->input('reason'),
+                $request->user()
             );
 
             return redirect()

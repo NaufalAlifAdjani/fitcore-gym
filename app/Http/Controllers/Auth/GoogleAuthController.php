@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
 
 class GoogleAuthController extends Controller
@@ -35,7 +36,12 @@ class GoogleAuthController extends Controller
         }
 
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            try {
+                $googleUser = Socialite::driver('google')->user();
+            } catch (InvalidStateException) {
+                // Fallback ke stateless jika session state mismatch (misal: localhost vs 127.0.0.1 atau browser tracking protection)
+                $googleUser = Socialite::driver('google')->stateless()->user();
+            }
 
             $googleId = $googleUser->getId();
             $email = $googleUser->getEmail();
@@ -101,12 +107,14 @@ class GoogleAuthController extends Controller
 
             return redirect()->route('member.dashboard');
         } catch (\Throwable $e) {
-            Log::error('Google OAuth Callback Error: '.$e->getMessage(), [
+            $errorMessage = $e->getMessage() ?: class_basename($e);
+
+            Log::error('Google OAuth Callback Error: '.$errorMessage, [
                 'trace' => $e->getTraceAsString(),
             ]);
 
             return redirect()->route('login')->withErrors([
-                'google' => 'Terjadi kendala saat memproses login Google: '.$e->getMessage(),
+                'google' => 'Terjadi kendala saat memproses login Google: '.$errorMessage,
             ]);
         }
     }

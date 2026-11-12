@@ -288,7 +288,6 @@ class TrainerDashboardTest extends TestCase
         $response->assertSee('Dashboard');
         $response->assertSee('Jadwal Sesi PT');
         $response->assertSee('Klien Saya');
-        $response->assertSee('Ketersediaan Waktu');
         $response->assertSee('Pendapatan / Komisi');
     }
 
@@ -299,14 +298,13 @@ class TrainerDashboardTest extends TestCase
         $routes = [
             '/trainer/jadwal-sesi' => 'Jadwal Sesi PT',
             '/trainer/klien-saya' => 'Klien Saya',
-            '/trainer/ketersediaan-waktu' => 'Ketersediaan Waktu',
-            '/trainer/pendapatan-komisi' => 'Pendapatan / Komisi',
+            '/trainer/pendapatan-komisi' => 'Pendapatan &amp; Komisi',
         ];
 
         foreach ($routes as $url => $title) {
             $response = $this->actingAs($trainer)->get($url);
             $response->assertOk();
-            $response->assertSee($title);
+            $response->assertSee($title, false);
         }
     }
 
@@ -317,7 +315,6 @@ class TrainerDashboardTest extends TestCase
         $urls = [
             '/trainer/jadwal-sesi',
             '/trainer/klien-saya',
-            '/trainer/ketersediaan-waktu',
             '/trainer/pendapatan-komisi',
         ];
 

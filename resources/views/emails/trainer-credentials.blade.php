@@ -12,9 +12,9 @@
                 <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #E5E7EB;">
                     <!-- Header -->
                     <tr>
-                        <td align="center" style="background-color: #16151A; padding: 30px 20px; border-bottom: 4px solid #ED1B45;">
+                        <td align="center" style="background-color: #16151A; padding: 30px 20px; border-bottom: 4px solid #FF5722;">
                             <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 800; letter-spacing: 1px;">
-                                FITCORE <span style="color: #ED1B45;">PRO</span>
+                                FITCORE <span style="color: #FF5722;">PRO</span>
                             </h1>
                             <p style="margin: 4px 0 0 0; color: #9CA3AF; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">
                                 Gym &amp; Performance Center
@@ -33,7 +33,7 @@
                             </p>
 
                             <!-- Credentials Box -->
-                            <div style="background-color: #FFF5F7; border: 1px solid #FBCFE8; border-left: 4px solid #ED1B45; border-radius: 8px; padding: 20px; margin: 25px 0;">
+                            <div style="background-color: #FFF5F7; border: 1px solid #FBCFE8; border-left: 4px solid #FF5722; border-radius: 8px; padding: 20px; margin: 25px 0;">
                                 <h3 style="margin: 0 0 12px 0; color: #9E102F; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
                                     Informasi Akses Akun Anda
                                 </h3>
@@ -44,7 +44,7 @@
                                     </tr>
                                     <tr>
                                         <td style="font-weight: 600; color: #565A66;">Kata Sandi:</td>
-                                        <td style="font-family: monospace; font-size: 15px; font-weight: 700; color: #ED1B45;">{{ $plainPassword }}</td>
+                                        <td style="font-family: monospace; font-size: 15px; font-weight: 700; color: #FF5722;">{{ $plainPassword }}</td>
                                     </tr>
                                     <tr>
                                         <td style="font-weight: 600; color: #565A66;">Role Akses:</td>
@@ -61,7 +61,7 @@
 
                             <!-- CTA Button -->
                             <div style="text-align: center; margin: 30px 0;">
-                                <a href="{{ $loginUrl }}" style="display: inline-block; background-color: #ED1B45; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 700; padding: 14px 32px; border-radius: 9999px; box-shadow: 0 4px 10px rgba(237, 27, 69, 0.3);">
+                                <a href="{{ $loginUrl }}" style="display: inline-block; background-color: #FF5722; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 700; padding: 14px 32px; border-radius: 9999px; box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);">
                                     Masuk ke Portal Trainer
                                 </a>
                             </div>

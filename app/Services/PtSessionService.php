@@ -9,6 +9,9 @@ use App\Exceptions\SlotUnavailableException;
 use App\Models\MemberPtQuota;
 use App\Models\PtSession;
 use App\Models\User;
+use App\Notifications\NewSessionRequestedNotification;
+use App\Notifications\SessionCancelledNotification;
+use App\Notifications\SessionConfirmedNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -45,12 +48,17 @@ class PtSessionService
             return substr((string) $session->start_time, 0, 5);
         });
 
+        $trainerUser = $trainer instanceof User ? $trainer : User::find($trainerId);
+        $trainerShift = $trainerUser?->shift ?? 'pagi';
+
         $durationMinutes = (int) config('pt_booking.session_duration_minutes', 60);
         $now = now();
         $isToday = $carbonDate->isToday();
         $isPastDate = $carbonDate->isPast() && ! $isToday;
 
         $groups = [];
+        $pagiSlots = ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00'];
+        $soreSlots = ['14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
 
         foreach ($configuredSlots as $groupKey => $times) {
             $groups[$groupKey] = [];
@@ -60,8 +68,18 @@ class PtSessionService
                 $slotStartCarbon = Carbon::parse($dateString.' '.$timeShort);
                 $endTime = Carbon::parse($timeShort)->addMinutes($durationMinutes)->format('H:i');
 
+                $isWithinTrainerShift = match ($trainerShift) {
+                    'pagi' => in_array($timeShort, $pagiSlots, true),
+                    'sore' => in_array($timeShort, $soreSlots, true),
+                    'fleksibel' => true,
+                    default => in_array($timeShort, $pagiSlots, true),
+                };
+
                 $minNoticeHours = (int) config('pt_booking.min_booking_notice_hours', 24);
-                if ($isPastDate || $slotStartCarbon->lessThan($now->copy()->addHours($minNoticeHours))) {
+                if (! $isWithinTrainerShift) {
+                    $status = 'off';
+                    $label = 'Di Luar Shift';
+                } elseif ($isPastDate || $slotStartCarbon->lessThan($now->copy()->addHours($minNoticeHours))) {
                     $status = 'passed';
                     $label = 'Sudah Lewat';
                 } elseif ($bookedSessions->has($timeShort)) {
@@ -112,23 +130,27 @@ class PtSessionService
             $groups = $this->getAvailableSlots($trainerId, $currentDate);
 
             $hasAvailableSlot = false;
+            $allAreOff = true;
             foreach ($groups as $slots) {
                 foreach ($slots as $slot) {
                     if ($slot['status'] === 'available') {
                         $hasAvailableSlot = true;
-                        break 2;
+                    }
+                    if ($slot['status'] !== 'off') {
+                        $allAreOff = false;
                     }
                 }
             }
 
             $dayOfWeek = (int) $currentDate->dayOfWeek;
+            $statusLabel = $hasAvailableSlot ? 'Ada slot' : ($allAreOff ? 'Libur' : 'Penuh');
 
             $daysList[] = [
                 'date' => $currentDate->toDateString(),
                 'day_name' => $dayNamesIndo[$dayOfWeek] ?? $currentDate->format('D'),
                 'day_num' => (int) $currentDate->format('d'),
                 'has_slots' => $hasAvailableSlot,
-                'status_label' => $hasAvailableSlot ? 'Ada slot' : 'Penuh',
+                'status_label' => $statusLabel,
             ];
         }
 
@@ -168,7 +190,20 @@ class PtSessionService
             throw new QuotaExceededException('Kuota sesi Anda telah habis atau tidak memiliki paket aktif.');
         }
 
-        // 2. Trainer slot check
+        // 2. Trainer Shift validation
+        $trainerShift = $trainer->shift ?? 'pagi';
+        $morningSlots = config('pt_booking.slots.morning', ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00']);
+        $afternoonSlots = config('pt_booking.slots.afternoon', ['14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']);
+
+        if ($trainerShift === 'pagi' && ! in_array($timeShort, $morningSlots, true)) {
+            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam shift bertugas pelatih (Shift Pagi: 06:00 – 14:00 WIB).');
+        } elseif ($trainerShift === 'sore' && ! in_array($timeShort, $afternoonSlots, true)) {
+            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam shift bertugas pelatih (Shift Sore: 14:00 – 22:00 WIB).');
+        } elseif ($trainerShift === 'fleksibel' && ! in_array($timeShort, array_merge($morningSlots, $afternoonSlots), true)) {
+            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam operasional sesi PT (06:00 – 22:00 WIB).');
+        }
+
+        // 3. Trainer slot conflict check
         $trainerQuery = PtSession::where('trainer_id', $trainer->id)
             ->whereDate('session_date', $sessionDate->toDateString())
             ->where('start_time', $startTime)
@@ -182,7 +217,7 @@ class PtSessionService
             throw new SlotUnavailableException('Slot pelatih pada jam tersebut sudah terisi.');
         }
 
-        // 3. Member conflict check
+        // 4. Member conflict check
         $memberQuery = PtSession::where('member_id', $member->id)
             ->whereDate('session_date', $sessionDate->toDateString())
             ->where('start_time', $startTime)
@@ -219,7 +254,7 @@ class PtSessionService
             $quota->increment('used_sessions');
             $quota->decrement('remaining_sessions');
 
-            return PtSession::create([
+            $session = PtSession::create([
                 'member_pt_quota_id' => $quota->id,
                 'member_id' => $member->id,
                 'trainer_id' => $trainer->id,
@@ -228,6 +263,11 @@ class PtSessionService
                 'end_time' => $endTime,
                 'status' => PtSessionStatus::Pending,
             ]);
+
+            $session->loadMissing(['member', 'trainer']);
+            $trainer->notify(new NewSessionRequestedNotification($session));
+
+            return $session;
         });
     }
 
@@ -237,6 +277,27 @@ class PtSessionService
     public function canChange(PtSession $session): bool
     {
         return $session->can_be_changed;
+    }
+
+    /**
+     * Mengonfirmasi sesi PT dan mengirimkan notifikasi ke member.
+     */
+    public function confirm(PtSession $session, ?User $confirmedBy = null): PtSession
+    {
+        return DB::transaction(function () use ($session, $confirmedBy) {
+            $lockedSession = PtSession::where('id', $session->id)->lockForUpdate()->firstOrFail();
+
+            if ($lockedSession->status === PtSessionStatus::Pending) {
+                $lockedSession->update([
+                    'status' => PtSessionStatus::Confirmed,
+                ]);
+
+                $lockedSession->loadMissing(['member', 'trainer']);
+                $lockedSession->member?->notify(new SessionConfirmedNotification($lockedSession, $confirmedBy));
+            }
+
+            return $lockedSession->fresh();
+        });
     }
 
     /**
@@ -303,16 +364,20 @@ class PtSessionService
     }
 
     /**
-     * Membatalkan sesi dan mengembalikan kuota aktif.
+     * Membatalkan sesi dan mengembalikan kuota aktif serta mengirimkan notifikasi.
      *
      * @throws ChangeDeadlinePassedException
      */
-    public function cancel(PtSession $session, ?string $reason = null): PtSession
-    {
-        return DB::transaction(function () use ($session) {
+    public function cancel(
+        PtSession $session,
+        ?string $reason = null,
+        ?User $cancelledBy = null,
+        bool $enforceDeadline = true
+    ): PtSession {
+        return DB::transaction(function () use ($session, $reason, $cancelledBy, $enforceDeadline) {
             $lockedSession = PtSession::where('id', $session->id)->lockForUpdate()->firstOrFail();
 
-            if (! $this->canChange($lockedSession)) {
+            if ($enforceDeadline && ! $this->canChange($lockedSession)) {
                 throw new ChangeDeadlinePassedException;
             }
 
@@ -327,6 +392,14 @@ class PtSessionService
             if ($quota) {
                 $quota->decrement('used_sessions');
                 $quota->increment('remaining_sessions');
+            }
+
+            $lockedSession->loadMissing(['member', 'trainer']);
+
+            if ($cancelledBy && $cancelledBy->id === $lockedSession->member_id) {
+                $lockedSession->trainer?->notify(new SessionCancelledNotification($lockedSession, $reason, $cancelledBy));
+            } else {
+                $lockedSession->member?->notify(new SessionCancelledNotification($lockedSession, $reason, $cancelledBy));
             }
 
             return $lockedSession->fresh();
@@ -382,11 +455,84 @@ class PtSessionService
                         $quota->increment('remaining_sessions');
                     }
 
+                    $lockedSession->loadMissing(['member', 'trainer']);
+                    $lockedSession->member?->notify(new SessionCancelledNotification(
+                        $lockedSession,
+                        'Batas waktu konfirmasi sesi telah berakhir',
+                        null
+                    ));
+
                     $cancelledCount++;
                 });
             }
         }
 
         return $cancelledCount;
+    }
+
+    /**
+     * Otomatis menandai sesi-sesi terkonfirmasi yang jadwalnya telah terlewati (end_time telah lewat)
+     * menjadi berstatus 'completed' (Selesai).
+     *
+     * @param  int|null  $trainerId  Opsional, batasi pengecekan untuk trainer tertentu
+     * @param  int|null  $memberId  Opsional, batasi pengecekan untuk member tertentu
+     * @return int Jumlah sesi yang berhasil diperbarui
+     */
+    public function completePastConfirmedSessions(?int $trainerId = null, ?int $memberId = null): int
+    {
+        $now = now();
+        $today = $now->toDateString();
+        $currentTime = $now->toTimeString();
+
+        $query = PtSession::query()
+            ->whereIn('status', [PtSessionStatus::Confirmed->value, PtSessionStatus::Scheduled->value])
+            ->where(function ($q) use ($today, $currentTime) {
+                $q->where('session_date', '<', $today)
+                    ->orWhere(function ($sub) use ($today, $currentTime) {
+                        $sub->where('session_date', $today)
+                            ->where('end_time', '<=', $currentTime);
+                    });
+            });
+
+        if ($trainerId) {
+            $query->where('trainer_id', $trainerId);
+        }
+
+        if ($memberId) {
+            $query->where('member_id', $memberId);
+        }
+
+        $candidates = $query->get();
+        $completedCount = 0;
+
+        foreach ($candidates as $candidate) {
+            DB::transaction(function () use ($candidate, $now, &$completedCount) {
+                $lockedSession = PtSession::where('id', $candidate->id)
+                    ->whereIn('status', [PtSessionStatus::Confirmed->value, PtSessionStatus::Scheduled->value])
+                    ->lockForUpdate()
+                    ->first();
+
+                if (! $lockedSession) {
+                    return;
+                }
+
+                $rate = $lockedSession->trainer?->trainerProfile?->commission_rate
+                    ?? (int) config('pt_booking.default_commission_rate', 60000);
+
+                $earnings = ($lockedSession->trainer_earnings && $lockedSession->trainer_earnings > 0)
+                    ? (int) $lockedSession->trainer_earnings
+                    : $rate;
+
+                $lockedSession->update([
+                    'status' => PtSessionStatus::Completed,
+                    'completed_at' => $lockedSession->ends_at ?? $now,
+                    'trainer_earnings' => $earnings,
+                ]);
+
+                $completedCount++;
+            });
+        }
+
+        return $completedCount;
     }
 }

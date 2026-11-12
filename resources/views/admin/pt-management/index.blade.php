@@ -11,8 +11,10 @@
                 name: '',
                 email: '',
                 phone: '',
+                shift: 'pagi',
                 specialization: '',
                 experience: 0,
+                commission_rate: 60000,
                 status: 'active',
                 bio: '',
                 password: '',
@@ -28,8 +30,10 @@
                     name: trainer?.name || '',
                     email: trainer?.email || '',
                     phone: trainer?.phone || '',
+                    shift: trainer?.shift || 'pagi',
                     specialization: trainer?.specialization || '',
                     experience: trainer?.experience || 0,
+                    commission_rate: trainer?.commission_rate || 60000,
                     status: trainer?.status || 'active',
                     bio: trainer?.bio || '',
                     password: '',
@@ -57,7 +61,7 @@
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <nav class="flex items-center gap-2 text-xs font-medium text-[#565A66] mb-1">
-                        <a href="{{ route('admin.dashboard') }}" class="hover:text-[#ED1B45] transition">Admin</a>
+                        <a href="{{ route('admin.dashboard') }}" class="hover:text-[#FF5722] transition">Admin</a>
                         <span>/</span>
                         <span class="text-[#16151A] font-semibold">Manajemen Trainer</span>
                     </nav>
@@ -74,7 +78,7 @@
                     <button 
                         type="button" 
                         @click="showAddModal = true"
-                        class="inline-flex items-center justify-center gap-2 rounded-full bg-[#ED1B45] px-5 py-2.5 font-inter text-sm font-bold text-white shadow-md shadow-[#ED1B45]/20 hover:bg-[#D6153B] transition duration-200 cursor-pointer"
+                        class="inline-flex items-center justify-center gap-2 rounded-full bg-[#FF5722] px-5 py-2.5 font-inter text-sm font-bold text-white shadow-md shadow-[#FF5722]/20 hover:bg-[#E64A19] transition duration-200 cursor-pointer"
                     >
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
@@ -137,7 +141,7 @@
                             <span>Terdaftar di sistem</span>
                         </p>
                     </div>
-                    <div class="h-12 w-12 rounded-2xl bg-[#ED1B45]/10 flex items-center justify-center text-[#ED1B45]">
+                    <div class="h-12 w-12 rounded-2xl bg-[#FF5722]/10 flex items-center justify-center text-[#FF5722]">
                         <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
@@ -161,19 +165,16 @@
                     </div>
                 </div>
 
-                <!-- Card 3: Trainer Nonaktif -->
+                <!-- Card 3: Total Komisi Pelatih -->
                 <div class="rounded-[20px] bg-white p-5 border border-[#E5E7EB] shadow-[0px_1px_3px_rgba(0,0,0,0.05)] flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-bold text-[#565A66] uppercase tracking-wider font-inter">Trainer Nonaktif</p>
-                        <h3 class="text-3xl font-extrabold font-poppins text-[#16151A] mt-1">{{ number_format($inactiveTrainers) }}</h3>
-                        <p class="text-xs font-medium text-[#D97706] mt-1 flex items-center gap-1">
-                            <span class="inline-block w-2 h-2 rounded-full bg-[#D97706]"></span>
-                            <span>Perlu tinjauan status</span>
-                        </p>
+                        <p class="text-xs font-bold text-[#565A66] uppercase tracking-wider font-inter">Total Komisi Pelatih</p>
+                        <h3 class="text-2xl font-extrabold font-poppins text-[#10B981] mt-1">Rp {{ number_format($totalCommissionsPaid, 0, ',', '.') }}</h3>
+                        <p class="text-xs font-medium text-[#565A66] mt-1">Akumulasi sesi selesai</p>
                     </div>
-                    <div class="h-12 w-12 rounded-2xl bg-[#FEF3C7] flex items-center justify-center text-[#D97706]">
+                    <div class="h-12 w-12 rounded-2xl bg-[#DCFCE7] flex items-center justify-center text-[#16A34A]">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                 </div>
@@ -200,19 +201,19 @@
                     <div class="flex items-center gap-1.5 p-1 bg-[#F6F6F7] rounded-full self-start sm:self-auto overflow-x-auto w-full lg:w-auto">
                         <a 
                             href="{{ route('admin.trainers.index', ['status' => 'all', 'search' => $currentSearch, 'specialization' => $currentSpecialization]) }}"
-                            class="px-4 py-1.5 rounded-full text-xs font-bold transition {{ $currentStatus === 'all' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="px-4 py-1.5 rounded-full text-xs font-bold transition {{ $currentStatus === 'all' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
                             Semua ({{ $totalTrainers }})
                         </a>
                         <a 
                             href="{{ route('admin.trainers.index', ['status' => 'active', 'search' => $currentSearch, 'specialization' => $currentSpecialization]) }}"
-                            class="px-4 py-1.5 rounded-full text-xs font-bold transition {{ $currentStatus === 'active' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="px-4 py-1.5 rounded-full text-xs font-bold transition {{ $currentStatus === 'active' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
                             Aktif ({{ $activeTrainers }})
                         </a>
                         <a 
                             href="{{ route('admin.trainers.index', ['status' => 'inactive', 'search' => $currentSearch, 'specialization' => $currentSpecialization]) }}"
-                            class="px-4 py-1.5 rounded-full text-xs font-bold transition {{ $currentStatus === 'inactive' ? 'bg-[#ED1B45] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="px-4 py-1.5 rounded-full text-xs font-bold transition {{ $currentStatus === 'inactive' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         >
                             Nonaktif ({{ $inactiveTrainers }})
                         </a>
@@ -234,7 +235,7 @@
                                 name="search" 
                                 value="{{ $currentSearch }}" 
                                 placeholder="Cari nama, email, spesialisasi..."
-                                class="w-full pl-9 pr-3 py-2 text-xs font-inter rounded-full border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] placeholder-[#9CA3AF] focus:border-[#ED1B45] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full pl-9 pr-3 py-2 text-xs font-inter rounded-full border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] placeholder-[#9CA3AF] focus:border-[#FF5722] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                             />
                         </div>
 
@@ -242,7 +243,7 @@
                         <select 
                             name="specialization" 
                             onchange="this.form.submit()"
-                            class="text-xs font-inter rounded-full border border-[#E5E7EB] bg-[#F6F6F7] px-4 py-2 text-[#565A66] focus:border-[#ED1B45] focus:bg-white focus:outline-none transition cursor-pointer"
+                            class="text-xs font-inter rounded-full border border-[#E5E7EB] bg-[#F6F6F7] px-4 py-2 text-[#565A66] focus:border-[#FF5722] focus:bg-white focus:outline-none transition cursor-pointer"
                         >
                             <option value="all">Semua Spesialisasi</option>
                             @foreach ($availableSpecializations as $spec)
@@ -250,13 +251,25 @@
                             @endforeach
                         </select>
 
+                        <!-- Filter Shift -->
+                        <select 
+                            name="shift" 
+                            onchange="this.form.submit()"
+                            class="text-xs font-inter rounded-full border border-[#E5E7EB] bg-[#F6F6F7] px-4 py-2 text-[#565A66] focus:border-[#FF5722] focus:bg-white focus:outline-none transition cursor-pointer"
+                        >
+                            <option value="all">Semua Shift</option>
+                            <option value="pagi" {{ ($currentShift ?? 'all') === 'pagi' ? 'selected' : '' }}>Shift Pagi (06:00 – 14:00)</option>
+                            <option value="sore" {{ ($currentShift ?? 'all') === 'sore' ? 'selected' : '' }}>Shift Sore (14:00 – 22:00)</option>
+                            <option value="fleksibel" {{ ($currentShift ?? 'all') === 'fleksibel' ? 'selected' : '' }}>Shift Fleksibel</option>
+                        </select>
+
                         <!-- Tombol Cari -->
                         <button type="submit" class="rounded-full bg-[#16151A] text-white px-4 py-2 text-xs font-bold hover:bg-black transition cursor-pointer">
                             Filter
                         </button>
 
-                        @if ($currentSearch || $currentStatus !== 'all' || $currentSpecialization !== 'all')
-                            <a href="{{ route('admin.trainers.index') }}" class="text-xs font-semibold text-[#ED1B45] hover:underline">
+                        @if ($currentSearch || $currentStatus !== 'all' || $currentSpecialization !== 'all' || ($currentShift ?? 'all') !== 'all')
+                            <a href="{{ route('admin.trainers.index') }}" class="text-xs font-semibold text-[#FF5722] hover:underline">
                                 Reset
                             </a>
                         @endif
@@ -272,6 +285,8 @@
                             <tr class="border-b border-[#E5E7EB] bg-[#FAFAFA] text-[11px] font-bold text-[#565A66] uppercase tracking-wider font-inter">
                                 <th class="py-4 px-6">Trainer</th>
                                 <th class="py-4 px-6">Spesialisasi &amp; Pengalaman</th>
+                                <th class="py-4 px-6">Shift Kerja</th>
+                                <th class="py-4 px-6">Tarif Komisi</th>
                                 <th class="py-4 px-6">Total Sesi Dilatih</th>
                                 <th class="py-4 px-6">Status Akun</th>
                                 <th class="py-4 px-6 text-right">Aksi</th>
@@ -286,7 +301,7 @@
                                             @if ($trainer->avatar)
                                                 <img src="{{ $trainer->avatar }}" alt="{{ $trainer->name }}" class="h-10 w-10 rounded-full object-cover border border-[#E5E7EB] shrink-0">
                                             @else
-                                                <div class="h-10 w-10 rounded-full bg-[#ED1B45]/10 text-[#ED1B45] font-poppins font-black flex items-center justify-center shrink-0 border border-[#ED1B45]/20">
+                                                <div class="h-10 w-10 rounded-full bg-[#FF5722]/10 text-[#FF5722] font-poppins font-black flex items-center justify-center shrink-0 border border-[#FF5722]/20">
                                                     {{ strtoupper(substr($trainer->name, 0, 2)) }}
                                                 </div>
                                             @endif
@@ -306,6 +321,34 @@
                                         <div class="text-[11px] text-[#6B7280]">
                                             {{ $trainer->trainerProfile?->experience ?? 0 }} Tahun Pengalaman
                                         </div>
+                                    </td>
+
+                                    <!-- Kolom Shift Kerja -->
+                                    <td class="py-4 px-6">
+                                        @if ($trainer->shift === 'sore')
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-bold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                                Sore (14:00 – 22:00)
+                                            </span>
+                                        @elseif ($trainer->shift === 'fleksibel')
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                Fleksibel (06:00 – 22:00)
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-bold">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                                Pagi (06:00 – 14:00)
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    <!-- Kolom Tarif Komisi -->
+                                    <td class="py-4 px-6">
+                                        <div class="font-bold text-[#16151A] text-xs">
+                                            Rp {{ number_format($trainer->trainerProfile?->commission_rate ?? config('pt_booking.default_commission_rate', 60000), 0, ',', '.') }}
+                                        </div>
+                                        <div class="text-[10px] text-[#6B7280]">per sesi selesai</div>
                                     </td>
 
                                     <!-- Kolom Sesi Dilatih -->
@@ -339,6 +382,11 @@
                                                 'email' => $trainer->email,
                                                 'phone' => $trainer->phone,
                                                 'status' => $trainer->status,
+                                                'shift' => $trainer->shift ?? 'pagi',
+                                                'shift_label' => $trainer->shift_label,
+                                                'shift_hours_text' => $trainer->shift_hours_text,
+                                                'commission_rate' => $trainer->trainerProfile?->commission_rate ?? config('pt_booking.default_commission_rate', 60000),
+                                                'total_earnings' => $trainer->total_earnings ?? 0,
                                                 'avatar' => $trainer->avatar,
                                                 'specialization' => $trainer->trainerProfile?->specialization ?? 'Umum',
                                                 'experience' => $trainer->trainerProfile?->experience ?? 0,
@@ -361,7 +409,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="py-12 text-center text-[#9CA3AF]">
+                                    <td colspan="7" class="py-12 text-center text-[#9CA3AF]">
                                         <div class="flex flex-col items-center justify-center">
                                             <div class="h-14 w-14 rounded-full bg-[#F3F4F6] flex items-center justify-center mb-3 text-[#9CA3AF]">
                                                 <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -375,7 +423,7 @@
                                             <button 
                                                 type="button" 
                                                 @click="showAddModal = true"
-                                                class="mt-4 rounded-full bg-[#ED1B45] text-white px-4 py-2 text-xs font-bold hover:bg-[#D6153B] transition shadow-xs"
+                                                class="mt-4 rounded-full bg-[#FF5722] text-white px-4 py-2 text-xs font-bold hover:bg-[#E64A19] transition shadow-xs"
                                             >
                                                 + Tambah Trainer Sekarang
                                             </button>
@@ -432,13 +480,13 @@
                             <img :src="selectedTrainer.avatar" class="h-16 w-16 rounded-2xl object-cover border border-[#E5E7EB] shadow-xs">
                         </template>
                         <template x-if="selectedTrainer && !selectedTrainer.avatar">
-                            <div class="h-16 w-16 rounded-2xl bg-[#ED1B45]/10 text-[#ED1B45] font-poppins font-black text-xl flex items-center justify-center border border-[#ED1B45]/20">
+                            <div class="h-16 w-16 rounded-2xl bg-[#FF5722]/10 text-[#FF5722] font-poppins font-black text-xl flex items-center justify-center border border-[#FF5722]/20">
                                 <span x-text="selectedTrainer ? selectedTrainer.name.substring(0, 2).toUpperCase() : 'TR'"></span>
                             </div>
                         </template>
 
                         <div>
-                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#ED1B45] text-white">
+                            <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#FF5722] text-white">
                                 Profil Trainer
                             </span>
                             <h3 class="text-xl font-black font-poppins text-[#16151A] mt-1" x-text="selectedTrainer?.name"></h3>
@@ -488,15 +536,27 @@
                         </div>
                         <div class="flex justify-between py-1.5 border-b border-[#F1F2F4]">
                             <span class="text-[#565A66]">Spesialisasi</span>
-                            <span class="font-bold text-[#ED1B45]" x-text="selectedTrainer?.specialization"></span>
+                            <span class="font-bold text-[#FF5722]" x-text="selectedTrainer?.specialization"></span>
                         </div>
                         <div class="flex justify-between py-1.5 border-b border-[#F1F2F4]">
                             <span class="text-[#565A66]">Pengalaman Melatih</span>
                             <span class="font-bold text-[#16151A]" x-text="(selectedTrainer?.experience || 0) + ' Tahun'"></span>
                         </div>
                         <div class="flex justify-between py-1.5 border-b border-[#F1F2F4]">
+                            <span class="text-[#565A66]">Shift Kerja</span>
+                            <span class="font-bold text-[#16151A]" x-text="(selectedTrainer?.shift_label || 'Pagi') + ' (' + (selectedTrainer?.shift_hours_text || '06:00 – 14:00 WIB') + ')'"></span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-[#F1F2F4]">
+                            <span class="text-[#565A66]">Tarif Komisi / Sesi</span>
+                            <span class="font-bold text-[#10B981]" x-text="'Rp ' + Number(selectedTrainer?.commission_rate || 60000).toLocaleString('id-ID')"></span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-[#F1F2F4]">
                             <span class="text-[#565A66]">Total Sesi Selesai</span>
                             <span class="font-bold text-[#16151A]" x-text="(selectedTrainer?.sessions_count || 0) + ' Sesi PT'"></span>
+                        </div>
+                        <div class="flex justify-between py-1.5 border-b border-[#F1F2F4]">
+                            <span class="text-[#565A66]">Total Komisi Diperoleh</span>
+                            <span class="font-bold text-[#10B981]" x-text="'Rp ' + Number(selectedTrainer?.total_earnings || 0).toLocaleString('id-ID')"></span>
                         </div>
                         <div class="py-1.5">
                             <span class="text-[#565A66] block mb-1">Bio / Profil Singkat:</span>
@@ -510,7 +570,7 @@
                         <button 
                             type="button" 
                             @click="openEdit(selectedTrainer)"
-                            class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#ED1B45] text-white font-bold text-xs shadow-md shadow-[#ED1B45]/20 hover:bg-[#D6153B] transition cursor-pointer"
+                            class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#FF5722] text-white font-bold text-xs shadow-md shadow-[#FF5722]/20 hover:bg-[#E64A19] transition cursor-pointer"
                         >
                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -578,7 +638,7 @@
                     </button>
 
                     <div class="mb-6">
-                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#ED1B45] text-white">
+                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#FF5722] text-white">
                             Formulir Akun
                         </span>
                         <h2 class="text-2xl font-black font-poppins text-[#16151A] mt-1">Tambah Personal Trainer Baru</h2>
@@ -592,40 +652,40 @@
 
                         <!-- Nama Lengkap -->
                         <div>
-                            <label class="block text-xs font-bold text-[#16151A] mb-1">Nama Lengkap Trainer <span class="text-[#ED1B45]">*</span></label>
+                            <label class="block text-xs font-bold text-[#16151A] mb-1">Nama Lengkap Trainer <span class="text-[#FF5722]">*</span></label>
                             <input 
                                 type="text" 
                                 name="name" 
                                 required
                                 placeholder="Contoh: Coach Doni Pratama"
                                 value="{{ old('name') }}"
-                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                             />
                         </div>
 
                         <!-- Email & Telepon Grid -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-[#16151A] mb-1">Alamat Email <span class="text-[#ED1B45]">*</span></label>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Alamat Email <span class="text-[#FF5722]">*</span></label>
                                 <input 
                                     type="email" 
                                     name="email" 
                                     required
                                     placeholder="pelatih@fitcore.my.id"
                                     value="{{ old('email') }}"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                                 />
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-[#16151A] mb-1">No. WhatsApp / HP <span class="text-[#ED1B45]">*</span></label>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">No. WhatsApp / HP <span class="text-[#FF5722]">*</span></label>
                                 <input 
                                     type="text" 
                                     name="phone" 
                                     required
                                     placeholder="08123456789"
                                     value="{{ old('phone') }}"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                                 />
                             </div>
                         </div>
@@ -633,7 +693,7 @@
                         <!-- Spesialisasi & Pengalaman Grid -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-[#16151A] mb-1">Spesialisasi Keahlian <span class="text-[#ED1B45]">*</span></label>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Spesialisasi Keahlian <span class="text-[#FF5722]">*</span></label>
                                 <input 
                                     type="text" 
                                     name="specialization" 
@@ -641,7 +701,7 @@
                                     list="specialization-options"
                                     placeholder="Pilih atau ketik spesialisasi"
                                     value="{{ old('specialization') }}"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                                 />
                                 <datalist id="specialization-options">
                                     <option value="Muscle Building & Hypertrophy">
@@ -654,7 +714,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-[#16151A] mb-1">Pengalaman (Tahun) <span class="text-[#ED1B45]">*</span></label>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Pengalaman (Tahun) <span class="text-[#FF5722]">*</span></label>
                                 <input 
                                     type="number" 
                                     name="experience" 
@@ -663,7 +723,37 @@
                                     required
                                     placeholder="Contoh: 4"
                                     value="{{ old('experience', 1) }}"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Shift Kerja & Tarif Komisi Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Shift Kerja <span class="text-[#FF5722]">*</span></label>
+                                <select 
+                                    name="shift" 
+                                    required
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
+                                >
+                                    <option value="pagi" {{ old('shift', 'pagi') === 'pagi' ? 'selected' : '' }}>Shift Pagi (06:00 – 14:00 WIB)</option>
+                                    <option value="sore" {{ old('shift') === 'sore' ? 'selected' : '' }}>Shift Sore (14:00 – 22:00 WIB)</option>
+                                    <option value="fleksibel" {{ old('shift') === 'fleksibel' ? 'selected' : '' }}>Shift Fleksibel (06:00 – 22:00 WIB)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Tarif Komisi per Sesi (Rp) <span class="text-[#FF5722]">*</span></label>
+                                <input 
+                                    type="number" 
+                                    name="commission_rate" 
+                                    min="0" 
+                                    step="5000"
+                                    required
+                                    placeholder="Contoh: 60000"
+                                    value="{{ old('commission_rate', 60000) }}"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                                 />
                             </div>
                         </div>
@@ -678,7 +768,7 @@
                                 type="text" 
                                 name="password" 
                                 placeholder="Biarkan kosong untuk generate acak otomatis"
-                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                             />
                         </div>
 
@@ -689,7 +779,7 @@
                                 name="bio" 
                                 rows="3"
                                 placeholder="Tuliskan latar belakang sertifikasi (e.g. APKI/NASM), gaya melatih, dll..."
-                                class="w-full px-4 py-2 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full px-4 py-2 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                             >{{ old('bio') }}</textarea>
                         </div>
 
@@ -719,7 +809,7 @@
                             </button>
                             <button 
                                 type="submit" 
-                                class="px-6 py-2.5 rounded-full bg-[#ED1B45] text-white text-xs font-bold hover:bg-[#D6153B] transition shadow-md shadow-[#ED1B45]/20 cursor-pointer"
+                                class="px-6 py-2.5 rounded-full bg-[#FF5722] text-white text-xs font-bold hover:bg-[#E64A19] transition shadow-md shadow-[#FF5722]/20 cursor-pointer"
                             >
                                 Simpan Akun Trainer
                             </button>
@@ -776,37 +866,37 @@
 
                         <!-- Nama Lengkap -->
                         <div>
-                            <label class="block text-xs font-bold text-[#16151A] mb-1">Nama Lengkap Trainer <span class="text-[#ED1B45]">*</span></label>
+                            <label class="block text-xs font-bold text-[#16151A] mb-1">Nama Lengkap Trainer <span class="text-[#FF5722]">*</span></label>
                             <input 
                                 type="text" 
                                 name="name" 
                                 required
                                 x-model="editForm.name"
-                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                             />
                         </div>
 
                         <!-- Email & Telepon Grid -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-[#16151A] mb-1">Alamat Email <span class="text-[#ED1B45]">*</span></label>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Alamat Email <span class="text-[#FF5722]">*</span></label>
                                 <input 
                                     type="email" 
                                     name="email" 
                                     required
                                     x-model="editForm.email"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                                 />
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-[#16151A] mb-1">No. WhatsApp / HP <span class="text-[#ED1B45]">*</span></label>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">No. WhatsApp / HP <span class="text-[#FF5722]">*</span></label>
                                 <input 
                                     type="text" 
                                     name="phone" 
                                     required
                                     x-model="editForm.phone"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                                 />
                             </div>
                         </div>
@@ -814,18 +904,18 @@
                         <!-- Spesialisasi & Pengalaman Grid -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-[#16151A] mb-1">Spesialisasi Keahlian <span class="text-[#ED1B45]">*</span></label>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Spesialisasi Keahlian <span class="text-[#FF5722]">*</span></label>
                                 <input 
                                     type="text" 
                                     name="specialization" 
                                     required
                                     x-model="editForm.specialization"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                                 />
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-[#16151A] mb-1">Pengalaman (Tahun) <span class="text-[#ED1B45]">*</span></label>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Pengalaman (Tahun) <span class="text-[#FF5722]">*</span></label>
                                 <input 
                                     type="number" 
                                     name="experience" 
@@ -833,18 +923,48 @@
                                     max="50" 
                                     required
                                     x-model="editForm.experience"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Shift Kerja & Tarif Komisi Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Shift Kerja <span class="text-[#FF5722]">*</span></label>
+                                <select 
+                                    name="shift" 
+                                    required
+                                    x-model="editForm.shift"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
+                                >
+                                    <option value="pagi">Shift Pagi (06:00 – 14:00 WIB)</option>
+                                    <option value="sore">Shift Sore (14:00 – 22:00 WIB)</option>
+                                    <option value="fleksibel">Shift Fleksibel (06:00 – 22:00 WIB)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-[#16151A] mb-1">Tarif Komisi per Sesi (Rp) <span class="text-[#FF5722]">*</span></label>
+                                <input 
+                                    type="number" 
+                                    name="commission_rate" 
+                                    min="0" 
+                                    step="5000"
+                                    required
+                                    x-model="editForm.commission_rate"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                                 />
                             </div>
                         </div>
 
                         <!-- Status Akun -->
                         <div>
-                            <label class="block text-xs font-bold text-[#16151A] mb-1">Status Keaktifan Akun <span class="text-[#ED1B45]">*</span></label>
+                            <label class="block text-xs font-bold text-[#16151A] mb-1">Status Keaktifan Akun <span class="text-[#FF5722]">*</span></label>
                             <select 
                                 name="status" 
                                 x-model="editForm.status"
-                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                             >
                                 <option value="active">Aktif (Dapat menerima jadwal sesi PT)</option>
                                 <option value="inactive">Nonaktif (Ditangguhkan sementara)</option>
@@ -862,7 +982,7 @@
                                 name="password" 
                                 x-model="editForm.password"
                                 placeholder="Masukkan kata sandi baru (min. 8 karakter)"
-                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                             />
                         </div>
 
@@ -873,7 +993,7 @@
                                 name="bio" 
                                 rows="3"
                                 x-model="editForm.bio"
-                                class="w-full px-4 py-2 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#ED1B45] focus:outline-none focus:ring-1 focus:ring-[#ED1B45] transition"
+                                class="w-full px-4 py-2 text-xs rounded-xl border border-[#E5E7EB] bg-[#F9FAFB] focus:bg-white focus:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] transition"
                             ></textarea>
                         </div>
 

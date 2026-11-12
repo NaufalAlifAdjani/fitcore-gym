@@ -7,6 +7,10 @@
 
         <title>{{ config('app.name', 'FitCore Gym') }}</title>
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+
         <!-- Google Fonts: Poppins (Headings) & Inter (Body) -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +35,7 @@
         $isAdmin = auth()->check() && (auth()->user()->role === 'admin' || request()->routeIs('admin.*'));
         $isTrainer = request()->routeIs('trainer.*') || (auth()->check() && auth()->user()->role === 'trainer' && !request()->routeIs('pt-sessions.*'));
     @endphp
-    <body class="bg-[#F6F6F7] text-[#16151A] antialiased min-h-screen selection:bg-[#ED1B45] selection:text-white flex flex-col font-sans">
+    <body class="bg-[#F6F6F7] text-[#16151A] antialiased min-h-screen selection:bg-[#FF5722] selection:text-white flex flex-col font-sans">
         <div
             x-data="{ sidebarOpen: false, profileOpen: false, showLogoutModal: false }"
             x-on:keydown.escape.window="showLogoutModal = false"
@@ -72,11 +76,11 @@
                         <div class="relative flex flex-col w-full max-w-xs h-full bg-white shadow-2xl z-10">
                             <div class="flex items-center justify-between p-4 border-b border-[#E5E7EB]">
                                 <div class="flex items-center gap-2.5">
-                                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#ED1B45] to-[#FF4567] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#ED1B45]/20">
+                                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#FF5722]/20">
                                         M
                                     </div>
                                     <span class="text-lg font-black tracking-tight text-[#16151A] font-heading uppercase">
-                                        MAXFIT<span class="text-[#ED1B45]">.</span>
+                                        MAXFIT<span class="text-[#FF5722]">.</span>
                                     </span>
                                 </div>
                                 <button @click="sidebarOpen = false" class="text-[#565A66] hover:text-[#16151A] p-2 rounded-xl">
@@ -142,7 +146,7 @@
                     class="relative w-full max-w-md rounded-3xl bg-white p-7 text-center shadow-2xl"
                     x-on:click.stop
                 >
-                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ED1B45]/10 text-[#ED1B45]">
+                    <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FF5722]/10 text-[#FF5722]">
                         <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H3" />
                         </svg>
@@ -167,7 +171,7 @@
                             @csrf
                             <button
                                 type="submit"
-                                class="w-full rounded-full bg-[#ED1B45] px-5 py-3 font-inter text-sm font-semibold text-white transition hover:bg-[#D1123D] focus:outline-none focus:ring-2 focus:ring-[#ED1B45] focus:ring-offset-2 cursor-pointer"
+                                class="w-full rounded-full bg-[#FF5722] px-5 py-3 font-inter text-sm font-semibold text-white transition hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:ring-offset-2 cursor-pointer"
                             >
                                 Ya, Keluar
                             </button>
