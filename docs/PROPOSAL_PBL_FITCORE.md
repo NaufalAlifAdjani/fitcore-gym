@@ -1462,8 +1462,8 @@ Prioritas
 
 ## 6.1 Arsitektur Sistem
 
-Sistem dibangun mengikuti pola arsitektur MVC (Model-View-Controller) bawaan Laravel. Permintaan dari browser member/personal trainer/admin diterima oleh Route dan diteruskan ke Controller sesuai peran pengguna (dibatasi melalui middleware role-based access control), Controller berinteraksi dengan Model (Eloquent ORM) untuk mengakses basis data MySQL, kemudian hasilnya dirender melalui View (Blade, dapat dikombinasikan dengan Livewire/Alpine.js untuk interaktivitas seperti pemilihan slot jadwal dan pemindaian QR code secara dinamis). Untuk proses pembayaran, sistem menyediakan alur transfer manual: Member mengunggah bukti transfer melalui fitur upload file, yang kemudian diverifikasi secara manual oleh Admin melalui dashboard verifikasi pembayaran. Untuk pembuatan dan pemindaian QR code sistem memanfaatkan library QR code (mis. simple-qrcode), dan untuk notifikasi sistem memanfaatkan layanan pengiriman email (mis. SMTP/Mailtrap pada tahap pengembangan).
-Gambaran komponen: Browser (Blade/Livewire) ⇄ Laravel App (Route → Middleware Role → Controller → Eloquent Model) ⇄ Database MySQL, dengan integrasi eksternal QR Code Generator/Scanner, dan Mail Service.
+Sistem dibangun mengikuti pola arsitektur MVC (Model-View-Controller) bawaan Laravel. Permintaan dari browser member/personal trainer/admin diterima oleh Route dan diteruskan ke Controller sesuai peran pengguna (dibatasi melalui middleware role-based access control), Controller berinteraksi dengan Model (Eloquent ORM) untuk mengakses basis data PostgreSQL, kemudian hasilnya dirender melalui View (Blade, dapat dikombinasikan dengan Livewire/Alpine.js untuk interaktivitas seperti pemilihan slot jadwal dan pemindaian QR code secara dinamis). Untuk proses pembayaran, sistem menyediakan alur transfer manual: Member mengunggah bukti transfer melalui fitur upload file, yang kemudian diverifikasi secara manual oleh Admin melalui dashboard verifikasi pembayaran. Untuk pembuatan dan pemindaian QR code sistem memanfaatkan library QR code (mis. simple-qrcode), dan untuk notifikasi sistem memanfaatkan layanan pengiriman email (mis. SMTP/Mailtrap pada tahap pengembangan).
+Gambaran komponen: Browser (Blade/Livewire) ⇄ Laravel App (Route → Middleware Role → Controller → Eloquent Model) ⇄ Database PostgreSQL, dengan integrasi eksternal QR Code Generator/Scanner, dan Mail Service.
 
 
 
@@ -1559,8 +1559,8 @@ No
 |  | Pemilihan slot jadwal, form dinamis tanpa reload, pemindaian QR real-time |
 |  | 5 |
 |  | Basis Data |
-|  | MySQL |
-|  | MySQL 8.0.x |
+|  | PostgreSQL |
+|  | PostgreSQL 16.x |
 |  | Penyimpanan seluruh data (users, membership, booking, payment, dll) |
 |  | 6 |
 |  | QR Code Generator |
