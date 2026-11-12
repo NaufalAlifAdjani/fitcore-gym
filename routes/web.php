@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MemberManagementController;
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
+use App\Http\Controllers\Admin\PtManagementController;
 use App\Http\Controllers\Admin\PtPackageController;
 use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\LandingController;
@@ -13,13 +14,14 @@ use App\Http\Controllers\Member\DashboardController as MemberDashboardController
 use App\Http\Controllers\Member\MembershipPackageController as MemberMembershipPackageController;
 use App\Http\Controllers\Member\TransactionHistoryController;
 use App\Http\Controllers\MemberCardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PtPackagePurchaseController;
 use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
 use App\Http\Controllers\Trainer\ClientController as TrainerClientController;
+use App\Http\Controllers\Trainer\CommissionController as TrainerCommissionController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
-use App\Http\Controllers\Trainer\TrainerAvailabilityController;
 use App\Livewire\Trainer\Sessions\Index as TrainerSessionsIndex;
 use App\Models\MemberPtQuota;
 use App\Models\MembershipPackage;
@@ -57,6 +59,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Notifications
+    Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.mark-all-read');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
 
     // Member Dashboard
     Route::get('/member/dashboard', [MemberDashboardController::class, 'index'])
@@ -115,11 +123,7 @@ Route::middleware(['auth', 'role:trainer'])->prefix('trainer')->name('trainer.')
     Route::get('/klien-saya', [TrainerClientController::class, 'index'])->name('clients.index');
     Route::get('/klien-saya/{member}', [TrainerClientController::class, 'show'])->whereNumber('member')->name('clients.show');
     Route::post('/sessions/{ptSession}/complete', [TrainerClientController::class, 'completeSession'])->whereNumber('ptSession')->name('sessions.complete');
-    Route::get('/ketersediaan-waktu', [TrainerAvailabilityController::class, 'index'])->name('availability.index');
-    Route::post('/ketersediaan-waktu/schedule', [TrainerAvailabilityController::class, 'updateSchedule'])->name('availability.schedule.update');
-    Route::post('/ketersediaan-waktu/day-offs', [TrainerAvailabilityController::class, 'storeDayOff'])->name('availability.day-offs.store');
-    Route::delete('/ketersediaan-waktu/day-offs/{dayOff}', [TrainerAvailabilityController::class, 'destroyDayOff'])->whereNumber('dayOff')->name('availability.day-offs.destroy');
-    Route::view('/pendapatan-komisi', 'trainer.placeholder', ['title' => 'Pendapatan / Komisi'])->name('commissions.index');
+    Route::get('/pendapatan-komisi', [TrainerCommissionController::class, 'index'])->name('commissions.index');
 });
 
 Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->name('admin.')->group(function () {
@@ -154,6 +158,16 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
         Route::patch('/{member}/deactivate', 'deactivate')->whereNumber('member')->name('deactivate');
         Route::delete('/{member}', 'destroy')->whereNumber('member')->name('destroy');
     });
+    // Manajemen Personal Trainer
+    Route::prefix('pt-management')->name('trainers.')->controller(PtManagementController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{trainer}', 'show')->name('show');
+        Route::put('/{trainer}', 'update')->name('update');
+        Route::patch('/{trainer}/toggle-status', 'toggleStatus')->name('toggle-status');
+        Route::delete('/{trainer}', 'destroy')->name('destroy');
+    });
+
     Route::get('/settings', Settings::class)->name('settings.index');
     Route::post('/settings/{payment}/payout', [Settings::class, 'payout'])->name('settings.payout');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');

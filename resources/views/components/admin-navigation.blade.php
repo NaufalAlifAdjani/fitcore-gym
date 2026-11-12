@@ -6,6 +6,7 @@
         ['label' => 'Verifikasi Pembayaran', 'route' => 'admin.payments.index', 'active' => request()->routeIs('admin.payments.*'), 'icon' => 'payments'],
         ['label' => 'Scanner Check-in', 'route' => 'admin.checkin.index', 'active' => request()->routeIs('admin.checkin.*') || request()->routeIs('admin.check-in.*'), 'icon' => 'scan'],
         ['label' => 'Manajemen Member', 'route' => 'admin.members.index', 'active' => request()->routeIs('admin.members.*'), 'icon' => 'members'],
+        ['label' => 'Manajemen Trainer', 'route' => 'admin.trainers.index', 'active' => request()->routeIs('admin.trainers.*'), 'icon' => 'trainers'],
         ['label' => 'Pengaturan', 'route' => 'admin.settings.index', 'active' => request()->routeIs('admin.settings.*'), 'icon' => 'settings'],
     ];
 
@@ -13,7 +14,6 @@
         ['label' => 'Dashboard', 'route' => 'trainer.dashboard', 'active' => request()->routeIs('trainer.dashboard'), 'icon' => 'dashboard'],
         ['label' => 'Jadwal Sesi PT', 'route' => 'trainer.sessions.index', 'active' => request()->routeIs('trainer.sessions.*'), 'icon' => 'calendar'],
         ['label' => 'Klien Saya', 'route' => 'trainer.clients.index', 'active' => request()->routeIs('trainer.clients.*'), 'icon' => 'members'],
-        ['label' => 'Ketersediaan Waktu', 'route' => 'trainer.availability.index', 'active' => request()->routeIs('trainer.availability.*'), 'icon' => 'clock'],
         ['label' => 'Pendapatan / Komisi', 'route' => 'trainer.commissions.index', 'active' => request()->routeIs('trainer.commissions.*'), 'icon' => 'payments'],
         ['label' => 'Scanner Check-in', 'route' => 'admin.checkin.index', 'active' => request()->routeIs('admin.checkin.*'), 'icon' => 'scan'],
     ];
@@ -92,6 +92,14 @@
                             <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                 <circle cx="9" cy="8" r="3.25" stroke="currentColor" stroke-width="1.8" />
                                 <path d="M3.5 20v-1.5A4.5 4.5 0 0 1 8 14h2a4.5 4.5 0 0 1 4.5 4.5V20M16 5a3.25 3.25 0 0 1 0 6.2M17 14.3a4.5 4.5 0 0 1 3.5 4.2V20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                            </svg>
+                            @break
+                        @case('trainers')
+                            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                             </svg>
                             @break
                         @case('settings')
@@ -291,18 +299,8 @@
 
     <!-- Kanan: Notifikasi + User Profile Dropdown -->
     <div class="flex shrink-0 items-center gap-2 sm:gap-4">
-        <!-- Ikon Notifikasi -->
-        <button
-            type="button"
-            aria-label="Notifikasi"
-            class="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-[#F6F6F7] transition cursor-pointer"
-        >
-            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <!-- Red Dot Indicator -->
-            <span class="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#FF5722] ring-2 ring-white"></span>
-        </button>
+        <!-- Ikon Notifikasi & Dropdown -->
+        <x-notification-dropdown theme="light" />
 
         <!-- User Profile Dropdown -->
         <div class="relative" x-on:click.outside="profileOpen = false">

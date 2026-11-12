@@ -82,7 +82,7 @@
                     </div>
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 self-start sm:self-auto">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        Gym Buka (05:30 - 22:00 WIB)
+                        Gym Buka 24 Jam Nonstop
                     </span>
                 </div>
 

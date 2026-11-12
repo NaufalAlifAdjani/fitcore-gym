@@ -7,7 +7,6 @@ use App\Models\MemberProfile;
 use App\Models\MemberPtQuota;
 use App\Models\PtPackage;
 use App\Models\PtSession;
-use App\Models\TrainerAvailability;
 use App\Models\TrainerProfile;
 use App\Models\User;
 use Carbon\Carbon;
@@ -34,10 +33,12 @@ class PtBookingDemoSeeder extends Seeder
                 'email' => 'rama@gym.test',
                 'name' => 'Coach Rama Prasetya, CSCS',
                 'phone' => '081299990001',
+                'shift' => 'sore',
                 'profile' => [
                     'specialization' => 'Hypertrophy & Strength Conditioning',
                     'bio' => 'Head Coach di Fitcore dengan sertifikasi NSCA CSCS. Membimbing 100+ atlet dan member.',
                     'experience' => 8,
+                    'commission_rate' => 75000,
                     'tier' => 'Senior PT Tier III',
                     'studio' => 'SCBD Studio',
                     'rating' => 4.98,
@@ -48,10 +49,12 @@ class PtBookingDemoSeeder extends Seeder
                 'email' => 'trainer@fitcore.test',
                 'name' => 'Trainer Utama',
                 'phone' => '081299990005',
+                'shift' => 'pagi',
                 'profile' => [
                     'specialization' => 'Fat Loss & Functional Fitness',
                     'bio' => 'Senior Personal Trainer spesialisasi program Fat Loss dan mobilitas atletik.',
                     'experience' => 5,
+                    'commission_rate' => 60000,
                     'tier' => 'Master Trainer Tier II',
                     'studio' => 'Kemang Studio',
                     'rating' => 4.92,
@@ -69,6 +72,7 @@ class PtBookingDemoSeeder extends Seeder
                     'password' => Hash::make('password123'),
                     'role' => 'trainer',
                     'phone' => $tData['phone'],
+                    'shift' => $tData['shift'],
                     'status' => 'active',
                     'email_verified_at' => now(),
                 ]
@@ -78,29 +82,6 @@ class PtBookingDemoSeeder extends Seeder
                 ['user_id' => $trainer->id],
                 array_merge($tData['profile'], ['status' => 'active'])
             );
-
-            // Seed Jadwal Ketersediaan Trainer
-            if ($tData['email'] === 'rama@gym.test') {
-                // Coach Rama: Senin - Jumat (Siang & Malam), Sabtu & Minggu Libur
-                $afternoonEveningSlots = ['13:00', '14:00', '15:00', '16:00', '18:00', '19:00', '20:00', '21:00'];
-                foreach (range(0, 6) as $day) {
-                    $isWorkDay = ($day >= 1 && $day <= 5);
-                    TrainerAvailability::updateOrCreate(
-                        ['trainer_id' => $trainer->id, 'day_of_week' => $day],
-                        ['is_active' => $isWorkDay, 'slots' => $isWorkDay ? $afternoonEveningSlots : []]
-                    );
-                }
-            } else {
-                // Trainer Umum: Senin - Sabtu (Pagi & Siang), Minggu Libur
-                $morningAfternoonSlots = ['07:00', '08:00', '09:00', '10:00', '13:00', '14:00', '15:00'];
-                foreach (range(0, 6) as $day) {
-                    $isWorkDay = ($day >= 1 && $day <= 6);
-                    TrainerAvailability::updateOrCreate(
-                        ['trainer_id' => $trainer->id, 'day_of_week' => $day],
-                        ['is_active' => $isWorkDay, 'slots' => $isWorkDay ? $morningAfternoonSlots : []]
-                    );
-                }
-            }
 
             $trainers[] = $trainer;
         }

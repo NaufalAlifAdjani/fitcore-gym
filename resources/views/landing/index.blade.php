@@ -72,7 +72,7 @@
                                 <h3 class="text-xl font-poppins font-black text-[#16151A] mt-1">FitCore SCBD Arena</h3>
                             </div>
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
-                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Buka 05:30 - 22:00
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Buka 24 Jam Nonstop
                             </span>
                         </div>
 
@@ -225,7 +225,7 @@
                             <ul class="space-y-3 text-xs text-[#16151A] border-t border-[#E5E7EB] pt-6 mb-8">
                                 <li class="flex items-center gap-2.5">
                                     <svg class="w-4 h-4 text-[#FF5722] shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-                                    <span>Akses Gym Penuh (05:30 - 22:00)</span>
+                                    <span>Akses Gym Penuh 24 Jam Nonstop</span>
                                 </li>
                                 <li class="flex items-center gap-2.5">
                                     <svg class="w-4 h-4 text-[#FF5722] shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>

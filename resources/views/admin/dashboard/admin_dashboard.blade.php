@@ -1,8 +1,8 @@
 <x-app-layout>
     <section class="min-h-screen bg-[#F6F6F7] px-4 py-8 text-[#16151A] sm:px-6 lg:px-10">
         <div class="mx-auto max-w-[1600px] space-y-8">
-            <!-- Header & Title Section -->
-            <header class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <!-- Header & Title Section with Date Filter -->
+            <header class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
                     <h1 class="text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">
                         Dashboard Performa Gym
@@ -11,7 +11,81 @@
                         Ringkasan metrik operasional gym, pertumbuhan anggota, dan pendapatan real-time FitCore Sudirman Central.
                     </p>
                 </div>
+
+                <!-- Date Filter Component -->
+                <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-wrap items-center gap-2 bg-white p-2.5 sm:p-3 rounded-2xl border border-[#E5E7EB] shadow-sm">
+                    <div class="flex items-center gap-1.5 pl-1 pr-1">
+                        <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FF5722]/10 text-[#FF5722] shrink-0">
+                            <svg class="w-4 h-4 text-[#FF5722]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </span>
+                        <select
+                            name="period"
+                            id="dashboard-period"
+                            onchange="updateDashboardDateInputs(this.value)"
+                            class="rounded-xl border-[#E5E7EB] text-xs font-semibold text-[#16151A] bg-[#F6F6F7] focus:border-[#FF5722] focus:ring-[#FF5722] py-1.5 px-2.5 transition cursor-pointer"
+                        >
+                            <option value="this_month" @selected(($filterPeriod ?? 'this_month') === 'this_month')>Bulan Ini</option>
+                            <option value="today" @selected(($filterPeriod ?? '') === 'today')>Hari Ini</option>
+                            <option value="7_days" @selected(($filterPeriod ?? '') === '7_days')>7 Hari Terakhir</option>
+                            <option value="30_days" @selected(($filterPeriod ?? '') === '30_days')>30 Hari Terakhir</option>
+                            <option value="this_year" @selected(($filterPeriod ?? '') === 'this_year')>Tahun Ini</option>
+                            <option value="custom" @selected(($filterPeriod ?? '') === 'custom')>Kustom Tanggal</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-1 bg-[#F6F6F7] border border-[#E5E7EB] rounded-xl px-2 py-1">
+                        <input
+                            type="date"
+                            name="start_date"
+                            id="filter-start-date"
+                            value="{{ $filterStartDate ?? '' }}"
+                            onchange="document.getElementById('dashboard-period').value = 'custom'"
+                            class="bg-transparent border-0 p-0.5 text-xs font-medium text-[#16151A] focus:ring-0"
+                            aria-label="Tanggal Mulai"
+                        >
+                        <span class="text-xs text-[#565A66] font-medium px-0.5">–</span>
+                        <input
+                            type="date"
+                            name="end_date"
+                            id="filter-end-date"
+                            value="{{ $filterEndDate ?? '' }}"
+                            onchange="document.getElementById('dashboard-period').value = 'custom'"
+                            class="bg-transparent border-0 p-0.5 text-xs font-medium text-[#16151A] focus:ring-0"
+                            aria-label="Tanggal Selesai"
+                        >
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold rounded-xl transition shadow-sm font-inter cursor-pointer"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                        </svg>
+                        Filter
+                    </button>
+
+                    @if (request()->hasAny(['start_date', 'end_date', 'period']))
+                        <a
+                            href="{{ route('admin.dashboard') }}"
+                            class="inline-flex items-center px-2.5 py-1.5 bg-[#F6F6F7] hover:bg-gray-200 text-[#565A66] text-xs font-medium rounded-xl transition font-inter"
+                            title="Reset Filter"
+                        >
+                            Reset
+                        </a>
+                    @endif
+                </form>
             </header>
+
+            <!-- Indikator Rentang Filter Aktif -->
+            <div class="flex items-center justify-between text-xs text-[#565A66] font-inter">
+                <span class="flex items-center gap-1.5">
+                    <span class="inline-block h-2 w-2 rounded-full bg-[#FF5722]"></span>
+                    Menampilkan data performa periode: <strong class="text-[#16151A]">{{ $filterRangeLabel ?? 'Bulan Ini' }}</strong>
+                </span>
+            </div>
 
             <!-- Banner Notifikasi Pembayaran Menunggu Verifikasi -->
             @if (($pendingVerificationsCount ?? $pendingPaymentsCount ?? 0) > 0)
@@ -40,13 +114,13 @@
                 </div>
             @endif
 
-            <!-- 1. Stat Cards Section (4 Columns) -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- 1. Stat Cards Section (4 Columns on Large Screen) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 <!-- Card 1: TOTAL MEMBER AKTIF -->
                 <x-stat-card
                     title="TOTAL MEMBER AKTIF"
                     :value="$totalActiveMembers ?? '0'"
-                    trend_text="+12.4% peningkatan bulan ini"
+                    trend_text="Member dengan status aktif"
                     trend_color="bg-[#10B981]"
                 >
                     <x-slot name="icon">
@@ -58,11 +132,11 @@
                     </x-slot>
                 </x-stat-card>
 
-                <!-- Card 2: PENDAPATAN BULAN INI -->
+                <!-- Card 2: PENDAPATAN MEMBERSHIP -->
                 <x-stat-card
-                    title="PENDAPATAN BULAN INI"
-                    :value="$formattedRevenue ?? 'Rp 0'"
-                    trend_text="Target tercapai 94.2%"
+                    title="PENDAPATAN MEMBERSHIP"
+                    :value="$formattedMembershipRevenue ?? 'Rp 0'"
+                    trend_text="Paket langganan membership"
                     trend_color="bg-[#10B981]"
                 >
                     <x-slot name="icon">
@@ -74,27 +148,11 @@
                     </x-slot>
                 </x-stat-card>
 
-                <!-- Card 3: TOTAL CHECK-IN HARI INI -->
+                <!-- Card 3: PENDAPATAN SESI PT -->
                 <x-stat-card
-                    title="TOTAL CHECK-IN HARI INI"
-                    :value="$formattedTodayCheckIns ?? '0'"
-                    trend_text="Jam sibuk: 17:00 - 20:00"
-                    trend_color="bg-[#3B82F6]"
-                >
-                    <x-slot name="icon">
-                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#3B82F6]/10 text-[#3B82F6]">
-                            <svg class="h-6 w-6 text-[#3B82F6]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7V5a2 2 0 012-2h2m10 0h2a2 2 0 012 2v2m0 10v2a2 2 0 01-2 2h-2m-10 0H5a2 2 0 01-2-2v-2M7 12h10" />
-                            </svg>
-                        </span>
-                    </x-slot>
-                </x-stat-card>
-
-                <!-- Card 4: SESI PT BERLANGSUNG -->
-                <x-stat-card
-                    title="SESI PT BERLANGSUNG"
-                    :value="$formattedPtSessions ?? '0 Sesi'"
-                    trend_text="18 trainer sedang aktif"
+                    title="PENDAPATAN SESI PT"
+                    :value="$formattedPtRevenue ?? 'Rp 0'"
+                    trend_text="Paket sesi Personal Trainer"
                     trend_color="bg-[#8B5CF6]"
                 >
                     <x-slot name="icon">
@@ -105,11 +163,27 @@
                         </span>
                     </x-slot>
                 </x-stat-card>
+
+                <!-- Card 4: TOTAL CHECKIN -->
+                <x-stat-card
+                    title="TOTAL CHECKIN"
+                    :value="$formattedTotalCheckIns ?? '0'"
+                    trend_text="Presensi akses gym 24 jam"
+                    trend_color="bg-[#3B82F6]"
+                >
+                    <x-slot name="icon">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#3B82F6]/10 text-[#3B82F6]">
+                            <svg class="h-6 w-6 text-[#3B82F6]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7V5a2 2 0 012-2h2m10 0h2a2 2 0 012 2v2m0 10v2a2 2 0 01-2 2h-2m-10 0H5a2 2 0 01-2-2v-2M7 12h10" />
+                            </svg>
+                        </span>
+                    </x-slot>
+                </x-stat-card>
             </div>
 
             <!-- 2. Grafik Pendapatan (Chart.js) -->
             <x-card class="p-6">
-                <div class="flex justify-between items-center mb-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                     <div>
                         <h2 class="font-poppins font-bold text-lg text-[#16151A]">
                             {{ $chartTitle }}
@@ -118,16 +192,9 @@
                             Grafik nominal pendapatan dari paket membership dan personal trainer terverifikasi.
                         </p>
                     </div>
-                    <div>
-                        <select
-                            name="range"
-                            onchange="window.location.href='?range=' + this.value"
-                            class="border border-[#E5E7EB] rounded-full px-4 py-1.5 text-xs font-inter text-[#565A66] hover:border-[#FF5722] focus:outline-none focus:ring-1 focus:ring-[#FF5722] cursor-pointer transition bg-white"
-                        >
-                            <option value="7_days" @selected(($currentRange ?? '7_days') === '7_days')>7 Hari Terakhir</option>
-                            <option value="30_days" @selected(($currentRange ?? '') === '30_days')>30 Hari Terakhir</option>
-                            <option value="this_year" @selected(($currentRange ?? '') === 'this_year')>Tahun Ini</option>
-                        </select>
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F6F6F7] border border-[#E5E7EB] text-xs font-medium text-[#565A66] w-fit">
+                        <span class="h-2 w-2 rounded-full bg-[#FF5722]"></span>
+                        <span>Periode: <strong class="text-[#16151A]">{{ $filterRangeLabel ?? 'Bulan Ini' }}</strong></span>
                     </div>
                 </div>
 
@@ -323,6 +390,46 @@
     <!-- Chart.js CDN & Inisialisasi Dinamis -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        function updateDashboardDateInputs(period) {
+            const startInput = document.getElementById('filter-start-date');
+            const endInput = document.getElementById('filter-end-date');
+            if (!startInput || !endInput) return;
+
+            const today = new Date();
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            if (period === 'today') {
+                const str = formatDate(today);
+                startInput.value = str;
+                endInput.value = str;
+            } else if (period === '7_days') {
+                const past = new Date();
+                past.setDate(today.getDate() - 6);
+                startInput.value = formatDate(past);
+                endInput.value = formatDate(today);
+            } else if (period === '30_days') {
+                const past = new Date();
+                past.setDate(today.getDate() - 29);
+                startInput.value = formatDate(past);
+                endInput.value = formatDate(today);
+            } else if (period === 'this_month') {
+                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+                const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                startInput.value = formatDate(firstDay);
+                endInput.value = formatDate(lastDay);
+            } else if (period === 'this_year') {
+                const firstDay = new Date(today.getFullYear(), 0, 1);
+                const lastDay = new Date(today.getFullYear(), 11, 31);
+                startInput.value = formatDate(firstDay);
+                endInput.value = formatDate(lastDay);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const chartCanvas = document.getElementById('adminRevenueChart');
             if (!chartCanvas) return;

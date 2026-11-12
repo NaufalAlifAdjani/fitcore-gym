@@ -128,16 +128,16 @@
                         <h4 class="font-poppins font-bold text-sm text-[#16151A] uppercase tracking-wider">Jam Operasional Studio</h4>
                         <div class="space-y-3 text-xs text-[#565A66]">
                             <div class="flex items-center justify-between pb-2 border-b border-[#E5E7EB]">
-                                <span class="font-medium">Senin – Jumat</span>
-                                <span class="font-extrabold text-[#16151A]">05:30 – 22:00 WIB</span>
+                                <span class="font-medium">Akses Member Gym</span>
+                                <span class="font-extrabold text-emerald-600">24 Jam Nonstop (24/7)</span>
                             </div>
                             <div class="flex items-center justify-between pb-2 border-b border-[#E5E7EB]">
-                                <span class="font-medium">Sabtu – Minggu</span>
-                                <span class="font-extrabold text-[#16151A]">06:00 – 21:00 WIB</span>
+                                <span class="font-medium">Sesi Personal Trainer</span>
+                                <span class="font-extrabold text-[#16151A]">06:00 – 22:00 WIB</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="font-medium">Hari Libur Nasional</span>
-                                <span class="font-extrabold text-[#FF5722]">07:00 – 20:00 WIB</span>
+                                <span class="font-extrabold text-emerald-600">Tetap Buka 24 Jam</span>
                             </div>
                         </div>
 
