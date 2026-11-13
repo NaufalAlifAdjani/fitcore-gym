@@ -19,9 +19,16 @@ class MembershipCheckoutTest extends TestCase
 {
     use RefreshDatabase;
 
+    private function createMember(array $attributes = []): User
+    {
+        return User::factory()->completeProfile()->create(array_merge([
+            'role' => 'member',
+        ], $attributes));
+    }
+
     public function test_authenticated_member_can_view_membership_package_catalog(): void
     {
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $package = MembershipPackage::create([
             'name' => 'FitCore Starter Pass',
             'badge' => 'SILVER',
@@ -47,7 +54,7 @@ class MembershipCheckoutTest extends TestCase
 
     public function test_member_can_access_checkout_form_for_active_package(): void
     {
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $bank = Bank::create([
             'name' => 'BCA',
             'account_number' => '1234567890',
@@ -80,7 +87,7 @@ class MembershipCheckoutTest extends TestCase
 
     public function test_validation_fails_if_proof_image_is_missing_or_invalid(): void
     {
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $bank = Bank::create([
             'name' => 'Mandiri',
             'account_number' => '9876543210',
@@ -124,7 +131,7 @@ class MembershipCheckoutTest extends TestCase
     {
         Storage::fake('public');
 
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $bank = Bank::create([
             'name' => 'BRI',
             'account_number' => '1122334455',
@@ -177,7 +184,7 @@ class MembershipCheckoutTest extends TestCase
 
     public function test_member_can_access_upload_proof_page_with_selected_bank_and_nominal(): void
     {
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $bank = Bank::create([
             'name' => 'BCA',
             'account_number' => '8271081234567890',
@@ -213,7 +220,7 @@ class MembershipCheckoutTest extends TestCase
     {
         Storage::fake('public');
 
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $bank = Bank::create([
             'name' => 'Mandiri',
             'account_number' => '1234509876',
@@ -250,7 +257,7 @@ class MembershipCheckoutTest extends TestCase
 
     public function test_inactive_package_is_not_visible_in_member_package_catalog(): void
     {
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         MembershipPackage::create([
             'name' => 'Inactive Super Pass',
             'tier' => 'Basic',
@@ -268,7 +275,7 @@ class MembershipCheckoutTest extends TestCase
 
     public function test_accessing_inactive_package_checkout_redirects_with_error_flash(): void
     {
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $package = MembershipPackage::create([
             'name' => 'Expired Discount Pass',
             'tier' => 'Basic',
@@ -288,7 +295,7 @@ class MembershipCheckoutTest extends TestCase
     {
         Storage::fake('public');
 
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $bank = Bank::create([
             'name' => 'BCA',
             'account_number' => '8888999900',
@@ -329,7 +336,7 @@ class MembershipCheckoutTest extends TestCase
 
         $admin = User::factory()->create(['role' => 'admin']);
         $otherAdmin = User::factory()->create(['role' => 'admin']);
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $bank = Bank::create([
             'name' => 'BCA',
             'account_number' => '1234567890',
@@ -365,7 +372,7 @@ class MembershipCheckoutTest extends TestCase
     {
         Storage::fake('public');
 
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $bank = Bank::create([
             'name' => 'BCA',
             'account_number' => '1234567890',
@@ -411,7 +418,7 @@ class MembershipCheckoutTest extends TestCase
 
     public function test_membership_checkout_generates_random_3_digit_unique_code(): void
     {
-        $member = User::factory()->create(['role' => 'member']);
+        $member = $this->createMember();
         $package = MembershipPackage::create([
             'name' => 'FitCore Starter Random',
             'tier' => 'Basic',

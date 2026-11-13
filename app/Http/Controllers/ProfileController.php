@@ -46,13 +46,34 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->safe()->only(['name', 'email', 'phone']));
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
+
+        if ($user->role === 'member') {
+            $profileAttributes = [];
+            if ($request->has('address')) {
+                $profileAttributes['address'] = $request->input('address');
+            }
+            if ($request->has('gender')) {
+                $profileAttributes['gender'] = $request->input('gender');
+            }
+
+            if (! empty($profileAttributes)) {
+                if ($user->memberProfile) {
+                    $user->memberProfile->update($profileAttributes);
+                } else {
+                    $user->memberProfile()->create(array_merge([
+                        'member_code' => 'MEM'.rand(100000, 999999),
+                    ], $profileAttributes));
+                }
+            }
+        }
 
         if (str_contains($request->header('referer', ''), '/m/')) {
             return Redirect::route('mobile.member.profile.index')->with('status', 'profile-updated');

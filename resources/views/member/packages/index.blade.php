@@ -128,7 +128,14 @@
 
                         <!-- Tombol Action -->
                         <div class="mt-4 pt-2">
-                            @if ($isFeatured)
+                            @if (auth()->check() && ! auth()->user()->isProfileComplete())
+                                <a
+                                    href="{{ $checkoutUrl }}"
+                                    class="block w-full text-center py-3.5 rounded-full font-bold text-sm bg-[#FF5722] hover:bg-[#E64A19] text-white transition-all shadow-lg shadow-[#FF5722]/30 hover:scale-[1.02]"
+                                >
+                                    Lengkapi Profil untuk Membeli
+                                </a>
+                            @elseif ($isFeatured)
                                 <a
                                     href="{{ $checkoutUrl }}"
                                     class="block w-full text-center py-3.5 rounded-full font-bold text-sm bg-[#FF5722] hover:bg-[#E64A19] text-white transition-all shadow-lg shadow-[#FF5722]/30 hover:shadow-[#FF5722]/50 hover:scale-[1.02]"

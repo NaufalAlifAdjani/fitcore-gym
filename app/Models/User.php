@@ -175,6 +175,22 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Memeriksa apakah biodata profil member sudah lengkap (nama, nomor telepon, dan alamat).
+     */
+    public function isProfileComplete(): bool
+    {
+        if ($this->role !== 'member') {
+            return true;
+        }
+
+        $hasPhone = ! empty(trim((string) ($this->phone ?? '')));
+        $profile = $this->memberProfile ?? $this->memberProfile()->first();
+        $hasAddress = ! empty(trim((string) ($profile?->address ?? '')));
+
+        return $hasPhone && $hasAddress;
+    }
+
+    /**
      * Check if user has a specific role or matches any of the given roles.
      *
      * @param  string|array<int, string>  $roles

@@ -74,10 +74,10 @@ Route::middleware('auth')->group(function () {
     // Member Membership Package, Checkout, Upload Proof, and Payment Status routes
     Route::prefix('membership')->name('member.membership.')->controller(MemberMembershipPackageController::class)->group(function () {
         Route::get('/packages', 'index')->name('packages');
-        Route::get('/checkout/{package}', 'checkout')->name('checkout');
-        Route::get('/upload-proof/{package}', 'uploadProof')->name('upload-proof');
-        Route::post('/upload-proof/{package}', 'processPayment')->name('upload-proof.store');
-        Route::post('/checkout/{package}', 'processPayment')->name('process-payment');
+        Route::get('/checkout/{package}', 'checkout')->middleware('profile.complete')->name('checkout');
+        Route::get('/upload-proof/{package}', 'uploadProof')->middleware('profile.complete')->name('upload-proof');
+        Route::post('/upload-proof/{package}', 'processPayment')->middleware('profile.complete')->name('upload-proof.store');
+        Route::post('/checkout/{package}', 'processPayment')->middleware('profile.complete')->name('process-payment');
         Route::get('/payment-status/{payment}', 'paymentStatus')->name('payment-status');
     });
 
@@ -252,7 +252,7 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
         }
 
         return view('mobile.member.packages.checkout', $view->getData());
-    })->name('mobile.member.packages.checkout');
+    })->middleware('profile.complete')->name('mobile.member.packages.checkout');
 
     Route::get('/payment-status/{payment}', function (Payment $payment, Request $request, MemberMembershipPackageController $controller) {
         $view = $controller->paymentStatus($payment);

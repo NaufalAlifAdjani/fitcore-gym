@@ -106,7 +106,7 @@ class MobileMemberDashboardTest extends TestCase
 
     public function test_member_can_access_mobile_package_checkout(): void
     {
-        $member = User::factory()->create([
+        $member = User::factory()->completeProfile()->create([
             'role' => 'member',
             'name' => 'Budi Pratama',
         ]);

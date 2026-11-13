@@ -148,7 +148,12 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
 
                     <!-- Tombol Action CTA (Pill Button per DESIGN.md & Prompt #2) -->
                     <div class="pt-2 border-t border-[#E5E7EB]">
-                        @if ($isFeatured)
+                        @if (auth()->check() && ! auth()->user()->isProfileComplete())
+                            <a href="{{ $checkoutUrl }}"
+                               class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
+                                Lengkapi Profil untuk Membeli
+                            </a>
+                        @elseif ($isFeatured)
                             <a href="{{ $checkoutUrl }}"
                                class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
                                 Gabung Sekarang
