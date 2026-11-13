@@ -18,6 +18,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PtPackagePurchaseController;
 use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
+use App\Http\Controllers\QrTokenController;
 use App\Http\Controllers\Trainer\ClientController as TrainerClientController;
 use App\Http\Controllers\Trainer\CommissionController as TrainerCommissionController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
@@ -180,6 +181,9 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
 */
 Route::middleware(['auth', 'role:member'])->name('member.')->group(function () {
     Route::get('/member/card', [MemberCardController::class, 'show'])->name('card');
+    // Dynamic QR token endpoints — POST to prevent caching; GET for SVG render
+    Route::post('/member/card/qr-token', [QrTokenController::class, 'generate'])->name('card.qr-token');
+    Route::get('/member/card/qr-svg', [QrTokenController::class, 'svg'])->name('card.qr-svg');
     Route::get('/member/pt-packages', [PtPackagePurchaseController::class, 'index'])->name('pt-packages.index');
     Route::get('/member/pt-packages/select-trainer', [PtPackagePurchaseController::class, 'selectTrainer'])->name('pt-packages.select-trainer');
     Route::get('/member/pt-packages/checkout', [PtPackagePurchaseController::class, 'checkout'])->name('pt-packages.checkout');

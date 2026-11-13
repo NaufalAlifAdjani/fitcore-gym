@@ -90,28 +90,46 @@
                             </div>
                         </div>
 
-                        <!-- Right QR Container -->
-                        <div class="flex flex-col items-center shrink-0 mx-auto sm:mx-0">
-                            @if($qrSvg)
-                                <div class="relative rounded-2xl bg-white p-3 shadow-xl border border-white/60 w-36 h-36 flex items-center justify-center transition duration-300 hover:scale-105">
-                                    <div class="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
-                                        {!! $qrSvg !!}
-                                    </div>
-                                </div>
-                                <span class="mt-2 text-[10px] font-bold tracking-wider text-white uppercase flex items-center gap-1.5 font-inter drop-shadow-sm">
-                                    <svg class="w-3.5 h-3.5 text-orange-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <!-- Right: Dynamic QR Container -->
+                        <div class="flex flex-col items-center shrink-0 mx-auto sm:mx-0"
+                             id="dynamic-qr-wrapper"
+                             data-generate-url="{{ $qrGenerateUrl }}"
+                             data-svg-url="{{ $qrSvgUrl }}">
+
+                            <!-- QR Image Box -->
+                            <div class="relative rounded-2xl bg-white p-3 shadow-xl border border-white/60 w-36 h-36 flex items-center justify-center transition duration-300 hover:scale-105">
+                                <!-- Loading state -->
+                                <div id="qr-loading" class="flex flex-col items-center justify-center w-full h-full">
+                                    <svg class="w-8 h-8 text-orange-400 animate-spin" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
                                     </svg>
-                                    Scan untuk Check-in
-                                </span>
-                            @else
-                                <div class="rounded-2xl border border-dashed border-white/40 bg-black/25 backdrop-blur-md p-4 w-36 h-36 flex flex-col items-center justify-center text-center text-white">
-                                    <svg class="w-8 h-8 text-white/70 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                </div>
+                                <!-- QR SVG rendered here -->
+                                <img id="qr-image"
+                                     src=""
+                                     alt="QR Code Check-in"
+                                     class="hidden w-full h-full object-contain" />
+                                <!-- Error state -->
+                                <div id="qr-error" class="hidden flex flex-col items-center justify-center text-center w-full h-full">
+                                    <svg class="w-7 h-7 text-rose-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                     </svg>
-                                    <span class="text-[11px] font-medium text-white/80 font-inter">QR Code belum tersedia</span>
+                                    <span class="text-[10px] font-medium text-slate-500 font-inter">Gagal memuat QR</span>
                                 </div>
-                            @endif
+                            </div>
+
+                            <!-- Countdown & label -->
+                            <span class="mt-2 text-[10px] font-bold tracking-wider text-white uppercase flex items-center gap-1.5 font-inter drop-shadow-sm">
+                                <svg class="w-3.5 h-3.5 text-orange-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                </svg>
+                                Scan untuk Check-in
+                            </span>
+                            <!-- Countdown timer -->
+                            <span id="qr-countdown" class="mt-0.5 text-[10px] font-inter text-orange-200/80 font-semibold hidden">
+                                Perbarui dalam <span id="qr-countdown-sec">30</span>s
+                            </span>
                         </div>
                     </div>
 
@@ -153,7 +171,7 @@
                     </li>
                     <li class="flex items-start gap-3">
                         <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-[10px] font-bold text-[#FF5722]">3</span>
-                        <span>Sistem akan memverifikasi status keaktifan paket membership Anda secara instan (1x per hari).</span>
+                        <span>QR Code akan otomatis diperbarui setiap 30 detik untuk menjaga keamanan akses.</span>
                     </li>
                 </ol>
 
@@ -171,4 +189,112 @@
 
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+    (function () {
+        const wrapper     = document.getElementById('dynamic-qr-wrapper');
+        const qrImage     = document.getElementById('qr-image');
+        const qrLoading   = document.getElementById('qr-loading');
+        const qrError     = document.getElementById('qr-error');
+        const countdownEl = document.getElementById('qr-countdown');
+        const countdownSec = document.getElementById('qr-countdown-sec');
+
+        if (!wrapper) return;
+
+        const GENERATE_URL = wrapper.dataset.generateUrl;
+        const SVG_URL      = wrapper.dataset.svgUrl;
+        const TTL          = 30; // seconds
+
+        let countdownTimer = null;
+        let refreshTimer   = null;
+
+        // ── Show / hide helpers ──────────────────────────────────────────────
+        function showLoading() {
+            qrLoading.classList.remove('hidden');
+            qrImage.classList.add('hidden');
+            qrError.classList.add('hidden');
+            countdownEl.classList.add('hidden');
+        }
+
+        function showQr(svgUrl) {
+            qrImage.src = svgUrl;
+            qrImage.classList.remove('hidden');
+            qrLoading.classList.add('hidden');
+            qrError.classList.add('hidden');
+            countdownEl.classList.remove('hidden');
+        }
+
+        function showError() {
+            qrError.classList.remove('hidden');
+            qrLoading.classList.add('hidden');
+            qrImage.classList.add('hidden');
+            countdownEl.classList.add('hidden');
+        }
+
+        // ── Countdown ────────────────────────────────────────────────────────
+        function startCountdown(seconds) {
+            clearInterval(countdownTimer);
+            let remaining = seconds;
+            countdownSec.textContent = remaining;
+
+            countdownTimer = setInterval(() => {
+                remaining -= 1;
+                countdownSec.textContent = remaining;
+                if (remaining <= 0) {
+                    clearInterval(countdownTimer);
+                }
+            }, 1000);
+        }
+
+        // ── Generate & display a fresh QR ───────────────────────────────────
+        async function refreshQr() {
+            clearTimeout(refreshTimer);
+            clearInterval(countdownTimer);
+            showLoading();
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+
+            let tokenData;
+            try {
+                const res = await fetch(GENERATE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                });
+                if (!res.ok) throw new Error('generate failed');
+                tokenData = await res.json();
+            } catch (err) {
+                console.error('QR generate error:', err);
+                showError();
+                // Retry after 5 s on network error
+                refreshTimer = setTimeout(refreshQr, 5000);
+                return;
+            }
+
+            const svgUrl = `${SVG_URL}?token=${encodeURIComponent(tokenData.token)}&_=${Date.now()}`;
+            showQr(svgUrl);
+
+            const ttl = tokenData.ttl ?? TTL;
+            startCountdown(ttl);
+
+            // Schedule the next auto-refresh just before the token expires
+            refreshTimer = setTimeout(refreshQr, ttl * 1000);
+        }
+
+        // ── Visibility: regenerate when user switches back to the tab ────────
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                refreshQr();
+            }
+        });
+
+        // ── Kick off on page load ────────────────────────────────────────────
+        refreshQr();
+    })();
+    </script>
+    @endpush
 </x-app-layout>
