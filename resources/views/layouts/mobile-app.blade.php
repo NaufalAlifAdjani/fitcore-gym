@@ -27,6 +27,7 @@
     </style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body class="h-full bg-[#F6F6F7] text-[#16151A] font-sans antialiased selection:bg-[#FF5722] selection:text-white flex flex-col overscroll-y-none">
 
@@ -140,5 +141,7 @@
     <x-toast />
     <x-email-verified-modal />
 
+    @livewireScriptConfig
+    @stack('scripts')
 </body>
 </html>

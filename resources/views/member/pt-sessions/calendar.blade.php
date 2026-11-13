@@ -11,7 +11,7 @@
                 <button 
                     type="button" 
                     wire:click="goToToday"
-                    class="px-5 py-2 text-sm font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#FF5722] hover:text-[#FF5722] active:bg-gray-100 transition shadow-2xs cursor-pointer"
+                    class="px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#FF5722] hover:text-[#FF5722] active:bg-gray-100 transition shadow-2xs cursor-pointer min-h-[44px] flex items-center justify-center"
                 >
                     Today
                 </button>
@@ -20,7 +20,7 @@
                 <button 
                     type="button" 
                     wire:click="previousPeriod"
-                    class="w-9 h-9 flex items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 active:bg-gray-200 transition cursor-pointer"
+                    class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 active:bg-gray-200 transition cursor-pointer"
                     aria-label="Previous period"
                 >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -29,7 +29,7 @@
                 </button>
 
                 <!-- Month, Week, or Day Title (di tengah tombol next dan previous) -->
-                <h2 class="text-xl sm:text-2xl font-bold text-[#16151A] tracking-tight px-2 text-center font-['Poppins']">
+                <h2 class="text-base sm:text-2xl font-bold text-[#16151A] tracking-tight px-1 sm:px-2 text-center font-['Poppins']">
                     @if($view === 'week')
                         {{ $this->weekDays[0]->format('M j') }} &ndash; {{ $this->weekDays[6]->format('M j, Y') }}
                     @elseif($view === 'day')
@@ -43,7 +43,7 @@
                 <button 
                     type="button" 
                     wire:click="nextPeriod"
-                    class="w-9 h-9 flex items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 active:bg-gray-200 transition cursor-pointer"
+                    class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 active:bg-gray-200 transition cursor-pointer"
                     aria-label="Next period"
                 >
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -302,90 +302,149 @@
             <div wire:key="view-mode-calendar">
                 @if($view === 'month')
                 <!-- Month Calendar Grid -->
-                <div class="rounded-2xl border border-[#E5E7EB] overflow-hidden bg-white">
-                    <div class="overflow-x-auto scrollbar-thin">
-                        <div class="min-w-[640px] md:min-w-0">
-                            <!-- Day Names Header Row (SUN, MON, TUE, WED, THU, FRI, SAT) -->
-                            <div class="grid grid-cols-7 border-b border-[#E5E7EB] bg-white">
-                                @foreach(['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'] as $dayHeader)
-                                    <div class="text-[11px] font-semibold text-[#565A66] uppercase tracking-wider text-center py-2.5">
-                                        {{ $dayHeader }}
-                                    </div>
-                                @endforeach
-                            </div>
+                <div class="rounded-2xl border border-[#E5E7EB] overflow-hidden bg-white shadow-2xs">
+                    <div class="w-full">
+                        <!-- Day Names Header Row (Initial on Mobile: S, M, T, W, T, F, S | Full on sm+: SUN, MON...) -->
+                        <div class="grid grid-cols-7 border-b border-[#E5E7EB] bg-white">
+                            @foreach([
+                                ['short' => 'S', 'full' => 'SUN'],
+                                ['short' => 'M', 'full' => 'MON'],
+                                ['short' => 'T', 'full' => 'TUE'],
+                                ['short' => 'W', 'full' => 'WED'],
+                                ['short' => 'T', 'full' => 'THU'],
+                                ['short' => 'F', 'full' => 'FRI'],
+                                ['short' => 'S', 'full' => 'SAT'],
+                            ] as $dayHeader)
+                                <div class="text-[10px] sm:text-[11px] font-bold text-[#565A66] uppercase tracking-wider text-center py-2 sm:py-2.5">
+                                    <span class="sm:hidden">{{ $dayHeader['short'] }}</span>
+                                    <span class="hidden sm:inline">{{ $dayHeader['full'] }}</span>
+                                </div>
+                            @endforeach
+                        </div>
 
-                            <!-- 7 Columns Calendar Body Grid -->
-                            <div class="grid grid-cols-7 border-t border-[#E5E7EB] divide-x divide-[#E5E7EB]">
+                        <!-- 7 Columns Calendar Body Grid -->
+                        <div class="grid grid-cols-7 border-t border-[#E5E7EB] divide-x divide-[#E5E7EB]">
+                            @php
+                                $parsedDate = \Carbon\Carbon::parse($date);
+                            @endphp
+
+                            @foreach($this->monthGrid as $gridDate)
                                 @php
-                                    $parsedDate = \Carbon\Carbon::parse($date);
+                                    $isCurrentMonth = $gridDate->isSameMonth($parsedDate);
+                                    $isToday = $gridDate->isToday();
+                                    $isSelected = $gridDate->toDateString() === $date;
+                                    $dayDateString = $gridDate->toDateString();
+                                    $daySessions = $this->monthSessions->get($dayDateString) ?? collect();
+                                    $isFirstOfMonth = $gridDate->day === 1;
                                 @endphp
 
-                                @foreach($this->monthGrid as $gridDate)
-                                    @php
-                                        $isCurrentMonth = $gridDate->isSameMonth($parsedDate);
-                                        $isToday = $gridDate->isToday();
-                                        $isSelected = $gridDate->toDateString() === $date;
-                                        $dayDateString = $gridDate->toDateString();
-                                        $daySessions = $this->monthSessions->get($dayDateString) ?? collect();
-                                        $isFirstOfMonth = $gridDate->day === 1;
-                                    @endphp
-
-                                    <div 
-                                        wire:key="grid-day-{{ $dayDateString }}"
-                                        wire:click="goToDate('{{ $dayDateString }}')"
-                                        class="min-h-[105px] sm:min-h-[125px] p-1.5 sm:p-2 border-b border-[#E5E7EB] flex flex-col transition cursor-pointer select-none {{ $isSelected ? 'bg-[#FF5722]/5 ring-2 ring-inset ring-[#FF5722]' : ($isCurrentMonth ? 'bg-white hover:bg-gray-50/80' : 'bg-gray-50/50 hover:bg-gray-100/70') }}"
-                                    >
-                                        <!-- Date Number Header in Cell -->
-                                        <div class="flex items-center justify-center mb-1">
-                                            @if($isToday)
-                                                <!-- Today: Solid Red Circle Badge -->
-                                                <div class="w-7 h-7 rounded-full bg-[#FF5722] text-white font-medium text-xs sm:text-sm flex items-center justify-center shadow-xs">
-                                                    {{ $gridDate->day }}
-                                                </div>
-                                            @elseif($isFirstOfMonth)
-                                                <!-- 1st of Month: "Oct 1" format -->
-                                                <div class="text-xs sm:text-sm font-semibold {{ $isCurrentMonth ? 'text-[#16151A]' : 'text-gray-400' }}">
-                                                    {{ $gridDate->format('M j') }}
-                                                </div>
-                                            @else
-                                                <div class="text-xs sm:text-sm {{ $isCurrentMonth ? 'text-[#16151A] font-medium' : 'text-gray-400 font-normal' }}">
-                                                    {{ $gridDate->day }}
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        <!-- Session Chips inside Day Cell -->
-                                        <div class="space-y-1 mt-1 flex-1 overflow-hidden">
-                                            @foreach($daySessions->take(2) as $sessionItem)
-                                                @php
-                                                    $chipStyle = match($sessionItem->status) {
-                                                        \App\Enums\PtSessionStatus::Pending => 'bg-amber-100 text-amber-900 border border-amber-300 font-medium',
-                                                        \App\Enums\PtSessionStatus::Confirmed => 'bg-emerald-600 text-white font-medium',
-                                                        \App\Enums\PtSessionStatus::Cancelled => 'bg-gray-100 text-gray-400 line-through font-medium',
-                                                        default => 'bg-gray-100 text-gray-700 font-medium',
-                                                    };
-                                                    $startTimeFormatted = \Carbon\Carbon::parse($sessionItem->start_time)->format('H:i');
-                                                @endphp
-                                                <div 
-                                                    class="text-[10px] sm:text-[11px] leading-tight px-1.5 py-0.5 rounded truncate shadow-2xs {{ $chipStyle }}"
-                                                    title="{{ $startTimeFormatted }} - {{ $sessionItem->trainer->name ?? 'Coach' }} ({{ $sessionItem->status->label() }})"
-                                                >
-                                                    <span class="font-bold whitespace-nowrap">{{ $startTimeFormatted }}</span>
-                                                    <span>{{ Str::limit($sessionItem->trainer->name ?? 'Coach', 8) }}</span>
-                                                </div>
-                                            @endforeach
-
-                                            @if($daySessions->count() > 2)
-                                                <div class="text-[10px] text-[#565A66] font-semibold px-1">
-                                                    +{{ $daySessions->count() - 2 }} more
-                                                </div>
-                                            @endif
-                                        </div>
+                                <div 
+                                    wire:key="grid-day-{{ $dayDateString }}"
+                                    wire:click="goToDate('{{ $dayDateString }}')"
+                                    class="min-h-[52px] sm:min-h-[110px] p-1 sm:p-2 border-b border-[#E5E7EB] flex flex-col transition cursor-pointer select-none {{ $isSelected ? 'bg-[#FF5722]/10 ring-2 ring-inset ring-[#FF5722]' : ($isCurrentMonth ? 'bg-white hover:bg-gray-50/80' : 'bg-gray-50/50 hover:bg-gray-100/70') }}"
+                                >
+                                    <!-- Date Number Header in Cell -->
+                                    <div class="flex items-center justify-center mb-0.5 sm:mb-1">
+                                        @if($isToday)
+                                            <!-- Today: Solid Red/Orange Circle Badge -->
+                                            <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#FF5722] text-white font-bold text-[11px] sm:text-sm flex items-center justify-center shadow-xs">
+                                                {{ $gridDate->day }}
+                                            </div>
+                                        @elseif($isFirstOfMonth)
+                                            <!-- 1st of Month: "Oct 1" format on sm+, day number on mobile -->
+                                            <div class="text-[11px] sm:text-sm font-semibold {{ $isCurrentMonth ? 'text-[#16151A]' : 'text-gray-400' }}">
+                                                <span class="sm:hidden">{{ $gridDate->day }}</span>
+                                                <span class="hidden sm:inline">{{ $gridDate->format('M j') }}</span>
+                                            </div>
+                                        @else
+                                            <div class="text-[11px] sm:text-sm {{ $isCurrentMonth ? 'text-[#16151A] font-medium' : 'text-gray-400 font-normal' }}">
+                                                {{ $gridDate->day }}
+                                            </div>
+                                        @endif
                                     </div>
-                                @endforeach
-                            </div>
+
+                                    <!-- Mobile session indicator dots (sm:hidden) -->
+                                    @if($daySessions->isNotEmpty())
+                                        <div class="sm:hidden flex items-center justify-center gap-0.5 mt-0.5 h-1.5">
+                                            @foreach($daySessions->take(3) as $dotSession)
+                                                @php
+                                                    $dotColor = match($dotSession->status) {
+                                                        \App\Enums\PtSessionStatus::Confirmed => 'bg-emerald-500',
+                                                        \App\Enums\PtSessionStatus::Pending => 'bg-amber-500',
+                                                        \App\Enums\PtSessionStatus::Cancelled => 'bg-gray-400',
+                                                        default => 'bg-[#FF5722]',
+                                                    };
+                                                @endphp
+                                                <span class="w-1.5 h-1.5 rounded-full {{ $isSelected ? 'bg-[#FF5722]' : $dotColor }}"></span>
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                    <!-- Session Chips inside Day Cell (hidden on mobile, visible on sm+) -->
+                                    <div class="hidden sm:block space-y-1 mt-1 flex-1 overflow-hidden">
+                                        @foreach($daySessions->take(2) as $sessionItem)
+                                            @php
+                                                $chipStyle = match($sessionItem->status) {
+                                                    \App\Enums\PtSessionStatus::Pending => 'bg-amber-100 text-amber-900 border border-amber-300 font-medium',
+                                                    \App\Enums\PtSessionStatus::Confirmed => 'bg-emerald-600 text-white font-medium',
+                                                    \App\Enums\PtSessionStatus::Cancelled => 'bg-gray-100 text-gray-400 line-through font-medium',
+                                                    default => 'bg-gray-100 text-gray-700 font-medium',
+                                                };
+                                                $startTimeFormatted = \Carbon\Carbon::parse($sessionItem->start_time)->format('H:i');
+                                            @endphp
+                                            <div 
+                                                class="text-[10px] sm:text-[11px] leading-tight px-1.5 py-0.5 rounded truncate shadow-2xs {{ $chipStyle }}"
+                                                title="{{ $startTimeFormatted }} - {{ $sessionItem->trainer->name ?? 'Coach' }} ({{ $sessionItem->status->label() }})"
+                                            >
+                                                <span class="font-bold whitespace-nowrap">{{ $startTimeFormatted }}</span>
+                                                <span>{{ Str::limit($sessionItem->trainer->name ?? 'Coach', 8) }}</span>
+                                            </div>
+                                        @endforeach
+
+                                        @if($daySessions->count() > 2)
+                                            <div class="text-[10px] text-[#565A66] font-semibold px-1">
+                                                +{{ $daySessions->count() - 2 }} more
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
+                </div>
+
+                <!-- Selected Date Sessions on Mobile (Month View) -->
+                @php
+                    $monthSelectedDaySessions = $this->monthSessions->get($date) ?? collect();
+                @endphp
+                <div class="sm:hidden mt-3 p-3.5 rounded-2xl border border-[#E5E7EB] bg-gray-50/80 space-y-2">
+                    <div class="flex items-center justify-between text-xs font-bold text-[#16151A]">
+                        <span>{{ \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('l, d F Y') }}</span>
+                        <span class="text-[10px] text-[#565A66]">{{ $monthSelectedDaySessions->count() }} Sesi</span>
+                    </div>
+                    @forelse($monthSelectedDaySessions as $session)
+                        <div class="p-2.5 rounded-xl border border-[#E5E7EB] bg-white space-y-1.5 shadow-2xs">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-xs text-[#16151A]">Coach {{ $session->trainer->name }}</span>
+                                <span class="px-2 py-0.5 text-[9px] font-bold rounded-full {{ $session->status->badgeClasses() }}">{{ $session->status->label() }}</span>
+                            </div>
+                            <div class="text-[11px] text-[#565A66] flex items-center justify-between">
+                                <div class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-[#FF5722]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span>{{ $session->time_range }}</span>
+                                </div>
+                                @if($session->can_be_changed)
+                                    <button type="button" 
+                                            wire:click="openCancelModal({{ $session->id }})"
+                                            class="text-[#FF5722] hover:underline text-[10px] font-bold cursor-pointer">
+                                        Batal Sesi
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-[11px] text-[#565A66] text-center py-2 italic">Tidak ada sesi pada tanggal ini. Ketuk tanggal lain untuk melihat jadwal.</p>
+                    @endforelse
                 </div>
 
 
