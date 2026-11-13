@@ -96,6 +96,10 @@ class AutoRedirectMobile
                 return redirect()->route('mobile.trainer.clients.index');
             }
 
+            if ($request->is('trainer/pendapatan-komisi') || $request->is('trainer/commissions*')) {
+                return redirect()->route('mobile.trainer.commissions.index');
+            }
+
             if ($request->is('trainer/profile')) {
                 return redirect()->route('mobile.trainer.profile.index');
             }
@@ -204,6 +208,10 @@ class AutoRedirectMobile
 
             if ($request->is('m/trainer/clients') || $request->is('m/trainer/clients/*')) {
                 return redirect()->route('trainer.clients.index', $query);
+            }
+
+            if ($request->is('m/trainer/commissions') || $request->is('m/trainer/commissions/*')) {
+                return redirect()->route('trainer.commissions.index', $query);
             }
 
             if ($request->is('m/trainer/profile') || $request->is('m/trainer/profile/*')) {

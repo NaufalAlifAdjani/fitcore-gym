@@ -301,6 +301,7 @@ Route::prefix('m/trainer')->name('mobile.trainer.')->middleware(['auth', 'role:t
     Route::post('/sessions/{ptSession}/confirm', [TrainerDashboardController::class, 'confirmSession'])->name('sessions.confirm');
     Route::post('/sessions/{ptSession}/reject', [TrainerDashboardController::class, 'rejectSession'])->name('sessions.reject');
     Route::get('/clients', [TrainerDashboardController::class, 'mobileClientsIndex'])->name('clients.index');
+    Route::get('/commissions', [TrainerCommissionController::class, 'index'])->name('commissions.index');
     Route::get('/profile', [TrainerDashboardController::class, 'mobileProfileIndex'])->name('profile.index');
 });
 

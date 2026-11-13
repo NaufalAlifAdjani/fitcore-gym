@@ -1,9 +1,13 @@
 {{--
-ROLE: PERSONAL TRAINER (PT)
-MODUL: Dashboard Harian & Permintaan Sesi Mobile (Fitur #9)
-VIEW: mobile.trainer.dashboard
-LAYOUT: layouts.mobile-trainer
-TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
+|--------------------------------------------------------------------------
+| FitCore Athletic - Mobile UI
+|--------------------------------------------------------------------------
+| ROLE         : PERSONAL TRAINER (PT)
+| MODUL        : Dashboard Harian & Permintaan Sesi (100% Visual Sync)
+| VIEW         : mobile.trainer.dashboard
+| LAYOUT       : layouts.mobile-trainer
+| TEMA         : Light Theme (Canvas #F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
+|--------------------------------------------------------------------------
 --}}
 
 <x-layouts.mobile-trainer title="Dashboard Pelatih - FitCore Coach" active="dashboard">
@@ -20,52 +24,139 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
         }
     }">
 
-        <!-- 1. Sambutan & Status Pelatih -->
-        <div class="flex items-center justify-between">
+        <!-- 1. Header Sambutan & Status Pelatih (Sesuai Web Desktop) -->
+        <header class="space-y-2">
+            <div class="flex items-center justify-between">
+                <!-- Floor Active Pill -->
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold shadow-2xs">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span>PT Aktif (Floor Active)</span>
+                </div>
+
+                <!-- Date Badge -->
+                <div class="text-[10px] font-semibold text-[#565A66] bg-white px-2.5 py-1 rounded-full border border-[#E5E7EB] shadow-2xs">
+                    {{ \Carbon\Carbon::now()->translatedFormat('l, d M Y') }}
+                </div>
+            </div>
+
             <div>
                 <p class="text-[11px] font-bold uppercase tracking-wider text-[#565A66]">Selamat Bertugas,</p>
-                <h1 class="text-xl font-black font-poppins text-[#16151A] tracking-tight">
-                    Coach {{ $trainer->name }}
+                <h1 class="font-poppins font-extrabold text-2xl sm:text-3xl text-[#16151A] tracking-tight leading-tight">
+                    Coach {{ $trainer->name }} 👋
                 </h1>
             </div>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                PT Aktif
-            </span>
+            <p class="font-inter text-xs text-[#565A66] leading-relaxed">
+                Kelola jadwal latihan hari ini, tangani konfirmasi booking member, dan pantau estimasi komisi Anda.
+            </p>
+        </header>
+
+        <!-- 2. 4 Stat Cards Ringkasan (2x2 Grid - Identik Visual Web Desktop) -->
+        <div class="grid grid-cols-2 gap-3">
+            <!-- Card 1: Sesi Hari Ini -->
+            <div class="rounded-2xl bg-white p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-[#E5E7EB] flex flex-col justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-[#FF5722] border border-rose-100">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="block font-inter text-[9px] font-bold uppercase tracking-wider text-[#565A66]">AGENDA</span>
+                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Hari Ini</h3>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="font-poppins text-2xl font-black text-[#16151A]">
+                        {{ $todaySessionsCount }}
+                    </div>
+                    <p class="text-[10px] text-emerald-600 font-medium mt-0.5">
+                        {{ $todaySessions->whereIn('status', [\App\Enums\PtSessionStatus::Completed, \App\Enums\PtSessionStatus::Done])->count() }} sesi tuntas
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 2: Sesi Selesai Bulan Ini -->
+            <div class="rounded-2xl bg-white p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-[#E5E7EB] flex flex-col justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="block font-inter text-[9px] font-bold uppercase tracking-wider text-[#565A66]">VOLUME</span>
+                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Bulan Ini</h3>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="font-poppins text-2xl font-black text-[#16151A]">
+                        {{ $completedSessions ?? 0 }}
+                    </div>
+                    <p class="text-[10px] text-[#565A66] font-medium mt-0.5">
+                        Sesi terlaksana
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 3: Permintaan Pending (Butuh Respon) -->
+            <div class="rounded-2xl bg-white p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border {{ $pendingSessions->count() > 0 ? 'border-amber-300 ring-2 ring-amber-100' : 'border-[#E5E7EB]' }} flex flex-col justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 border border-amber-100">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="block font-inter text-[9px] font-bold uppercase tracking-wider text-amber-600">Butuh Respon</span>
+                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Permintaan</h3>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="font-poppins text-2xl font-black text-amber-600">
+                        {{ $pendingSessions->count() }}
+                    </div>
+                    <p class="text-[10px] text-amber-700 font-medium mt-0.5">
+                        Menunggu konfirmasi
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 4: Estimasi Komisi -->
+            <div class="rounded-2xl bg-white p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-[#E5E7EB] flex flex-col justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="block font-inter text-[9px] font-bold uppercase tracking-wider text-blue-600">KOMISI</span>
+                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Estimasi</h3>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="font-poppins text-lg font-black text-[#FF5722] truncate">
+                        Rp {{ number_format($estimatedCommission, 0, ',', '.') }}
+                    </div>
+                    <p class="text-[10px] text-[#565A66] font-medium mt-0.5">
+                        {{ $currentMonthLabel }}
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <!-- 2. Metrik Statistik Horizontal Scroll (DESIGN.md Light Theme, Radius 16px) -->
-        <div class="flex gap-3 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4">
-            <!-- Stat 1: Sesi Hari Ini -->
-            <div class="min-w-[140px] p-4 rounded-2xl bg-white border border-[#E5E7EB] shrink-0 space-y-1 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66] block">Sesi Hari Ini</span>
-                <span class="text-2xl font-black font-poppins text-[#16151A] block">{{ $todaySessionsCount }}</span>
-                <span class="text-[10px] text-emerald-600 font-semibold block">Jadwal aktif</span>
-            </div>
-
-            <!-- Stat 2: Permintaan Pending -->
-            <div class="min-w-[140px] p-4 rounded-2xl bg-white border border-amber-200 shrink-0 space-y-1 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 block">Butuh Respon</span>
-                <span class="text-2xl font-black font-poppins text-amber-600 block">{{ $pendingSessions->count() }}</span>
-                <span class="text-[10px] text-[#565A66] font-semibold block">Menunggu respon</span>
-            </div>
-
-            <!-- Stat 3: Total Selesai Bulan Ini -->
-            <div class="min-w-[140px] p-4 rounded-2xl bg-white border border-[#E5E7EB] shrink-0 space-y-1 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66] block">Selesai Bulan Ini</span>
-                <span class="text-2xl font-black font-poppins text-[#16151A] block">{{ $completedSessions ?? 0 }}</span>
-                <span class="text-[10px] text-[#565A66] font-semibold block">Sesi tuntas</span>
-            </div>
-
-            <!-- Stat 4: Total Member Aktif -->
-            <div class="min-w-[140px] p-4 rounded-2xl bg-white border border-[#E5E7EB] shrink-0 space-y-1 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66] block">Klien Aktif</span>
-                <span class="text-2xl font-black font-poppins text-[#FF5722] block">{{ $activeMembersCount }}</span>
-                <span class="text-[10px] text-[#565A66] font-semibold block">Member dibimbing</span>
-            </div>
-        </div>
-
-        <!-- 3. Permintaan Booking Masuk (Actionable Cards Sesuai Backend Controller) -->
+        <!-- 3. Permintaan Booking Masuk (Actionable Cards Sesuai Web Desktop) -->
         <div class="space-y-3">
             <div class="flex items-center justify-between">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-amber-700 flex items-center gap-1.5 font-poppins">
@@ -104,7 +195,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                         </a>
                     </div>
 
-                    <!-- Tombol Aksi Konfirmasi / Tolak (Pill Full Radius) -->
+                    <!-- Tombol Aksi Konfirmasi / Tolak (Pill Full Radius Sesuai Desktop) -->
                     <div class="pt-2 border-t border-[#E5E7EB] flex items-center gap-2">
                         <button type="button"
                                 @click="openRejectModal('{{ route('mobile.trainer.sessions.reject', $pending) }}', '{{ addslashes($pending->member->name ?? 'Member') }}', '{{ substr($pending->start_time, 0, 5) }} WIB')"
@@ -115,7 +206,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                         <form method="POST" action="{{ route('mobile.trainer.sessions.confirm', $pending) }}" class="flex-1">
                             @csrf
                             <button type="submit"
-                                    class="w-full py-2 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-md shadow-orange-500/20 hover:bg-[#E64A19] active:scale-[0.98] transition cursor-pointer">
+                                    class="w-full py-2 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold shadow-md shadow-orange-500/20 active:scale-[0.98] transition cursor-pointer">
                                 Konfirmasi
                             </button>
                         </form>
@@ -190,7 +281,55 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             @endforelse
         </div>
 
-        <!-- 5. Modal Konfirmasi Penolakan Sesi -->
+        <!-- 5. Peringatan Sisa Kuota Klien Menipis (Identik Web Desktop) -->
+        @if (isset($lowQuotaClients) && $lowQuotaClients->count() > 0)
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-rose-700 flex items-center gap-1.5 font-poppins">
+                        <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+                        Kuota Klien Menipis (&le; 2 Sesi)
+                    </h3>
+                </div>
+
+                <div class="space-y-2.5">
+                    @foreach ($lowQuotaClients as $lq)
+                        @php
+                            $cleanPhone = preg_replace('/[^0-9]/', '', (string) ($lq->member->phone ?? ''));
+                            if ($cleanPhone && str_starts_with($cleanPhone, '0')) {
+                                $cleanPhone = '62' . substr($cleanPhone, 1);
+                            }
+                        @endphp
+                        <div class="p-3.5 rounded-2xl bg-white border border-rose-200 flex items-center justify-between gap-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-bold text-[#16151A] font-poppins truncate">
+                                    {{ $lq->member->name ?? 'Member FitCore' }}
+                                </h4>
+                                <p class="text-[10px] text-[#565A66] truncate mt-0.5">
+                                    Paket: {{ $lq->ptPackage->name ?? 'Paket PT' }}
+                                </p>
+                                <span class="inline-block text-[10px] font-bold text-rose-600 mt-0.5">
+                                    Tersisa: {{ $lq->remaining_sessions }} sesi
+                                </span>
+                            </div>
+
+                            @if ($cleanPhone)
+                                <a href="https://wa.me/{{ $cleanPhone }}?text=Halo%20{{ urlencode($lq->member->name) }},%20kuota%20sesi%20latihan%20PT%20Anda%20di%20FitCore%20tersisa%20{{ $lq->remaining_sessions }}%20sesi.%20Yuk%20perpanjang%20paket%20agar%20latihan%20tetap%20konsisten!"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold shrink-0 hover:bg-emerald-100 transition">
+                                    <svg class="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.974.554 1.769.82 2.796.82 3.182 0 5.768-2.587 5.768-5.766.001-3.182-2.585-5.766-5.768-5.766zm9.969 5.766c0 5.508-4.462 9.969-9.969 9.969-1.758 0-3.417-.463-4.871-1.272l-5.16 1.353 1.378-5.034c-.9-1.517-1.416-3.292-1.416-5.016 0-5.508 4.462-9.969 9.969-9.969 5.507 0 9.969 4.461 9.969 9.969z"/>
+                                    </svg>
+                                    <span>Ingatkan</span>
+                                </a>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+        <!-- 6. Modal Konfirmasi Penolakan Sesi -->
         <div x-show="showRejectModal"
              x-cloak
              class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"

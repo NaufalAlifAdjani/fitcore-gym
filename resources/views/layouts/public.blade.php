@@ -170,13 +170,11 @@
                             <span>Sesi Personal Trainer</span>
                             <span class="font-bold text-[#16151A]">06:00 – 22:00 WIB</span>
                         </div>
-                        </div>
                         <div class="flex justify-between">
                             <span>Hari Libur Nasional</span>
-                            <span class="font-bold text-emerald-400">Tetap Buka 24 Jam</span>
+                            <span class="font-bold text-emerald-600">Tetap Buka 24 Jam</span>
                         </div>
                     </div>
-                </div>
 
                 <!-- Kolom 3: Navigasi Cepat -->
                 <div class="space-y-3">

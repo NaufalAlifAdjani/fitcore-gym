@@ -272,5 +272,36 @@ class MobileTrainerTest extends TestCase
         ])->get('/profile');
 
         $response->assertRedirect('/m/trainer/profile');
+
+        // 5. Desktop commissions for trainer -> mobile trainer commissions
+        $response = $this->actingAs($trainer)->withHeaders([
+            'User-Agent' => self::IPHONE_USER_AGENT,
+        ])->get('/trainer/pendapatan-komisi');
+
+        $response->assertRedirect('/m/trainer/commissions');
+    }
+
+    public function test_trainer_can_access_mobile_commissions_page(): void
+    {
+        $trainer = User::factory()->create([
+            'role' => 'trainer',
+            'name' => 'Coach Bima',
+            'shift' => 'pagi',
+        ]);
+
+        TrainerProfile::create([
+            'user_id' => $trainer->id,
+            'specialization' => 'Hypertrophy Specialist',
+            'commission_rate' => 75000,
+        ]);
+
+        $response = $this->actingAs($trainer)->get('/m/trainer/commissions');
+
+        $response->assertStatus(200);
+        $response->assertSee('Pendapatan &amp; Komisi', false);
+        $response->assertSee('Shift: Pagi');
+        $response->assertSee('75.000');
+        $response->assertSee('Komisi Bulan Ini');
+        $response->assertSee('Total Seluruh Waktu');
     }
 }
