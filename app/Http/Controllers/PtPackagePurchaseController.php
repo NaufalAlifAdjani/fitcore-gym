@@ -176,7 +176,7 @@ class PtPackagePurchaseController extends Controller
         ];
 
         $dbTrainers = User::where('role', 'trainer')
-            ->with(['trainerAvailabilities'])
+            ->with(['trainerProfile'])
             ->get()
             ->keyBy('id');
 

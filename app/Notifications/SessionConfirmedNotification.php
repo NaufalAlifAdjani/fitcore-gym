@@ -6,10 +6,11 @@ use App\Models\PtSession;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SessionConfirmedNotification extends Notification
+class SessionConfirmedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

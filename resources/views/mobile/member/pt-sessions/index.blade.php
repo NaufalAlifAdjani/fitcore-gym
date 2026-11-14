@@ -7,6 +7,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
 --}}
 
 @php
+    $hasActiveQuota = $quota && $quota->status === 'active' && ! $quota->isExpired() && $quota->remaining_sessions > 0;
     $totalSessions = $quota->total_sessions ?? 0;
     $remainingSessions = $quota->remaining_sessions ?? 0;
     $usedSessions = $quota->used_sessions ?? 0;
@@ -37,13 +38,24 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     </div>
                 </div>
 
-                <a href="{{ route('mobile.member.pt-sessions.create') }}"
-                   class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.98] text-white text-xs font-bold font-poppins shadow-md shadow-orange-500/25 transition shrink-0">
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    <span>+ Booking Sesi</span>
-                </a>
+                @if ($hasActiveQuota)
+                    <a href="{{ route('mobile.member.pt-sessions.create') }}"
+                       class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.98] text-white text-xs font-bold font-poppins shadow-md shadow-orange-500/25 transition shrink-0">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        <span>+ Booking Sesi</span>
+                    </a>
+                @else
+                    <button type="button" disabled
+                       title="Anda belum memiliki kuota sesi PT aktif"
+                       class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-gray-200 text-gray-400 text-xs font-bold font-poppins border border-gray-300 shadow-none cursor-not-allowed shrink-0 select-none">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        <span>+ Booking Sesi</span>
+                    </button>
+                @endif
             </div>
 
             <!-- Progress Bar Kuota Latihan -->
@@ -175,15 +187,30 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     <p class="text-[11px] text-[#565A66] max-w-xs mx-auto">
                         Pilih tab status lain atau lakukan reservasi sesi latihan baru bersama pelatih pribadi.
                     </p>
-                    <div class="pt-2">
-                        <a href="{{ route('mobile.member.pt-sessions.create') }}"
-                           class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold font-poppins shadow-md shadow-orange-500/25 transition">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                            </svg>
-                            <span>Booking Sesi PT</span>
-                        </a>
-                    </div>
+                    @if ($hasActiveQuota)
+                        <div class="pt-2">
+                            <a href="{{ route('mobile.member.pt-sessions.create') }}"
+                               class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold font-poppins shadow-md shadow-orange-500/25 transition">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                <span>Booking Sesi PT</span>
+                            </a>
+                        </div>
+                    @else
+                        <div class="pt-2 flex flex-col items-center gap-1.5">
+                            <button type="button" disabled
+                               class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-gray-200 text-gray-400 text-xs font-bold font-poppins border border-gray-300 shadow-none cursor-not-allowed select-none">
+                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                <span>Booking Sesi PT</span>
+                            </button>
+                            <a href="{{ route('mobile.member.packages') }}" class="text-[11px] font-bold text-[#FF5722] hover:underline">
+                                Beli Paket Sesi PT &rarr;
+                            </a>
+                        </div>
+                    @endif
                 </div>
             @endforelse
 

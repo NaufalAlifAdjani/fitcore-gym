@@ -191,6 +191,18 @@
                                 </span>
                             </button>
 
+                            <!-- Selesai (Completed) -->
+                            <button 
+                                type="button" 
+                                wire:click="setTaskStatusFilter('completed')"
+                                class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer {{ $taskStatusFilter === 'completed' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            >
+                                <span>Selesai</span>
+                                <span class="px-1.5 py-0.2 rounded-full text-[10px] {{ $taskStatusFilter === 'completed' ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-700 font-bold' }}">
+                                    {{ $this->taskStatusCounts['completed'] }}
+                                </span>
+                            </button>
+
                             <!-- Dibatalkan (Cancelled) -->
                             <button 
                                 type="button" 
@@ -217,7 +229,7 @@
                                 @if($taskStatusFilter === 'all')
                                     Tidak ada jadwal sesi pada periode ini.
                                 @else
-                                    Tidak ada sesi berstatus <strong>{{ $taskStatusFilter === 'pending' ? 'Menunggu' : ($taskStatusFilter === 'confirmed' ? 'Terkonfirmasi' : 'Dibatalkan') }}</strong> pada periode ini.
+                                    Tidak ada sesi berstatus <strong>{{ match($taskStatusFilter) { 'pending' => 'Menunggu', 'confirmed' => 'Terkonfirmasi', 'completed' => 'Selesai', 'cancelled' => 'Dibatalkan', default => '' } }}</strong> pada periode ini.
                                 @endif
                             </p>
                             @if($taskStatusFilter !== 'all')
@@ -248,8 +260,7 @@
                                             @endphp
                                             <div 
                                                 wire:key="task-session-{{ $taskSession->id }}"
-                                                wire:click="goToDate('{{ \Carbon\Carbon::parse($taskSession->session_date)->toDateString() }}')"
-                                                class="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#FF5722]/50 hover:shadow-md transition-all duration-200 cursor-pointer group shadow-2xs"
+                                                class="flex flex-col justify-between p-4 sm:p-5 rounded-2xl bg-white border border-[#E5E7EB] hover:border-[#FF5722]/50 hover:shadow-md transition-all duration-200 group shadow-2xs"
                                             >
                                                 <div>
                                                     <!-- Top Card Row: Member Info & Badge -->
@@ -284,10 +295,10 @@
 
                                                 <!-- Action Buttons if Pending -->
                                                 @if($statusEnum === \App\Enums\PtSessionStatus::Pending)
-                                                    <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#E5E7EB]" @click.stop>
+                                                    <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#E5E7EB]">
                                                         <button 
                                                             type="button" 
-                                                            wire:click="rejectSession({{ $taskSession->id }})"
+                                                            wire:click.stop="rejectSession({{ $taskSession->id }})"
                                                             wire:loading.attr="disabled"
                                                             class="w-full px-3 py-2 bg-gray-100 hover:bg-rose-50 hover:text-rose-600 text-[#565A66] font-semibold rounded-xl text-xs transition cursor-pointer border border-[#E5E7EB] text-center"
                                                         >
@@ -295,7 +306,7 @@
                                                         </button>
                                                         <button 
                                                             type="button" 
-                                                            wire:click="confirmSession({{ $taskSession->id }})"
+                                                            wire:click.stop="confirmSession({{ $taskSession->id }})"
                                                             wire:loading.attr="disabled"
                                                             class="w-full px-3.5 py-2 bg-[#FF5722] hover:bg-[#E64A19] text-white font-semibold rounded-xl text-xs transition shadow-xs cursor-pointer text-center"
                                                         >
@@ -449,10 +460,10 @@
                                     </div>
 
                                     @if($statusEnum === \App\Enums\PtSessionStatus::Pending)
-                                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#E5E7EB]" @click.stop>
+                                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#E5E7EB]">
                                             <button 
                                                 type="button" 
-                                                wire:click="rejectSession({{ $session->id }})"
+                                                wire:click.stop="rejectSession({{ $session->id }})"
                                                 wire:loading.attr="disabled"
                                                 class="w-full px-3 py-1.5 bg-gray-100 hover:bg-rose-50 hover:text-rose-600 text-[#565A66] font-semibold rounded-xl text-xs transition cursor-pointer border border-[#E5E7EB] text-center"
                                             >
@@ -460,7 +471,7 @@
                                             </button>
                                             <button 
                                                 type="button" 
-                                                wire:click="confirmSession({{ $session->id }})"
+                                                wire:click.stop="confirmSession({{ $session->id }})"
                                                 wire:loading.attr="disabled"
                                                 class="w-full px-3.5 py-1.5 bg-[#FF5722] hover:bg-[#E64A19] text-white font-semibold rounded-xl text-xs transition shadow-xs cursor-pointer text-center"
                                             >
@@ -587,10 +598,10 @@
                                             </div>
 
                                             @if($statusEnum === \App\Enums\PtSessionStatus::Pending)
-                                                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#E5E7EB]" @click.stop>
+                                                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#E5E7EB]">
                                                     <button 
                                                         type="button" 
-                                                        wire:click="rejectSession({{ $session->id }})"
+                                                        wire:click.stop="rejectSession({{ $session->id }})"
                                                         wire:loading.attr="disabled"
                                                         class="w-full px-3 py-1.5 bg-gray-100 hover:bg-rose-50 hover:text-rose-600 text-[#565A66] font-semibold rounded-xl text-xs transition cursor-pointer border border-[#E5E7EB] text-center"
                                                     >
@@ -598,7 +609,7 @@
                                                     </button>
                                                     <button 
                                                         type="button" 
-                                                        wire:click="confirmSession({{ $session->id }})"
+                                                        wire:click.stop="confirmSession({{ $session->id }})"
                                                         wire:loading.attr="disabled"
                                                         class="w-full px-3.5 py-1.5 bg-[#FF5722] hover:bg-[#E64A19] text-white font-semibold rounded-xl text-xs transition shadow-xs cursor-pointer text-center"
                                                     >

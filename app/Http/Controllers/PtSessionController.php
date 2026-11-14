@@ -64,11 +64,20 @@ class PtSessionController extends Controller
 
         $sessions = $query->paginate(10)->withQueryString();
 
-        // Data Kuota Aktif
+        // Data Kuota: prioritas kuota aktif bersisa sesi (FIFO berdasarkan tanggal terdekat)
         $quota = MemberPtQuota::where('member_id', $user->id)
             ->where('status', 'active')
-            ->orderBy('end_date', 'desc')
+            ->where('end_date', '>=', now()->toDateString())
+            ->where('remaining_sessions', '>', 0)
+            ->orderBy('end_date', 'asc')
             ->first();
+
+        // Jika tidak ada kuota aktif bersisa, ambil kuota terakhir untuk menampilkan status (habis / kedaluwarsa)
+        if (! $quota) {
+            $quota = MemberPtQuota::where('member_id', $user->id)
+                ->latest('end_date')
+                ->first();
+        }
 
         // Counter untuk Tabs
         $counts = [

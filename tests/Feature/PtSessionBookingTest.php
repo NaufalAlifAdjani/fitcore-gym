@@ -305,4 +305,32 @@ class PtSessionBookingTest extends TestCase
         $this->assertEquals($newerSession->id, $sessions->first()->id);
         $this->assertEquals($olderSession->id, $sessions->last()->id);
     }
+
+    public function test_booking_button_is_disabled_and_quota_is_dynamic_when_member_has_no_quota(): void
+    {
+        $member = User::factory()->member()->create();
+
+        $response = $this->actingAs($member)->get(route('pt-sessions.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('0');
+        $response->assertSee('/ 0 Sesi Tersedia');
+        $response->assertSee('Belum memiliki paket sesi PT aktif');
+        $response->assertDontSee('28 November 2025');
+        $response->assertSee('disabled');
+        $response->assertSee('Beli Paket Sesi PT');
+    }
+
+    public function test_create_booking_page_disables_confirmation_when_member_has_no_quota(): void
+    {
+        $member = User::factory()->member()->create();
+        $trainer = User::factory()->trainer()->create();
+        TrainerProfile::factory()->create(['user_id' => $trainer->id]);
+
+        $response = $this->actingAs($member)->get(route('pt-sessions.create'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Sisa kuota sesi PT Anda kosong');
+        $response->assertSee(':disabled="!selectedDate || !selectedSlot || true"', false);
+    }
 }

@@ -46,7 +46,7 @@ class Index extends Component
             $this->mode = 'calendar';
         }
 
-        if (! in_array($this->taskStatusFilter, ['all', 'pending', 'confirmed', 'cancelled'], true)) {
+        if (! in_array($this->taskStatusFilter, ['all', 'pending', 'confirmed', 'completed', 'cancelled'], true)) {
             $this->taskStatusFilter = 'all';
         }
     }
@@ -94,7 +94,7 @@ class Index extends Component
 
     public function setTaskStatusFilter(string $status): void
     {
-        if (in_array($status, ['all', 'pending', 'confirmed', 'cancelled'], true)) {
+        if (in_array($status, ['all', 'pending', 'confirmed', 'completed', 'cancelled'], true)) {
             $this->taskStatusFilter = $status;
             unset($this->tasksList);
         }
@@ -191,8 +191,14 @@ class Index extends Component
             ->where('trainer_id', Auth::id() ?? 1)
             ->whereBetween('session_date', [$startDate, $endDate]);
 
-        if (in_array($this->taskStatusFilter, ['pending', 'confirmed', 'cancelled'], true)) {
-            $query->where('status', $this->taskStatusFilter);
+        if ($this->taskStatusFilter === 'pending') {
+            $query->where('status', PtSessionStatus::Pending->value);
+        } elseif ($this->taskStatusFilter === 'confirmed') {
+            $query->whereIn('status', [PtSessionStatus::Confirmed->value, PtSessionStatus::Scheduled->value]);
+        } elseif ($this->taskStatusFilter === 'completed') {
+            $query->whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value]);
+        } elseif ($this->taskStatusFilter === 'cancelled') {
+            $query->where('status', PtSessionStatus::Cancelled->value);
         }
 
         return $query
@@ -226,10 +232,14 @@ class Index extends Component
             ->groupBy('status')
             ->pluck('total', 'status');
 
+        $confirmedCount = (int) ($counts[PtSessionStatus::Confirmed->value] ?? 0) + (int) ($counts[PtSessionStatus::Scheduled->value] ?? 0);
+        $completedCount = (int) ($counts[PtSessionStatus::Completed->value] ?? 0) + (int) ($counts[PtSessionStatus::Done->value] ?? 0);
+
         return [
             'all' => (clone $base)->count(),
             'pending' => (int) ($counts[PtSessionStatus::Pending->value] ?? 0),
-            'confirmed' => (int) ($counts[PtSessionStatus::Confirmed->value] ?? 0),
+            'confirmed' => $confirmedCount,
+            'completed' => $completedCount,
             'cancelled' => (int) ($counts[PtSessionStatus::Cancelled->value] ?? 0),
         ];
     }
