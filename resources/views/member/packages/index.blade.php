@@ -49,12 +49,10 @@
                             ];
                         }
 
-                        // Bersihkan duplikasi mention PT pada fasilitas agar tidak terulang
-                        if ($package->pt_session_count > 0) {
-                            $facilities = array_filter($facilities, function ($item) {
-                                return !preg_match('/(sesi\s*pt|personal\s*trainer)/i', $item);
-                            });
-                        }
+                        // Pastikan tidak ada benefit sesi PT yang ditampilkan pada paket membership
+                        $facilities = array_filter($facilities, function ($item) {
+                            return !preg_match('/(sesi\s*pt|personal\s*trainer)/i', $item);
+                        });
 
                         $effectivePrice = ($package->promo_price && $package->promo_price < $package->price)
                             ? $package->promo_price
@@ -113,16 +111,6 @@
                                         <span class="leading-relaxed text-[#565A66]">{{ $facility }}</span>
                                     </li>
                                 @endforeach
-                                @if ($package->pt_session_count > 0)
-                                    <li class="flex items-start gap-3 text-sm">
-                                        <svg class="w-5 h-5 shrink-0 text-[#10B981] mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                        </svg>
-                                        <span class="leading-relaxed text-[#565A66]">
-                                            <strong class="text-[#16151A] font-semibold">{{ $package->pt_session_count }} Sesi</strong> Personal Trainer Gratis
-                                        </span>
-                                    </li>
-                                @endif
                             </ul>
                         </div>
 

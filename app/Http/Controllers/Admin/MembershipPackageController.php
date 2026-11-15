@@ -49,7 +49,8 @@ class MembershipPackageController extends Controller
     {
         $data = $request->validated();
         $data['is_active'] = $request->boolean('is_active');
-        $data['pt_sessions'] = $data['pt_sessions'] ?? 0;
+        $data['pt_sessions'] = 0;
+        $data['pt_session_count'] = 0;
 
         MembershipPackage::create($data);
 
@@ -60,7 +61,8 @@ class MembershipPackageController extends Controller
     {
         $data = $request->validated();
         $data['is_active'] = $request->boolean('is_active');
-        $data['pt_sessions'] = $data['pt_sessions'] ?? 0;
+        $data['pt_sessions'] = 0;
+        $data['pt_session_count'] = 0;
 
         $package->update($data);
 

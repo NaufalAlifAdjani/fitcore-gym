@@ -18,7 +18,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     Pilih Paket Keanggotaan
                 </h1>
                 <p class="text-xs text-[#565A66] mt-1 leading-relaxed">
-                    Akses fasilitas gym kelas dunia, loker privat, dan sesi latihan bersama pelatih tersertifikasi.
+                    Akses fasilitas gym kelas dunia, loker privat, dan area latihan beban &amp; cardio lengkap.
                 </p>
             </div>
             <!-- Subtle decorative background accent -->
@@ -65,11 +65,9 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                         ];
                     }
 
-                    if ($package->pt_session_count > 0) {
-                        $facilities = array_filter($facilities, function ($item) {
-                            return !preg_match('/(sesi\s*pt|personal\s*trainer)/i', $item);
-                        });
-                    }
+                    $facilities = array_filter($facilities, function ($item) {
+                        return !preg_match('/(sesi\s*pt|personal\s*trainer)/i', $item);
+                    });
 
                     $effectivePrice = ($package->promo_price && $package->promo_price < $package->price)
                         ? $package->promo_price
@@ -131,17 +129,6 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                                         <span class="leading-tight">{{ $facility }}</span>
                                     </li>
                                 @endforeach
-
-                                @if ($package->pt_session_count > 0)
-                                    <li class="flex items-start gap-1.5 text-xs leading-tight text-[#16151A] font-medium bg-orange-50/70 p-1.5 rounded-lg border border-orange-100">
-                                        <svg class="w-3 h-3 sm:w-4 h-4 shrink-0 text-[#FF5722] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                        </svg>
-                                        <span class="leading-tight">
-                                            <strong class="text-[#FF5722] font-bold">{{ $package->pt_session_count }} Sesi</strong> PT Gratis
-                                        </span>
-                                    </li>
-                                @endif
                             </ul>
                         </div>
                     </div>

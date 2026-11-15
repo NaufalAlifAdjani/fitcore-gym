@@ -72,7 +72,7 @@ class MembershipCheckoutTest extends TestCase
             'duration_unit' => 'Bulan',
             'duration_in_days' => 180,
             'facilities' => ['Akses Gym 24 jam'],
-            'pt_sessions' => 2,
+            'pt_sessions' => 0,
             'is_active' => true,
         ]);
 
@@ -149,7 +149,7 @@ class MembershipCheckoutTest extends TestCase
             'duration_unit' => 'Bulan',
             'duration_in_days' => 365,
             'facilities' => ['Akses semua cabang'],
-            'pt_sessions' => 5,
+            'pt_sessions' => 0,
             'is_active' => true,
         ]);
 
