@@ -108,8 +108,12 @@ class AutoRedirectMobile
                 return redirect()->route('mobile.member.card');
             }
 
-            if ($request->is('membership/packages') || $request->is('member/pt-packages')) {
+            if ($request->is('membership/packages')) {
                 return redirect()->route('mobile.member.packages');
+            }
+
+            if ($request->is('member/pt-packages')) {
+                return redirect()->route('mobile.member.pt-packages.index');
             }
 
             if ($request->is('membership/checkout/*')) {
@@ -237,6 +241,10 @@ class AutoRedirectMobile
                 }
 
                 return redirect()->route('landing.packages', $query);
+            }
+
+            if ($request->is('m/pt-packages') || $request->is('m/member/pt-packages')) {
+                return redirect()->route('member.pt-packages.index', $query);
             }
 
             if (preg_match('#^m/(?:member/)?packages/([^/]+)/checkout#', $request->path(), $matches)) {

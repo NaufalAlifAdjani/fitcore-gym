@@ -25,6 +25,16 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-[#FF5722]/5 blur-xl pointer-events-none"></div>
         </div>
 
+        <!-- Tab Switcher (Paket Gym vs Paket PT) -->
+        <div class="grid grid-cols-2 p-1 bg-white border border-[#E5E7EB] rounded-2xl shadow-xs">
+            <a href="{{ route('mobile.member.packages') }}" class="py-2 text-center text-xs font-bold rounded-xl bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25 transition">
+                🏋️ Paket Gym
+            </a>
+            <a href="{{ route('mobile.member.pt-packages.index') }}" class="py-2 text-center text-xs font-bold rounded-xl text-[#565A66] hover:text-[#FF5722] transition">
+                ⚡ Sesi PT
+            </a>
+        </div>
+
         <!-- 2. Alert Notifikasi -->
         @if (session('success'))
             <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-2xl text-xs text-emerald-800 flex items-start gap-2.5 shadow-xs">

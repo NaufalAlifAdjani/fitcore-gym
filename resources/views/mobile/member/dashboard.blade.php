@@ -176,6 +176,24 @@
                         Jadwal &rarr;
                     </a>
                 </div>
+
+                <!-- Card 4: Beli Paket PT -->
+                <div class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-[#FF5722] border border-orange-100 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <div class="min-w-0">
+                            <h4 class="font-poppins font-bold text-sm text-[#16151A] truncate">Paket Sesi PT</h4>
+                            <p class="text-[11px] text-[#565A66] truncate">Top-up kuota sesi latihan personal trainer</p>
+                        </div>
+                    </div>
+                    <a href="{{ route('mobile.member.pt-packages.index') }}" class="px-3.5 py-1.5 rounded-full text-[11px] font-bold bg-[#FF5722] text-white hover:bg-[#E64A19] transition shadow-xs shrink-0">
+                        Beli &rarr;
+                    </a>
+                </div>
             </div>
         </div>
 

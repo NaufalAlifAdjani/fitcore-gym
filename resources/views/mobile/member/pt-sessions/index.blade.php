@@ -85,14 +85,18 @@
                     </div>
                 </div>
 
-                <!-- 3. Tombol Booking Sesi (Touch Ergonomics, w-full di bagian bawah header) -->
-                <div class="pt-1">
+                <!-- 3. Tombol Booking & Pembelian Sesi PT (Touch Ergonomics) -->
+                <div class="pt-1 flex flex-col gap-2">
                     <a href="{{ route('mobile.member.pt-sessions.create') }}"
                        class="flex items-center justify-center gap-2 w-full py-3.5 px-4 rounded-full bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-bold font-poppins text-xs uppercase tracking-wider shadow-lg shadow-[#FF5722]/25 transition-all cursor-pointer">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                         </svg>
                         <span>+ Booking Sesi Baru</span>
+                    </a>
+                    <a href="{{ route('mobile.member.pt-packages.index') }}"
+                       class="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-full bg-white hover:bg-orange-50 active:scale-[0.99] text-[#FF5722] border border-orange-200 font-bold font-poppins text-xs uppercase tracking-wider shadow-xs transition-all cursor-pointer">
+                        <span>⚡ Top-up / Beli Sesi PT</span>
                     </a>
                 </div>
             </div>

@@ -27,6 +27,7 @@ use App\Models\MemberPtQuota;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\PtSession;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -244,6 +245,15 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
 
         return view('mobile.member.packages.index', $view->getData());
     })->name('mobile.packages.index');
+
+    Route::get('/pt-packages', function (Request $request, PtPackagePurchaseController $controller) {
+        $view = $controller->index($request);
+        if ($view instanceof JsonResponse) {
+            return $view;
+        }
+
+        return view('mobile.member.pt-packages.index', $view->getData());
+    })->name('mobile.member.pt-packages.index');
 
     Route::get('/packages/{package}/checkout', function (MembershipPackage $package, Request $request, MemberMembershipPackageController $controller) {
         $view = $controller->checkout($package);
