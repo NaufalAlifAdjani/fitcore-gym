@@ -59,9 +59,9 @@
         <!-- 1. STICKY HEADER MOBILE GUEST -->
         <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] shadow-xs">
             <!-- Brand Bar & Tombol Masuk -->
-            <div class="px-4 py-3 flex items-center justify-between">
+            <div class="px-4 py-2.5 sm:py-3 flex items-center justify-between">
                 <a href="{{ route('mobile.landing.index') }}" class="flex items-center gap-2">
-                    <img src="{{ asset('images/logo/logo-text.png') }}" class="h-6 sm:h-7 w-auto object-contain" alt="FitCore">
+                    <img src="{{ asset('images/logo/logo.png') }}" class="h-5 sm:h-5.5 w-auto object-contain" alt="FitCore">
                 </a>
 
                 <div class="flex items-center gap-2">

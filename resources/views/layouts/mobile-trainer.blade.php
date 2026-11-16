@@ -53,9 +53,9 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
 <body class="h-full bg-[#F6F6F7] text-[#16151A] font-sans antialiased selection:bg-[#FF5722] selection:text-white flex flex-col overscroll-y-none">
 
     <!-- Sticky Mobile Top Bar (Clean Light Background with subtle border) -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] pt-safe px-4 py-3 flex items-center justify-between shadow-xs">
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] pt-safe px-4 py-2.5 sm:py-3 flex items-center justify-between shadow-xs">
         <a href="{{ route('mobile.trainer.dashboard') }}" class="flex items-center gap-2">
-            <img src="{{ asset('images/logo/logo-text.png') }}" class="h-6 sm:h-7 w-auto object-contain" alt="FitCore">
+            <img src="{{ asset('images/logo/logo.png') }}" class="h-5 sm:h-5.5 w-auto object-contain" alt="FitCore">
         </a>
 
         <div class="flex items-center gap-2">
