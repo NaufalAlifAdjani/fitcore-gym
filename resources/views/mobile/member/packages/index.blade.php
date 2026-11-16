@@ -25,13 +25,13 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-[#FF5722]/5 blur-xl pointer-events-none"></div>
         </div>
 
-        <!-- Tab Switcher (Paket Gym vs Paket PT) -->
+        <!-- Tab Switcher (Paket Gym vs Sesi PT) -->
         <div class="grid grid-cols-2 p-1 bg-white border border-[#E5E7EB] rounded-2xl shadow-xs">
-            <a href="{{ route('mobile.member.packages') }}" class="py-2 text-center text-xs font-bold rounded-xl bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25 transition">
-                🏋️ Paket Gym
+            <a href="{{ route('mobile.member.packages') }}" class="py-2.5 text-center text-xs font-bold rounded-xl bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25 transition">
+                Paket Gym
             </a>
-            <a href="{{ route('mobile.member.pt-packages.index') }}" class="py-2 text-center text-xs font-bold rounded-xl text-[#565A66] hover:text-[#FF5722] transition">
-                ⚡ Sesi PT
+            <a href="{{ route('mobile.member.pt-packages.index') }}" class="py-2.5 text-center text-xs font-bold rounded-xl text-[#565A66] hover:text-[#FF5722] transition">
+                Sesi PT
             </a>
         </div>
 
@@ -54,8 +54,8 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             </div>
         @endif
 
-        <!-- 3. Daftar Kartu Paket Membership (Grid 2 Kolom) -->
-        <div class="grid grid-cols-2 gap-3 sm:gap-4 w-full">
+        <!-- 3. Daftar Kartu Paket Membership (Rapi, Terstruktur & Nyaman di Layar HP) -->
+        <div class="grid grid-cols-1 gap-4 w-full">
             @forelse ($packages as $package)
                 @php
                     $isFeatured = str_contains(strtoupper($package->badge ?? ''), 'BEST')
@@ -85,79 +85,81 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     $checkoutUrl = route('mobile.member.packages.checkout', $package->id);
                 @endphp
 
-                <div class="w-full bg-white rounded-2xl p-3 sm:p-4 border {{ $isFeatured ? 'border-2 border-[#FF5722] shadow-lg shadow-orange-500/10' : 'border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)]' }} relative flex flex-col justify-between h-full transition-all">
+                <div class="w-full bg-white rounded-2xl p-4 sm:p-5 border {{ $isFeatured ? 'border-2 border-[#FF5722] shadow-lg shadow-orange-500/10' : 'border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)]' }} relative flex flex-col justify-between transition-all">
                     
                     @if ($package->badge)
-                        <div class="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-wider z-10 shadow-xs {{ $isFeatured ? 'bg-[#FF5722] text-white shadow-orange-500/25' : 'bg-slate-100 text-[#16151A] border border-[#E5E7EB]' }}">
+                        <div class="absolute -top-3 right-4 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider z-10 shadow-xs {{ $isFeatured ? 'bg-[#FF5722] text-white shadow-orange-500/25' : 'bg-slate-100 text-[#16151A] border border-[#E5E7EB]' }}">
                             {{ $package->badge }}
                         </div>
                     @endif
 
-                    <div>
+                    <div class="space-y-3.5">
                         <!-- Header Paket -->
-                        <div class="mb-3">
-                            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#565A66]">
-                                {{ $package->tier ?? 'Membership' }}
-                            </span>
-                            <h2 class="text-sm sm:text-base font-bold font-poppins text-[#16151A] mt-0.5 leading-tight">
+                        <div>
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66]">
+                                    {{ $package->tier ?? 'Membership' }}
+                                </span>
+                                <span class="text-[11px] text-[#565A66] font-medium bg-[#F6F6F7] px-2 py-0.5 rounded-md border border-[#E5E7EB]">
+                                    {{ $package->duration_days }} Hari Akses
+                                </span>
+                            </div>
+                            <h2 class="text-base sm:text-lg font-bold font-poppins text-[#16151A] mt-1 leading-snug">
                                 {{ $package->name }}
                             </h2>
-                            <p class="text-xs text-[#565A66] mt-0.5">
-                                Masa Berlaku: <strong class="text-[#16151A] font-semibold">{{ $package->duration_days }} Hari</strong>
-                            </p>
                         </div>
 
                         <!-- Harga Paket -->
-                        <div class="mb-3 bg-[#F6F6F7] p-2 sm:p-3 rounded-xl border border-[#E5E7EB]">
+                        <div class="bg-[#F6F6F7] p-3 rounded-xl border border-[#E5E7EB]">
                             @if ($package->promo_price && $package->promo_price < $package->price)
-                                <p class="text-[10px] sm:text-[11px] font-semibold text-[#565A66] line-through">
+                                <p class="text-[11px] font-semibold text-[#565A66] line-through">
                                     Rp {{ number_format($package->price, 0, ',', '.') }}
                                 </p>
                             @endif
                             <div class="flex items-baseline gap-1 mt-0.5">
                                 <span class="text-xs font-bold text-[#FF5722]">Rp</span>
-                                <span class="font-poppins font-black text-base sm:text-lg text-[#16151A] tracking-tight">
+                                <span class="font-poppins font-black text-xl text-[#16151A] tracking-tight">
                                     {{ number_format($effectivePrice, 0, ',', '.') }}
                                 </span>
-                                <span class="text-[10px] sm:text-xs text-[#565A66] font-medium">
+                                <span class="text-xs text-[#565A66] font-medium">
                                     / {{ strtolower($package->duration_unit ?? 'bln') }}
                                 </span>
                             </div>
                         </div>
 
                         <!-- Daftar Fasilitas -->
-                        <div class="mb-4">
-                            <span class="block text-[10px] font-bold uppercase tracking-wider text-[#16151A] mb-1.5 font-poppins">
-                                Fasilitas yang Didapat:
+                        <div class="pt-1">
+                            <span class="block text-[10px] font-bold uppercase tracking-wider text-[#16151A] mb-2 font-poppins">
+                                Fasilitas Keanggotaan:
                             </span>
-                            <ul class="space-y-1.5">
+                            <ul class="space-y-2">
                                 @foreach ($facilities as $facility)
-                                    <li class="flex items-start gap-1.5 text-xs leading-tight text-[#565A66]">
-                                        <svg class="w-3 h-3 sm:w-4 h-4 shrink-0 text-[#10B981] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <li class="flex items-start gap-2 text-xs text-[#565A66]">
+                                        <svg class="w-4 h-4 shrink-0 text-[#10B981] mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                         </svg>
-                                        <span class="leading-tight">{{ $facility }}</span>
+                                        <span class="leading-relaxed">{{ $facility }}</span>
                                     </li>
                                 @endforeach
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Tombol Action CTA (Pill Button per DESIGN.md & Prompt #2) -->
-                    <div class="pt-2 border-t border-[#E5E7EB]">
+                    <!-- Tombol Action CTA -->
+                    <div class="pt-3.5 mt-3.5 border-t border-[#E5E7EB]">
                         @if (auth()->check() && ! auth()->user()->isProfileComplete())
                             <a href="{{ $checkoutUrl }}"
-                               class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
-                                Lengkapi Profil untuk Membeli
+                               class="w-full block text-center py-2.5 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
+                                Lengkapi Profil &amp; Beli
                             </a>
                         @elseif ($isFeatured)
                             <a href="{{ $checkoutUrl }}"
-                               class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
+                               class="w-full block text-center py-2.5 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
                                 Gabung Sekarang
                             </a>
                         @else
                             <a href="{{ $checkoutUrl }}"
-                               class="w-full block text-center py-2 rounded-full font-bold text-xs uppercase tracking-wider border-2 border-[#FF5722] text-[#FF5722] hover:bg-[#FF5722] hover:text-white active:scale-[0.98] transition">
+                               class="w-full block text-center py-2.5 rounded-full font-bold text-xs uppercase tracking-wider border-2 border-[#FF5722] text-[#FF5722] hover:bg-[#FF5722] hover:text-white active:scale-[0.98] transition">
                                 Pilih Paket Ini
                             </a>
                         @endif

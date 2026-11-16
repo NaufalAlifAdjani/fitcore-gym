@@ -53,13 +53,36 @@
     @php
         $currentRoute = request()->route()?->getName() ?? '';
         $currentPath = request()->path();
+        $targetTab = $activeTab ?? $attributes->get('active-tab') ?? $attributes->get('activeTab') ?? '';
 
         $resolvedTab = match (true) {
-            in_array($activeTab, ['pt-sessions', 'sessions']) || str_starts_with($currentRoute, 'mobile.member.pt-sessions') || str_starts_with($currentPath, 'm/pt-sessions') => 'pt-sessions',
-            in_array($activeTab, ['packages', 'paket']) || str_starts_with($currentRoute, 'mobile.member.packages') || $currentRoute === 'mobile.packages.index' || str_starts_with($currentPath, 'm/packages') => 'packages',
-            in_array($activeTab, ['card', 'qr']) || $currentRoute === 'mobile.member.card' || str_starts_with($currentPath, 'm/card') => 'card',
-            in_array($activeTab, ['history', 'riwayat', 'riwayat-transaksi']) || str_starts_with($currentRoute, 'mobile.member.riwayat-transaksi') || str_starts_with($currentPath, 'm/riwayat-transaksi') => 'history',
-            $activeTab === 'profile' || str_starts_with($currentRoute, 'mobile.member.profile') || str_starts_with($currentPath, 'm/profile') => 'profile',
+            in_array($targetTab, ['packages', 'paket', 'pt-packages', 'membership-packages'])
+                || str_starts_with($currentRoute, 'mobile.member.packages')
+                || str_starts_with($currentRoute, 'mobile.member.pt-packages')
+                || str_starts_with($currentRoute, 'member.pt-packages')
+                || str_starts_with($currentRoute, 'member.membership')
+                || $currentRoute === 'mobile.packages.index'
+                || str_starts_with($currentPath, 'm/packages')
+                || str_starts_with($currentPath, 'm/pt-packages')
+                || str_starts_with($currentPath, 'member/pt-packages')
+                || str_starts_with($currentPath, 'membership') => 'packages',
+
+            in_array($targetTab, ['pt-sessions', 'sessions'])
+                || (str_starts_with($currentRoute, 'mobile.member.pt-sessions') && !str_contains($currentRoute, 'pt-packages'))
+                || (str_starts_with($currentPath, 'm/pt-sessions') && !str_contains($currentPath, 'pt-packages')) => 'pt-sessions',
+
+            in_array($targetTab, ['card', 'qr'])
+                || str_starts_with($currentRoute, 'mobile.member.card')
+                || str_starts_with($currentPath, 'm/card') => 'card',
+
+            in_array($targetTab, ['history', 'riwayat', 'riwayat-transaksi'])
+                || str_starts_with($currentRoute, 'mobile.member.riwayat-transaksi')
+                || str_starts_with($currentPath, 'm/riwayat-transaksi') => 'history',
+
+            $targetTab === 'profile'
+                || str_starts_with($currentRoute, 'mobile.member.profile')
+                || str_starts_with($currentPath, 'm/profile') => 'profile',
+
             default => 'beranda',
         };
     @endphp

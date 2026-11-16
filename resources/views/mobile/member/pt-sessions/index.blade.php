@@ -96,7 +96,7 @@
                     </a>
                     <a href="{{ route('mobile.member.pt-packages.index') }}"
                        class="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-full bg-white hover:bg-orange-50 active:scale-[0.99] text-[#FF5722] border border-orange-200 font-bold font-poppins text-xs uppercase tracking-wider shadow-xs transition-all cursor-pointer">
-                        <span>⚡ Top-up / Beli Sesi PT</span>
+                        <span>Top-up / Beli Sesi PT</span>
                     </a>
                 </div>
             </div>

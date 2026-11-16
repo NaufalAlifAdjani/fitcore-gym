@@ -47,6 +47,7 @@ class MobileMemberPtPackageTest extends TestCase
         $response->assertSee('Sesi');
         $response->assertSee('Paket Gym');
         $response->assertSee('Sesi PT');
+        $response->assertSee("currentNavTab: 'packages'", false);
     }
 
     public function test_mobile_device_redirects_member_pt_packages_to_m_pt_packages(): void
