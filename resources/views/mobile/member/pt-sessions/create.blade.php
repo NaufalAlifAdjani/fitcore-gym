@@ -163,20 +163,25 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 </span>
             </div>
         @else
-            <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs shadow-xs space-y-2">
-                <div class="flex items-center gap-2 text-amber-800 font-bold">
-                    <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <div class="p-3.5 rounded-2xl bg-orange-50 border border-orange-200 text-xs shadow-xs space-y-2.5">
+                <div class="flex items-center gap-2 text-orange-950 font-bold">
+                    <svg class="w-4 h-4 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <span>Sisa Kuota Sesi PT Anda Habis</span>
+                    <span>Kuota Sesi PT Belum Tersedia</span>
                 </div>
-                <p class="text-[11px] text-amber-700">
-                    Anda belum memiliki saldo kuota sesi PT aktif. Silakan pilih paket membership yang menyertakan sesi latihan atau beli paket sesi tambahan.
+                <p class="text-[11px] text-[#565A66] leading-relaxed">
+                    Anda belum memiliki saldo sesi latihan aktif. Beli paket sesi PT terlebih dahulu agar dapat mengonfirmasi booking latihan bersama Personal Trainer.
                 </p>
-                <a href="{{ route('mobile.member.packages') }}"
-                   class="inline-block px-3 py-1.5 rounded-full text-[10px] font-bold bg-[#FF5722] text-white shadow-xs">
-                    Lihat Paket Membership →
-                </a>
+                <div>
+                    <a href="{{ route('mobile.member.pt-packages.index') }}"
+                       class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-xs transition">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                        <span>Beli Paket Sesi PT Sekarang &rarr;</span>
+                    </a>
+                </div>
             </div>
         @endif
 
@@ -505,10 +510,6 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     Lanjut ke Konfirmasi →
                 </button>
             </div>
-                        class="w-2/3 py-3 rounded-full text-white text-xs font-semibold transition">
-                    Lanjut ke Konfirmasi →
-                </button>
-            </div>
         </div>
 
         <!-- ========================================== -->
@@ -545,7 +546,11 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
 
                     <div class="flex items-center justify-between pt-2 border-t border-[#E5E7EB]">
                         <span class="text-[#565A66]">Potong Kuota</span>
-                        <span class="font-bold text-emerald-700">1 Sesi dari Saldo Paket</span>
+                        @if ($remainingQuota > 0)
+                            <span class="font-bold text-emerald-700">1 Sesi dari Saldo Paket</span>
+                        @else
+                            <span class="font-bold text-amber-700">Saldo Kosong (Wajib Beli Paket)</span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -581,22 +586,22 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     <button type="button" @click="step = 2" class="w-1/3 py-3.5 rounded-full bg-white border border-[#E5E7EB] text-[#16151A] text-xs font-bold text-center cursor-pointer hover:bg-gray-50 transition shadow-xs">
                         Kembali
                     </button>
-                    <button type="submit"
-                            :disabled="!agreedPolicy"
-                            :class="!agreedPolicy ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#FF5722] hover:bg-[#E64A19] cursor-pointer shadow-md shadow-orange-500/25 active:scale-[0.98]'"
-                            class="w-2/3 py-3.5 rounded-full text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
-                        <span>Konfirmasi Booking</span>
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </button>
-                </div>
-                            class="w-2/3 py-3.5 rounded-full text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
-                        <span>Konfirmasi Booking</span>
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </button>
+                    @if ($remainingQuota > 0)
+                        <button type="submit"
+                                :disabled="!agreedPolicy"
+                                :class="!agreedPolicy ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#FF5722] hover:bg-[#E64A19] cursor-pointer shadow-md shadow-orange-500/25 active:scale-[0.98]'"
+                                class="w-2/3 py-3.5 rounded-full text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                            <span>Konfirmasi Booking</span>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                    @else
+                        <a href="{{ route('mobile.member.pt-packages.index') }}"
+                           class="w-2/3 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
+                            <span>Beli Paket Sesi Dulu &rarr;</span>
+                        </a>
+                    @endif
                 </div>
             </form>
 

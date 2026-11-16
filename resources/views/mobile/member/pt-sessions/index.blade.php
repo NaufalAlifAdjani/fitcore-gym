@@ -52,6 +52,21 @@
                 </div>
             </div>
 
+            @if ($remainingSessions <= 0)
+                <!-- Notice Banner untuk Member yang Belum Memiliki Kuota -->
+                <div class="p-3 rounded-xl bg-orange-50/80 border border-orange-200/70 flex items-start gap-2.5 text-xs text-[#565A66]">
+                    <svg class="w-4 h-4 text-[#FF5722] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="space-y-0.5">
+                        <p class="font-bold text-[#16151A]">Kuota Sesi PT Belum Tersedia</p>
+                        <p class="text-[11px] leading-relaxed">
+                            Beli paket sesi PT terlebih dahulu agar Anda dapat memilih pelatih dan menjadwalkan sesi latihan.
+                        </p>
+                    </div>
+                </div>
+            @endif
+
             <div class="flex items-center justify-between text-[11px] text-[#565A66] pt-2 border-t border-[#E5E7EB]/70">
                 <span>
                     @if ($quota && $quota->end_date)
@@ -64,12 +79,27 @@
             </div>
         </div>
 
-        <!-- 3. Tombol Utama Booking Sesi (Clean, Tanpa Ikon Ganda) -->
+        <!-- 3. Tombol Utama Booking / Pembelian Sesi PT (Smart Action Flow) -->
         <div>
-            <a href="{{ route('mobile.member.pt-sessions.create') }}"
-               class="w-full py-3 px-4 rounded-xl bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-bold font-poppins text-xs tracking-wide shadow-md shadow-orange-500/20 transition-all flex items-center justify-center">
-                <span>+ Booking Sesi Baru</span>
-            </a>
+            @if ($remainingSessions > 0)
+                <a href="{{ route('mobile.member.pt-sessions.create') }}"
+                   class="w-full py-3.5 px-4 rounded-xl bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-bold font-poppins text-xs tracking-wide shadow-md shadow-orange-500/20 transition-all flex items-center justify-center">
+                    <span>+ Booking Sesi Baru</span>
+                </a>
+            @else
+                <div class="space-y-1.5">
+                    <a href="{{ route('mobile.member.pt-packages.index') }}"
+                       class="w-full py-3.5 px-4 rounded-xl bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-bold font-poppins text-xs tracking-wide shadow-md shadow-orange-500/25 transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                        <span>Beli Paket Sesi PT (+ Booking Sesi)</span>
+                    </a>
+                    <p class="text-[11px] text-center text-[#565A66]">
+                        Selesaikan pembelian paket untuk membuka akses booking jadwal latihan.
+                    </p>
+                </div>
+            @endif
         </div>
 
         <!-- 4. Ringkasan Status Sesi (3 Kolom Seimbang) -->

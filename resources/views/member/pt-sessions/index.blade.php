@@ -31,8 +31,8 @@
                             </div>
 
                             @php
-                                $total = $quota->total_sessions ?? 16;
-                                $rem = $quota->remaining_sessions ?? 7;
+                                $total = $quota->total_sessions ?? 0;
+                                $rem = $quota->remaining_sessions ?? 0;
                                 $pct = $total > 0 ? round(($rem / $total) * 100) : 0;
                             @endphp
                             <div class="w-full bg-orange-100 rounded-full h-2.5 overflow-hidden">
@@ -41,8 +41,11 @@
                             </div>
 
                             <p class="text-[11px] text-[#565A66]">
-                                Masa berlaku paket hingga
-                                {{ $quota && $quota->end_date ? \Carbon\Carbon::parse($quota->end_date)->translatedFormat('d F Y') : '28 November 2025' }}
+                                @if ($quota && $quota->end_date)
+                                    Masa berlaku paket hingga {{ \Carbon\Carbon::parse($quota->end_date)->translatedFormat('d F Y') }}
+                                @else
+                                    Belum ada paket aktif
+                                @endif
                             </p>
                         </div>
                     </div>
@@ -65,12 +68,20 @@
                             </div>
                         </div>
 
-                        <!-- + Booking Sesi Baru Button -->
-                        <a href="{{ route('pt-sessions.create') }}"
-                            class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF5722]/25 hover:shadow-[#FF5722]/40 transition-all cursor-pointer">
-                            <span>+</span>
-                            <span>Booking Sesi Baru</span>
-                        </a>
+                        <!-- + Booking Sesi Baru / Beli Paket Button -->
+                        @if ($rem > 0)
+                            <a href="{{ route('pt-sessions.create') }}"
+                                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF5722]/25 hover:shadow-[#FF5722]/40 transition-all cursor-pointer">
+                                <span>+</span>
+                                <span>Booking Sesi Baru</span>
+                            </a>
+                        @else
+                            <a href="{{ route('member.pt-packages.index') }}"
+                                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF5722]/25 hover:shadow-[#FF5722]/40 transition-all cursor-pointer">
+                                <span>+</span>
+                                <span>Beli Paket Sesi PT</span>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
