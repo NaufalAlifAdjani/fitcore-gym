@@ -189,9 +189,19 @@
                 @foreach ($trainers as $trainer)
                     <div class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] flex items-center justify-between gap-3">
                         <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#FF5722] to-[#FFB703] text-white flex items-center justify-center font-poppins font-black text-sm shrink-0 border border-white/20 shadow-xs shadow-orange-500/25">
-                                {{ strtoupper(substr($trainer->name, 0, 2)) }}
-                            </div>
+                            @php
+                                $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $trainer->name)))[0]);
+                                $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
+                                    ? asset("images/trainers/coach-{$cFirstName}.jpg")
+                                    : ($trainer->trainerProfile?->photo_path ? asset('storage/' . $trainer->trainerProfile->photo_path) : null);
+                            @endphp
+                            @if ($cPhoto)
+                                <img src="{{ $cPhoto }}" alt="{{ $trainer->name }}" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-orange-200 shadow-xs">
+                            @else
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#FF5722] to-[#FFB703] text-white flex items-center justify-center font-poppins font-black text-sm shrink-0 border border-white/20 shadow-xs shadow-orange-500/25">
+                                    {{ strtoupper(substr($trainer->name, 0, 2)) }}
+                                </div>
+                            @endif
                             <div>
                                 <h3 class="font-poppins font-bold text-sm text-[#16151A]">{{ $trainer->name }}</h3>
                                 <p class="text-[11px] font-semibold text-[#FF5722]">{{ $trainer->trainerProfile->specialization ?? 'Strength Coach' }}</p>

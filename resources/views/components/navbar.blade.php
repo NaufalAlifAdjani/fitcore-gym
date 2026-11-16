@@ -13,7 +13,7 @@
         </a>
 
         <!-- Desktop Navigation Items -->
-        <nav class="hidden md:flex items-center gap-1 bg-orange-50/70 p-1.5 rounded-full border border-orange-100">
+        <nav class="hidden lg:flex items-center gap-1 bg-orange-50/70 p-1.5 rounded-full border border-orange-100">
             <a href="{{ Route::has('landing.packages') ? route('landing.packages') : (Route::has('member.membership.packages') ? route('member.membership.packages') : '#') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
@@ -120,7 +120,7 @@
 
             <!-- Mobile Menu Toggle Button -->
             <button type="button" x-on:click="mobileMenuOpen = !mobileMenuOpen"
-                class="inline-flex md:hidden items-center justify-center rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 transition cursor-pointer"
+                class="inline-flex lg:hidden items-center justify-center rounded-lg p-2 text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 transition cursor-pointer"
                 aria-label="Toggle Navigation">
                 <svg x-show="!mobileMenuOpen" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -135,7 +135,7 @@
 
     <!-- Mobile Navigation Drawer -->
     <div x-cloak x-show="mobileMenuOpen" x-transition
-        class="md:hidden border-t border-gray-200 bg-white px-4 pt-3 pb-5 space-y-2 shadow-lg">
+        class="lg:hidden border-t border-gray-200 bg-white px-4 pt-3 pb-5 space-y-2 shadow-lg">
         <a href="{{ Route::has('landing.packages') ? route('landing.packages') : (Route::has('member.membership.packages') ? route('member.membership.packages') : '#') }}"
             class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('landing.packages') || request()->routeIs('member.membership.*') || $active === 'packages') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-zinc-700 hover:bg-orange-50 hover:text-zinc-900' }}">
             Paket Membership

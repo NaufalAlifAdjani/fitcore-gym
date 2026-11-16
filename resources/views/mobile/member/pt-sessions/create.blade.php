@@ -228,9 +228,19 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                         </div>
 
                         <div>
-                            <div class="w-12 h-12 rounded-xl bg-gray-100 text-[#16151A] flex items-center justify-center font-bold text-sm mb-2 border border-[#E5E7EB]">
-                                {{ strtoupper(substr($t->name, 0, 2)) }}
-                            </div>
+                            @php
+                                $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $t->name)))[0]);
+                                $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
+                                    ? asset("images/trainers/coach-{$cFirstName}.jpg")
+                                    : ($t->trainerProfile?->photo_path ? asset('storage/' . $t->trainerProfile->photo_path) : null);
+                            @endphp
+                            @if ($cPhoto)
+                                <img src="{{ $cPhoto }}" alt="{{ $t->name }}" class="w-12 h-12 rounded-xl object-cover mb-2 border border-[#E5E7EB]">
+                            @else
+                                <div class="w-12 h-12 rounded-xl bg-gray-100 text-[#16151A] flex items-center justify-center font-bold text-sm mb-2 border border-[#E5E7EB]">
+                                    {{ strtoupper(substr($t->name, 0, 2)) }}
+                                </div>
+                            @endif
                             <h4 class="text-xs font-bold text-[#16151A] truncate font-poppins">
                                 Coach {{ $t->name }}
                             </h4>

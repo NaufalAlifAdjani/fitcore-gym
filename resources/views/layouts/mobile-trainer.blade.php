@@ -54,32 +54,34 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
 
     <!-- Sticky Mobile Top Bar (Clean Light Background with subtle border) -->
     <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] pt-safe px-4 py-3 flex items-center justify-between shadow-xs">
-        <a href="{{ route('mobile.trainer.dashboard') }}" class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white shadow-md shadow-[#FF5722]/25 shrink-0 font-poppins font-black text-xs">
-                PT
-            </div>
-            <div class="flex flex-col">
-                <span class="font-poppins text-sm font-extrabold tracking-wider text-[#16151A]">
-                    FITCORE <span class="text-[#FF5722]">COACH</span>
-                </span>
-                <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-[#565A66]">Trainer Portal</span>
-            </div>
+        <a href="{{ route('mobile.trainer.dashboard') }}" class="flex items-center gap-2">
+            <img src="{{ asset('images/logo/logo-text.png') }}" class="h-6 sm:h-7 w-auto object-contain" alt="FitCore">
         </a>
 
         <div class="flex items-center gap-2">
             <a href="{{ route('mobile.trainer.profile.index') }}" class="relative block" title="Profil Trainer">
-                <x-avatar-initial :initials="auth()->user()->name ?? 'PT'" color_theme="red" class="w-8 h-8 text-xs border border-[#E5E7EB] shadow-xs" />
+                @php
+                    $userFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', auth()->user()->name ?? '')))[0] ?? '');
+                    $userPhoto = ($userFirstName && file_exists(public_path("images/trainers/coach-{$userFirstName}.jpg")))
+                        ? asset("images/trainers/coach-{$userFirstName}.jpg")
+                        : (auth()->user()->trainerProfile?->photo_path ? asset('storage/' . auth()->user()->trainerProfile->photo_path) : null);
+                @endphp
+                @if ($userPhoto)
+                    <img src="{{ $userPhoto }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover border border-[#E5E7EB] shadow-xs">
+                @else
+                    <x-avatar-initial :initials="auth()->user()->name ?? 'PT'" color_theme="red" class="w-8 h-8 text-xs border border-[#E5E7EB] shadow-xs" />
+                @endif
             </a>
         </div>
     </header>
 
-    <!-- Scrollable Main Content Area with pb-24 -->
-    <main class="flex-1 w-full max-w-md mx-auto px-4 py-5 overflow-y-auto pb-24">
+    <!-- Scrollable Main Content Area with pb-28 -->
+    <main class="flex-1 w-full max-w-md mx-auto px-4 py-5 overflow-y-auto pb-28">
         {{ $slot }}
     </main>
 
-    <!-- Fixed Bottom Tab Bar (Light Theme per DESIGN.md & stitch-prompts #Shared UI Patterns) -->
-    <nav class="fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-lg border-t border-[#E5E7EB] pb-safe shadow-[0_-4px_16px_rgba(0,0,0,0.06)]"
+    <!-- Fixed Bottom Tab Bar (Light Theme Glassmorphism) -->
+    <nav class="fixed bottom-0 inset-x-0 z-50 bg-white/90 backdrop-blur-md border-t border-gray-100 pb-safe shadow-sm"
          x-data="{ currentNavTab: '{{ $resolvedTab }}' }">
         <div class="max-w-md mx-auto px-3 flex items-center justify-between h-16">
 
@@ -87,50 +89,50 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             <a href="{{ route('mobile.trainer.dashboard') }}"
                class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'dashboard' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]' }}"
                :class="currentNavTab === 'dashboard' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]'">
-                <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-6 h-6 transition group-hover:scale-105 active:scale-95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
-                <span class="text-[10px] font-semibold mt-1">Dashboard</span>
+                <span class="text-[10px] font-semibold mt-1 tracking-tight">Dashboard</span>
             </a>
 
             <!-- 2. Jadwal Sesi -->
             <a href="{{ route('mobile.trainer.sessions.index') }}"
                class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'sessions' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]' }}"
                :class="currentNavTab === 'sessions' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]'">
-                <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-6 h-6 transition group-hover:scale-105 active:scale-95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span class="text-[10px] font-semibold mt-1">Jadwal Sesi</span>
+                <span class="text-[10px] font-semibold mt-1 tracking-tight">Jadwal Sesi</span>
             </a>
 
             <!-- 3. Klien Saya -->
             <a href="{{ route('mobile.trainer.clients.index') }}"
                class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'clients' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]' }}"
                :class="currentNavTab === 'clients' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]'">
-                <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-6 h-6 transition group-hover:scale-105 active:scale-95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <span class="text-[10px] font-semibold mt-1">Klien</span>
+                <span class="text-[10px] font-semibold mt-1 tracking-tight">Klien</span>
             </a>
 
             <!-- 4. Pendapatan / Komisi -->
             <a href="{{ route('mobile.trainer.commissions.index') }}"
                class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'commissions' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]' }}"
                :class="currentNavTab === 'commissions' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]'">
-                <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-6 h-6 transition group-hover:scale-105 active:scale-95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span class="text-[10px] font-semibold mt-1">Komisi</span>
+                <span class="text-[10px] font-semibold mt-1 tracking-tight">Komisi</span>
             </a>
 
             <!-- 5. Profil -->
             <a href="{{ route('mobile.trainer.profile.index') }}"
                class="flex flex-col items-center justify-center flex-1 py-1 transition group {{ $resolvedTab === 'profile' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]' }}"
                :class="currentNavTab === 'profile' ? 'text-[#FF5722]' : 'text-[#565A66] hover:text-[#16151A]'">
-                <svg class="w-5 h-5 transition group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-6 h-6 transition group-hover:scale-105 active:scale-95" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                <span class="text-[10px] font-semibold mt-1">Profil</span>
+                <span class="text-[10px] font-semibold mt-1 tracking-tight">Profil</span>
             </a>
 
         </div>
