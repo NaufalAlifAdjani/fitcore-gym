@@ -1,22 +1,7 @@
 <x-guest-layout>
-    <!-- Role Selector Toggle (Member / Personal Trainer) -->
-    <div class="flex p-1 bg-gray-100 rounded-xl mb-8 border border-gray-200/60">
-        <button type="button" @click="role = 'member'"
-            :class="role === 'member' ? 'bg-white shadow text-[#FF5722] font-bold' : 'text-gray-500 font-medium hover:text-gray-800'"
-            class="flex-1 py-2 text-xs rounded-lg transition duration-150 text-center">
-            Member
-        </button>
-        <button type="button" @click="role = 'trainer'"
-            :class="role === 'trainer' ? 'bg-white shadow text-[#FF5722] font-bold' : 'text-gray-500 font-medium hover:text-gray-800'"
-            class="flex-1 py-2 text-xs rounded-lg transition duration-150 text-center">
-            Personal Trainer
-        </button>
-    </div>
-
     <!-- Title Heading -->
     <h2 class="text-3xl sm:text-4xl font-black text-gray-950 leading-tight mb-8">
         Masuk Akun<br>
-        <span x-text="role === 'trainer' ? 'Trainer' : 'Member'">Member</span><br>
         FITCORE GYM
     </h2>
 
@@ -39,8 +24,6 @@
 
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
-        <!-- Role login yang dipilih (member atau trainer) -->
-        <input type="hidden" name="role" :value="role">
 
         <!-- Email atau Nomor WhatsApp -->
         <x-auth-input
