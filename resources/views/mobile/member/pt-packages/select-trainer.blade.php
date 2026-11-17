@@ -77,26 +77,26 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 <button type="button"
                         @click="selectedPeriod = 'all'"
                         :class="selectedPeriod === 'all' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
-                        class="px-3 py-1.5 rounded-full font-semibold shrink-0 transition text-xs whitespace-nowrap cursor-pointer">
+                        class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition text-xs whitespace-nowrap cursor-pointer">
                     Semua Waktu
                 </button>
                 <button type="button"
                         @click="selectedPeriod = 'morning'"
                         :class="selectedPeriod === 'morning' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
-                        class="px-3 py-1.5 rounded-full font-semibold shrink-0 transition text-xs whitespace-nowrap flex items-center gap-1 cursor-pointer">
-                    <span>🌅 Sedia Pagi</span>
+                        class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition text-xs whitespace-nowrap cursor-pointer">
+                    Sedia Pagi
                 </button>
                 <button type="button"
                         @click="selectedPeriod = 'afternoon'"
                         :class="selectedPeriod === 'afternoon' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
-                        class="px-3 py-1.5 rounded-full font-semibold shrink-0 transition text-xs whitespace-nowrap flex items-center gap-1 cursor-pointer">
-                    <span>☀️ Sedia Siang</span>
+                        class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition text-xs whitespace-nowrap cursor-pointer">
+                    Sedia Siang
                 </button>
                 <button type="button"
                         @click="selectedPeriod = 'evening'"
                         :class="selectedPeriod === 'evening' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] border border-[#E5E7EB] hover:text-[#16151A]'"
-                        class="px-3 py-1.5 rounded-full font-semibold shrink-0 transition text-xs whitespace-nowrap flex items-center gap-1 cursor-pointer">
-                    <span>🌙 Sedia Malam</span>
+                        class="px-3.5 py-1.5 rounded-full font-semibold shrink-0 transition text-xs whitespace-nowrap cursor-pointer">
+                    Sedia Malam
                 </button>
             </div>
         </div>
