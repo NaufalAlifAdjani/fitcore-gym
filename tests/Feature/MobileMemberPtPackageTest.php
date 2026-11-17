@@ -2,9 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Bank;
+use App\Models\Payment;
 use App\Models\PtPackage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class MobileMemberPtPackageTest extends TestCase
@@ -123,5 +127,132 @@ class MobileMemberPtPackageTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee(route('mobile.member.pt-packages.index'));
         $response->assertSee('Paket Sesi PT');
+    }
+
+    public function test_mobile_member_can_access_select_trainer_page(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $response = $this->actingAs($member)
+            ->withHeaders(['User-Agent' => self::IPHONE_USER_AGENT])
+            ->get('/m/pt-packages/select-trainer');
+
+        $response->assertStatus(200);
+        $response->assertSee('Pilih Personal Trainer');
+        $response->assertSee('Coach Rama');
+        $response->assertSee(route('mobile.member.pt-packages.index'));
+    }
+
+    public function test_mobile_member_can_access_checkout_page(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $pkg = PtPackage::first();
+
+        $response = $this->actingAs($member)
+            ->withHeaders(['User-Agent' => self::IPHONE_USER_AGENT])
+            ->get('/m/pt-packages/checkout?package_id='.$pkg->id.'&trainer_id=1');
+
+        $response->assertStatus(200);
+        $response->assertSee('Rincian & Pembayaran');
+        $response->assertSee('Total Pembayaran');
+        $response->assertSee(route('mobile.member.pt-packages.process-checkout'));
+    }
+
+    public function test_mobile_member_can_process_checkout_and_redirect_to_upload_payment(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $pkg = PtPackage::first();
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_holder' => 'PT FitCore',
+            'status' => 'active',
+        ]);
+
+        $response = $this->actingAs($member)
+            ->withHeaders(['User-Agent' => self::IPHONE_USER_AGENT])
+            ->post('/m/pt-packages/checkout', [
+                'package_id' => $pkg->id,
+                'trainer_id' => 1,
+                'bank_id' => $bank->id,
+                'unique_code' => 123,
+                'total_amount' => 3582123,
+            ]);
+
+        $response->assertRedirect();
+        $this->assertStringContainsString('/m/pt-packages/upload-payment', $response->headers->get('Location'));
+    }
+
+    public function test_mobile_member_can_upload_payment_proof(): void
+    {
+        Storage::fake('public');
+
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $pkg = PtPackage::first();
+        $bank = Bank::create([
+            'name' => 'BCA',
+            'account_number' => '1234567890',
+            'account_holder' => 'PT FitCore',
+            'status' => 'active',
+        ]);
+
+        $payment = Payment::create([
+            'invoice_id' => 'INV-TEST-001',
+            'member_id' => $member->id,
+            'package_id' => $pkg->id,
+            'pt_package_id' => $pkg->id,
+            'bank_id' => $bank->id,
+            'amount' => 3582123,
+            'status' => 'pending',
+            'package_type' => 'pt_session',
+            'payment_type' => 'pt_package',
+        ]);
+
+        $file = UploadedFile::fake()->image('receipt.jpg');
+
+        $response = $this->actingAs($member)
+            ->withHeaders(['User-Agent' => self::IPHONE_USER_AGENT])
+            ->post('/m/pt-packages/upload-payment/'.$payment->id, [
+                'proof_image' => $file,
+                'sender_name' => 'John Doe',
+                'sender_bank' => 'BCA',
+            ]);
+
+        $response->assertRedirect(route('mobile.member.pt-packages.index'));
+        $payment->refresh();
+        $this->assertNotNull($payment->proof_image_path);
+    }
+
+    public function test_mobile_device_redirects_desktop_pt_package_subroutes(): void
+    {
+        $member = User::factory()->create([
+            'role' => 'member',
+            'email_verified_at' => now(),
+        ]);
+
+        $responseSelect = $this->actingAs($member)
+            ->withHeaders(['User-Agent' => self::IPHONE_USER_AGENT])
+            ->get('/member/pt-packages/select-trainer');
+        $responseSelect->assertRedirect('/m/pt-packages/select-trainer');
+
+        $responseCheckout = $this->actingAs($member)
+            ->withHeaders(['User-Agent' => self::IPHONE_USER_AGENT])
+            ->get('/member/pt-packages/checkout');
+        $responseCheckout->assertRedirect('/m/pt-packages/checkout');
     }
 }

@@ -318,7 +318,11 @@ class PtPackagePurchaseController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('member.pt-packages.upload-payment', [
+        $targetRoute = ($request->routeIs('mobile.*') || str_contains(url()->previous(), '/m/'))
+            ? 'mobile.member.pt-packages.upload-payment'
+            : 'member.pt-packages.upload-payment';
+
+        return redirect()->route($targetRoute, [
             'payment' => $payment->id,
             'trainer_id' => $trainerId,
             'package_id' => $packageId,
@@ -412,7 +416,11 @@ class PtPackagePurchaseController extends Controller
             }
         }
 
-        return redirect()->route('member.pt-packages.index')
+        $targetRoute = ($request->routeIs('mobile.*') || str_contains(url()->previous(), '/m/'))
+            ? 'mobile.member.pt-packages.index'
+            : 'member.pt-packages.index';
+
+        return redirect()->route($targetRoute)
             ->with('success', 'Bukti pembayaran berhasil diunggah! Tim finance akan memverifikasi dalam 1×24 jam.');
     }
 

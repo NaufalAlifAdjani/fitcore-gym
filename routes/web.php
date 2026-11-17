@@ -255,6 +255,39 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
         return view('mobile.member.pt-packages.index', $view->getData());
     })->name('mobile.member.pt-packages.index');
 
+    Route::get('/pt-packages/select-trainer', function (Request $request, PtPackagePurchaseController $controller) {
+        $view = $controller->selectTrainer($request);
+        if ($view instanceof RedirectResponse) {
+            return $view;
+        }
+
+        return view('mobile.member.pt-packages.select-trainer', $view->getData());
+    })->name('mobile.member.pt-packages.select-trainer');
+
+    Route::get('/pt-packages/checkout', function (Request $request, PtPackagePurchaseController $controller) {
+        $view = $controller->checkout($request);
+        if ($view instanceof RedirectResponse) {
+            return $view;
+        }
+
+        return view('mobile.member.pt-packages.checkout', $view->getData());
+    })->name('mobile.member.pt-packages.checkout');
+
+    Route::post('/pt-packages/checkout', [PtPackagePurchaseController::class, 'processCheckout'])
+        ->name('mobile.member.pt-packages.process-checkout');
+
+    Route::get('/pt-packages/upload-payment/{payment?}', function (Request $request, PtPackagePurchaseController $controller, $payment = null) {
+        $view = $controller->uploadPayment($request, $payment);
+        if ($view instanceof RedirectResponse) {
+            return $view;
+        }
+
+        return view('mobile.member.pt-packages.upload-payment', $view->getData());
+    })->name('mobile.member.pt-packages.upload-payment');
+
+    Route::post('/pt-packages/upload-payment/{payment?}', [PtPackagePurchaseController::class, 'submitPaymentProof'])
+        ->name('mobile.member.pt-packages.submit-proof');
+
     Route::get('/packages/{package}/checkout', function (MembershipPackage $package, Request $request, MemberMembershipPackageController $controller) {
         $view = $controller->checkout($package);
         if ($view instanceof RedirectResponse) {

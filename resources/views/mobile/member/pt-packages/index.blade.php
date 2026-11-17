@@ -196,7 +196,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
 
                     {{-- Tombol Pilih Trainer & Checkout --}}
                     <div class="mt-3 pt-2 border-t border-[#E5E7EB]/60">
-                        <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $pkg['id'], 'sessions' => $pkg['sessions']]) }}"
+                        <a href="{{ route('mobile.member.pt-packages.select-trainer', ['package_id' => $pkg['id'], 'sessions' => $pkg['sessions']]) }}"
                            class="w-full py-2 px-2 rounded-xl text-center font-bold text-xs block transition active:scale-95 shadow-xs {{ $isPopular ? 'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-[#FF5722]/20' : 'bg-[#16151A] hover:bg-[#FF5722] text-white' }}">
                             {{ $userQuota ? 'Beli Lagi' : 'Pilih Paket' }}
                         </a>
