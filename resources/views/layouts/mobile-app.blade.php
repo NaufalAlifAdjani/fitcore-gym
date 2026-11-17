@@ -111,13 +111,13 @@
                 <span class="text-[10px] font-semibold mt-1 tracking-tight">Sesi PT</span>
             </a>
 
-            <!-- 3. Floating Center Action Button: Kartu Member Digital QR (Enlarged Halo Ring Style) -->
-            <div class="flex-1 flex justify-center -mt-7">
+            <!-- 3. Floating Center Action Button: Kartu Member Digital QR (Enlarged Halo Ring Style - Matching Reference) -->
+            <div class="flex-1 flex justify-center -mt-8">
                 <a href="{{ route('mobile.member.card') }}"
-                   class="group relative flex items-center justify-center p-1.5 rounded-full bg-orange-100/80 border border-orange-200/90 shadow-[0_8px_25px_rgba(255,87,34,0.30)] hover:scale-105 active:scale-95 transition-all duration-200"
+                   class="group relative flex items-center justify-center p-2 rounded-full bg-orange-500/15 hover:bg-orange-500/25 border border-orange-200/90 shadow-[0_10px_25px_rgba(255,87,34,0.35)] hover:scale-105 active:scale-95 transition-all duration-200"
                    title="Buka QR Pass">
-                    <!-- Inner Circle Button -->
-                    <div class="w-13 h-13 rounded-full bg-gradient-to-tr from-[#FF5722] to-[#FF8A65] text-white flex items-center justify-center border-2 border-white shadow-md shadow-orange-600/30 transition-transform group-hover:rotate-3">
+                    <!-- Inner Circle Button: Enlarged 56px x 56px (w-14 h-14) -->
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-[#FF5722] to-[#FF8A65] text-white flex items-center justify-center border-2 border-white shadow-md shadow-orange-600/35 transition-transform group-hover:rotate-3">
                         <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <!-- Viewfinder 4 Corners (Like QRIS / Mobile Banking) -->
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2" />

@@ -258,9 +258,15 @@
                         Gunakan kuota Anda untuk menjadwalkan latihan bersama Personal Trainer pilihan.
                     </p>
                     <div class="pt-1">
-                        <a href="{{ route('mobile.member.pt-sessions.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-md shadow-orange-500/20 hover:bg-[#E64A19] transition">
-                            <span>+ Booking Sesi Baru</span>
-                        </a>
+                        @if (($ptQuota->remaining_sessions ?? 0) > 0)
+                            <a href="{{ route('mobile.member.pt-sessions.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-md shadow-orange-500/20 hover:bg-[#E64A19] transition">
+                                <span>+ Booking Sesi Baru</span>
+                            </a>
+                        @else
+                            <a href="{{ route('mobile.member.pt-packages.index') }}" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-md shadow-orange-500/20 hover:bg-[#E64A19] transition">
+                                <span>Beli Paket Sesi PT Dulu &rarr;</span>
+                            </a>
+                        @endif
                     </div>
                 </div>
             @endif
