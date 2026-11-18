@@ -18,6 +18,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PtPackagePurchaseController;
 use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
+use App\Http\Controllers\PushSubscriptionController;
 use App\Http\Controllers\Trainer\ClientController as TrainerClientController;
 use App\Http\Controllers\Trainer\CommissionController as TrainerCommissionController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
@@ -64,6 +65,14 @@ Route::middleware('auth')->group(function () {
         ->name('notifications.mark-all-read');
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
         ->name('notifications.read');
+
+    // Push Subscriptions
+    Route::get('/push-subscriptions/vapid-public-key', [PushSubscriptionController::class, 'vapidPublicKey'])
+        ->name('push-subscriptions.vapid-public-key');
+    Route::post('/push-subscriptions', [PushSubscriptionController::class, 'store'])
+        ->name('push-subscriptions.store');
+    Route::delete('/push-subscriptions', [PushSubscriptionController::class, 'destroy'])
+        ->name('push-subscriptions.destroy');
 
     // Member Dashboard
     Route::get('/member/dashboard', [MemberDashboardController::class, 'index'])

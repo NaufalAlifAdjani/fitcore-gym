@@ -1,7 +1,7 @@
 <x-app-layout>
     <div x-data="ptBooking({
         trainerId: {{ $trainer->id ?? 1 }},
-        initialDate: '{{ now()->toDateString() }}',
+        initialDate: '{{ now()->addDay()->toDateString() }}',
         slotsUrl: '{{ route('pt-sessions.slots') }}',
         availabilityUrl: '{{ route('pt-sessions.availability') }}'
     })" class="py-8 sm:py-10">
@@ -134,6 +134,14 @@
                                     Jadwal untuk: <span class="font-bold text-[#FF5722]" x-text="formattedSelectedDate || selectedDate"></span>
                                 </p>
                             </div>
+                        </div>
+
+                        <!-- Notice 24 Jam Notice -->
+                        <div class="p-3 bg-blue-50/80 border border-blue-200 rounded-2xl text-xs text-blue-800 flex items-center gap-2.5">
+                            <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Pemesanan sesi PT minimal dilakukan <strong>1 hari (24 jam)</strong> sebelum jadwal sesi dimulai.</span>
                         </div>
 
                         <!-- Loading Slots Indicator -->
@@ -324,6 +332,19 @@
                             </div>
                         </div>
 
+                        @php
+                            $canBookSession = $quota && $quota->status === 'active' && ! $quota->isExpired() && $quota->remaining_sessions > 0;
+                        @endphp
+
+                        @if (! $canBookSession)
+                            <div class="mb-3 p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center gap-2">
+                                <svg class="w-4 h-4 shrink-0 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                <span>Sisa kuota sesi PT Anda kosong. Tidak dapat melakukan booking sesi.</span>
+                            </div>
+                        @endif
+
                         <!-- Form Submit -->
                         <form method="POST" action="{{ route('pt-sessions.store') }}" class="pt-2">
                             @csrf
@@ -331,9 +352,9 @@
                             <input type="hidden" name="session_date" :value="selectedDate">
                             <input type="hidden" name="start_time" :value="selectedSlot">
 
-                            <button type="submit" :disabled="!selectedDate || !selectedSlot" :class="{
-                                        'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-lg shadow-orange-500/25 cursor-pointer': selectedDate && selectedSlot,
-                                        'bg-gray-100 text-[#565A66]/60 border border-[#E5E7EB] cursor-not-allowed': !selectedDate || !selectedSlot
+                            <button type="submit" :disabled="!selectedDate || !selectedSlot || {{ $canBookSession ? 'false' : 'true' }}" :class="{
+                                        'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-lg shadow-orange-500/25 cursor-pointer': selectedDate && selectedSlot && {{ $canBookSession ? 'true' : 'false' }},
+                                        'bg-gray-100 text-[#565A66]/60 border border-[#E5E7EB] cursor-not-allowed': !selectedDate || !selectedSlot || {{ $canBookSession ? 'false' : 'true' }}
                                     }"
                                 class="w-full py-3.5 rounded-full font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2">
                                 <span>Konfirmasi Booking Sesi</span>

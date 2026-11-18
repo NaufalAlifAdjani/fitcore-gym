@@ -10,7 +10,44 @@ import { membershipPackageStatus, membershipPackages } from './admin/membership-
 import paymentVerification from './admin/payment-verification.js';
 import { ptPackageStatus, ptPackages } from './admin/pt-packages.js';
 
+import './push-notifications.js';
+
 window.Alpine = Alpine;
+
+Alpine.data('pushNotificationToggle', () => ({
+    supported: false,
+    permission: 'default',
+    isSubscribed: false,
+    loading: false,
+
+    async init() {
+        this.supported = window.FitCorePush?.isSupported() ?? false;
+        if (!this.supported) return;
+
+        this.permission = window.FitCorePush.getPermission();
+        this.isSubscribed = await window.FitCorePush.isSubscribed();
+    },
+
+    async toggle() {
+        if (!this.supported) return;
+        this.loading = true;
+        try {
+            if (this.isSubscribed) {
+                await window.FitCorePush.unsubscribe();
+                this.isSubscribed = false;
+            } else {
+                await window.FitCorePush.subscribe();
+                this.isSubscribed = true;
+                this.permission = window.FitCorePush.getPermission();
+            }
+        } catch (e) {
+            console.error('[PushToggle] Error:', e);
+            alert(e.message || 'Gagal mengubah pengaturan notifikasi push.');
+        } finally {
+            this.loading = false;
+        }
+    }
+}));
 
 Alpine.data('membershipPackages', membershipPackages);
 Alpine.data('membershipPackageStatus', membershipPackageStatus);

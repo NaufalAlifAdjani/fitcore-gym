@@ -325,13 +325,6 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     </svg>
                 </button>
             </div>
-                        class="w-full py-3.5 rounded-full text-white font-semibold text-sm flex items-center justify-center gap-2 transition">
-                    <span>Lanjut ke Pilih Waktu</span>
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
-                </button>
-            </div>
         </div>
 
         <!-- ========================================== -->
@@ -495,10 +488,6 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     Lanjut ke Konfirmasi →
                 </button>
             </div>
-                        class="w-2/3 py-3 rounded-full text-white text-xs font-semibold transition">
-                    Lanjut ke Konfirmasi →
-                </button>
-            </div>
         </div>
 
         <!-- ========================================== -->
@@ -572,15 +561,8 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                         Kembali
                     </button>
                     <button type="submit"
-                            :disabled="!agreedPolicy"
-                            :class="!agreedPolicy ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#FF5722] hover:bg-[#E64A19] cursor-pointer shadow-md shadow-orange-500/25 active:scale-[0.98]'"
-                            class="w-2/3 py-3.5 rounded-full text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
-                        <span>Konfirmasi Booking</span>
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </button>
-                </div>
+                            :disabled="!agreedPolicy || {{ $remainingQuota <= 0 ? 'true' : 'false' }}"
+                            :class="(!agreedPolicy || {{ $remainingQuota <= 0 ? 'true' : 'false' }}) ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#FF5722] hover:bg-[#E64A19] cursor-pointer shadow-md shadow-orange-500/25 active:scale-[0.98]'"
                             class="w-2/3 py-3.5 rounded-full text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
                         <span>Konfirmasi Booking</span>
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">

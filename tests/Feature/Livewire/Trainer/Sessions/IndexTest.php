@@ -478,6 +478,7 @@ class IndexTest extends TestCase
 
         $memberPending = User::factory()->create(['name' => 'Member Menunggu', 'role' => 'member']);
         $memberConfirmed = User::factory()->create(['name' => 'Member Terkonfirmasi', 'role' => 'member']);
+        $memberCompleted = User::factory()->create(['name' => 'Member Selesai', 'role' => 'member']);
         $memberCancelled = User::factory()->create(['name' => 'Member Dibatalkan', 'role' => 'member']);
 
         $package = PtPackage::factory()->create();
@@ -516,6 +517,16 @@ class IndexTest extends TestCase
 
         PtSession::factory()->create([
             'member_pt_quota_id' => $quota->id,
+            'member_id' => $memberCompleted->id,
+            'trainer_id' => $trainer->id,
+            'session_date' => '2026-10-16',
+            'start_time' => '11:00:00',
+            'end_time' => '12:00:00',
+            'status' => PtSessionStatus::Completed,
+        ]);
+
+        PtSession::factory()->create([
+            'member_pt_quota_id' => $quota->id,
             'member_id' => $memberCancelled->id,
             'trainer_id' => $trainer->id,
             'session_date' => '2026-10-16',
@@ -532,21 +543,32 @@ class IndexTest extends TestCase
             ->assertSet('taskStatusFilter', 'all')
             ->assertSee('Menunggu')
             ->assertSee('Terkonfirmasi')
+            ->assertSee('Selesai')
             ->assertSee('Dibatalkan')
             ->assertSee('Member Menunggu')
             ->assertSee('Member Terkonfirmasi')
+            ->assertSee('Member Selesai')
             ->assertSee('Member Dibatalkan')
             // Filter: Pending
             ->call('setTaskStatusFilter', 'pending')
             ->assertSet('taskStatusFilter', 'pending')
             ->assertSee('Member Menunggu')
             ->assertDontSee('Member Terkonfirmasi')
+            ->assertDontSee('Member Selesai')
             ->assertDontSee('Member Dibatalkan')
             // Filter: Confirmed
             ->call('setTaskStatusFilter', 'confirmed')
             ->assertSet('taskStatusFilter', 'confirmed')
             ->assertSee('Member Terkonfirmasi')
             ->assertDontSee('Member Menunggu')
+            ->assertDontSee('Member Selesai')
+            ->assertDontSee('Member Dibatalkan')
+            // Filter: Completed
+            ->call('setTaskStatusFilter', 'completed')
+            ->assertSet('taskStatusFilter', 'completed')
+            ->assertSee('Member Selesai')
+            ->assertDontSee('Member Menunggu')
+            ->assertDontSee('Member Terkonfirmasi')
             ->assertDontSee('Member Dibatalkan')
             // Filter: Cancelled
             ->call('setTaskStatusFilter', 'cancelled')
@@ -554,10 +576,12 @@ class IndexTest extends TestCase
             ->assertSee('Member Dibatalkan')
             ->assertDontSee('Member Menunggu')
             ->assertDontSee('Member Terkonfirmasi')
+            ->assertDontSee('Member Selesai')
             // Back to All
             ->call('setTaskStatusFilter', 'all')
             ->assertSee('Member Menunggu')
             ->assertSee('Member Terkonfirmasi')
+            ->assertSee('Member Selesai')
             ->assertSee('Member Dibatalkan');
 
         Carbon::setTestNow();

@@ -20,29 +20,40 @@
                             </p>
                         </div>
 
+                        @php
+                            $hasActiveQuota = $quota && $quota->status === 'active' && ! $quota->isExpired() && $quota->remaining_sessions > 0;
+                            $total = $quota ? (int) $quota->total_sessions : 0;
+                            $rem = $quota ? (int) $quota->remaining_sessions : 0;
+                            $pct = $total > 0 ? min(100, round(($rem / $total) * 100)) : 0;
+                        @endphp
+
                         <!-- Sisa Kuota Bar in Hero -->
                         <div class="space-y-2 pt-2">
                             <div class="flex justify-between items-center text-xs">
                                 <span class="text-[#565A66] font-medium">Sisa Kuota Sesi</span>
                                 <div class="font-extrabold">
-                                    <span class="text-[#FF5722]">{{ $quota->remaining_sessions ?? 7 }}</span>
-                                    <span class="text-[#16151A]"> / {{ $quota->total_sessions ?? 16 }} Sesi Tersedia</span>
+                                    <span class="text-[#FF5722]">{{ $rem }}</span>
+                                    <span class="text-[#16151A]"> / {{ $total }} Sesi Tersedia</span>
                                 </div>
                             </div>
 
-                            @php
-                                $total = $quota->total_sessions ?? 16;
-                                $rem = $quota->remaining_sessions ?? 7;
-                                $pct = $total > 0 ? round(($rem / $total) * 100) : 0;
-                            @endphp
                             <div class="w-full bg-orange-100 rounded-full h-2.5 overflow-hidden">
                                 <div class="bg-gradient-to-r from-[#FF5722] to-[#FFB703] h-full rounded-full transition-all duration-300 shadow-xs"
                                     style="width: {{ $pct }}%"></div>
                             </div>
 
                             <p class="text-[11px] text-[#565A66]">
-                                Masa berlaku paket hingga
-                                {{ $quota && $quota->end_date ? \Carbon\Carbon::parse($quota->end_date)->translatedFormat('d F Y') : '28 November 2025' }}
+                                @if ($hasActiveQuota && $quota->end_date)
+                                    Masa berlaku paket hingga
+                                    {{ \Carbon\Carbon::parse($quota->end_date)->translatedFormat('d F Y') }}
+                                @elseif ($quota && $quota->remaining_sessions <= 0)
+                                    Sisa kuota sesi latihan telah habis
+                                @elseif ($quota && $quota->isExpired())
+                                    Masa berlaku paket telah berakhir pada
+                                    {{ \Carbon\Carbon::parse($quota->end_date)->translatedFormat('d F Y') }}
+                                @else
+                                    Belum memiliki paket sesi PT aktif
+                                @endif
                             </p>
                         </div>
                     </div>
@@ -66,11 +77,27 @@
                         </div>
 
                         <!-- + Booking Sesi Baru Button -->
-                        <a href="{{ route('pt-sessions.create') }}"
-                            class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF5722]/25 hover:shadow-[#FF5722]/40 transition-all cursor-pointer">
-                            <span>+</span>
-                            <span>Booking Sesi Baru</span>
-                        </a>
+                        @if ($hasActiveQuota)
+                            <a href="{{ route('pt-sessions.create') }}"
+                                class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-[#FF5722]/25 hover:shadow-[#FF5722]/40 transition-all cursor-pointer">
+                                <span>+</span>
+                                <span>Booking Sesi Baru</span>
+                            </a>
+                        @else
+                            <div class="flex flex-col items-center sm:items-end gap-1.5">
+                                <button type="button" disabled
+                                    title="Anda belum memiliki kuota sesi PT aktif untuk melakukan booking"
+                                    class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gray-200 text-gray-400 font-bold text-xs uppercase tracking-wider cursor-not-allowed border border-gray-300 shadow-none select-none">
+                                    <span>+</span>
+                                    <span>Booking Sesi Baru</span>
+                                </button>
+                                <a href="{{ route('member.pt-packages.index') }}"
+                                    class="text-[11px] font-semibold text-[#FF5722] hover:text-[#E64A19] hover:underline flex items-center gap-1">
+                                    <span>Beli Paket Sesi PT</span>
+                                    <span>&rarr;</span>
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
