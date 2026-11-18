@@ -205,12 +205,24 @@
                                         WIB
                                     </td>
                                     <td class="py-3.5 px-4">
-                                        <div class="font-semibold text-[#16151A]">
-                                            {{ $checkIn->member->name ?? 'Member FitCore' }}
-                                        </div>
-                                        <div class="font-mono text-[11px] text-[#565A66]">
-                                            ID:
-                                            {{ $checkIn->member?->memberProfile?->member_code ?? ('MBR-' . str_pad($checkIn->member_id, 5, '0', STR_PAD_LEFT)) }}
+                                        <div class="flex items-center gap-3">
+                                            @if ($checkIn->member?->avatar_url)
+                                                <img src="{{ $checkIn->member->avatar_url }}" alt="{{ $checkIn->member->name }}"
+                                                    class="h-11 w-11 rounded-full object-cover border-2 border-[#E5E7EB] shrink-0 shadow-xs">
+                                            @else
+                                                <div class="h-11 w-11 rounded-full bg-orange-50 border border-orange-200 text-[#FF5722] font-poppins font-bold flex items-center justify-center text-xs shrink-0 shadow-xs">
+                                                    {{ strtoupper(substr($checkIn->member->name ?? 'M', 0, 2)) }}
+                                                </div>
+                                            @endif
+                                            <div>
+                                                <div class="font-semibold text-[#16151A]">
+                                                    {{ $checkIn->member->name ?? 'Member FitCore' }}
+                                                </div>
+                                                <div class="font-mono text-[11px] text-[#565A66]">
+                                                    ID:
+                                                    {{ $checkIn->member?->memberProfile?->member_code ?? ('MBR-' . str_pad($checkIn->member_id, 5, '0', STR_PAD_LEFT)) }}
+                                                </div>
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="py-3.5 px-4 font-medium text-slate-700">

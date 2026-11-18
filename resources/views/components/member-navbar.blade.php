@@ -74,10 +74,15 @@
             <div class="relative" x-data="{ userMenuOpen: false }" x-on:click.outside="userMenuOpen = false">
                 <button type="button" x-on:click="userMenuOpen = !userMenuOpen"
                     class="flex items-center gap-2.5 rounded-full bg-white border border-[#E5E7EB] p-1.5 pr-3 transition hover:border-[#FF5722]/50 shadow-xs cursor-pointer">
-                    <span
-                        class="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF5722] font-heading text-xs font-bold uppercase text-white shadow-xs">
-                        {{ \Illuminate\Support\Str::of(Auth::user()?->name ?? 'M')->explode(' ')->map(fn($p) => \Illuminate\Support\Str::substr($p, 0, 1))->take(2)->implode('') }}
-                    </span>
+                    @if (Auth::user()?->avatar_url)
+                        <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}"
+                            class="h-8 w-8 rounded-full object-cover border border-[#E5E7EB] shadow-xs">
+                    @else
+                        <span
+                            class="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF5722] font-heading text-xs font-bold uppercase text-white shadow-xs">
+                            {{ \Illuminate\Support\Str::of(Auth::user()?->name ?? 'M')->explode(' ')->map(fn($p) => \Illuminate\Support\Str::substr($p, 0, 1))->take(2)->implode('') }}
+                        </span>
+                    @endif
                     <span class="hidden sm:inline-block text-xs font-bold text-[#16151A]">
                         {{ Auth::user()?->name ?? 'Member FitCore' }}
                     </span>

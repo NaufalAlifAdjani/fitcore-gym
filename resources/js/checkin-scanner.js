@@ -1,4 +1,4 @@
-﻿import { Html5Qrcode } from 'html5-qrcode';
+import { Html5Qrcode } from 'html5-qrcode';
 
 /**
  * QR Code Check-In Scanner (Dual Mode: Hardware Scanner Gun & Webcam)
@@ -277,6 +277,15 @@ function addCheckInToTable(data) {
     const validUntil = data.valid_until ?? '-';
     const checkInTime = data.checked_in_at ? `${data.checked_in_at} WIB` : '-';
     const operatorName = data.checked_by_name ?? 'Admin';
+    const memberAvatar = data.member_avatar ?? null;
+
+    let avatarHtml = '';
+    if (memberAvatar) {
+        avatarHtml = `<img src="${escapeHtml(memberAvatar)}" alt="${escapeHtml(memberName)}" class="h-11 w-11 rounded-full object-cover border-2 border-[#E5E7EB] shrink-0 shadow-xs">`;
+    } else {
+        const initials = escapeHtml(memberName.substring(0, 2).toUpperCase());
+        avatarHtml = `<div class="h-11 w-11 rounded-full bg-orange-50 border border-orange-200 text-[#FF5722] font-poppins font-bold flex items-center justify-center text-xs shrink-0 shadow-xs">${initials}</div>`;
+    }
 
     const tr = document.createElement('tr');
     tr.className = 'hover:bg-slate-50/80 transition-colors bg-emerald-50/70 duration-1000';
@@ -285,8 +294,13 @@ function addCheckInToTable(data) {
             ${escapeHtml(checkInTime)}
         </td>
         <td class="py-3.5 px-4">
-            <div class="font-semibold text-[#16151A]">${escapeHtml(memberName)}</div>
-            ${memberCode ? `<div class="font-mono text-[11px] text-[#565A66]">${escapeHtml(memberCode)}</div>` : ''}
+            <div class="flex items-center gap-3">
+                ${avatarHtml}
+                <div>
+                    <div class="font-semibold text-[#16151A]">${escapeHtml(memberName)}</div>
+                    ${memberCode ? `<div class="font-mono text-[11px] text-[#565A66]">${escapeHtml(memberCode)}</div>` : ''}
+                </div>
+            </div>
         </td>
         <td class="py-3.5 px-4 font-medium text-slate-700">
             ${escapeHtml(packageName)}
@@ -346,15 +360,19 @@ function showResult(success, errorMessage = null, data = null) {
         resultBox.className = 'mt-6 rounded-2xl p-6 bg-emerald-50 border border-emerald-200 shadow-sm transition';
         resultBox.innerHTML = `
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-emerald-200/60">
-                <div class="flex items-center gap-3">
-                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-md shadow-emerald-500/20">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                        </svg>
-                    </span>
+                <div class="flex items-center gap-3.5">
+                    ${data.member_avatar ? `
+                        <img src="${escapeHtml(data.member_avatar)}" alt="${escapeHtml(data.member_name)}" class="h-16 w-16 rounded-2xl object-cover border-2 border-emerald-400 shadow-md shrink-0">
+                    ` : `
+                        <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-md shadow-emerald-500/20">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                            </svg>
+                        </span>
+                    `}
                     <div>
                         <h3 class="font-poppins text-lg font-bold text-emerald-950">Check-in berhasil.</h3>
-                        <p class="font-inter text-xs font-medium text-emerald-700">Data kehadiran telah dicatat ke sistem.</p>
+                        <p class="font-inter text-xs font-medium text-emerald-700">Verifikasi wajah member dengan foto di atas / tabel kehadiran.</p>
                     </div>
                 </div>
 

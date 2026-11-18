@@ -440,9 +440,14 @@
                                     <!-- Member Info -->
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3.5">
-                                            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200 text-xs font-bold text-[#16151A] ring-2 ring-gray-100">
-                                                {{ $initials ?: 'MB' }}
-                                            </div>
+                                            @if ($m->avatar_url)
+                                                <img src="{{ $m->avatar_url }}" alt="{{ $m->name }}"
+                                                    class="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-gray-100">
+                                            @else
+                                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-200 text-xs font-bold text-[#16151A] ring-2 ring-gray-100">
+                                                    {{ $initials ?: 'MB' }}
+                                                </div>
+                                            @endif
                                             <div>
                                                 <div class="font-semibold text-[#16151A] leading-tight">
                                                     {{ $m->name }}

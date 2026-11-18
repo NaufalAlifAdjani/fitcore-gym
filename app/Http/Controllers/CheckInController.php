@@ -19,7 +19,7 @@ class CheckInController extends Controller
         $today = now('Asia/Jakarta')->toDateString();
 
         $todayCheckIns = CheckIn::with([
-            'member:id,name,email',
+            'member:id,name,email,avatar',
             'member.memberProfile:id,user_id,member_code',
             'membership.package:id,name',
             'checkedBy:id,name',
@@ -57,7 +57,15 @@ class CheckInController extends Controller
 
         $member = $memberProfile->user;
 
-        // ── B. Validate Active Membership ────────────────────────────────────
+        // ── B. Validate Profile Photo ────────────────────────────────────────
+        if (! $member->hasProfilePhoto()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Member belum melengkapi foto profil. Harap lengkapi foto profil terlebih dahulu sebelum melakukan check-in.',
+            ], 422);
+        }
+
+        // ── C. Validate Active Membership ────────────────────────────────────
         $today = now('Asia/Jakarta');
 
         $activeMembership = $member->memberships()
@@ -95,7 +103,7 @@ class CheckInController extends Controller
             ], 422);
         }
 
-        // ── C. Validate Duplicate Check-In ───────────────────────────────────
+        // ── D. Validate Duplicate Check-In ───────────────────────────────────
         $todayDate = $today->toDateString(); // e.g. "2026-10-11"
 
         // Use whereDate() for cross-driver compatibility (SQLite stores dates as text).
@@ -110,7 +118,7 @@ class CheckInController extends Controller
             ], 409);
         }
 
-        // ── D. Save Check-In ─────────────────────────────────────────────────
+        // ── E. Save Check-In ─────────────────────────────────────────────────
         // The unique(member_id, check_in_date) DB constraint is the ultimate safeguard
         // against race conditions. We catch it explicitly and return a 409.
         try {
@@ -131,7 +139,7 @@ class CheckInController extends Controller
             ], 409);
         }
 
-        // ── E. Return Success Response ────────────────────────────────────────
+        // ── F. Return Success Response ────────────────────────────────────────
         $memberCode = $memberProfile->member_code ?? ('MBR-'.str_pad((string) $member->id, 5, '0', STR_PAD_LEFT));
         $operatorName = $request->user()?->name ?? 'Admin';
         $packageName = $activeMembership->package->name ?? 'Membership FitCore';
@@ -143,6 +151,7 @@ class CheckInController extends Controller
             'message' => 'Check-in berhasil!',
             'member_name' => $member->name,
             'member_code' => $memberCode,
+            'member_avatar' => $member->avatar_url,
             'membership' => $packageName,
             'valid_until' => $validUntil,
             'checked_in_at' => $checkedInTime,
