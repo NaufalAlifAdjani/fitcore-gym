@@ -90,7 +90,7 @@
                         <span>LOKASI</span>
                     </div>
                     <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-xs">
-                        <h4 class="text-zinc-900 font-extrabold text-sm mb-1.5">Maxfit SCBD Mega Tower</h4>
+                        <h4 class="text-zinc-900 font-extrabold text-sm mb-1.5">FitCore SCBD Mega Tower</h4>
                         <p class="text-xs text-zinc-600 leading-relaxed">
                             Lt. B1 &amp; Mezzanine, Pacific Century Place, SCBD Lot 11, Jakarta Selatan
                         </p>
@@ -127,8 +127,8 @@
                             </div>
                             <div>
                                 <span class="text-[10px] text-zinc-500 uppercase tracking-wider block">Email Resmi Member &amp; Kerjasama</span>
-                                <a href="mailto:support@maxfit.id" class="text-xs font-black text-zinc-900 hover:underline">
-                                    support@maxfit.id
+                                <a href="mailto:support@fitcore.test" class="text-xs font-black text-zinc-900 hover:underline">
+                                    support@fitcore.test
                                 </a>
                             </div>
                         </div>
@@ -161,20 +161,11 @@
 
             <!-- Bottom Bar Footer -->
             <div class="border-t border-gray-200 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-zinc-500 gap-4">
-                <p>&copy; 2025 PT Maxfit Kebugaran Indonesia. Hak Cipta Dilindungi.</p>
+                <p>&copy; {{ date('Y') }} FitCore Athletic Gym Indonesia. Seluruh Hak Cipta Dilindungi.</p>
                 <div class="flex items-center gap-6">
                     <a href="#" class="hover:text-[#FF5722] transition">Kebijakan Privasi</a>
                     <a href="#" class="hover:text-[#FF5722] transition">Syarat &amp; Ketentuan</a>
                     <a href="#" class="hover:text-[#FF5722] transition">Bantuan</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-                <div class="flex flex-wrap items-center gap-6">
-                    <a href="#" class="hover:text-zinc-300 transition">Kebijakan Privasi</a>
-                    <a href="#" class="hover:text-zinc-300 transition">Syarat &amp; Ketentuan</a>
-                    <a href="#" class="hover:text-zinc-300 transition">Protokol Keselamatan</a>
-                    <a href="#" class="hover:text-zinc-300 transition">SOP Pelatih CSCS</a>
                 </div>
             </div>
         </div>

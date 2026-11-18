@@ -175,6 +175,7 @@
                             <span class="font-bold text-emerald-600">Tetap Buka 24 Jam</span>
                         </div>
                     </div>
+                </div>
 
                 <!-- Kolom 3: Navigasi Cepat -->
                 <div class="space-y-3">

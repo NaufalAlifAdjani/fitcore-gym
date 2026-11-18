@@ -47,18 +47,18 @@
                     </div>
                     <span
                         class="text-lg sm:text-xl font-extrabold tracking-tight text-[#16151A] font-heading uppercase">
-                        MAXFIT<span class="text-[#FF5722]">.</span>
+                        FITCORE<span class="text-[#FF5722]">.</span>
                     </span>
                 </div>
 
-                <!-- Text MAXFIT / TRAINER PORTAL -->
+                <!-- Text FITCORE / PT -->
                 <div class="hidden sm:flex flex-col pl-4 border-l border-[#E5E7EB] leading-none">
                     <span class="text-base sm:text-lg font-black tracking-tight text-[#16151A] font-heading uppercase">
-                        MAXFIT
+                        FITCORE
                     </span>
                     <span
                         class="text-[10px] sm:text-[11px] tracking-wider text-[#FF5722] font-extrabold uppercase mt-0.5">
-                        TRAINER PORTAL
+                        PERSONAL TRAINER
                     </span>
                 </div>
             </a>

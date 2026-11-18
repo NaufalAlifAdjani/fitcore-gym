@@ -219,39 +219,4 @@
             </div>
         </div>
     </section>
-
-    <!-- Footer Resmi FitCore Athletic (Light Theme) -->
-    <footer class="border-t border-[#E5E7EB] bg-white text-[#565A66] text-xs py-14 px-4 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-10">
-            <div class="space-y-3.5 md:col-span-2">
-                <div class="flex items-center gap-3">
-                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 shadow-md shadow-[#FF5722]/30 rounded-full">
-                        <rect width="36" height="36" rx="18" fill="#FF5722"/>
-                        <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="white"/>
-                    </svg>
-                    <div>
-                        <span class="font-poppins font-extrabold text-[#16151A] text-base tracking-wider">FITCORE <span class="text-[#FF5722]">ATHLETIC</span></span>
-                        <p class="text-[9px] uppercase tracking-widest text-[#565A66]">Gym &amp; Performance Center</p>
-                    </div>
-                </div>
-                <p class="text-[#565A66] max-w-sm leading-relaxed text-xs">
-                    Pusat kebugaran premium dengan peralatan standar internasional, instruktur bersertifikasi, dan teknologi modern untuk memaksimalkan potensi tubuh Anda.
-                </p>
-            </div>
-            <div>
-                <h4 class="font-poppins font-bold text-[#16151A] uppercase text-xs tracking-wider mb-3.5">Lokasi &amp; Jam Operasional</h4>
-                <p class="leading-relaxed text-[#565A66]">Sudirman Central Business District (SCBD), District 8, Jakarta Selatan</p>
-                <p class="mt-2.5 text-[#FF5722] font-bold">Senin - Minggu: 06:00 - 23:00 WIB</p>
-            </div>
-            <div>
-                <h4 class="font-poppins font-bold text-[#16151A] uppercase text-xs tracking-wider mb-3.5">Kontak &amp; Bantuan</h4>
-                <p class="text-[#565A66]">WhatsApp: +62 812-3456-7890</p>
-                <p class="mt-1 text-[#565A66]">Email: cs@fitcoreathletic.id</p>
-                <p class="mt-2.5 text-[11px] text-[#565A66]">Layanan CS beroperasi setiap hari 24 jam.</p>
-            </div>
-        </div>
-        <div class="mx-auto max-w-7xl mt-10 border-t border-[#E5E7EB] pt-6 text-center text-[#565A66] text-[11px]">
-            &copy; {{ date('Y') }} FitCore Athletic Gym &amp; Performance Center. Seluruh hak cipta dilindungi undang-undang.
-        </div>
-    </footer>
 </x-member-layout>
