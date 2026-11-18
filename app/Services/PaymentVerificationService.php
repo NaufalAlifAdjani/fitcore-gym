@@ -10,6 +10,7 @@ use App\Models\Payment;
 use App\Models\PtPackage;
 use App\Models\User;
 use App\Notifications\ChoosePtScheduleNotification;
+use App\Notifications\PaymentRejectedNotification;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -73,6 +74,8 @@ class PaymentVerificationService
                 'action' => 'reject',
                 'notes' => $reason,
             ]);
+
+            $lockedPayment->member?->notify(new PaymentRejectedNotification($lockedPayment, $reason));
 
             return $lockedPayment->refresh();
         }, attempts: 3);
