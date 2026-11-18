@@ -92,15 +92,16 @@ class GoogleAuthController extends Controller
                 ]);
             }
 
+            // Validasi: Administrator tidak dapat login melalui portal publik /login
+            if ($user->isAdmin()) {
+                abort(403, 'Akses Ditolak. Administrator tidak dapat login melalui halaman ini. Halaman ini hanya diperuntukkan bagi Member dan Personal Trainer.');
+            }
+
             // Login user ke sesi aplikasi
             Auth::login($user, remember: true);
             $request->session()->regenerate();
 
-            // Redirect user sesuai role spesifik (Member ke dashboard member)
-            if ($user->isAdmin()) {
-                return redirect()->route('admin.dashboard');
-            }
-
+            // Redirect user sesuai role spesifik (Trainer ke dashboard trainer, Member ke dashboard member)
             if ($user->isTrainer()) {
                 return redirect()->route('trainer.dashboard');
             }
