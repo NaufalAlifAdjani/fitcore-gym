@@ -17,7 +17,6 @@
 
         <!-- Header Ringkas -->
         <div class="space-y-1">
-            <span class="text-[10px] font-bold text-[#FF5722] uppercase tracking-wider">FILOSOFI KAMI</span>
             <h1 class="font-poppins font-black text-2xl text-[#16151A]">Tentang FitCore</h1>
             <p class="text-xs text-[#565A66] leading-relaxed">
                 Pusat kebugaran premier yang didedikasikan untuk performa atletik, disiplin latihan, dan hasil nyata.

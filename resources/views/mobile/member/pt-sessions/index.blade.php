@@ -80,34 +80,18 @@
             </div>
         </div>
 
-        <!-- 3. Ringkasan Status Sesi (3 Kolom Seimbang Sesuai Website: Di Atas Tombol Booking) -->
-        <div class="grid grid-cols-3 gap-2.5">
-            <div class="bg-white border border-[#E5E7EB] rounded-2xl p-3 text-center shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-                <div class="text-xl font-black font-poppins text-[#16151A]">{{ $counts['pending'] ?? 0 }}</div>
-                <div class="text-[10px] font-bold text-[#565A66] mt-0.5 uppercase tracking-wide">Menunggu</div>
-            </div>
-            <div class="bg-white border border-[#E5E7EB] rounded-2xl p-3 text-center shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-                <div class="text-xl font-black font-poppins text-[#16151A]">{{ $counts['confirmed'] ?? 0 }}</div>
-                <div class="text-[10px] font-bold text-[#565A66] mt-0.5 uppercase tracking-wide">Terkonfirmasi</div>
-            </div>
-            <div class="bg-white border border-[#E5E7EB] rounded-2xl p-3 text-center shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-                <div class="text-xl font-black font-poppins text-[#16151A]">{{ $counts['cancelled'] ?? 0 }}</div>
-                <div class="text-[10px] font-bold text-[#565A66] mt-0.5 uppercase tracking-wide">Dibatalkan</div>
-            </div>
-        </div>
-
-        <!-- 4. Tombol Utama Booking / Beli Sesi PT (Posisi Tepat di Bawah Ringkasan Status Sesi) -->
+        <!-- 3. Tombol Utama Booking / Beli Sesi PT (Posisi Tepat di Bawah Kartu Kuota - Ergonomis Mobile) -->
         <div>
             @if ($remainingSessions > 0)
                 <a href="{{ route('mobile.member.pt-sessions.create') }}"
-                   class="w-full py-3.5 px-4 rounded-xl bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-bold font-poppins text-xs tracking-wide shadow-md shadow-orange-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                   class="w-full py-3.5 px-4 rounded-2xl bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-bold font-poppins text-sm tracking-wide shadow-md shadow-orange-500/20 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
                     <span class="text-base leading-none font-black">+</span>
                     <span>Booking Sesi Baru</span>
                 </a>
             @else
                 <div class="space-y-1.5">
                     <a href="{{ route('mobile.member.pt-packages.index') }}"
-                       class="w-full py-3.5 px-4 rounded-xl bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-bold font-poppins text-xs tracking-wide shadow-md shadow-orange-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer">
+                       class="w-full py-3.5 px-4 rounded-2xl bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-bold font-poppins text-sm tracking-wide shadow-md shadow-orange-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
@@ -118,6 +102,22 @@
                     </p>
                 </div>
             @endif
+        </div>
+
+        <!-- 4. Ringkasan Status Sesi (3 Kolom Bersih, Rapi & Elegan di Bawah Tombol Utama) -->
+        <div class="grid grid-cols-3 gap-2.5">
+            <div class="bg-white border border-[#E5E7EB] rounded-2xl p-3.5 text-center shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+                <div class="text-2xl font-black font-poppins text-[#16151A]">{{ $counts['pending'] ?? 0 }}</div>
+                <div class="text-xs font-semibold text-[#565A66] mt-1">Menunggu</div>
+            </div>
+            <div class="bg-white border border-[#E5E7EB] rounded-2xl p-3.5 text-center shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+                <div class="text-2xl font-black font-poppins text-[#16151A]">{{ $counts['confirmed'] ?? 0 }}</div>
+                <div class="text-xs font-semibold text-[#565A66] mt-1">Terkonfirmasi</div>
+            </div>
+            <div class="bg-white border border-[#E5E7EB] rounded-2xl p-3.5 text-center shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
+                <div class="text-2xl font-black font-poppins text-[#16151A]">{{ $counts['cancelled'] ?? 0 }}</div>
+                <div class="text-xs font-semibold text-[#565A66] mt-1">Dibatalkan</div>
+            </div>
         </div>
 
         <!-- 5. Kalender & Jadwal Sesi Latihan -->

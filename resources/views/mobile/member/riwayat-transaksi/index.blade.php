@@ -29,12 +29,8 @@
         x-on:keydown.escape.window="closeDetailModal()"
         class="space-y-5"
     >
-        <!-- 1. Header Halaman Riwayat Transaksi (Sesuai Web Desktop) -->
+        <!-- 1. Header Halaman Riwayat Transaksi -->
         <header class="space-y-2">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 text-[#FF5722] text-[11px] font-inter font-bold uppercase tracking-wider border border-orange-100">
-                <span class="h-1.5 w-1.5 rounded-full bg-[#FF5722]"></span>
-                Member Portal FitCore
-            </div>
             <h1 class="font-poppins font-extrabold text-2xl sm:text-3xl text-[#16151A] tracking-tight leading-tight">
                 RIWAYAT TRANSAKSI
             </h1>

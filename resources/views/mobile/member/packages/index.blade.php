@@ -11,9 +11,6 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
         <!-- 1. Header Banner (Clean Light Theme) -->
         <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] relative overflow-hidden">
             <div class="relative z-10">
-                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-[#FF5722] bg-orange-50 border border-orange-200 mb-2">
-                    FITCORE MEMBERSHIP
-                </span>
                 <h1 class="font-poppins text-lg font-black text-[#16151A] tracking-tight">
                     Pilih Paket Keanggotaan
                 </h1>

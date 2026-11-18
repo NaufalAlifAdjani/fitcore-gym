@@ -4,8 +4,7 @@
         <!-- 1. Header Halaman Pengaturan & Komisi PT -->
         <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <p class="font-inter text-xs font-bold text-[#FF5722] tracking-wider uppercase">PENGATURAN &amp; KEUANGAN</p>
-                <h1 class="mt-1 text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">
+                <h1 class="text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">
                     Manajemen Komisi PT (Skema 70/30)
                 </h1>
                 <p class="font-inter text-sm text-[#565A66] mt-0.5">

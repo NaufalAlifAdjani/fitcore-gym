@@ -17,7 +17,6 @@
 
         <!-- Header Ringkas -->
         <div class="space-y-1">
-            <span class="text-[10px] font-bold text-[#FF5722] uppercase tracking-wider">PILIHAN MEMBERSHIP</span>
             <h1 class="font-poppins font-black text-2xl text-[#16151A]">Paket Keanggotaan</h1>
             <p class="text-xs text-[#565A66] leading-relaxed">
                 Pilih paket membership untuk akses tak terbatas ke seluruh peralatan dan fasilitas recovery.

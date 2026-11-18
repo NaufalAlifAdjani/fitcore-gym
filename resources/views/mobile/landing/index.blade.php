@@ -20,11 +20,6 @@
             <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-[#FF5722]/10 rounded-full blur-2xl pointer-events-none"></div>
 
             <div class="relative space-y-3">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-50 text-[10px] font-bold uppercase tracking-wider text-[#FF5722] border border-orange-200/80">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#FF5722] animate-pulse"></span>
-                    PREMIER ATHLETIC GYM
-                </span>
-
                 <h1 class="font-poppins font-black text-2xl tracking-tight leading-tight text-[#16151A]">
                     TRANSFORMASI TOTAL <br>
                     <span class="text-[#FF5722]">KEKUATAN ANDA</span>

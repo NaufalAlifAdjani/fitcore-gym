@@ -2,9 +2,6 @@
     <!-- Header Section (Nuansa Putih / Light Bersih) -->
     <section class="bg-white border-b border-[#E5E7EB] pt-14 pb-20 px-4 sm:px-6 lg:px-8">
         <div class="mx-auto max-w-5xl text-center">
-            <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#FF5722] bg-orange-50 border border-orange-200 rounded-full mb-4">
-                FITCORE ATHLETIC MEMBERSHIP
-            </span>
             <h1 class="font-poppins text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#16151A] tracking-tight">
                 Pilih Paket Keanggotaan
             </h1>

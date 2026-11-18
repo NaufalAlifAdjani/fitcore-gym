@@ -2,12 +2,8 @@
     <div class="min-h-screen bg-[#F6F6F7] py-8 sm:py-12 px-4 sm:px-6 lg:px-8 text-[#16151A]">
         <div class="max-w-xl mx-auto space-y-8">
 
-            <!-- Page Title / Header Badge -->
+            <!-- Page Title -->
             <div class="text-center space-y-2">
-                <span class="inline-flex items-center gap-1.5 px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#FF5722] bg-orange-50 border border-orange-200 rounded-full">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#FF5722] animate-pulse"></span>
-                    FitCore Digital Pass
-                </span>
                 <h1 class="font-heading text-2xl sm:text-3xl font-extrabold text-[#16151A] tracking-tight">
                     Kartu Member Digital
                 </h1>

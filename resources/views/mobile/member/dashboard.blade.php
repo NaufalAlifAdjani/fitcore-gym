@@ -14,28 +14,9 @@
 <x-layouts.mobile-app title="Beranda Member - FitCore Athletic" active-tab="beranda">
     <div class="space-y-5">
 
-        <!-- 1. Header Sambutan & Status Membership (Sesuai Web Desktop) -->
-        <header class="space-y-2">
-            <div class="flex items-center justify-between">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 text-[#FF5722] text-[11px] font-inter font-bold uppercase tracking-wider border border-orange-100">
-                    <span class="h-1.5 w-1.5 rounded-full bg-[#FF5722]"></span>
-                    Member Portal FitCore
-                </div>
-
-                @if ($activeMembership)
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        Member Aktif
-                    </span>
-                @else
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200 shadow-2xs">
-                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                        Belum Langganan
-                    </span>
-                @endif
-            </div>
-
-            <div class="mt-1">
+        <!-- 1. Header Sambutan -->
+        <header class="space-y-1">
+            <div>
                 <p class="text-[11px] font-bold uppercase tracking-wider text-[#565A66]">Selamat Datang Kembali,</p>
                 <h1 class="font-poppins font-extrabold text-2xl sm:text-3xl text-[#16151A] tracking-tight leading-tight">
                     {{ $user->name }}

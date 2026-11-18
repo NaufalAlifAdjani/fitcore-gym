@@ -13,9 +13,16 @@
 <x-layouts.mobile-trainer title="Pendapatan & Komisi - FitCore Coach" active="commissions">
     <div class="space-y-4">
 
-        <!-- 1. Header Judul Halaman (Sesuai Web Desktop) -->
+        <!-- 1. Header Judul Halaman -->
         <header class="space-y-2">
-            <div class="flex flex-wrap items-center gap-2">
+            <h1 class="font-poppins font-extrabold text-2xl text-[#16151A] tracking-tight leading-tight">
+                Pendapatan &amp; Komisi
+            </h1>
+            <p class="font-inter text-xs text-[#565A66] leading-relaxed">
+                Pantau rincian komisi yang Anda peroleh dari setiap sesi private training yang telah diselesaikan.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-2 pt-1">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-bold">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -27,13 +34,6 @@
                     <span>Tarif: Rp {{ number_format($currentRate, 0, ',', '.') }} / Sesi</span>
                 </span>
             </div>
-
-            <h1 class="font-poppins font-extrabold text-2xl text-[#16151A] tracking-tight leading-tight">
-                Pendapatan &amp; Komisi
-            </h1>
-            <p class="font-inter text-xs text-[#565A66] leading-relaxed">
-                Pantau rincian komisi yang Anda peroleh dari setiap sesi private training yang telah diselesaikan.
-            </p>
         </header>
 
         <!-- 2. 4 Stat Cards Ringkasan (2x2 Grid - Identik Visual Web Desktop) -->

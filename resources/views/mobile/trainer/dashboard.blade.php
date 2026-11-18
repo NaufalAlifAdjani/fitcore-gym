@@ -24,26 +24,13 @@
         }
     }">
 
-        <!-- 1. Header Sambutan & Status Pelatih (Sesuai Web Desktop) -->
-        <header class="space-y-2">
-            <div class="flex items-center justify-between">
-                <!-- Floor Active Pill -->
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold shadow-2xs">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    <span>PT Aktif (Floor Active)</span>
-                </div>
-
-                <!-- Date Badge -->
-                <div class="text-[10px] font-semibold text-[#565A66] bg-white px-2.5 py-1 rounded-full border border-[#E5E7EB] shadow-2xs">
-                    {{ \Carbon\Carbon::now()->translatedFormat('l, d M Y') }}
-                </div>
-            </div>
-
+        <!-- 1. Header Sambutan -->
+        <header class="space-y-1">
             <div>
-                <p class="text-[11px] font-bold uppercase tracking-wider text-[#565A66]">Selamat Bertugas,</p>
+                <div class="flex items-center gap-2">
+                    <p class="text-[11px] font-bold uppercase tracking-wider text-[#565A66]">Selamat Bertugas,</p>
+                    <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">PT Aktif</span>
+                </div>
                 <h1 class="font-poppins font-extrabold text-2xl sm:text-3xl text-[#16151A] tracking-tight leading-tight">
                     Coach {{ $trainer->name }} 👋
                 </h1>

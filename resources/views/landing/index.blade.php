@@ -23,11 +23,6 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <!-- Kolom Kiri: Teks & CTA -->
                 <div class="lg:col-span-7 space-y-6">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-orange-200/80 text-xs font-bold text-[#FF5722]">
-                        <span class="w-2 h-2 rounded-full bg-[#FF5722] animate-pulse"></span>
-                        PUSAT KEBUGARAN PREMIER &amp; HIGH PERFORMANCE
-                    </div>
-
                     <h1 class="font-poppins font-black text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-[1.1] text-[#16151A]">
                         TRANSFORMASI TOTAL <br>
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#16151A] via-[#FF5722] to-[#FF8A00]">KEKUATAN &amp; PERFORMA</span>

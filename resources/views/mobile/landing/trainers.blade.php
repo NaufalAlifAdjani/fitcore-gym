@@ -17,7 +17,6 @@
 
         <!-- Header Ringkas -->
         <div class="space-y-1">
-            <span class="text-[10px] font-bold text-[#FF5722] uppercase tracking-wider">PELATIH BERLISENSI</span>
             <h1 class="font-poppins font-black text-2xl text-[#16151A]">Personal Trainer</h1>
             <p class="text-xs text-[#565A66] leading-relaxed">
                 Bimbingan intensif dari instruktur berlisensi internasional untuk hasil latihan terukur dan bebas cedera.
