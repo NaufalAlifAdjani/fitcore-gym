@@ -9,6 +9,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\WebPush\WebPushChannel;
+use NotificationChannels\WebPush\WebPushMessage;
 
 class SessionConfirmedNotification extends Notification implements ShouldQueue
 {
@@ -22,11 +24,11 @@ class SessionConfirmedNotification extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @return array<int, string>
+     * @return array<int, class-string|string>
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database', 'mail', WebPushChannel::class];
     }
 
     /**
@@ -49,6 +51,23 @@ class SessionConfirmedNotification extends Notification implements ShouldQueue
             ->line("**Waktu:** {$timeRange}")
             ->action('Lihat Sesi Latihan', route('pt-sessions.index'))
             ->line('Harap hadir 10 menit sebelum waktu latihan dimulai. Tetap semangat!');
+    }
+
+    /**
+     * Get the web push representation of the notification.
+     */
+    public function toWebPush(object $notifiable, mixed $notification = null): WebPushMessage
+    {
+        $sessionDate = Carbon::parse($this->session->session_date)->locale('id')->isoFormat('D MMMM Y');
+        $startTime = substr((string) $this->session->start_time, 0, 5);
+        $trainerName = $this->session->trainer?->name ?? 'Personal Trainer';
+
+        return (new WebPushMessage)
+            ->title('Sesi PT Disetujui! ✅')
+            ->icon('/images/logo/logo-icon.png')
+            ->body("Sesi latihan dengan Coach {$trainerName} pada {$sessionDate} jam {$startTime} WIB telah dikonfirmasi.")
+            ->action('Lihat Sesi', 'view_session')
+            ->data(['url' => route('pt-sessions.index')]);
     }
 
     /**

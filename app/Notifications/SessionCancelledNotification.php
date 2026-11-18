@@ -9,6 +9,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\WebPush\WebPushChannel;
+use NotificationChannels\WebPush\WebPushMessage;
 
 class SessionCancelledNotification extends Notification implements ShouldQueue
 {
@@ -23,11 +25,11 @@ class SessionCancelledNotification extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @return array<int, string>
+     * @return array<int, class-string|string>
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database', 'mail', WebPushChannel::class];
     }
 
     /**
@@ -67,6 +69,38 @@ class SessionCancelledNotification extends Notification implements ShouldQueue
         return $mail
             ->action('Lihat Jadwal', $targetUrl)
             ->line('Jika Anda memiliki pertanyaan lebih lanjut, silakan hubungi tim dukungan FitCore.');
+    }
+
+    /**
+     * Get the web push representation of the notification.
+     */
+    public function toWebPush(object $notifiable, mixed $notification = null): WebPushMessage
+    {
+        $sessionDate = Carbon::parse($this->session->session_date)->locale('id')->isoFormat('D MMMM Y');
+        $startTime = substr((string) $this->session->start_time, 0, 5);
+        $isRecipientTrainer = $notifiable->id === $this->session->trainer_id;
+        $targetUrl = $isRecipientTrainer ? route('trainer.sessions.index') : route('pt-sessions.index');
+
+        if ($isRecipientTrainer) {
+            $memberName = $this->session->member?->name ?? 'Member';
+            $title = 'Sesi PT Dibatalkan 🚫';
+            $body = "Sesi latihan dengan {$memberName} pada {$sessionDate} ({$startTime} WIB) telah dibatalkan.";
+        } else {
+            $trainerName = $this->session->trainer?->name ?? 'Personal Trainer';
+            $title = 'Sesi PT Dibatalkan ⚠️';
+            $body = "Sesi latihan dengan Coach {$trainerName} pada {$sessionDate} ({$startTime} WIB) telah dibatalkan. Kuota sesi telah dikembalikan.";
+        }
+
+        if ($this->reason) {
+            $body .= " Alasan: {$this->reason}";
+        }
+
+        return (new WebPushMessage)
+            ->title($title)
+            ->icon('/images/logo/logo-icon.png')
+            ->body($body)
+            ->action('Lihat Jadwal', 'view_schedule')
+            ->data(['url' => $targetUrl]);
     }
 
     /**
