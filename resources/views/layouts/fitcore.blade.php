@@ -49,14 +49,9 @@
 
                 <!-- Kolom 1 (Brand & Jam Operasional) -->
                 <div class="space-y-6">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-[#FF5722] flex items-center justify-center text-white shadow-md">
-                            <svg class="w-5 h-5 rotate-[-45deg]" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M6 5a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5zm9 0a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V5zM4 9a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9zm12 0a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V9zM8 11h8v2H8v-2z"/>
-                            </svg>
-                        </div>
-                        <span class="text-2xl font-black text-zinc-900 tracking-wider">FITCORE</span>
-                    </div>
+                    <a href="{{ route('member.dashboard') }}" class="flex items-center gap-3">
+                        <img src="{{ asset('images/logo/logo.png') }}" alt="FitCore Athletic" class="h-9 w-auto object-contain">
+                    </a>
 
                     <p class="text-xs text-zinc-500 leading-relaxed max-w-sm">
                         Pusat kebugaran dan pelatihan berintensitas tinggi dengan peralatan standar kejuaraan internasional, pelatih berlisensi tersertifikasi, dan kultur disiplin tanpa kompromi.

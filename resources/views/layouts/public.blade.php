@@ -50,17 +50,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
             <!-- Brand Logo -->
             <a href="{{ route('landing.index') }}" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white shadow-md shadow-[#FF5722]/30 transition group-hover:scale-105 shrink-0">
-                    <svg width="22" height="22" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
-                        <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="currentColor"/>
-                    </svg>
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-poppins font-black text-xl tracking-tight text-[#16151A]">
-                        FIT <span class="text-[#FF5722]">CORE</span>
-                    </span>
-                    <span class="text-[9px] font-bold uppercase tracking-[0.25em] text-[#565A66]">ATHLETIC CENTER</span>
-                </div>
+                <img src="{{ asset('images/logo/logo.png') }}" alt="FitCore Athletic" class="h-8 sm:h-9 w-auto object-contain">
             </a>
 
             <!-- Navigation Links -->
@@ -145,14 +135,9 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-[#E5E7EB]">
                 <!-- Kolom 1: Brand & Filosofi -->
                 <div class="md:col-span-1 space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white shadow-md shadow-[#FF5722]/25">
-                            <svg width="20" height="20" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
-                                <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="currentColor"/>
-                            </svg>
-                        </div>
-                        <span class="font-poppins font-black text-xl text-[#16151A] tracking-wider">FITCORE</span>
-                    </div>
+                    <a href="{{ route('landing.index') }}" class="flex items-center gap-3">
+                        <img src="{{ asset('images/logo/logo.png') }}" alt="FitCore Athletic" class="h-9 w-auto object-contain">
+                    </a>
                     <p class="text-xs text-[#565A66] leading-relaxed">
                         Pusat kebugaran berstandar kejuaraan internasional, pelatih berlisensi tersertifikasi, dan kultur disiplin tanpa kompromi untuk performa atletik puncak.
                     </p>

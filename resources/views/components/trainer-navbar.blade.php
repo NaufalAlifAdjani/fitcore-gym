@@ -29,35 +29,10 @@
             </button>
 
             <!-- Brand Logo Lockup -->
-            <a href="{{ route('trainer.sessions.index') }}" class="flex items-center gap-4 group select-none">
-                <!-- Barbell Icon + MAXFIT. -->
-                <div class="flex items-center gap-2">
-                    <div
-                        class="flex items-center text-[#FF5722] group-hover:scale-105 transition-transform duration-200">
-                        <svg class="h-6 w-auto" viewBox="0 0 32 16" fill="currentColor">
-                            <!-- Left Plate -->
-                            <rect x="0" y="0" width="4" height="16" rx="2" />
-                            <rect x="5" y="2" width="2" height="12" rx="1" />
-                            <!-- Barbell Center Rod -->
-                            <rect x="7" y="6.5" width="18" height="3" rx="1" />
-                            <!-- Right Plate -->
-                            <rect x="25" y="2" width="2" height="12" rx="1" />
-                            <rect x="28" y="0" width="4" height="16" rx="2" />
-                        </svg>
-                    </div>
-                    <span
-                        class="text-lg sm:text-xl font-extrabold tracking-tight text-[#16151A] font-heading uppercase">
-                        FITCORE<span class="text-[#FF5722]">.</span>
-                    </span>
-                </div>
-
-                <!-- Text FITCORE / PT -->
-                <div class="hidden sm:flex flex-col pl-4 border-l border-[#E5E7EB] leading-none">
-                    <span class="text-base sm:text-lg font-black tracking-tight text-[#16151A] font-heading uppercase">
-                        FITCORE
-                    </span>
-                    <span
-                        class="text-[10px] sm:text-[11px] tracking-wider text-[#FF5722] font-extrabold uppercase mt-0.5">
+            <a href="{{ route('trainer.sessions.index') }}" class="flex items-center gap-3 group select-none">
+                <img src="{{ asset('images/logo/logo.png') }}" alt="FitCore" class="h-8 w-auto object-contain">
+                <div class="hidden sm:flex flex-col pl-3 border-l border-[#E5E7EB] leading-none">
+                    <span class="text-xs font-black tracking-wider text-[#FF5722] uppercase">
                         PERSONAL TRAINER
                     </span>
                 </div>

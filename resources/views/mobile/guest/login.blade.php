@@ -18,20 +18,12 @@
 <x-layouts.mobile-guest title="Masuk Akun - FitCore Athletic">
     <div class="w-full flex flex-col justify-center" x-data="{ role: '{{ old('role', 'member') }}', showPassword: false }">
 
-        <!-- 1. Header & Logo Brand (Figma Spec: 56x56px, #FF5722, radius 16px, isolate) -->
+        <!-- 1. Header & Logo Brand -->
         <div class="flex flex-col items-center justify-center text-center mb-5">
-            <!-- Dumbbell Blaze Orange Squircle Badge -->
-            <div class="w-[56px] h-[56px] rounded-[16px] bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center isolate text-white shadow-lg shadow-orange-500/25 mb-3.5 shrink-0">
-                <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
-                    <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="currentColor"/>
-                </svg>
-            </div>
-
-            <!-- Brand Name & Portal Pill -->
-            <div class="flex items-center gap-2 mb-2">
-                <span class="font-poppins font-black text-lg tracking-tight text-[#16151A]">FIT <span class="text-[#FF5722]">CORE</span></span>
-                <span class="px-2 py-0.5 rounded-md bg-gray-200/80 text-[10px] font-bold tracking-wider text-[#565A66] uppercase">PORTAL</span>
-            </div>
+            <!-- Brand Logo -->
+            <a href="{{ route('mobile.landing.index') }}" class="inline-flex items-center justify-center mb-3">
+                <img src="{{ asset('images/logo/logo.png') }}" alt="FitCore Athletic" class="h-8 sm:h-9 w-auto object-contain">
+            </a>
 
             <!-- Page Title & Subtitle Dinamis Berdasarkan Role -->
             <h1 class="text-2xl sm:text-3xl font-black font-poppins text-[#16151A] tracking-tight leading-tight">
