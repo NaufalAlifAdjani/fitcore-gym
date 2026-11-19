@@ -232,7 +232,7 @@
 
         <x-email-verified-modal />
     </div>
-    @livewireScripts
+    @livewireScriptConfig
     @stack('scripts')
 </body>
 

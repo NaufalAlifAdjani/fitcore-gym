@@ -12,6 +12,7 @@
 --}}
 
 @php
+    $hasActiveQuota = $quota && $quota->status === 'active' && ! $quota->isExpired() && $quota->remaining_sessions > 0;
     $totalSessions = $quota->total_sessions ?? 0;
     $remainingSessions = $quota->remaining_sessions ?? 0;
     $usedSessions = $quota->used_sessions ?? 0;

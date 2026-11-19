@@ -396,7 +396,7 @@ class PtPackagePurchaseTest extends TestCase
             'name' => 'Coach Rama Prasetya',
             'shift' => 'pagi',
         ]);
-        TrainerProfile::create([
+        TrainerProfile::factory()->create([
             'user_id' => $trainer->id,
             'specialization' => 'Hypertrophy',
         ]);

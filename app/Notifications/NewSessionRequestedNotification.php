@@ -5,10 +5,13 @@ namespace App\Notifications;
 use App\Models\PtSession;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\WebPush\WebPushChannel;
+use NotificationChannels\WebPush\WebPushMessage;
 
-class NewSessionRequestedNotification extends Notification
+class NewSessionRequestedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -19,11 +22,11 @@ class NewSessionRequestedNotification extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @return array<int, string>
+     * @return array<int, class-string|string>
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database', 'mail', WebPushChannel::class];
     }
 
     /**
@@ -43,8 +46,25 @@ class NewSessionRequestedNotification extends Notification
             ->line("Member **{$memberName}** telah mengajukan jadwal sesi latihan Personal Trainer baru.")
             ->line("**Tanggal:** {$sessionDate}")
             ->line("**Waktu:** {$timeRange}")
-            ->action('Periksa Jadwal Sesi', route('trainer.sessions.index'))
+            ->action('Periksa Jadwal Sesi', route('trainer.sessions.index', ['status' => 'pending']))
             ->line('Silakan lakukan konfirmasi pada portal trainer untuk menyetujui sesi latihan.');
+    }
+
+    /**
+     * Get the web push representation of the notification.
+     */
+    public function toWebPush(object $notifiable, mixed $notification = null): WebPushMessage
+    {
+        $sessionDate = Carbon::parse($this->session->session_date)->locale('id')->isoFormat('D MMMM Y');
+        $startTime = substr((string) $this->session->start_time, 0, 5);
+        $memberName = $this->session->member?->name ?? 'Member FitCore';
+
+        return (new WebPushMessage)
+            ->title('Booking Sesi PT Baru! 🏋️‍♂️')
+            ->icon('/images/logo/logo-icon.png')
+            ->body("Member {$memberName} mengajukan sesi latihan pada {$sessionDate} ({$startTime} WIB).")
+            ->action('Periksa Jadwal', 'view_schedule')
+            ->data(['url' => route('trainer.sessions.index', ['status' => 'pending'])]);
     }
 
     /**
@@ -79,7 +99,7 @@ class NewSessionRequestedNotification extends Notification
             'time_range' => $timeRange,
             'title' => 'Pengajuan Sesi Baru',
             'message' => "Member {$memberName} telah mengajukan jadwal sesi PT pada {$sessionDate} ({$timeRange}).",
-            'url' => route('trainer.sessions.index'),
+            'url' => route('trainer.sessions.index', ['status' => 'pending']),
         ];
     }
 }
