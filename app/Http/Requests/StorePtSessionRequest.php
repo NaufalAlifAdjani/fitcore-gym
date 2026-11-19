@@ -17,6 +17,11 @@ class StorePtSessionRequest extends FormRequest
             'trainer_id' => ['required', 'integer', 'exists:users,id'],
             'session_date' => ['required', 'date', 'after_or_equal:today'],
             'start_time' => ['required', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/'],
+            'workout_focus' => ['nullable', 'string', 'max:255'],
+            'notes' => ['nullable', 'string', 'max:500'],
+            'redirect_to' => ['nullable', 'string', 'in:mobile,web'],
+            'from_mobile' => ['nullable'],
+            'agreed_policy' => ['nullable'],
         ];
     }
 

@@ -96,6 +96,8 @@ Route::middleware('auth')->group(function () {
         ->name('pt-sessions.slots');
     Route::get('/pt-sessions/availability', [PtSessionSlotController::class, 'availability'])
         ->name('pt-sessions.availability');
+    Route::get('/pt-sessions/trainers-availability', [PtSessionSlotController::class, 'trainersAvailability'])
+        ->name('pt-sessions.trainers-availability');
 
     Route::get('/pt-sessions', [PtSessionController::class, 'index'])
         ->name('pt-sessions.index');

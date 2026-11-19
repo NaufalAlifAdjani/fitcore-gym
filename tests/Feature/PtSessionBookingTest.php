@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use App\Enums\PtSessionStatus;
 use App\Models\MemberPtQuota;
+use App\Models\Membership;
+use App\Models\Payment;
+use App\Models\PtPackage;
 use App\Models\PtSession;
 use App\Models\TrainerProfile;
 use App\Models\User;
@@ -332,5 +335,193 @@ class PtSessionBookingTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Sisa kuota sesi PT Anda kosong');
         $response->assertSee(':disabled="!selectedDate || !selectedSlot || true"', false);
+    }
+
+    public function test_booking_fails_when_member_membership_is_expired(): void
+    {
+        $member = User::factory()->member()->create();
+        $trainer = User::factory()->trainer()->create();
+
+        MemberPtQuota::factory()->create([
+            'member_id' => $member->id,
+            'remaining_sessions' => 5,
+            'status' => 'active',
+            'end_date' => now()->addMonth(),
+        ]);
+
+        Membership::factory()->create([
+            'member_id' => $member->id,
+            'status' => 'expired',
+            'end_date' => now()->subDay(),
+        ]);
+
+        $targetDate = now()->addDays(2)->toDateString();
+
+        $response = $this->actingAs($member)->post(route('pt-sessions.store'), [
+            'trainer_id' => $trainer->id,
+            'session_date' => $targetDate,
+            'start_time' => '10:00',
+        ]);
+
+        $response->assertSessionHasErrors('booking_error');
+        $this->assertDatabaseCount('pt_sessions', 0);
+    }
+
+    public function test_mobile_booking_submission_creates_pending_session_and_redirects_to_mobile_index(): void
+    {
+        $member = User::factory()->member()->create();
+        $trainer = User::factory()->trainer()->create(['name' => 'Coach Rama']);
+        TrainerProfile::factory()->create(['user_id' => $trainer->id]);
+
+        $quota = MemberPtQuota::factory()->create([
+            'member_id' => $member->id,
+            'total_sessions' => 5,
+            'used_sessions' => 0,
+            'remaining_sessions' => 5,
+            'end_date' => now()->addMonth(),
+            'status' => 'active',
+        ]);
+
+        $targetDate = now()->addDays(2)->toDateString();
+
+        $response = $this->actingAs($member)->post(route('pt-sessions.store'), [
+            'trainer_id' => $trainer->id,
+            'session_date' => $targetDate,
+            'start_time' => '09:00',
+            'workout_focus' => 'Chest & Triceps Hypertrophy',
+            'notes' => 'Tolong fokus pemanasan lebih lama',
+            'redirect_to' => 'mobile',
+            'from_mobile' => '1',
+        ]);
+
+        $response->assertRedirect(route('mobile.member.pt-sessions.index'));
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('pt_sessions', [
+            'member_id' => $member->id,
+            'trainer_id' => $trainer->id,
+            'session_date' => $targetDate,
+            'start_time' => '09:00:00',
+            'status' => PtSessionStatus::Pending->value,
+        ]);
+
+        $session = PtSession::where('member_id', $member->id)->first();
+        $this->assertStringContainsString('Chest & Triceps Hypertrophy', (string) $session->notes);
+        $this->assertStringContainsString('Tolong fokus pemanasan lebih lama', (string) $session->notes);
+
+        $quota->refresh();
+        $this->assertEquals(1, $quota->used_sessions);
+        $this->assertEquals(4, $quota->remaining_sessions);
+    }
+
+    public function test_trainers_availability_endpoint_returns_json(): void
+    {
+        $member = User::factory()->member()->create();
+        $trainer = User::factory()->trainer()->create(['name' => 'Coach Rama']);
+        TrainerProfile::factory()->create(['user_id' => $trainer->id]);
+
+        $targetDate = now()->addDays(2)->toDateString();
+
+        $response = $this->actingAs($member)->getJson(route('pt-sessions.trainers-availability', [
+            'date' => $targetDate,
+        ]));
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'date',
+            'formatted_date',
+            'trainers' => [
+                '*' => [
+                    'trainer_id',
+                    'name',
+                    'shift',
+                    'shift_label',
+                    'specialization',
+                    'rating',
+                    'available_slots_count',
+                    'booked_slots_count',
+                    'total_shift_slots',
+                    'has_available_slots',
+                ],
+            ],
+        ]);
+    }
+
+    public function test_member_can_view_mobile_booking_page(): void
+    {
+        $member = User::factory()->member()->create();
+        $trainer = User::factory()->trainer()->create();
+        TrainerProfile::factory()->create(['user_id' => $trainer->id]);
+        MemberPtQuota::factory()->create([
+            'member_id' => $member->id,
+            'remaining_sessions' => 5,
+            'end_date' => now()->addMonth(),
+        ]);
+
+        $response = $this->actingAs($member)->get(route('mobile.member.pt-sessions.create'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Booking Sesi PT');
+        $response->assertSee('Pilih Tanggal Sesi');
+        $response->assertSee('Pilih Jam Sesi');
+        $response->assertSee('Ringkasan Booking');
+    }
+
+    public function test_booking_is_locked_to_trainer_chosen_during_pt_package_purchase(): void
+    {
+        $member = User::factory()->member()->create();
+        $trainerBound = User::factory()->trainer()->create(['name' => 'Coach Rama']);
+        $trainerOther = User::factory()->trainer()->create(['name' => 'Coach Dimas']);
+        TrainerProfile::factory()->create(['user_id' => $trainerBound->id]);
+        TrainerProfile::factory()->create(['user_id' => $trainerOther->id]);
+
+        $package = PtPackage::factory()->create();
+
+        $quota = MemberPtQuota::factory()->create([
+            'member_id' => $member->id,
+            'pt_package_id' => $package->id,
+            'remaining_sessions' => 5,
+            'end_date' => now()->addMonth(),
+            'status' => 'active',
+        ]);
+
+        Payment::factory()->create([
+            'member_id' => $member->id,
+            'pt_package_id' => $package->id,
+            'trainer_id' => $trainerBound->id,
+            'payment_type' => 'pt_package',
+            'status' => 'verified',
+        ]);
+
+        // 1. Check mobile booking page shows the bound trainer
+        $pageResponse = $this->actingAs($member)->get(route('mobile.member.pt-sessions.create'));
+        $pageResponse->assertStatus(200);
+        $pageResponse->assertSee('Coach Rama');
+        $pageResponse->assertSee('Pelatih Paket Anda');
+
+        $targetDate = now()->addDays(2)->toDateString();
+
+        // 2. Booking with another trainer must fail
+        $failResponse = $this->actingAs($member)->post(route('pt-sessions.store'), [
+            'trainer_id' => $trainerOther->id,
+            'session_date' => $targetDate,
+            'start_time' => '10:00',
+        ]);
+        $failResponse->assertSessionHasErrors('booking_error');
+        $this->assertDatabaseCount('pt_sessions', 0);
+
+        // 3. Booking with the bound trainer succeeds
+        $successResponse = $this->actingAs($member)->post(route('pt-sessions.store'), [
+            'trainer_id' => $trainerBound->id,
+            'session_date' => $targetDate,
+            'start_time' => '10:00',
+        ]);
+        $successResponse->assertSessionHasNoErrors();
+        $this->assertDatabaseHas('pt_sessions', [
+            'member_id' => $member->id,
+            'trainer_id' => $trainerBound->id,
+            'session_date' => $targetDate,
+            'start_time' => '10:00:00',
+        ]);
     }
 }

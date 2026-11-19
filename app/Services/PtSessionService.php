@@ -7,6 +7,8 @@ use App\Exceptions\ChangeDeadlinePassedException;
 use App\Exceptions\QuotaExceededException;
 use App\Exceptions\SlotUnavailableException;
 use App\Models\MemberPtQuota;
+use App\Models\Membership;
+use App\Models\Payment;
 use App\Models\PtSession;
 use App\Models\User;
 use App\Notifications\NewSessionRequestedNotification;
@@ -158,6 +160,51 @@ class PtSessionService
     }
 
     /**
+     * Mendapatkan daftar pelatih beserta ringkasan ketersediaan slot pada tanggal tertentu.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getTrainersAvailabilityOnDate(Carbon|string $date): array
+    {
+        $carbonDate = $date instanceof Carbon ? $date->copy() : Carbon::parse($date);
+        $trainers = User::where('role', 'trainer')
+            ->whereHas('trainerProfile')
+            ->with('trainerProfile')
+            ->get();
+
+        $result = [];
+        foreach ($trainers as $trainer) {
+            $slots = $this->getAvailableSlots($trainer, $carbonDate);
+            $allSlots = array_merge($slots['morning'] ?? [], $slots['afternoon'] ?? [], $slots['evening'] ?? []);
+
+            $availableCount = count(array_filter($allSlots, fn ($s) => ($s['status'] ?? '') === 'available'));
+            $bookedCount = count(array_filter($allSlots, fn ($s) => ($s['status'] ?? '') === 'booked'));
+            $totalInShift = count(array_filter($allSlots, fn ($s) => ($s['status'] ?? '') !== 'off'));
+
+            $firstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $trainer->name)))[0]);
+            $photoUrl = file_exists(public_path("images/trainers/coach-{$firstName}.jpg"))
+                ? asset("images/trainers/coach-{$firstName}.jpg")
+                : ($trainer->trainerProfile?->photo_path ? asset('storage/'.$trainer->trainerProfile->photo_path) : null);
+
+            $result[] = [
+                'trainer_id' => $trainer->id,
+                'name' => $trainer->name,
+                'photo_url' => $photoUrl,
+                'shift' => $trainer->shift ?? 'pagi',
+                'shift_label' => $trainer->shift_label ?? 'Shift Pagi',
+                'specialization' => $trainer->trainerProfile?->specialization ?? 'Personal Trainer',
+                'rating' => (float) ($trainer->trainerProfile?->rating ?? 4.9),
+                'available_slots_count' => $availableCount,
+                'booked_slots_count' => $bookedCount,
+                'total_shift_slots' => $totalInShift,
+                'has_available_slots' => $availableCount > 0,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
      * Memvalidasi prasyarat booking sebelum eksekusi transaksi.
      *
      * @throws QuotaExceededException|SlotUnavailableException
@@ -190,7 +237,37 @@ class PtSessionService
             throw new QuotaExceededException('Kuota sesi Anda telah habis atau tidak memiliki paket aktif.');
         }
 
-        // 2. Trainer Shift validation
+        // 2. Active Gym Membership validation (if member has membership records)
+        $hasMembershipRecord = Membership::where('member_id', $member->id)->exists();
+        if ($hasMembershipRecord) {
+            $hasActiveMembership = Membership::where('member_id', $member->id)
+                ->where('status', 'active')
+                ->whereDate('end_date', '>=', now()->toDateString())
+                ->exists();
+
+            if (! $hasActiveMembership) {
+                throw new QuotaExceededException('Masa aktif membership gym Anda telah berakhir. Harap perpanjang membership terlebih dahulu.');
+            }
+        }
+
+        // 3. Bound Personal Trainer validation (locked to trainer chosen during package purchase)
+        $paymentTrainerId = Payment::where('member_id', $member->id)
+            ->where('status', 'verified')
+            ->where(function ($q) use ($quota) {
+                $q->where('pt_package_id', $quota->pt_package_id)
+                    ->orWhere('package_id', $quota->pt_package_id)
+                    ->orWhere('payment_type', 'pt_package')
+                    ->orWhere('package_type', 'pt_package');
+            })
+            ->whereNotNull('trainer_id')
+            ->latest()
+            ->value('trainer_id');
+
+        if ($paymentTrainerId && (int) $trainer->id !== (int) $paymentTrainerId) {
+            throw new SlotUnavailableException('Sesi latihan hanya dapat dibooking dengan Personal Trainer yang terikat pada paket Anda.');
+        }
+
+        // 4. Trainer Shift validation
         $trainerShift = $trainer->shift ?? 'pagi';
         $morningSlots = config('pt_booking.slots.morning', ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00']);
         $afternoonSlots = config('pt_booking.slots.afternoon', ['14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']);
@@ -256,6 +333,18 @@ class PtSessionService
 
             $sessionPrice = (float) ($quota->ptPackage?->price ? ($quota->ptPackage->price / max(1, $quota->total_sessions)) : 250000);
 
+            $notesContent = null;
+            if (! empty($data['workout_focus']) || ! empty($data['notes'])) {
+                $parts = [];
+                if (! empty($data['workout_focus'])) {
+                    $parts[] = 'Fokus: '.$data['workout_focus'];
+                }
+                if (! empty($data['notes'])) {
+                    $parts[] = 'Catatan: '.$data['notes'];
+                }
+                $notesContent = implode(' | ', $parts);
+            }
+
             $session = PtSession::create([
                 'member_pt_quota_id' => $quota->id,
                 'member_id' => $member->id,
@@ -264,6 +353,7 @@ class PtSessionService
                 'start_time' => $startTime,
                 'end_time' => $endTime,
                 'status' => PtSessionStatus::Pending,
+                'notes' => $notesContent,
                 'trainer_revenue' => round($sessionPrice * 0.70, 2),
                 'gym_revenue' => round($sessionPrice * 0.30, 2),
                 'payout_status' => 'pending',

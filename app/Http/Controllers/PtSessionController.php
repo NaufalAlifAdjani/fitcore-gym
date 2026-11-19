@@ -7,6 +7,8 @@ use App\Exceptions\PtBookingException;
 use App\Http\Requests\StorePtSessionRequest;
 use App\Http\Requests\UpdatePtSessionRequest;
 use App\Models\MemberPtQuota;
+use App\Models\Membership;
+use App\Models\Payment;
 use App\Models\PtSession;
 use App\Models\User;
 use App\Services\PtSessionService;
@@ -113,11 +115,34 @@ class PtSessionController extends Controller
             ->orderBy('end_date', 'asc')
             ->first();
 
-        // Trainer terpilih dari parameter atau default (Coach Rama jika ada, atau trainer aktif pertama)
-        $selectedTrainerId = $request->query('trainer_id');
         $trainer = null;
 
-        if ($selectedTrainerId) {
+        // 1. Ambil pelatih yang terikat dari paket PT aktif milik member
+        if ($quota) {
+            $ptPayment = Payment::where('member_id', $user->id)
+                ->where('status', 'verified')
+                ->where(function ($q) use ($quota) {
+                    $q->where('pt_package_id', $quota->pt_package_id)
+                        ->orWhere('package_id', $quota->pt_package_id)
+                        ->orWhere('payment_type', 'pt_package')
+                        ->orWhere('package_type', 'pt_package');
+                })
+                ->whereNotNull('trainer_id')
+                ->latest()
+                ->first();
+
+            if ($ptPayment?->trainer_id) {
+                $trainer = User::where('role', 'trainer')
+                    ->where('id', $ptPayment->trainer_id)
+                    ->whereHas('trainerProfile')
+                    ->with('trainerProfile')
+                    ->first();
+            }
+        }
+
+        // 2. Query param trainer_id (jika di-pass eksplisit, misalnya dalam pengujian)
+        $selectedTrainerId = $request->query('trainer_id');
+        if (! $trainer && $selectedTrainerId) {
             $trainer = User::where('role', 'trainer')
                 ->where('id', $selectedTrainerId)
                 ->whereHas('trainerProfile')
@@ -125,6 +150,7 @@ class PtSessionController extends Controller
                 ->first();
         }
 
+        // 3. Fallback jika belum ada pelatih terikat
         if (! $trainer) {
             $trainer = User::where('role', 'trainer')
                 ->whereHas('trainerProfile')
@@ -142,10 +168,17 @@ class PtSessionController extends Controller
             ->with('trainerProfile')
             ->get();
 
+        $activeMembership = Membership::where('member_id', $user->id)
+            ->where('status', 'active')
+            ->whereDate('end_date', '>=', now()->toDateString())
+            ->latest('end_date')
+            ->first();
+
         return view('member.pt-sessions.create', [
             'quota' => $quota,
             'trainer' => $trainer,
             'trainers' => $trainers,
+            'activeMembership' => $activeMembership,
         ]);
     }
 
@@ -160,8 +193,16 @@ class PtSessionController extends Controller
                 $request->validated()
             );
 
+            $isMobile = $request->input('redirect_to') === 'mobile'
+                || $request->filled('from_mobile')
+                || str_contains((string) $request->header('referer'), '/m/');
+
+            $redirectRoute = $isMobile
+                ? 'mobile.member.pt-sessions.index'
+                : 'pt-sessions.index';
+
             return redirect()
-                ->route('pt-sessions.index')
+                ->route($redirectRoute)
                 ->with('success', __('pt_booking.booking_success'));
         } catch (PtBookingException $e) {
             return back()

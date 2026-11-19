@@ -8,6 +8,7 @@ use App\Models\PtSession;
 use App\Models\User;
 use App\Services\PtSessionService;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PtSessionSlotController extends Controller
@@ -59,6 +60,25 @@ class PtSessionSlotController extends Controller
 
         return new PtSessionDateResource([
             'days' => $daysList,
+        ]);
+    }
+
+    /**
+     * Mendapatkan ketersediaan seluruh pelatih pada tanggal tertentu.
+     */
+    public function trainersAvailability(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'date' => ['nullable', 'date'],
+        ]);
+
+        $date = isset($validated['date']) ? Carbon::parse($validated['date']) : now()->addDay();
+        $trainers = $this->ptSessionService->getTrainersAvailabilityOnDate($date);
+
+        return response()->json([
+            'date' => $date->toDateString(),
+            'formatted_date' => $date->locale('id')->translatedFormat('l, d F Y'),
+            'trainers' => $trainers,
         ]);
     }
 }

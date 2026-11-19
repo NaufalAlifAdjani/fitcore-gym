@@ -204,9 +204,9 @@ class MobileMemberDashboardTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Booking Sesi PT');
-        $response->assertSee('1. Pilih Trainer');
-        $response->assertSee('2. Waktu');
-        $response->assertSee('3. Konfirmasi');
+        $response->assertSee('Pilih Tanggal Sesi');
+        $response->assertSee('Pilih Jam Sesi');
+        $response->assertSee('Ringkasan Booking');
         $response->assertSee('Coach Dimas');
     }
 
