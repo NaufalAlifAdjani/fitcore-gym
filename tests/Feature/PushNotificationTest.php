@@ -41,6 +41,8 @@ class PushNotificationTest extends TestCase
 
     public function test_user_can_get_vapid_public_key(): void
     {
+        config(['webpush.vapid.public_key' => 'mock-vapid-public-key-sample']);
+
         $user = User::factory()->member()->create();
 
         $response = $this->actingAs($user)->getJson(route('push-subscriptions.vapid-public-key'));
