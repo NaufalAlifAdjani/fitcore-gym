@@ -22,7 +22,7 @@
         </a>
 
         <!-- Desktop Navigation Items -->
-        <nav class="hidden lg:flex items-center gap-1 bg-[#F6F6F7] p-1.5 rounded-full border border-[#E5E7EB]">
+        <nav class="hidden lg:flex items-center gap-1 sm:gap-2">
             <a href="{{ route('member.dashboard') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
                 'bg-[#FF5722] text-white shadow-xs' => $isBeranda,

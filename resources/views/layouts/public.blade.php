@@ -64,7 +64,7 @@
             </a>
 
             <!-- Navigation Links -->
-            <nav class="hidden md:flex items-center gap-1 bg-[#F6F6F7] p-1.5 rounded-full border border-[#E5E7EB]">
+            <nav class="hidden md:flex items-center gap-1 sm:gap-2">
                 <a href="{{ route('landing.index') }}"
                     class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isHome ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}">
                     Beranda
