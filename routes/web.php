@@ -159,6 +159,7 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
     Route::patch('/pt-packages/{ptPackage}/toggle-status', [PtPackageController::class, 'toggleStatus'])->name('pt-packages.toggle-status');
     Route::get('/pt-sessions', [PtPackageController::class, 'index'])->name('pt-sessions.index');
     Route::get('/check-in', [CheckInController::class, 'index'])->name('check-in.index');
+    // Manajemen Member
     Route::prefix('member-management')->name('members.')->controller(MemberManagementController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
