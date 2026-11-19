@@ -50,12 +50,15 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                         <span class="truncate">{{ $trainer->email }}</span>
                     </div>
 
-                    <div class="flex items-center gap-2 mt-2">
+                    <div class="flex flex-wrap items-center gap-1.5 mt-2">
                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 text-[#FF5722] border border-orange-200">
                             {{ $profile->tier ?? 'Personal Trainer' }}
                         </span>
                         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
                             ★ {{ $profile->rating ?? '4.9' }}
+                        </span>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                            Shift {{ $trainer->shift_label }}
                         </span>
                     </div>
                 </div>
@@ -136,7 +139,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             </a>
 
             <!-- Link 2: Klien Saya -->
-            <a href="{{ route('mobile.trainer.clients.index') }}" class="py-3 flex items-center justify-between group last:pb-0">
+            <a href="{{ route('mobile.trainer.clients.index') }}" class="py-3 flex items-center justify-between group">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -146,6 +149,24 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     <div>
                         <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Member &amp; Klien Saya</span>
                         <span class="text-[11px] text-[#565A66]">Daftar member dalam bimbingan latihan Anda</span>
+                    </div>
+                </div>
+                <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+
+            <!-- Link 3: Pendapatan & Komisi -->
+            <a href="{{ route('mobile.trainer.commissions.index') }}" class="py-3 flex items-center justify-between group last:pb-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Pendapatan &amp; Komisi</span>
+                        <span class="text-[11px] text-[#565A66]">Rincian bagi hasil dan komisi per sesi</span>
                     </div>
                 </div>
                 <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

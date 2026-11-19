@@ -77,10 +77,10 @@
                             <div class="flex items-center justify-between p-4 border-b border-[#E5E7EB]">
                                 <div class="flex items-center gap-2.5">
                                     <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white font-black text-sm shadow-md shadow-[#FF5722]/20">
-                                        M
+                                        F
                                     </div>
                                     <span class="text-lg font-black tracking-tight text-[#16151A] font-heading uppercase">
-                                        MAXFIT<span class="text-[#FF5722]">.</span>
+                                        FITCORE<span class="text-[#FF5722]">.</span>
                                     </span>
                                 </div>
                                 <button @click="sidebarOpen = false" class="text-[#565A66] hover:text-[#16151A] p-2 rounded-xl">
@@ -98,6 +98,18 @@
                         <x-toast />
                         {{ $slot }}
                     </main>
+
+                    <!-- Trainer Footer -->
+                    <footer class="mt-auto border-t border-[#E5E7EB] bg-white py-4 px-6 sm:px-10">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#565A66] max-w-7xl mx-auto">
+                            <p>© {{ date('Y') }} FitCore Athletic Gym Indonesia. Seluruh Hak Cipta Dilindungi.</p>
+                            <div class="flex items-center gap-6">
+                                <span class="text-gray-400">Personal Trainer Portal</span>
+                                <a href="#" class="hover:text-[#FF5722] transition">SOP Pelatih</a>
+                                <a href="#" class="hover:text-[#FF5722] transition">Bantuan</a>
+                            </div>
+                        </div>
+                    </footer>
                 </div>
             @else
                 <!-- Member Navbar -->
@@ -116,6 +128,18 @@
                 <main class="flex-1">
                     {{ $slot }}
                 </main>
+
+                <!-- Member Footer -->
+                <footer class="mt-auto border-t border-[#E5E7EB] bg-white py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#565A66]">
+                        <p>© {{ date('Y') }} FitCore Athletic Gym Indonesia. Seluruh Hak Cipta Dilindungi.</p>
+                        <div class="flex items-center gap-6">
+                            <a href="#" class="hover:text-[#FF5722] transition">Syarat &amp; Ketentuan</a>
+                            <a href="#" class="hover:text-[#FF5722] transition">Kebijakan Privasi</a>
+                            <a href="#" class="hover:text-[#FF5722] transition">Bantuan</a>
+                        </div>
+                    </div>
+                </footer>
             @endif
 
             <!-- Modal Konfirmasi Logout -->

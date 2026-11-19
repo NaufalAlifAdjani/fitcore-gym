@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="bg-white border border-gray-200 rounded-2xl p-4 text-xs space-y-1.5 shadow-xs">
-                    <h5 class="font-bold text-zinc-900 text-sm">Maxfit SCBD Mega Tower</h5>
+                    <h5 class="font-bold text-zinc-900 text-sm">FitCore SCBD Mega Tower</h5>
                     <p class="text-zinc-600 leading-relaxed">
                         Lt. B1 & Mezzanine, Pacific Century Place, SCBD Lot 11, Jakarta Selatan
                     </p>
@@ -66,7 +66,7 @@
                     </a>
 
                     <!-- Email -->
-                    <a href="mailto:support@maxfit.id"
+                    <a href="mailto:support@fitcore.test"
                        class="flex items-center gap-3 bg-white hover:bg-orange-50/50 border border-gray-200 hover:border-orange-200 rounded-2xl p-3.5 text-xs transition-colors group shadow-xs">
                         <div class="w-8 h-8 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center shrink-0 border border-orange-200">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +75,7 @@
                         </div>
                         <div>
                             <div class="text-[11px] text-zinc-500">Email Resmi Member & Kerjasama</div>
-                            <div class="font-bold text-zinc-900 group-hover:text-[#FF5722] transition-colors">support@maxfit.id</div>
+                            <div class="font-bold text-zinc-900 group-hover:text-[#FF5722] transition-colors">support@fitcore.test</div>
                         </div>
                     </a>
                 </div>
@@ -104,7 +104,7 @@
         <!-- Bottom Copyright & Legal Links -->
         <div class="pt-8 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-[11px] text-zinc-500">
             <div>
-                &copy; {{ date('Y') }} PT Maxfit Kebugaran Indonesia. Hak Cipta Dilindungi.
+                &copy; {{ date('Y') }} FitCore Athletic Gym Indonesia. Seluruh Hak Cipta Dilindungi.
             </div>
             <div class="flex flex-wrap items-center gap-4 sm:gap-6 font-medium">
                 <a href="#" class="hover:text-[#FF5722] transition-colors">Kebijakan Privasi</a>

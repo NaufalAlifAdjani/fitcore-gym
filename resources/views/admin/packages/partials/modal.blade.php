@@ -46,17 +46,10 @@
                 </div>
             </div>
 
-            <div class="grid gap-4 sm:grid-cols-2">
-                <div>
-                    <x-input-label for="pkg-badge" value="Nama Badge" class="!mb-1.5 font-inter text-xs text-[#565A66]" />
-                    <x-text-input id="pkg-badge" type="text" name="badge" x-model="form.badge" maxlength="50" placeholder="Contoh: BEST SELLER" class="!bg-white !border-[#E5E7EB] !p-3 font-inter !text-sm uppercase focus:!border-[#FF5722] focus:!ring-[#FF5722]" />
-                    @error('badge') <span class="mt-1 block font-inter text-xs text-red-600">{{ $message }}</span> @enderror
-                </div>
-                <div>
-                    <x-input-label for="pkg-pt-sessions" value="Sesi Personal Trainer" class="!mb-1.5 font-inter text-xs text-[#565A66]" />
-                    <x-text-input id="pkg-pt-sessions" type="number" name="pt_sessions" x-model="form.pt_sessions" min="0" step="1" class="!bg-white !border-[#E5E7EB] !p-3 font-inter !text-sm focus:!border-[#FF5722] focus:!ring-[#FF5722]" />
-                    @error('pt_sessions') <span class="mt-1 block font-inter text-xs text-red-600">{{ $message }}</span> @enderror
-                </div>
+            <div>
+                <x-input-label for="pkg-badge" value="Nama Badge" class="!mb-1.5 font-inter text-xs text-[#565A66]" />
+                <x-text-input id="pkg-badge" type="text" name="badge" x-model="form.badge" maxlength="50" placeholder="Contoh: BEST SELLER" class="!bg-white !border-[#E5E7EB] !p-3 font-inter !text-sm uppercase focus:!border-[#FF5722] focus:!ring-[#FF5722]" />
+                @error('badge') <span class="mt-1 block font-inter text-xs text-red-600">{{ $message }}</span> @enderror
             </div>
 
             <div>

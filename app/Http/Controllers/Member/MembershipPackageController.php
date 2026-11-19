@@ -41,6 +41,17 @@ class MembershipPackageController extends Controller
      */
     public function checkout(MembershipPackage $package): View|RedirectResponse
     {
+        if (auth()->check() && ! auth()->user()->isProfileComplete()) {
+            $message = 'Mohon lengkapi biodata (Nomor Telepon, Alamat, dll) Anda terlebih dahulu sebelum melakukan pembelian paket.';
+            $redirectRoute = request()->is('m/*') || request()->routeIs('mobile.*')
+                ? 'mobile.member.profile.index'
+                : 'profile.edit';
+
+            return redirect()->route($redirectRoute)
+                ->with('warning', $message)
+                ->with('profile_incomplete', true);
+        }
+
         if (! $package->is_active || $package->status !== 'active') {
             return redirect()
                 ->route('member.membership.packages')
@@ -65,6 +76,17 @@ class MembershipPackageController extends Controller
      */
     public function uploadProof(Request $request, MembershipPackage $package): View|RedirectResponse
     {
+        if (auth()->check() && ! auth()->user()->isProfileComplete()) {
+            $message = 'Mohon lengkapi biodata (Nomor Telepon, Alamat, dll) Anda terlebih dahulu sebelum melakukan pembelian paket.';
+            $redirectRoute = $request->is('m/*') || $request->routeIs('mobile.*')
+                ? 'mobile.member.profile.index'
+                : 'profile.edit';
+
+            return redirect()->route($redirectRoute)
+                ->with('warning', $message)
+                ->with('profile_incomplete', true);
+        }
+
         if (! $package->is_active || $package->status !== 'active') {
             return redirect()
                 ->route('member.membership.packages')
@@ -111,6 +133,17 @@ class MembershipPackageController extends Controller
      */
     public function processPayment(StoreMembershipPaymentRequest $request, MembershipPackage $package): RedirectResponse
     {
+        if (auth()->check() && ! auth()->user()->isProfileComplete()) {
+            $message = 'Mohon lengkapi biodata (Nomor Telepon, Alamat, dll) Anda terlebih dahulu sebelum melakukan pembelian paket.';
+            $redirectRoute = $request->is('m/*') || $request->routeIs('mobile.*')
+                ? 'mobile.member.profile.index'
+                : 'profile.edit';
+
+            return redirect()->route($redirectRoute)
+                ->with('warning', $message)
+                ->with('profile_incomplete', true);
+        }
+
         if (! $package->is_active || $package->status !== 'active') {
             return redirect()
                 ->route('member.membership.packages')

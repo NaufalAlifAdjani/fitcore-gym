@@ -34,6 +34,17 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
         </div>
 
         <!-- 2. Flash Status Notifications -->
+        @if (session('warning'))
+            <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-semibold flex items-start gap-2.5 shadow-2xs">
+                <div class="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center shrink-0 text-amber-600 mt-0.5">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <span class="leading-relaxed">{{ session('warning') }}</span>
+            </div>
+        @endif
+
         @if (session('status') === 'profile-updated')
             <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2.5 shadow-2xs">
                 <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 text-emerald-600">
@@ -219,21 +230,59 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     @enderror
                 </div>
 
-                <!-- Nomor WhatsApp / Kontak (Informasi) -->
+                <!-- Nomor WhatsApp / Kontak -->
                 <div class="space-y-1">
-                    <label class="block text-xs font-bold text-[#16151A]">Nomor WhatsApp Terdaftar</label>
+                    <label for="phone" class="block text-xs font-bold text-[#16151A]">
+                        Nomor WhatsApp / Telepon <span class="text-[#FF5722]">*</span>
+                    </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                             </svg>
                         </div>
-                        <input type="text"
-                               disabled
-                               value="{{ $user->phone ?? 'Belum ada nomor WhatsApp' }}"
-                               class="w-full pl-9 pr-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-gray-100 text-gray-500 cursor-not-allowed">
+                        <input id="phone"
+                               name="phone"
+                               type="text"
+                               required
+                               value="{{ old('phone', $user->phone) }}"
+                               placeholder="Contoh: 081234567890"
+                               class="w-full pl-9 pr-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] transition">
                     </div>
-                    <p class="text-[10px] text-[#565A66]">Hubungi front-desk gym untuk perubahan nomor telepon terdaftar.</p>
+                    @error('phone')
+                        <p class="text-[11px] font-semibold text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Alamat Domisili -->
+                <div class="space-y-1">
+                    <label for="address" class="block text-xs font-bold text-[#16151A]">
+                        Alamat Domisili <span class="text-[#FF5722]">*</span>
+                    </label>
+                    <textarea id="address"
+                              name="address"
+                              rows="3"
+                              required
+                              placeholder="Masukkan alamat domisili lengkap Anda"
+                              class="w-full px-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] transition">{{ old('address', $memberProfile->address ?? '') }}</textarea>
+                    @error('address')
+                        <p class="text-[11px] font-semibold text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Jenis Kelamin -->
+                <div class="space-y-1">
+                    <label for="gender" class="block text-xs font-bold text-[#16151A]">Jenis Kelamin</label>
+                    <select id="gender"
+                            name="gender"
+                            class="w-full px-3.5 py-2.5 text-xs font-medium rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] text-[#16151A] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5722]/20 focus:border-[#FF5722] transition">
+                        <option value="">-- Pilih Jenis Kelamin --</option>
+                        <option value="male" {{ old('gender', $memberProfile->gender ?? '') === 'male' ? 'selected' : '' }}>Laki-laki</option>
+                        <option value="female" {{ old('gender', $memberProfile->gender ?? '') === 'female' ? 'selected' : '' }}>Perempuan</option>
+                    </select>
+                    @error('gender')
+                        <p class="text-[11px] font-semibold text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <div class="pt-2">

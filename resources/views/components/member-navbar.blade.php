@@ -22,46 +22,46 @@
         </a>
 
         <!-- Desktop Navigation Items -->
-        <nav class="hidden md:flex items-center gap-1 bg-orange-50/70 p-1.5 rounded-full border border-orange-100">
+        <nav class="hidden lg:flex items-center gap-1 sm:gap-2">
             <a href="{{ route('member.dashboard') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isBeranda,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isBeranda,
+                'bg-[#FF5722] text-white shadow-xs' => $isBeranda,
+                'text-[#565A66] hover:text-[#16151A]' => !$isBeranda,
             ])>
                 Beranda
             </a>
             <a href="{{ route('member.card') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isCard,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isCard,
+                'bg-[#FF5722] text-white shadow-xs' => $isCard,
+                'text-[#565A66] hover:text-[#16151A]' => !$isCard,
             ])>
                 Kartu Member
             </a>
             <a href="{{ route('member.membership.packages') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isPackages,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isPackages,
+                'bg-[#FF5722] text-white shadow-xs' => $isPackages,
+                'text-[#565A66] hover:text-[#16151A]' => !$isPackages,
             ])>
                 Paket Membership
             </a>
             <a href="{{ route('member.pt-packages.index') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isPt,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isPt,
+                'bg-[#FF5722] text-white shadow-xs' => $isPt,
+                'text-[#565A66] hover:text-[#16151A]' => !$isPt,
             ])>
                 Personal Trainer
             </a>
             <a href="{{ route('pt-sessions.index') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isBooking,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isBooking,
+                'bg-[#FF5722] text-white shadow-xs' => $isBooking,
+                'text-[#565A66] hover:text-[#16151A]' => !$isBooking,
             ])>
                 Booking Sesi
             </a>
             <a href="{{ route('member.riwayat-transaksi.index') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isRiwayat,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isRiwayat,
+                'bg-[#FF5722] text-white shadow-xs' => $isRiwayat,
+                'text-[#565A66] hover:text-[#16151A]' => !$isRiwayat,
             ])>
                 Riwayat Transaksi
             </a>
@@ -124,7 +124,7 @@
 
             <!-- Mobile Menu Toggle Button -->
             <button type="button" x-on:click="mobileMenuOpen = !mobileMenuOpen"
-                class="inline-flex md:hidden items-center justify-center rounded-lg p-2 text-[#565A66] hover:bg-zinc-100 hover:text-[#16151A] transition cursor-pointer"
+                class="inline-flex lg:hidden items-center justify-center rounded-lg p-2 text-[#565A66] hover:bg-zinc-100 hover:text-[#16151A] transition cursor-pointer"
                 aria-label="Toggle Navigation">
                 <svg x-show="!mobileMenuOpen" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -139,7 +139,7 @@
 
     <!-- Mobile Navigation Drawer -->
     <div x-cloak x-show="mobileMenuOpen" x-transition
-        class="md:hidden border-t border-[#E5E7EB] bg-white px-4 pt-3 pb-5 space-y-2 shadow-lg">
+        class="lg:hidden border-t border-[#E5E7EB] bg-white px-4 pt-3 pb-5 space-y-2 shadow-lg">
         <a href="{{ route('member.dashboard') }}"
             class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $isBeranda ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:bg-orange-50 hover:text-[#16151A]' }}">
             Beranda
