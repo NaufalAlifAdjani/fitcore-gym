@@ -66,37 +66,37 @@
             <!-- Navigation Links -->
             <nav class="hidden md:flex items-center gap-1 bg-[#F6F6F7] p-1.5 rounded-full border border-[#E5E7EB]">
                 <a href="{{ route('landing.index') }}"
-                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isHome ? 'bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25' : 'text-[#565A66] hover:text-[#FF5722]' }}">
+                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isHome ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}">
                     Beranda
                 </a>
                 <a href="{{ route('landing.packages') }}"
-                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isPackages ? 'bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25' : 'text-[#565A66] hover:text-[#FF5722]' }}">
+                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isPackages ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}">
                     Paket Gym
                 </a>
                 <a href="{{ route('landing.trainers') }}"
-                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isTrainers ? 'bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25' : 'text-[#565A66] hover:text-[#FF5722]' }}">
+                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isTrainers ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}">
                     Pelatih PT
                 </a>
                 <a href="{{ route('landing.about') }}"
-                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isAbout ? 'bg-[#FF5722] text-white shadow-sm shadow-[#FF5722]/25' : 'text-[#565A66] hover:text-[#FF5722]' }}">
+                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isAbout ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}">
                     Tentang Kami
                 </a>
             </nav>
 
             <!-- Action Buttons (Masuk / Daftar / Dashboard) -->
-            <div class="hidden md:flex items-center gap-3">
+            <div class="hidden md:flex items-center gap-4">
                 @auth
-                    <a href="{{ route('dashboard') }}" class="px-5 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold transition shadow-sm shadow-[#FF5722]/30">
-                        Ke Dashboard ({{ Auth::user()->name }})
+                    <a href="{{ route('dashboard') }}" class="px-5 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold transition shadow-xs">
+                        Ke Dashboard
                     </a>
                 @else
                     @if (! request()->routeIs('login'))
-                        <a href="{{ route('login') }}" class="px-4 py-2.5 text-xs font-bold text-[#565A66] hover:text-[#FF5722] transition">
+                        <a href="{{ route('login') }}" class="text-xs font-bold text-[#565A66] hover:text-[#16151A] transition px-2 py-2">
                             Masuk
                         </a>
                     @endif
                     @if (Route::has('register') && ! request()->routeIs('register'))
-                        <a href="{{ route('register') }}" class="px-5 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold transition shadow-sm shadow-[#FF5722]/30">
+                        <a href="{{ route('register') }}" class="px-6 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold transition shadow-xs">
                             Daftar Member
                         </a>
                     @endif
@@ -121,13 +121,13 @@
             <a href="{{ route('landing.about') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isAbout ? 'bg-[#FF5722] text-white' : 'text-[#565A66]' }}">Tentang Kami</a>
             <div class="pt-3 border-t border-[#E5E7EB] flex flex-col gap-2">
                 @auth
-                    <a href="{{ route('dashboard') }}" class="block text-center py-2.5 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-sm shadow-[#FF5722]/30">Ke Dashboard</a>
+                    <a href="{{ route('dashboard') }}" class="block text-center py-2.5 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-xs">Ke Dashboard</a>
                 @else
                     @if (! request()->routeIs('login'))
                         <a href="{{ route('login') }}" class="block text-center py-2.5 rounded-full border border-[#E5E7EB] text-xs font-bold text-[#16151A] hover:border-[#FF5722] hover:text-[#FF5722]">Masuk</a>
                     @endif
                     @if (Route::has('register') && ! request()->routeIs('register'))
-                        <a href="{{ route('register') }}" class="block text-center py-2.5 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-sm shadow-[#FF5722]/30">Daftar Member</a>
+                        <a href="{{ route('register') }}" class="block text-center py-2.5 rounded-full bg-[#FF5722] text-white text-xs font-bold shadow-xs">Daftar Member</a>
                     @endif
                 @endauth
             </div>

@@ -22,46 +22,46 @@
         </a>
 
         <!-- Desktop Navigation Items -->
-        <nav class="hidden lg:flex items-center gap-1 bg-orange-50/70 p-1.5 rounded-full border border-orange-100">
+        <nav class="hidden lg:flex items-center gap-1 bg-[#F6F6F7] p-1.5 rounded-full border border-[#E5E7EB]">
             <a href="{{ route('member.dashboard') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isBeranda,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isBeranda,
+                'bg-[#FF5722] text-white shadow-xs' => $isBeranda,
+                'text-[#565A66] hover:text-[#16151A]' => !$isBeranda,
             ])>
                 Beranda
             </a>
             <a href="{{ route('member.card') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isCard,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isCard,
+                'bg-[#FF5722] text-white shadow-xs' => $isCard,
+                'text-[#565A66] hover:text-[#16151A]' => !$isCard,
             ])>
                 Kartu Member
             </a>
             <a href="{{ route('member.membership.packages') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isPackages,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isPackages,
+                'bg-[#FF5722] text-white shadow-xs' => $isPackages,
+                'text-[#565A66] hover:text-[#16151A]' => !$isPackages,
             ])>
                 Paket Membership
             </a>
             <a href="{{ route('member.pt-packages.index') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isPt,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isPt,
+                'bg-[#FF5722] text-white shadow-xs' => $isPt,
+                'text-[#565A66] hover:text-[#16151A]' => !$isPt,
             ])>
                 Personal Trainer
             </a>
             <a href="{{ route('pt-sessions.index') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isBooking,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isBooking,
+                'bg-[#FF5722] text-white shadow-xs' => $isBooking,
+                'text-[#565A66] hover:text-[#16151A]' => !$isBooking,
             ])>
                 Booking Sesi
             </a>
             <a href="{{ route('member.riwayat-transaksi.index') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                'bg-[#FF5722] text-white shadow-md shadow-[#FF5722]/25' => $isRiwayat,
-                'text-[#565A66] hover:text-[#16151A] hover:bg-white/80' => !$isRiwayat,
+                'bg-[#FF5722] text-white shadow-xs' => $isRiwayat,
+                'text-[#565A66] hover:text-[#16151A]' => !$isRiwayat,
             ])>
                 Riwayat Transaksi
             </a>
