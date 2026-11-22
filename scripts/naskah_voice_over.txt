@@ -1,0 +1,194 @@
+================================================================================
+                    NASKAH VOICE OVER (VO) DEMO APLIKASI FITCORE
+================================================================================
+
+
+--------------------------------------------------------------------------------
+🎙️ 1. LANDING PAGE (Durasi Penuh: 00:00 - 00:54)
+--------------------------------------------------------------------------------
+Tone: Ramah, energik, dan memperkenalkan nilai utama FitCore.
+
+[00:00 - 00:11]
+Visual  : Halaman Beranda (/) terbuka, scroll perlahan menampilkan Hero Section 
+          dan fitur unggulan gym.
+Naskah  : 
+"Selamat datang di FitCore, platform ekosistem manajemen gym modern yang 
+mengintegrasikan pengalaman member, pelatih, dan operasional gym dalam satu 
+sistem terpadu. Pada halaman utama ini, calon member dapat melihat gambaran 
+fasilitas, keunggulan gym, dan fasilitas kebugaran yang tersedia."
+
+[00:11 - 00:23]
+Visual  : Mengklik menu navigasi Paket (/packages), scroll melihat kartu paket 
+          keanggotaan.
+Naskah  : 
+"Selanjutnya pada menu Paket, FitCore menyajikan transparansi harga dan pilihan 
+paket membership—mulai dari bulanan hingga tahunan lengkap dengan rincian 
+benefit kebugaran tanpa biaya tersembunyi."
+
+[00:23 - 00:37]
+Visual  : Mengklik menu Trainer (/trainers), scroll melihat profil pelatih 
+          bersertifikasi.
+Naskah  : 
+"Di menu Trainer, calon member dapat melihat profil para pelatih bersertifikasi 
+internasional beserta keahlian spesialisasi mereka, memudahkan member memilih 
+pelatih yang cocok dengan target latihan mereka."
+
+[00:37 - 00:54]
+Visual  : Mengklik menu Tentang Kami (/about), scroll melihat visi, misi, dan 
+          fasilitas FitCore.
+Naskah  : 
+"Terakhir pada menu Tentang Kami, ditampilkan visi misi FitCore dalam mewujudkan 
+gaya hidup sehat yang terstruktur melalui fasilitas olahraga modern dan layanan 
+pelatihan privat berstandar tinggi."
+
+
+
+--------------------------------------------------------------------------------
+🎙️ 2. PERSONAL TRAINER (Durasi: 00:00 - 00:48)
+--------------------------------------------------------------------------------
+Tone: Profesional, fokus pada produktivitas dan transparansi penghasilan pelatih.
+
+[00:00 - 00:08]
+Visual  : Halaman login terbuka, mengetik email rama@gym.test, password, dan 
+          klik Masuk.
+Naskah  : 
+"Sekarang kita masuk ke modul Personal Trainer, dengan login sebagai 
+Coach Rama Prasetya."
+
+[00:08 - 00:20]
+Visual  : Dashboard Trainer terbuka: Shift sore, jadwal hari ini, dan estimasi 
+          komisi.
+Naskah  : 
+"Pada Dashboard Trainer, pelatih langsung disajikan shift kerja aktif, jadwal 
+latihan hari ini, serta fitur unggulan: Transparansi Komisi. Komisi dihitung 
+otomatis dari setiap sesi yang terlaksana secara real-time."
+
+[00:20 - 00:35]
+Visual  : Navigasi ke Jadwal Sesi PT (/trainer/jadwal-sesi), kalender 
+          interaktif ditampilkan.
+Naskah  : 
+"Di menu Jadwal Sesi PT, pelatih memiliki kalender interaktif untuk memantau 
+jadwal latihan harian dan mengelola permintaan booking baru dari member agar 
+tidak terjadi jadwal yang tumpang tindih."
+
+[00:35 - 00:48]
+Visual  : Navigasi ke Klien Saya (/trainer/klien-saya), melihat daftar member 
+          bimbingan aktif.
+Naskah  : 
+"Pada menu Klien Saya, pelatih dapat memantau basis data member bimbingannya 
+secara detail, riwayat kehadiran, serta rekam progres latihan masing-masing 
+member di lapangan."
+
+
+
+--------------------------------------------------------------------------------
+🎙️ 3. MEMBER (Durasi: 00:00 - 01:20)
+--------------------------------------------------------------------------------
+Tone: Antusias, informatif, menekankan kemudahan dan kenyamanan member.
+
+[00:00 - 00:08]
+Visual  : Halaman login terbuka, mengetik email member@gym.test, password, dan 
+          klik Masuk.
+Naskah  : 
+"Berikutnya kita masuk ke modul Member dengan login sebagai member terdaftar."
+
+[00:08 - 00:22]
+Visual  : Dashboard Member terbuka, menampilkan status paket, kuota latihan, 
+          dan banner info.
+Naskah  : 
+"Begitu masuk, Member Dashboard memberikan ringkasan status keanggotaan aktif, 
+sisa kuota sesi PT yang tersedia, serta jadwal latihan mendatang secara rapi 
+dan real-time."
+
+[00:22 - 00:33]
+Visual  : Membuka Kartu Member Digital (/member/card) dengan Dynamic QR Code.
+Naskah  : 
+"FitCore mengeliminasi kartu fisik. Member memiliki Kartu Digital dengan QR Code 
+dinamis yang otomatis diperbarui setiap 30 detik untuk check-in aman di gerbang 
+gym."
+
+[00:33 - 00:44]
+Visual  : Membuka Katalog Paket Membership (/membership/packages).
+Naskah  : 
+"Member dapat menjelajahi dan memperpanjang langganan gym melalui katalog paket 
+membership resmi secara mandiri."
+
+[00:44 - 00:55]
+Visual  : Membuka Paket Sesi PT dan halaman Pilih Pelatih (select-trainer).
+Naskah  : 
+"Jika membutuhkan bimbingan intensif, member dapat membeli paket sesi PT dan 
+langsung memilih pelatih favorit, seperti Coach Rama."
+
+[00:55 - 01:08]
+Visual  : Membuka Sesi Latihan PT (/pt-sessions), melihat bar saldo kuota latihan 
+          (8 / 10 Sesi).
+Naskah  : 
+"Pada menu Sesi Latihan PT, member dapat memantau sisa kuota sesi latihan mereka 
+secara transparan lengkap dengan riwayat status sesi."
+
+[01:08 - 01:20]
+Visual  : Membuka formulir Booking Sesi Baru (/pt-sessions/create), memilih 
+          jadwal dan mengisi catatan.
+Naskah  : 
+"Untuk memesan jadwal, member cukup klik Booking Sesi Baru, menentukan tanggal 
+latihan, memilih slot waktu pelatih, dan menambahkan catatan fokus latihan 
+hari itu."
+
+
+
+--------------------------------------------------------------------------------
+🎙️ 4. ADMINISTRATOR (Durasi: 00:00 - 01:43)
+--------------------------------------------------------------------------------
+Tone: Berwibawa, terstruktur, fokus pada kendali operasional dan data finansial gym.
+
+[00:00 - 00:08]
+Visual  : Portal khusus /admin/login terbuka, mengetik admin@fitcore.test, 
+          password, dan login.
+Naskah  : 
+"Sekarang kita masuk ke modul Admin Backoffice melalui portal login khusus 
+administrator."
+
+[00:08 - 00:23]
+Visual  : Menu 1: Dashboard Performa Gym, menampilkan 4 kartu metrik utama dan 
+          grafik analitik.
+Naskah  : 
+"Di menu pertama, Dashboard, manajemen disajikan metrik kesehatan bisnis: 
+total member aktif, pendapatan, sesi PT berjalan, dan grafik kunjungan yang 
+terintegrasi filter tanggal."
+
+[00:23 - 00:39]
+Visual  : Klik sidebar Paket & Harga (/admin/packages), scroll tabel paket 
+          membership.
+Naskah  : 
+"Di menu Paket & Harga, admin mengelola master paket keanggotaan gym—menentukan 
+harga langganan, durasi aktif, serta mengaktifkan atau menonaktifkan paket promo."
+
+[00:39 - 00:55]
+Visual  : Klik sidebar Paket Sesi & Jadwal PT (/admin/pt-sessions), scroll tabel 
+          paket sesi.
+Naskah  : 
+"Pada menu Paket Sesi & Jadwal PT, admin mengatur kuota sesi latihan privat 
+bersama pelatih dan menetapkan tarif per paket sesi."
+
+[00:55 - 01:11]
+Visual  : Klik sidebar Verifikasi Pembayaran (/admin/verifikasi-pembayaran), 
+          antrean transfer terbuka.
+Naskah  : 
+"Di menu Verifikasi Pembayaran, staf keuangan memvalidasi bukti transfer manual 
+yang diunggah member sebelum paket keanggotaan diaktifkan."
+
+[01:11 - 01:28]
+Visual  : Klik sidebar Scanner Check-in (/admin/checkin), kamera scanner & tabel 
+          kehadiran live.
+Naskah  : 
+"Menu Scanner Check-in berfungsi sebagai meja resepsionis digital. Kamera scanner 
+memvalidasi QR Code dari smartphone member dalam hitungan detik untuk pencatatan 
+kehadiran instan."
+
+[01:28 - 01:43]
+Visual  : Klik sidebar Manajemen Member (/admin/member-management), scroll 
+          basis data anggota gym.
+Naskah  : 
+"Dan di menu Manajemen Member, staf dapat mengelola seluruh basis data anggota 
+aktif, melihat masa berlaku paket, riwayat kunjungan, serta memantau status 
+keaktifan akun secara terpusat."

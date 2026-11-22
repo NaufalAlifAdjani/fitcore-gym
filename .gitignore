@@ -14,6 +14,9 @@
 /.zed
 /auth.json
 /docs
+/demo-recordings
+LAPORAN_MILESTONE_2_FITCORE.md
+*.docx
 /node_modules
 /public/build
 /public/fonts-manifest.dev.json
