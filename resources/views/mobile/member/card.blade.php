@@ -96,28 +96,51 @@
                     </div>
                 </div>
 
-                <!-- Center Large QR Container -->
-                <div class="flex flex-col items-center justify-center pt-1">
-                    @if(isset($qrSvg) && $qrSvg)
+                <!-- Center Large Dynamic QR Container -->
+                <div class="flex flex-col items-center justify-center pt-1"
+                     id="dynamic-qr-wrapper-mobile"
+                     data-generate-url="{{ route('member.card.qr-token') }}"
+                     data-svg-url="{{ route('member.card.qr-svg') }}">
+                    <!-- QR Box with Pulse Ring -->
+                    <div class="relative">
+                        <!-- Subtle Pulsing Live Ring in Blaze Orange -->
+                        <div class="absolute -inset-2 rounded-2xl bg-gradient-to-r from-[#FF5722] to-[#FFB703] opacity-40 blur-xs animate-pulse"></div>
+
+                        <!-- White Card Container for High-Contrast QR Scanning -->
                         <div class="relative rounded-2xl bg-white p-3 shadow-xl border border-white/60 w-44 h-44 flex items-center justify-center transition duration-300">
-                            <div class="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full">
-                                {!! $qrSvg !!}
+                            <!-- Loading state -->
+                            <div id="qr-loading-mobile" class="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-2">
+                                <svg class="w-10 h-10 text-orange-400 animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                                </svg>
+                                <span class="text-[10px] font-semibold text-slate-500 font-inter">Memuat QR Pass...</span>
+                            </div>
+                            <!-- QR image -->
+                            <img id="qr-image-mobile" src="" alt="QR Code Check-in"
+                                 class="hidden w-full h-full object-contain" />
+                            <!-- Error state -->
+                            <div id="qr-error-mobile" class="hidden w-full h-full flex flex-col items-center justify-center text-gray-400 gap-1 text-center">
+                                <svg class="w-8 h-8 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                                <span class="text-[10px] font-semibold text-slate-500 font-inter">Gagal memuat QR</span>
                             </div>
                         </div>
-                        <span class="mt-2.5 text-[10px] font-bold tracking-wider text-white uppercase flex items-center gap-1.5 font-inter drop-shadow-sm">
-                            <svg class="w-3.5 h-3.5 text-orange-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                            </svg>
-                            Scan untuk Check-in
-                        </span>
-                    @else
-                        <div class="rounded-2xl border border-dashed border-white/40 bg-black/25 backdrop-blur-md p-4 w-44 h-44 flex flex-col items-center justify-center text-center text-white">
-                            <svg class="w-8 h-8 text-white/70 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                            </svg>
-                            <span class="text-xs font-medium text-white/80 font-inter">QR Code belum tersedia</span>
-                        </div>
-                    @endif
+                    </div>
+
+                    <!-- Label Scan -->
+                    <span class="mt-2.5 text-[10px] font-bold tracking-wider text-white uppercase flex items-center gap-1.5 font-inter drop-shadow-sm">
+                        <svg class="w-3.5 h-3.5 text-orange-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        </svg>
+                        Scan untuk Check-in
+                    </span>
+
+                    <!-- Countdown -->
+                    <div id="qr-countdown-mobile" class="hidden text-center mt-1 text-[10px] font-inter text-orange-200/90 font-semibold drop-shadow-xs">
+                        Perbarui dalam <span id="qr-countdown-sec-mobile">30</span>s
+                    </div>
                 </div>
 
                 <!-- Card Bottom Footer -->
@@ -175,4 +198,98 @@
         </div>
 
     </div>
+
+    @push('scripts')
+    <script>
+    (function () {
+        const wrapper      = document.getElementById('dynamic-qr-wrapper-mobile');
+        const qrImage      = document.getElementById('qr-image-mobile');
+        const qrLoading    = document.getElementById('qr-loading-mobile');
+        const qrError      = document.getElementById('qr-error-mobile');
+        const countdownEl  = document.getElementById('qr-countdown-mobile');
+        const countdownSec = document.getElementById('qr-countdown-sec-mobile');
+
+        if (!wrapper) return;
+
+        const GENERATE_URL = wrapper.dataset.generateUrl;
+        const SVG_URL      = wrapper.dataset.svgUrl;
+        const TTL          = 30;
+
+        let countdownTimer = null;
+        let refreshTimer   = null;
+
+        function showLoading() {
+            qrLoading.classList.remove('hidden');
+            qrImage.classList.add('hidden');
+            qrError.classList.add('hidden');
+            countdownEl.classList.add('hidden');
+        }
+
+        function showQr(svgUrl) {
+            qrImage.src = svgUrl;
+            qrImage.classList.remove('hidden');
+            qrLoading.classList.add('hidden');
+            qrError.classList.add('hidden');
+            countdownEl.classList.remove('hidden');
+        }
+
+        function showError() {
+            qrError.classList.remove('hidden');
+            qrLoading.classList.add('hidden');
+            qrImage.classList.add('hidden');
+            countdownEl.classList.add('hidden');
+        }
+
+        function startCountdown(seconds) {
+            clearInterval(countdownTimer);
+            let remaining = seconds;
+            countdownSec.textContent = remaining;
+            countdownTimer = setInterval(() => {
+                remaining -= 1;
+                countdownSec.textContent = remaining;
+                if (remaining <= 0) clearInterval(countdownTimer);
+            }, 1000);
+        }
+
+        async function refreshQr() {
+            clearTimeout(refreshTimer);
+            clearInterval(countdownTimer);
+            showLoading();
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content ?? '';
+            let tokenData;
+            try {
+                const res = await fetch(GENERATE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                });
+                if (!res.ok) throw new Error('generate failed');
+                tokenData = await res.json();
+            } catch (err) {
+                console.error('QR generate error:', err);
+                showError();
+                refreshTimer = setTimeout(refreshQr, 5000);
+                return;
+            }
+
+            const svgUrl = `${SVG_URL}?token=${encodeURIComponent(tokenData.token)}&_=${Date.now()}`;
+            showQr(svgUrl);
+
+            const ttl = tokenData.ttl ?? TTL;
+            startCountdown(ttl);
+            refreshTimer = setTimeout(refreshQr, ttl * 1000);
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') refreshQr();
+        });
+
+        refreshQr();
+    })();
+    </script>
+    @endpush
 </x-layouts.mobile-app>

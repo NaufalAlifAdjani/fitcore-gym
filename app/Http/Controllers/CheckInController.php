@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckInRequest;
 use App\Models\CheckIn;
-use App\Models\MemberProfile;
-use Illuminate\Database\UniqueConstraintViolationException;
+use App\Models\QrToken;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class CheckInController extends Controller
 {
+    /** Minimum minutes between successive check-ins for the same member. */
+    private const COOLDOWN_MINUTES = 10;
+
     /**
      * Display the QR scanner page (admin/staff only — enforced by route middleware).
      */
@@ -38,82 +41,104 @@ class CheckInController extends Controller
      */
     public function store(CheckInRequest $request): JsonResponse
     {
-        $qrToken = $request->validated()['qr_token'];
+        $qrTokenStr = $request->validated()['qr_token'];
 
-        // ── A. Validate QR Token ─────────────────────────────────────────────
-        $memberProfile = MemberProfile::with([
-            'user',
-            'user.memberships.package',
-            'user.memberships.payment',
-            'user.memberships.payments',
-        ])->where('qr_token', $qrToken)->first();
+        // ── A. Validate Temporary QR Token (atomic) ──────────────────────────
+        // Use a DB transaction with a row-level lock to prevent race conditions
+        // where two simultaneous requests both see the token as unused.
+        $result = DB::transaction(function () use ($qrTokenStr, $request) {
+            /** @var QrToken|null $qrToken */
+            $qrToken = QrToken::where('token', $qrTokenStr)->lockForUpdate()->first();
 
-        if (! $memberProfile) {
-            return response()->json([
-                'success' => false,
-                'message' => 'QR Code tidak valid atau tidak terdaftar.',
-            ], 404);
-        }
-
-        $member = $memberProfile->user;
-
-        // ── B. Validate Active Membership ────────────────────────────────────
-        $today = now('Asia/Jakarta');
-
-        $activeMembership = $member->memberships()
-            ->where('status', 'active')
-            ->where('start_date', '<=', $today->toDateString())
-            ->where('end_date', '>=', $today->toDateString())
-            ->where(function ($query) {
-                $query->whereHas('payment', fn ($q) => $q->where('status', 'verified'))
-                    ->orWhereHas('payments', fn ($q) => $q->where('status', 'verified'));
-            })
-            ->first();
-
-        if (! $activeMembership) {
-            // Differentiate: expired vs pending payment vs no membership at all
-            $anyMembership = $member->memberships()->latest()->first();
-
-            if (! $anyMembership) {
+            if (! $qrToken) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Member belum memiliki membership aktif.',
+                    'message' => 'QR Code tidak valid atau tidak terdaftar.',
+                ], 404);
+            }
+
+            if ($qrToken->isExpired()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'QR Code sudah kedaluwarsa. Minta member untuk menampilkan QR baru.',
                 ], 422);
             }
 
-            if ($anyMembership->status === 'expired' || $today->toDateString() > $anyMembership->end_date->toDateString()) {
+            if ($qrToken->isUsed()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Membership member sudah berakhir.',
+                    'message' => 'QR Code sudah digunakan. Minta member untuk menampilkan QR baru.',
                 ], 422);
             }
 
-            // Pending payment or pending status
-            return response()->json([
-                'success' => false,
-                'message' => 'Membership member belum aktif atau pembayaran belum diverifikasi.',
-            ], 422);
-        }
+            // ── B. Load member & validate active membership ──────────────────
+            $member = $qrToken->member()->with([
+                'memberProfile',
+                'memberships.package',
+                'memberships.payment',
+                'memberships.payments',
+            ])->first();
 
-        // ── C. Validate Duplicate Check-In ───────────────────────────────────
-        $todayDate = $today->toDateString(); // e.g. "2026-10-11"
+            $today = now('Asia/Jakarta');
 
-        // Use whereDate() for cross-driver compatibility (SQLite stores dates as text).
-        $alreadyCheckedIn = CheckIn::where('member_id', $member->id)
-            ->whereDate('check_in_date', $todayDate)
-            ->exists();
+            $activeMembership = $member->memberships()
+                ->where('status', 'active')
+                ->where('start_date', '<=', $today->toDateString())
+                ->where('end_date', '>=', $today->toDateString())
+                ->where(function ($query) {
+                    $query->whereHas('payment', fn ($q) => $q->where('status', 'verified'))
+                        ->orWhereHas('payments', fn ($q) => $q->where('status', 'verified'));
+                })
+                ->first();
 
-        if ($alreadyCheckedIn) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Member sudah melakukan check-in hari ini.',
-            ], 409);
-        }
+            if (! $activeMembership) {
+                $anyMembership = $member->memberships()->latest()->first();
 
-        // ── D. Save Check-In ─────────────────────────────────────────────────
-        // The unique(member_id, check_in_date) DB constraint is the ultimate safeguard
-        // against race conditions. We catch it explicitly and return a 409.
-        try {
+                if (! $anyMembership) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Member belum memiliki membership aktif.',
+                    ], 422);
+                }
+
+                if ($anyMembership->status === 'expired' || $today->toDateString() > $anyMembership->end_date->toDateString()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Membership member sudah berakhir.',
+                    ], 422);
+                }
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Membership member belum aktif atau pembayaran belum diverifikasi.',
+                ], 422);
+            }
+
+            // ── C. Cooldown check (10-minute minimum between check-ins) ───────
+            $lastCheckIn = CheckIn::where('member_id', $member->id)
+                ->latest('checked_in_at')
+                ->first();
+
+            if ($lastCheckIn) {
+                $minutesSinceLast = (int) $lastCheckIn->checked_in_at->diffInMinutes($today);
+
+                if ($minutesSinceLast < self::COOLDOWN_MINUTES) {
+                    $waitMinutes = self::COOLDOWN_MINUTES - $minutesSinceLast;
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Member baru saja check-in. Mohon tunggu {$waitMinutes} menit lagi sebelum check-in berikutnya.",
+                    ], 429);
+                }
+            }
+
+            // ── D. Mark token as used (inside the same transaction + lock) ───
+            $qrToken->update(['used_at' => $today]);
+
+            // ── E. Save check-in record ───────────────────────────────────────
+            $memberProfile = $member->memberProfile;
+            $todayDate = $today->toDateString();
+
             $checkIn = CheckIn::create([
                 'member_id' => $member->id,
                 'membership_id' => $activeMembership->id,
@@ -123,30 +148,26 @@ class CheckInController extends Controller
                 'method' => 'qr_code',
                 'checked_by' => $request->user()->id,
             ]);
-        } catch (UniqueConstraintViolationException) {
-            // Race condition: two requests passed the exists() check simultaneously.
+
+            // ── F. Build success response ─────────────────────────────────────
+            $memberCode = $memberProfile->member_code ?? ('MBR-'.str_pad((string) $member->id, 5, '0', STR_PAD_LEFT));
+            $operatorName = $request->user()?->name ?? 'Admin';
+            $packageName = $activeMembership->package->name ?? 'Membership FitCore';
+            $validUntil = $activeMembership->end_date->locale('id')->translatedFormat('d F Y');
+            $checkedInTime = $today->format('H:i');
+
             return response()->json([
-                'success' => false,
-                'message' => 'Member sudah melakukan check-in hari ini.',
-            ], 409);
-        }
+                'success' => true,
+                'message' => 'Check-in berhasil!',
+                'member_name' => $member->name,
+                'member_code' => $memberCode,
+                'membership' => $packageName,
+                'valid_until' => $validUntil,
+                'checked_in_at' => $checkedInTime,
+                'checked_by_name' => $operatorName,
+            ]);
+        });
 
-        // ── E. Return Success Response ────────────────────────────────────────
-        $memberCode = $memberProfile->member_code ?? ('MBR-'.str_pad((string) $member->id, 5, '0', STR_PAD_LEFT));
-        $operatorName = $request->user()?->name ?? 'Admin';
-        $packageName = $activeMembership->package->name ?? 'Membership FitCore';
-        $validUntil = $activeMembership->end_date->locale('id')->translatedFormat('d F Y');
-        $checkedInTime = $today->format('H:i');
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Check-in berhasil!',
-            'member_name' => $member->name,
-            'member_code' => $memberCode,
-            'membership' => $packageName,
-            'valid_until' => $validUntil,
-            'checked_in_at' => $checkedInTime,
-            'checked_by_name' => $operatorName,
-        ]);
+        return $result;
     }
 }
