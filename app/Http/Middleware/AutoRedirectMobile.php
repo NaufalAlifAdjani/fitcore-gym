@@ -96,6 +96,10 @@ class AutoRedirectMobile
                 return redirect()->route('mobile.trainer.clients.index');
             }
 
+            if ($request->is('trainer/pendapatan-komisi') || $request->is('trainer/commissions*')) {
+                return redirect()->route('mobile.trainer.commissions.index');
+            }
+
             if ($request->is('trainer/profile')) {
                 return redirect()->route('mobile.trainer.profile.index');
             }
@@ -104,8 +108,26 @@ class AutoRedirectMobile
                 return redirect()->route('mobile.member.card');
             }
 
-            if ($request->is('membership/packages') || $request->is('member/pt-packages')) {
+            if ($request->is('membership/packages')) {
                 return redirect()->route('mobile.member.packages');
+            }
+
+            if ($request->is('member/pt-packages')) {
+                return redirect()->route('mobile.member.pt-packages.index');
+            }
+
+            if ($request->is('member/pt-packages/select-trainer')) {
+                return redirect()->route('mobile.member.pt-packages.select-trainer', $query);
+            }
+
+            if ($request->is('member/pt-packages/checkout')) {
+                return redirect()->route('mobile.member.pt-packages.checkout', $query);
+            }
+
+            if (preg_match('#^member/pt-packages/upload-payment(?:/(\d+))?#', $request->path(), $matches)) {
+                $paymentId = $matches[1] ?? null;
+
+                return redirect()->route('mobile.member.pt-packages.upload-payment', array_merge($paymentId ? ['payment' => $paymentId] : [], $query));
             }
 
             if ($request->is('membership/checkout/*')) {
@@ -206,6 +228,10 @@ class AutoRedirectMobile
                 return redirect()->route('trainer.clients.index', $query);
             }
 
+            if ($request->is('m/trainer/commissions') || $request->is('m/trainer/commissions/*')) {
+                return redirect()->route('trainer.commissions.index', $query);
+            }
+
             if ($request->is('m/trainer/profile') || $request->is('m/trainer/profile/*')) {
                 return redirect()->route('profile.edit', $query);
             }
@@ -229,6 +255,24 @@ class AutoRedirectMobile
                 }
 
                 return redirect()->route('landing.packages', $query);
+            }
+
+            if ($request->is('m/pt-packages') || $request->is('m/member/pt-packages')) {
+                return redirect()->route('member.pt-packages.index', $query);
+            }
+
+            if ($request->is('m/pt-packages/select-trainer') || $request->is('m/member/pt-packages/select-trainer')) {
+                return redirect()->route('pt-packages.select-trainer', $query);
+            }
+
+            if ($request->is('m/pt-packages/checkout') || $request->is('m/member/pt-packages/checkout')) {
+                return redirect()->route('member.pt-packages.checkout', $query);
+            }
+
+            if (preg_match('#^m/(?:member/)?pt-packages/upload-payment(?:/(\d+))?#', $request->path(), $matches)) {
+                $paymentId = $matches[1] ?? null;
+
+                return redirect()->route('member.pt-packages.upload-payment', array_merge($paymentId ? ['payment' => $paymentId] : [], $query));
             }
 
             if (preg_match('#^m/(?:member/)?packages/([^/]+)/checkout#', $request->path(), $matches)) {

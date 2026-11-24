@@ -37,15 +37,9 @@
                 </svg>
             </div>
 
-            <!-- Error Code Tag -->
-            <div class="inline-flex items-center gap-1.5 rounded-full bg-orange-50 border border-orange-200 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-[#FF5722] mb-5">
-                <span>HTTP 403</span>
-                <span>•</span>
-                <span>Akses Ditolak</span>
-            </div>
-
+            <p class="text-xs font-bold uppercase tracking-wider text-[#FF5722] mb-3">HTTP 403 • Akses Ditolak</p>
             <!-- Highlighted Description Text -->
-            <h1 class="font-poppins text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight leading-relaxed max-w-lg mx-auto">
+            <h1 class="font-poppins text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight leading-relaxed max-w-lg mx-auto mb-4">
                 {{ $exception->getMessage() ?: 'Akses Ditolak. Anda tidak memiliki izin untuk mengakses halaman ini.' }}
             </h1>
 

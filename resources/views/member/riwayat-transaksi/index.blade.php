@@ -30,10 +30,6 @@
         <div class="mx-auto max-w-6xl space-y-8">
             <!-- Header Halaman Riwayat Transaksi -->
             <header class="space-y-2">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FF5722]/10 text-[#FF5722] text-xs font-inter font-bold uppercase tracking-wider">
-                    <span class="h-1.5 w-1.5 rounded-full bg-[#FF5722]"></span>
-                    Member Portal FitCore
-                </div>
                 <h1 class="font-poppins font-extrabold text-3xl sm:text-4xl lg:text-[3.25rem] text-[#16151A] tracking-tight leading-tight">
                     RIWAYAT TRANSAKSI
                 </h1>

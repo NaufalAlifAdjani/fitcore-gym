@@ -2,18 +2,10 @@
     <div id="checkin-page" data-store-url="{{ route('admin.checkin.store') }}"
         class="min-h-screen bg-[#F6F6F7] px-4 py-6 text-[#16151A] sm:px-6 lg:px-8 w-full max-w-full">
         <div class="mx-auto max-w-4xl space-y-6">
-            <!-- Header & Badge -->
+            <!-- Header -->
             <header class="flex flex-col gap-4">
                 <div class="min-w-0 flex-1">
-                    <div class="flex items-center gap-2">
-                        <span
-                            class="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 font-inter text-xs font-bold text-[#FF5722] border border-orange-200">
-                            <span class="h-1.5 w-1.5 rounded-full bg-[#FF5722]"></span>
-                            Portal Admin
-                        </span>
-                        <span class="text-xs font-medium text-[#565A66] font-inter">Presensi &amp; Check-In</span>
-                    </div>
-                    <h1 class="mt-2 text-2xl sm:text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">
                         Scanner Check-in QR Code Member
                     </h1>
                     <p class="font-inter text-sm text-[#565A66] mt-1 max-w-2xl">

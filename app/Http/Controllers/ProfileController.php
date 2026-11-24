@@ -48,8 +48,6 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $validated = $request->validated();
-
         if ($request->hasFile('avatar')) {
             if ($user->avatar && ! str_starts_with($user->avatar, 'http') && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
@@ -59,16 +57,33 @@ class ProfileController extends Controller
             $user->avatar = $path;
         }
 
-        $user->fill([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-        ]);
+        $user->fill($request->safe()->only(['name', 'email', 'phone']));
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
         $user->save();
+
+        if ($user->role === 'member') {
+            $profileAttributes = [];
+            if ($request->has('address')) {
+                $profileAttributes['address'] = $request->input('address');
+            }
+            if ($request->has('gender')) {
+                $profileAttributes['gender'] = $request->input('gender');
+            }
+
+            if (! empty($profileAttributes)) {
+                if ($user->memberProfile) {
+                    $user->memberProfile->update($profileAttributes);
+                } else {
+                    $user->memberProfile()->create(array_merge([
+                        'member_code' => 'MEM'.rand(100000, 999999),
+                    ], $profileAttributes));
+                }
+            }
+        }
 
         if (str_contains($request->header('referer', ''), '/m/')) {
             return Redirect::route('mobile.member.profile.index')->with('status', 'profile-updated');

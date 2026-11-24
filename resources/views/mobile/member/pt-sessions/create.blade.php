@@ -1,6 +1,6 @@
 {{--
 ROLE: MEMBER
-MODUL: Booking Sesi PT 3-Step Wizard Mobile
+MODUL: Booking Sesi PT 3-Step Wizard Mobile (Tersinkronisasi Alur Bisnis Website)
 VIEW: mobile.member.pt-sessions.create
 TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
@@ -8,61 +8,180 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
 @php
     $defaultTrainer = $trainer ?? $trainers->first();
     $initialDate = now()->addDay()->toDateString();
-    $initialDateLabel = now()->addDay()->translatedFormat('l, d M Y');
+    $initialDateLabel = now()->addDay()->translatedFormat('l, d F Y');
     $remainingQuota = $quota->remaining_sessions ?? 0;
 @endphp
 
 <x-layouts.mobile-app title="Booking Sesi PT - FitCore Athletic" active-tab="pt-sessions">
     <div x-data="{
         step: 1,
-        selectedTrainerId: '{{ $defaultTrainer->id ?? '' }}',
-        selectedTrainerName: '{{ $defaultTrainer->name ?? '' }}',
-        selectedTrainerSpec: '{{ $defaultTrainer->trainerProfile->specialization ?? 'CSCS Certified' }}',
+        selectedTrainerId: '{{ $defaultTrainer->id ?? 1 }}',
+        selectedTrainerName: '{{ $defaultTrainer->name ?? 'Coach Rama' }}',
+        selectedTrainerSpec: '{{ $defaultTrainer->trainerProfile->specialization ?? 'Hypertrophy & Conditioning' }}',
         selectedFocus: 'Chest & Triceps Hypertrophy',
-        selectedDate: '{{ $initialDate }}',
-        selectedDateLabel: '{{ $initialDateLabel }}',
-        selectedSlot: '08:00',
-        selectedTimeLabel: '08:00 - 09:00 WIB',
+        notes: '',
         agreedPolicy: false,
         activeFilter: 'semua',
-        notes: '',
-        isLoadingSlots: false,
-        slotStatusMap: {},
 
-        init() {
-            if (this.selectedTrainerId && this.selectedDate) {
-                this.fetchSlots();
+        // Kalender & Slot Interaktif Sesuai Web Desktop
+        selectedDate: '{{ $initialDate }}',
+        formattedSelectedDate: '{{ $initialDateLabel }}',
+        selectedSlot: '08:00',
+        endSlotTime: '09:00',
+        selectedTimeLabel: '08:00 - 09:00 WIB (60 Menit)',
+        isLoadingSlots: false,
+        currentViewDate: new Date({{ now()->year }}, {{ now()->month - 1 }}, {{ now()->day }}),
+        monthDays: [],
+        availabilityMap: {},
+        slots: { morning: [], afternoon: [], evening: [] },
+        currentMonthYear: '',
+
+        async init() {
+            this.generateMonthGrid();
+            await this.fetchMonthAvailability();
+            if (this.selectedDate) {
+                await this.fetchSlots(this.selectedDate);
             }
         },
 
-        async fetchSlots() {
-            if (!this.selectedTrainerId || !this.selectedDate) return;
-            this.isLoadingSlots = true;
+        generateMonthGrid() {
+            const year = this.currentViewDate.getFullYear();
+            const month = this.currentViewDate.getMonth();
+
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            this.currentMonthYear = months[month] + ' ' + year;
+
+            const startOfMonth = new Date(year, month, 1);
+            const startDayOfWeek = startOfMonth.getDay(); // 0 is Sun
+
+            const endOfMonth = new Date(year, month + 1, 0);
+
+            const totalCells = (startDayOfWeek + endOfMonth.getDate() <= 35) ? 35 : 42;
+            const days = [];
+
+            const now = new Date();
+            const todayStr = this.formatDate(now);
+
+            for (let i = 0; i < totalCells; i++) {
+                const d = new Date(year, month, (1 - startDayOfWeek) + i);
+                const dateStr = this.formatDate(d);
+                const isCurrentMonth = d.getMonth() === month;
+                const isToday = dateStr === todayStr;
+                const isPast = dateStr < todayStr;
+
+                days.push({
+                    date: dateStr,
+                    dayNum: d.getDate(),
+                    isCurrentMonth: isCurrentMonth,
+                    isToday: isToday,
+                    isPast: isPast,
+                });
+            }
+            this.monthDays = days;
+        },
+
+        formatDate(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        },
+
+        async fetchMonthAvailability() {
+            if (!this.monthDays.length || !this.selectedTrainerId) return;
+            const startDateStr = this.monthDays[0].date;
             try {
-                const url = '{{ route('pt-sessions.slots') }}?trainer_id=' + this.selectedTrainerId + '&date=' + this.selectedDate;
+                const url = `{{ route('pt-sessions.availability') }}?trainer_id=${this.selectedTrainerId}&start_date=${startDateStr}&days=42`;
                 const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
                 if (res.ok) {
                     const data = await res.json();
-                    const groups = data.data?.groups || data.groups || {};
                     const map = {};
-                    for (const key in groups) {
-                        if (Array.isArray(groups[key])) {
-                            groups[key].forEach(slot => {
-                                map[slot.time] = slot.status;
-                            });
-                        }
-                    }
-                    this.slotStatusMap = map;
+                    (data.days || []).forEach(d => {
+                        map[d.date] = d.has_slots;
+                    });
+                    this.availabilityMap = map;
                 }
             } catch (e) {
-                console.error('Error fetching slots:', e);
+                console.error('Failed fetching month availability', e);
+            }
+        },
+
+        async prevMonth() {
+            this.currentViewDate = new Date(this.currentViewDate.getFullYear(), this.currentViewDate.getMonth() - 1, 1);
+            this.generateMonthGrid();
+            await this.fetchMonthAvailability();
+        },
+
+        async nextMonth() {
+            this.currentViewDate = new Date(this.currentViewDate.getFullYear(), this.currentViewDate.getMonth() + 1, 1);
+            this.generateMonthGrid();
+            await this.fetchMonthAvailability();
+        },
+
+        async goToToday() {
+            this.currentViewDate = new Date();
+            this.generateMonthGrid();
+            await this.fetchMonthAvailability();
+            const todayStr = this.formatDate(new Date());
+            this.selectDate(todayStr);
+        },
+
+        async fetchSlots(date) {
+            if (!date || !this.selectedTrainerId) return;
+            this.isLoadingSlots = true;
+            try {
+                const url = `{{ route('pt-sessions.slots') }}?trainer_id=${this.selectedTrainerId}&date=${date}`;
+                const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+                if (res.ok) {
+                    const data = await res.json();
+                    this.formattedSelectedDate = data.formatted_date || date;
+                    const groups = data.groups || (data.data?.groups) || { morning: [], afternoon: [], evening: [] };
+                    this.slots = groups;
+
+                    const allSlots = [...(groups.morning || []), ...(groups.afternoon || []), ...(groups.evening || [])];
+                    const activeStillValid = allSlots.some(s => s.time === this.selectedSlot && s.status === 'available');
+                    if (!activeStillValid) {
+                        const firstAvail = allSlots.find(s => s.status === 'available');
+                        if (firstAvail) {
+                            this.selectSlot(firstAvail.time);
+                        } else {
+                            this.selectedSlot = '';
+                            this.endSlotTime = '';
+                            this.selectedTimeLabel = 'Slot belum dipilih';
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('Failed fetching slots', e);
             } finally {
                 this.isLoadingSlots = false;
             }
         },
 
-        getSlotStatus(time) {
-            return this.slotStatusMap[time] || 'available';
+        selectDate(date) {
+            this.selectedDate = date;
+            this.fetchSlots(date);
+        },
+
+        selectSlot(time) {
+            this.selectedSlot = time;
+            const parts = time.split(':').map(Number);
+            const h = parts[0] || 0;
+            const m = parts[1] || 0;
+            const endH = String((h + 1) % 24).padStart(2, '0');
+            const endM = String(m).padStart(2, '0');
+            this.endSlotTime = `${endH}:${endM}`;
+            this.selectedTimeLabel = `${time} - ${endH}:${endM} WIB (60 Menit)`;
+        },
+
+        selectTrainer(id, name, spec) {
+            this.selectedTrainerId = id;
+            this.selectedTrainerName = name;
+            this.selectedTrainerSpec = spec;
+            this.fetchMonthAvailability();
+            if (this.selectedDate) {
+                this.fetchSlots(this.selectedDate);
+            }
         },
 
         filterTrainer(spec) {
@@ -72,25 +191,6 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             if (this.activeFilter === 'fatloss') return s.includes('fat') || s.includes('loss') || s.includes('hiit') || s.includes('cardio') || s.includes('weight');
             if (this.activeFilter === 'rehab') return s.includes('rehab') || s.includes('mobility') || s.includes('recovery') || s.includes('posture');
             return true;
-        },
-
-        selectTrainer(id, name, spec) {
-            this.selectedTrainerId = id;
-            this.selectedTrainerName = name;
-            this.selectedTrainerSpec = spec;
-            this.fetchSlots();
-        },
-
-        selectDate(date, label) {
-            this.selectedDate = date;
-            this.selectedDateLabel = label;
-            this.fetchSlots();
-        },
-
-        selectSlot(time, label) {
-            if (this.getSlotStatus(time) !== 'available') return;
-            this.selectedSlot = time;
-            this.selectedTimeLabel = label;
         }
     }" class="space-y-4">
 
@@ -144,7 +244,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             </div>
         </div>
 
-        <!-- 4. Banner Kuota Paket Sesi PT -->
+        <!-- 4. Banner Kuota Paket Sesi PT (Direct Warning & Action if Quota 0) -->
         @if ($remainingQuota > 0)
             <div class="p-3.5 rounded-2xl bg-white border border-[#E5E7EB] flex items-center justify-between text-xs shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
                 <div class="flex items-center gap-2.5">
@@ -163,20 +263,26 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 </span>
             </div>
         @else
-            <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs shadow-xs space-y-2">
-                <div class="flex items-center gap-2 text-amber-800 font-bold">
-                    <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <!-- Notice Banner Kuota 0: Langsung Mengarahkan ke Pembelian Sesi PT -->
+            <div class="p-4 rounded-2xl bg-orange-50 border border-orange-200 text-xs shadow-xs space-y-3">
+                <div class="flex items-center gap-2 text-orange-950 font-bold">
+                    <svg class="w-4 h-4 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <span>Sisa Kuota Sesi PT Anda Habis</span>
+                    <span>Saldo Kuota 0 Sesi: Wajib Beli Paket Terlebih Dahulu</span>
                 </div>
-                <p class="text-[11px] text-amber-700">
-                    Anda belum memiliki saldo kuota sesi PT aktif. Silakan pilih paket membership yang menyertakan sesi latihan atau beli paket sesi tambahan.
+                <p class="text-[11px] text-[#565A66] leading-relaxed">
+                    Anda belum memiliki saldo sesi latihan aktif. Beli paket sesi PT terlebih dahulu agar Anda dapat memilih pelatih dan menjadwalkan sesi latihan privat.
                 </p>
-                <a href="{{ route('mobile.member.packages') }}"
-                   class="inline-block px-3 py-1.5 rounded-full text-[10px] font-bold bg-[#FF5722] text-white shadow-xs">
-                    Lihat Paket Membership →
-                </a>
+                <div>
+                    <a href="{{ route('mobile.member.pt-packages.index') }}"
+                       class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/20 active:scale-98 transition">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                        <span>Beli Paket Sesi PT Sekarang &rarr;</span>
+                    </a>
+                </div>
             </div>
         @endif
 
@@ -228,9 +334,19 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                         </div>
 
                         <div>
-                            <div class="w-12 h-12 rounded-xl bg-gray-100 text-[#16151A] flex items-center justify-center font-bold text-sm mb-2 border border-[#E5E7EB]">
-                                {{ strtoupper(substr($t->name, 0, 2)) }}
-                            </div>
+                            @php
+                                $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $t->name)))[0]);
+                                $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
+                                    ? asset("images/trainers/coach-{$cFirstName}.jpg")
+                                    : ($t->trainerProfile?->photo_path ? asset('storage/' . $t->trainerProfile->photo_path) : null);
+                            @endphp
+                            @if ($cPhoto)
+                                <img src="{{ $cPhoto }}" alt="{{ $t->name }}" class="w-12 h-12 rounded-xl object-cover mb-2 border border-[#E5E7EB]">
+                            @else
+                                <div class="w-12 h-12 rounded-xl bg-gray-100 text-[#16151A] flex items-center justify-center font-bold text-sm mb-2 border border-[#E5E7EB]">
+                                    {{ strtoupper(substr($t->name, 0, 2)) }}
+                                </div>
+                            @endif
                             <h4 class="text-xs font-bold text-[#16151A] truncate font-poppins">
                                 Coach {{ $t->name }}
                             </h4>
@@ -312,10 +428,10 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 </div>
             </div>
 
-            <!-- Tombol Lanjut ke Step 2 (Pill Button) -->
+            <!-- Tombol Lanjut ke Step 2 -->
             <div class="pt-3">
                 <button type="button"
-                        @click="if (selectedTrainerId && selectedFocus) { step = 2; fetchSlots(); }"
+                        @click="if (selectedTrainerId && selectedFocus) { step = 2; fetchSlots(selectedDate); }"
                         :disabled="!selectedTrainerId || !selectedFocus"
                         :class="(!selectedTrainerId || !selectedFocus) ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] cursor-pointer shadow-md shadow-orange-500/25'"
                         class="w-full py-3.5 rounded-full text-white font-semibold text-sm flex items-center justify-center gap-2 transition">
@@ -328,7 +444,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
         </div>
 
         <!-- ========================================== -->
-        <!-- STEP 2: PILIH HARI, TANGGAL & JAM SESI    -->
+        <!-- STEP 2: KALENDER BULAN & PILIH JAM SESI    -->
         <!-- ========================================== -->
         <div x-show="step === 2" x-transition class="space-y-4" x-cloak>
             
@@ -348,135 +464,219 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 </button>
             </div>
 
-            <!-- Carousel Tanggal 7 Hari -->
-            <div class="space-y-2">
-                <div class="flex items-center justify-between">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-[#16151A] font-poppins">
-                        Pilih Hari &amp; Tanggal
-                    </label>
-                    <span class="text-[10px] text-[#565A66] font-semibold uppercase">{{ now()->translatedFormat('F Y') }}</span>
-                </div>
+            <!-- Kalender Bulanan Interaktif (Sesuai Website) -->
+            <div class="bg-white rounded-2xl border border-[#E5E7EB] p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-3">
+                <!-- Navigasi Bulan & Tombol Hari Ini -->
+                <div class="flex items-center justify-between pb-2 border-b border-[#E5E7EB]">
+                    <button type="button"
+                            @click="goToToday()"
+                            class="px-3 py-1 text-[11px] font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#FF5722] hover:text-[#FF5722] active:bg-gray-100 transition shadow-2xs cursor-pointer">
+                        Hari Ini
+                    </button>
 
-                <div class="grid grid-cols-5 gap-1.5 text-center">
-                    @for ($i = 0; $i < 5; $i++)
-                        @php
-                            $targetDate = now()->addDays($i);
-                            $dateStr = $targetDate->toDateString();
-                            $dayName = substr($targetDate->translatedFormat('D'), 0, 3);
-                            $dayNum = $targetDate->format('d');
-                        @endphp
+                    <div class="flex items-center gap-1.5">
                         <button type="button"
-                                @click="selectDate('{{ $dateStr }}', '{{ $targetDate->translatedFormat('l, d M Y') }}')"
-                                class="p-2.5 rounded-2xl border transition-all flex flex-col items-center justify-center cursor-pointer"
-                                :class="selectedDate === '{{ $dateStr }}' ? 'bg-[#FF5722] text-white border-[#FF5722] shadow-md shadow-orange-500/25' : 'bg-white text-[#565A66] border-[#E5E7EB] hover:border-gray-300 shadow-xs'">
-                            <span class="text-[10px] font-medium uppercase">{{ $dayName }}</span>
-                            <span class="text-base font-black font-poppins mt-0.5">{{ $dayNum }}</span>
-                            <span class="text-[8px] mt-0.5 opacity-80">{{ $i === 0 ? 'Hari Ini' : ($i === 1 ? 'Besok' : 'Tersedia') }}</span>
+                                @click="prevMonth()"
+                                class="w-7 h-7 flex items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 active:bg-gray-200 transition cursor-pointer"
+                                aria-label="Bulan sebelumnya">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+                            </svg>
                         </button>
-                    @endfor
+
+                        <span class="text-xs font-bold font-poppins text-[#16151A] min-w-[110px] text-center" x-text="currentMonthYear">
+                            Bulan Tahun
+                        </span>
+
+                        <button type="button"
+                                @click="nextMonth()"
+                                class="w-7 h-7 flex items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 active:bg-gray-200 transition cursor-pointer"
+                                aria-label="Bulan berikutnya">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grid Kalender 7 Kolom -->
+                <div class="rounded-xl border border-[#E5E7EB] overflow-hidden bg-white">
+                    <!-- Header Nama Hari (MIN, SEN, SEL, RAB, KAM, JUM, SAB) -->
+                    <div class="grid grid-cols-7 border-b border-[#E5E7EB] bg-gray-50/70 text-center">
+                        <template x-for="header in ['MIN', 'SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB']" :key="header">
+                            <div class="text-[9px] font-bold text-[#565A66] py-1.5" x-text="header"></div>
+                        </template>
+                    </div>
+
+                    <!-- Cells Kalender -->
+                    <div class="grid grid-cols-7 divide-x divide-[#E5E7EB]">
+                        <template x-for="day in monthDays" :key="day.date">
+                            <div @click="!day.isPast && selectDate(day.date)"
+                                 :class="{
+                                     'bg-[#FF5722]/10 ring-2 ring-inset ring-[#FF5722] font-bold': selectedDate === day.date,
+                                     'bg-white hover:bg-gray-50/80 cursor-pointer': selectedDate !== day.date && !day.isPast && day.isCurrentMonth,
+                                     'bg-gray-50/40 hover:bg-gray-100/70 cursor-pointer': selectedDate !== day.date && !day.isPast && !day.isCurrentMonth,
+                                     'bg-gray-100/60 opacity-40 cursor-not-allowed': day.isPast
+                                 }"
+                                 class="min-h-[50px] p-1 border-b border-[#E5E7EB] flex flex-col items-center justify-between transition select-none">
+                                
+                                <div class="mt-0.5">
+                                    <template x-if="selectedDate === day.date">
+                                        <div class="w-6 h-6 rounded-full bg-[#FF5722] text-white font-bold text-[11px] flex items-center justify-center shadow-xs" x-text="day.dayNum"></div>
+                                    </template>
+                                    <template x-if="selectedDate !== day.date && day.isToday">
+                                        <div class="w-6 h-6 rounded-full bg-white border-2 border-[#FF5722] text-[#FF5722] font-bold text-[11px] flex items-center justify-center" x-text="day.dayNum"></div>
+                                    </template>
+                                    <template x-if="selectedDate !== day.date && !day.isToday">
+                                        <span class="text-[11px] font-medium" :class="day.isCurrentMonth ? 'text-[#16151A]' : 'text-gray-400'" x-text="day.dayNum"></span>
+                                    </template>
+                                </div>
+
+                                <!-- Indikator Ketersediaan Slot -->
+                                <div class="mb-0.5">
+                                    <template x-if="!day.isPast && availabilityMap[day.date] === true">
+                                        <span class="w-1.5 h-1.5 rounded-full inline-block" :class="selectedDate === day.date ? 'bg-[#FF5722]' : 'bg-emerald-500'"></span>
+                                    </template>
+                                    <template x-if="!day.isPast && availabilityMap[day.date] === false">
+                                        <span class="text-[8px] text-gray-400 font-medium">Full</span>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Label Tanggal Aktif Terpilih -->
+                <div class="flex items-center justify-between text-xs pt-1">
+                    <span class="text-[#565A66]">Tanggal Dipilih:</span>
+                    <span class="font-bold text-[#FF5722]" x-text="formattedSelectedDate || selectedDate"></span>
                 </div>
             </div>
 
-            <!-- Notice Booking 24 Jam -->
-            <div class="p-2.5 bg-blue-50/70 border border-blue-200 rounded-xl text-[10px] text-blue-800 flex items-center gap-2">
-                <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Sesi dapat dipesan minimal 24 jam sebelum jadwal latihan dimulai.</span>
-            </div>
-
-            <!-- Jam Sesi Grouped By Pagi, Siang & Sore, Malam -->
-            <div class="space-y-3 pt-1">
-                <div class="flex items-center justify-between">
-                    <label class="block text-xs font-bold uppercase tracking-wider text-[#16151A] font-poppins">
-                        Pilih Jam Sesi
-                    </label>
+            <!-- Pemilihan Slot Jam (Sesuai Web Desktop: Pagi, Siang & Sore, Malam) -->
+            <div class="bg-white rounded-2xl border border-[#E5E7EB] p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-4">
+                <div class="flex items-center justify-between pb-2 border-b border-[#E5E7EB]">
+                    <div>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-[#16151A] font-poppins">
+                            Pilih Jam Sesi Latihan
+                        </h3>
+                        <p class="text-[10px] text-[#565A66] mt-0.5">Durasi 60 Menit per Sesi</p>
+                    </div>
                     <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                        Durasi 60 Menit
+                        Slot Real-Time
                     </span>
                 </div>
 
-                <!-- Bagian 1: Pagi (07:00 - 11:00) -->
-                <div class="space-y-1.5">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66] block">Pagi (07:00 - 11:00)</span>
-                    <div class="grid grid-cols-2 gap-2 text-xs font-bold">
-                        @foreach (['07:00' => '07:00 - 08:00', '08:00' => '08:00 - 09:00', '09:00' => '09:00 - 10:00', '10:00' => '10:00 - 11:00'] as $time => $label)
-                            <button type="button"
-                                    @click="selectSlot('{{ $time }}', '{{ $label }} WIB')"
-                                    :disabled="getSlotStatus('{{ $time }}') !== 'available'"
-                                    :class="{
-                                        'bg-[#FF5722] text-white border-[#FF5722] shadow-xs': selectedSlot === '{{ $time }}',
-                                        'bg-white text-[#16151A] border-[#E5E7EB] hover:border-gray-300 shadow-xs': selectedSlot !== '{{ $time }}' && getSlotStatus('{{ $time }}') === 'available',
-                                        'bg-gray-100 text-gray-400 border-gray-200 line-through cursor-not-allowed opacity-60': getSlotStatus('{{ $time }}') !== 'available'
-                                    }"
-                                    class="p-2.5 rounded-xl border text-center transition cursor-pointer">
-                                <span>{{ $label }}</span>
-                                <template x-if="getSlotStatus('{{ $time }}') === 'booked'">
-                                    <span class="block text-[9px] font-normal text-rose-500">Penuh</span>
-                                </template>
-                                <template x-if="getSlotStatus('{{ $time }}') === 'passed'">
-                                    <span class="block text-[9px] font-normal text-gray-400">Lewat</span>
-                                </template>
-                            </button>
-                        @endforeach
-                    </div>
+                <!-- Loader Saat Memuat Slot -->
+                <div x-show="isLoadingSlots" class="py-8 text-center space-y-2">
+                    <div class="inline-block w-6 h-6 border-3 border-[#FF5722] border-t-transparent rounded-full animate-spin"></div>
+                    <p class="text-[11px] text-[#565A66]">Memeriksa ketersediaan jam latihan...</p>
                 </div>
 
-                <!-- Bagian 2: Siang & Sore (13:00 - 17:00) -->
-                <div class="space-y-1.5">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66] block">Siang &amp; Sore (13:00 - 17:00)</span>
-                    <div class="grid grid-cols-2 gap-2 text-xs font-bold">
-                        @foreach (['13:00' => '13:00 - 14:00', '14:00' => '14:00 - 15:00', '15:00' => '15:00 - 16:00', '16:00' => '16:00 - 17:00'] as $time => $label)
-                            <button type="button"
-                                    @click="selectSlot('{{ $time }}', '{{ $label }} WIB')"
-                                    :disabled="getSlotStatus('{{ $time }}') !== 'available'"
-                                    :class="{
-                                        'bg-[#FF5722] text-white border-[#FF5722] shadow-xs': selectedSlot === '{{ $time }}',
-                                        'bg-white text-[#16151A] border-[#E5E7EB] hover:border-gray-300 shadow-xs': selectedSlot !== '{{ $time }}' && getSlotStatus('{{ $time }}') === 'available',
-                                        'bg-gray-100 text-gray-400 border-gray-200 line-through cursor-not-allowed opacity-60': getSlotStatus('{{ $time }}') !== 'available'
-                                    }"
-                                    class="p-2.5 rounded-xl border text-center transition cursor-pointer">
-                                <span>{{ $label }}</span>
-                                <template x-if="getSlotStatus('{{ $time }}') === 'booked'">
-                                    <span class="block text-[9px] font-normal text-rose-500">Penuh</span>
-                                </template>
-                                <template x-if="getSlotStatus('{{ $time }}') === 'passed'">
-                                    <span class="block text-[9px] font-normal text-gray-400">Lewat</span>
-                                </template>
-                            </button>
-                        @endforeach
-                    </div>
-                </div>
+                <!-- Slot Groups Dinamis -->
+                <div x-show="!isLoadingSlots" class="space-y-4">
 
-                <!-- Bagian 3: Malam (18:00 - 22:00) -->
-                <div class="space-y-1.5">
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66] block">Malam (18:00 - 22:00)</span>
-                    <div class="grid grid-cols-2 gap-2 text-xs font-bold">
-                        @foreach (['18:00' => '18:00 - 19:00', '19:00' => '19:00 - 20:00', '20:00' => '20:00 - 21:00', '21:00' => '21:00 - 22:00'] as $time => $label)
-                            <button type="button"
-                                    @click="selectSlot('{{ $time }}', '{{ $label }} WIB')"
-                                    :disabled="getSlotStatus('{{ $time }}') !== 'available'"
-                                    :class="{
-                                        'bg-[#FF5722] text-white border-[#FF5722] shadow-xs': selectedSlot === '{{ $time }}',
-                                        'bg-white text-[#16151A] border-[#E5E7EB] hover:border-gray-300 shadow-xs': selectedSlot !== '{{ $time }}' && getSlotStatus('{{ $time }}') === 'available',
-                                        'bg-gray-100 text-gray-400 border-gray-200 line-through cursor-not-allowed opacity-60': getSlotStatus('{{ $time }}') !== 'available'
-                                    }"
-                                    class="p-2.5 rounded-xl border text-center transition cursor-pointer">
-                                <span>{{ $label }}</span>
-                                <template x-if="getSlotStatus('{{ $time }}') === 'booked'">
-                                    <span class="block text-[9px] font-normal text-rose-500">Penuh</span>
-                                </template>
-                                <template x-if="getSlotStatus('{{ $time }}') === 'passed'">
-                                    <span class="block text-[9px] font-normal text-gray-400">Lewat</span>
-                                </template>
-                            </button>
-                        @endforeach
+                    <!-- Periode 1: Pagi (07:00 - 11:00) -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66] block">Sesi Pagi (07:00 - 11:00)</span>
+                        <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                            <template x-for="slot in slots.morning" :key="slot.time">
+                                <div class="relative">
+                                    <div x-show="selectedSlot === slot.time"
+                                         class="absolute -top-2 right-2 bg-[#FF5722] text-white text-[8px] font-extrabold uppercase px-1.5 py-0.2 rounded-full shadow-xs z-10">
+                                        DIPILIH
+                                    </div>
+                                    <button type="button"
+                                            @click="slot.status === 'available' && selectSlot(slot.time)"
+                                            :disabled="slot.status !== 'available'"
+                                            :class="{
+                                                'bg-[#FFE8EC] border-2 border-[#FF5722] text-[#FF5722] shadow-xs font-bold': selectedSlot === slot.time,
+                                                'bg-white text-[#16151A] border border-[#E5E7EB] hover:border-orange-300 shadow-xs cursor-pointer': selectedSlot !== slot.time && slot.status === 'available',
+                                                'bg-gray-50 border border-gray-200 text-gray-400 cursor-not-allowed opacity-60': slot.status !== 'available'
+                                            }"
+                                            class="w-full p-2.5 rounded-xl text-center transition">
+                                        <span x-text="slot.time"></span>
+                                        <template x-if="slot.status === 'booked'">
+                                            <span class="block text-[9px] font-normal text-rose-500 mt-0.5">Penuh</span>
+                                        </template>
+                                        <template x-if="slot.status === 'passed'">
+                                            <span class="block text-[9px] font-normal text-gray-400 mt-0.5">Lewat</span>
+                                        </template>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
                     </div>
+
+                    <!-- Periode 2: Siang & Sore (13:00 - 17:00) -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66] block">Sesi Siang &amp; Sore (13:00 - 17:00)</span>
+                        <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                            <template x-for="slot in slots.afternoon" :key="slot.time">
+                                <div class="relative">
+                                    <div x-show="selectedSlot === slot.time"
+                                         class="absolute -top-2 right-2 bg-[#FF5722] text-white text-[8px] font-extrabold uppercase px-1.5 py-0.2 rounded-full shadow-xs z-10">
+                                        DIPILIH
+                                    </div>
+                                    <button type="button"
+                                            @click="slot.status === 'available' && selectSlot(slot.time)"
+                                            :disabled="slot.status !== 'available'"
+                                            :class="{
+                                                'bg-[#FFE8EC] border-2 border-[#FF5722] text-[#FF5722] shadow-xs font-bold': selectedSlot === slot.time,
+                                                'bg-white text-[#16151A] border border-[#E5E7EB] hover:border-orange-300 shadow-xs cursor-pointer': selectedSlot !== slot.time && slot.status === 'available',
+                                                'bg-gray-50 border border-gray-200 text-gray-400 cursor-not-allowed opacity-60': slot.status !== 'available'
+                                            }"
+                                            class="w-full p-2.5 rounded-xl text-center transition">
+                                        <span x-text="slot.time"></span>
+                                        <template x-if="slot.status === 'booked'">
+                                            <span class="block text-[9px] font-normal text-rose-500 mt-0.5">Penuh</span>
+                                        </template>
+                                        <template x-if="slot.status === 'passed'">
+                                            <span class="block text-[9px] font-normal text-gray-400 mt-0.5">Lewat</span>
+                                        </template>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Periode 3: Malam (18:00 - 22:00) -->
+                    <div class="space-y-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66] block">Sesi Malam (18:00 - 22:00)</span>
+                        <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                            <template x-for="slot in slots.evening" :key="slot.time">
+                                <div class="relative">
+                                    <div x-show="selectedSlot === slot.time"
+                                         class="absolute -top-2 right-2 bg-[#FF5722] text-white text-[8px] font-extrabold uppercase px-1.5 py-0.2 rounded-full shadow-xs z-10">
+                                        DIPILIH
+                                    </div>
+                                    <button type="button"
+                                            @click="slot.status === 'available' && selectSlot(slot.time)"
+                                            :disabled="slot.status !== 'available'"
+                                            :class="{
+                                                'bg-[#FFE8EC] border-2 border-[#FF5722] text-[#FF5722] shadow-xs font-bold': selectedSlot === slot.time,
+                                                'bg-white text-[#16151A] border border-[#E5E7EB] hover:border-orange-300 shadow-xs cursor-pointer': selectedSlot !== slot.time && slot.status === 'available',
+                                                'bg-gray-50 border border-gray-200 text-gray-400 cursor-not-allowed opacity-60': slot.status !== 'available'
+                                            }"
+                                            class="w-full p-2.5 rounded-xl text-center transition">
+                                        <span x-text="slot.time"></span>
+                                        <template x-if="slot.status === 'booked'">
+                                            <span class="block text-[9px] font-normal text-rose-500 mt-0.5">Penuh</span>
+                                        </template>
+                                        <template x-if="slot.status === 'passed'">
+                                            <span class="block text-[9px] font-normal text-gray-400 mt-0.5">Lewat</span>
+                                        </template>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Tombol Navigasi Step 2 (Pill Button) -->
-            <div class="flex items-center gap-3 pt-3">
+            <!-- Tombol Navigasi Step 2 -->
+            <div class="flex items-center gap-3 pt-2">
                 <button type="button" @click="step = 1" class="w-1/3 py-3 rounded-full bg-white border border-[#E5E7EB] text-[#16151A] text-xs font-bold text-center cursor-pointer hover:bg-gray-50 transition shadow-xs">
                     Kembali
                 </button>
@@ -509,12 +709,12 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
 
                     <div class="flex items-center justify-between">
                         <span class="text-[#565A66]">Tanggal Latihan</span>
-                        <span class="font-bold text-[#16151A]" x-text="selectedDateLabel">{{ $initialDateLabel }}</span>
+                        <span class="font-bold text-[#16151A]" x-text="formattedSelectedDate || selectedDate">{{ $initialDateLabel }}</span>
                     </div>
 
                     <div class="flex items-center justify-between">
-                        <span class="text-[#565A66]">Jam Latihan</span>
-                        <span class="font-bold text-[#FF5722]" x-text="selectedTimeLabel">08:00 - 09:00 WIB</span>
+                        <span class="text-[#565A66]">Jam Sesi</span>
+                        <span class="font-bold text-[#FF5722]" x-text="selectedTimeLabel">08:00 - 09:00 WIB (60 Menit)</span>
                     </div>
 
                     <div class="flex items-center justify-between">
@@ -524,7 +724,11 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
 
                     <div class="flex items-center justify-between pt-2 border-t border-[#E5E7EB]">
                         <span class="text-[#565A66]">Potong Kuota</span>
-                        <span class="font-bold text-emerald-700">1 Sesi dari Saldo Paket</span>
+                        @if ($remainingQuota > 0)
+                            <span class="font-bold text-emerald-700">1 Sesi dari Saldo Paket</span>
+                        @else
+                            <span class="font-bold text-rose-600">Saldo 0 Sesi (Wajib Beli Paket)</span>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -555,20 +759,27 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     </span>
                 </label>
 
-                <!-- Tombol Submit Akhir (Pill Full Radius) -->
+                <!-- Tombol Submit Akhir -->
                 <div class="flex items-center gap-3 pt-2">
                     <button type="button" @click="step = 2" class="w-1/3 py-3.5 rounded-full bg-white border border-[#E5E7EB] text-[#16151A] text-xs font-bold text-center cursor-pointer hover:bg-gray-50 transition shadow-xs">
                         Kembali
                     </button>
-                    <button type="submit"
-                            :disabled="!agreedPolicy || {{ $remainingQuota <= 0 ? 'true' : 'false' }}"
-                            :class="(!agreedPolicy || {{ $remainingQuota <= 0 ? 'true' : 'false' }}) ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#FF5722] hover:bg-[#E64A19] cursor-pointer shadow-md shadow-orange-500/25 active:scale-[0.98]'"
-                            class="w-2/3 py-3.5 rounded-full text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
-                        <span>Konfirmasi Booking</span>
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </button>
+                    @if ($remainingQuota > 0)
+                        <button type="submit"
+                                :disabled="!agreedPolicy"
+                                :class="!agreedPolicy ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'bg-[#FF5722] hover:bg-[#E64A19] cursor-pointer shadow-md shadow-orange-500/25 active:scale-[0.98]'"
+                                class="w-2/3 py-3.5 rounded-full text-white text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                            <span>Konfirmasi Booking</span>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                    @else
+                        <a href="{{ route('mobile.member.pt-packages.index') }}"
+                           class="w-2/3 py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
+                            <span>Beli Paket Sesi Dulu &rarr;</span>
+                        </a>
+                    @endif
                 </div>
             </form>
 

@@ -17,7 +17,6 @@
 
         <!-- Header Ringkas -->
         <div class="space-y-1">
-            <span class="text-[10px] font-bold text-[#FF5722] uppercase tracking-wider">PELATIH BERLISENSI</span>
             <h1 class="font-poppins font-black text-2xl text-[#16151A]">Personal Trainer</h1>
             <p class="text-xs text-[#565A66] leading-relaxed">
                 Bimbingan intensif dari instruktur berlisensi internasional untuk hasil latihan terukur dan bebas cedera.
@@ -29,9 +28,19 @@
             @forelse ($trainers as $trainer)
                 <div class="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] space-y-4">
                     <div class="flex items-start gap-3.5">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] text-white flex items-center justify-center font-poppins font-black text-base shrink-0 border-2 border-white shadow-md shadow-orange-500/25">
-                            {{ strtoupper(substr($trainer->name, 0, 2)) }}
-                        </div>
+                        @php
+                            $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $trainer->name)))[0]);
+                            $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
+                                ? asset("images/trainers/coach-{$cFirstName}.jpg")
+                                : ($trainer->trainerProfile?->photo_path ? asset('storage/' . $trainer->trainerProfile->photo_path) : null);
+                        @endphp
+                        @if ($cPhoto)
+                            <img src="{{ $cPhoto }}" alt="{{ $trainer->name }}" class="w-14 h-14 rounded-2xl object-cover shrink-0 border-2 border-white shadow-md shadow-orange-500/25">
+                        @else
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] text-white flex items-center justify-center font-poppins font-black text-base shrink-0 border-2 border-white shadow-md shadow-orange-500/25">
+                                {{ strtoupper(substr($trainer->name, 0, 2)) }}
+                            </div>
+                        @endif
                         <div class="flex-1 min-w-0">
                             <h2 class="font-poppins font-bold text-base text-[#16151A] truncate">{{ $trainer->name }}</h2>
                             <span class="inline-block px-2.5 py-0.5 rounded-md bg-orange-50 text-[#FF5722] text-[11px] font-bold mt-1">

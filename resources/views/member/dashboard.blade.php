@@ -4,10 +4,6 @@
 
             <!-- 1. Header Sambutan -->
             <header class="space-y-2">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 text-[#FF5722] text-xs font-inter font-bold uppercase tracking-wider border border-orange-100">
-                    <span class="h-1.5 w-1.5 rounded-full bg-[#FF5722]"></span>
-                    Member Portal FitCore
-                </div>
                 <h1 class="font-poppins font-extrabold text-3xl sm:text-4xl text-[#16151A] tracking-tight leading-tight">
                     Selamat Datang, {{ Auth::user()->name }}!
                 </h1>

@@ -391,9 +391,15 @@ class PtPackagePurchaseTest extends TestCase
     public function test_select_trainer_page_renders_with_back_button(): void
     {
         $member = $this->createMember();
-        // Buat trainer di database untuk memastikan relasi User teruji dan tidak error
-        $trainer = User::factory()->create(['role' => 'trainer', 'shift' => 'pagi']);
-        TrainerProfile::factory()->create(['user_id' => $trainer->id]);
+        $trainer = User::factory()->create([
+            'role' => 'trainer',
+            'name' => 'Coach Rama Prasetya',
+            'shift' => 'pagi',
+        ]);
+        TrainerProfile::factory()->create([
+            'user_id' => $trainer->id,
+            'specialization' => 'Hypertrophy',
+        ]);
 
         $response = $this->actingAs($member)->get(route('member.pt-packages.select-trainer'));
 

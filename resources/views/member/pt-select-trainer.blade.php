@@ -69,26 +69,26 @@
                     <button type="button" 
                             @click="selectedPeriod = 'all'" 
                             :class="selectedPeriod === 'all' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] hover:bg-gray-100 border border-[#E5E7EB]'" 
-                            class="px-3 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer">
+                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer">
                         Semua Waktu
                     </button>
                     <button type="button" 
                             @click="selectedPeriod = 'morning'" 
                             :class="selectedPeriod === 'morning' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] hover:bg-gray-100 border border-[#E5E7EB]'" 
-                            class="px-3 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1 cursor-pointer">
-                        <span>🌅 Sedia Pagi</span>
+                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer">
+                        Sedia Pagi
                     </button>
                     <button type="button" 
                             @click="selectedPeriod = 'afternoon'" 
                             :class="selectedPeriod === 'afternoon' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] hover:bg-gray-100 border border-[#E5E7EB]'" 
-                            class="px-3 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1 cursor-pointer">
-                        <span>☀️ Sedia Siang</span>
+                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer">
+                        Sedia Siang
                     </button>
                     <button type="button" 
                             @click="selectedPeriod = 'evening'" 
                             :class="selectedPeriod === 'evening' ? 'bg-[#FF5722] text-white shadow-xs' : 'bg-white text-[#565A66] hover:bg-gray-100 border border-[#E5E7EB]'" 
-                            class="px-3 py-1.5 rounded-full text-xs font-semibold transition flex items-center gap-1 cursor-pointer">
-                        <span>🌙 Sedia Malam</span>
+                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer">
+                        Sedia Malam
                     </button>
                 </div>
             </div>

@@ -37,6 +37,18 @@
             <main class="flex-1">
                 {{ $slot }}
             </main>
+
+            <!-- Member Footer -->
+            <footer class="mt-auto border-t border-[#E5E7EB] bg-white py-5 px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#565A66]">
+                    <p>© {{ date('Y') }} FitCore Athletic Gym Indonesia. Seluruh Hak Cipta Dilindungi.</p>
+                    <div class="flex items-center gap-6">
+                        <a href="#" class="hover:text-[#FF5722] transition">Syarat &amp; Ketentuan</a>
+                        <a href="#" class="hover:text-[#FF5722] transition">Kebijakan Privasi</a>
+                        <a href="#" class="hover:text-[#FF5722] transition">Bantuan</a>
+                    </div>
+                </div>
+            </footer>
         </div>
 
         <x-toast />

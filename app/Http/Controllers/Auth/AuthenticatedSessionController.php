@@ -59,33 +59,36 @@ class AuthenticatedSessionController extends Controller
 
         $requestedRole = $request->input('role');
 
-        // 4. Jika login via form Admin Login tetapi akun bukan Admin
-        if ($requestedRole === 'admin' && ! $user->isAdmin()) {
-            abort(403, 'Akses Ditolak. Akun Anda (Role: '.$user->role.') tidak memiliki hak akses Administrator untuk masuk ke Portal Admin.');
+        // 4. Pengecekan Hak Akses Berdasarkan Portal Login
+        if ($requestedRole === 'admin') {
+            // Portal Login Khusus Admin (/admin/login)
+            if (! $user->isAdmin()) {
+                abort(403, 'Akses Ditolak. Akun Anda (Role: '.$user->role.') tidak memiliki hak akses Administrator untuk masuk ke Portal Admin.');
+            }
+        } else {
+            // Portal Login Umum (/login) - HANYA untuk Member dan Trainer
+            // Jika akun adalah Admin, tolak dengan status 403 Forbidden
+            if ($user->isAdmin()) {
+                abort(403, 'Akses Ditolak. Administrator tidak dapat login melalui halaman ini. Halaman ini hanya diperuntukkan bagi Member dan Personal Trainer.');
+            }
+
+            // Pastikan akun memiliki role yang diizinkan (Member atau Trainer)
+            if (! $user->isMember() && ! $user->isTrainer()) {
+                abort(403, 'Akses Ditolak. Halaman login ini hanya diperuntukkan bagi Member dan Personal Trainer.');
+            }
         }
 
-        // 5. Jika login via tab Trainer tetapi akun bukan Trainer
-        if ($requestedRole === 'trainer' && ! $user->isTrainer()) {
-            abort(403, 'Akses Ditolak. Akun Anda (Role: '.$user->role.') bukan akun Personal Trainer dan tidak memiliki izin masuk melalui Portal Pelatih.');
-        }
-
-        // 6. Jika login via tab Member tetapi akun bukan Member
-        if ($requestedRole === 'member' && ! $user->isMember()) {
-            abort(403, 'Akses Ditolak. Akun Anda (Role: '.$user->role.') bukan akun Member dan tidak memiliki izin masuk melalui Portal Member.');
-        }
-
-        // 7. Lakukan login dan buat sesi baru
+        // 5. Lakukan login dan buat sesi baru
         Auth::login($user, $request->boolean('remember'));
         $request->session()->regenerate();
 
-        // Redirect berdasarkan Role User
-        $role = $user->role;
-        if ($role === 'admin') {
-            return redirect()->intended(route('admin.dashboard', absolute: false));
-        } elseif ($role === 'trainer') {
+        // 6. Redirect otomatis berdasarkan Role User
+        if ($user->isTrainer()) {
             return redirect()->intended(route('trainer.dashboard', absolute: false));
-        } elseif ($role === 'member') {
+        } elseif ($user->isMember()) {
             return redirect()->intended(route('member.dashboard', absolute: false));
+        } elseif ($user->isAdmin()) {
+            return redirect()->intended(route('admin.dashboard', absolute: false));
         }
 
         return redirect()->intended(route('member.dashboard', absolute: false));

@@ -18,9 +18,6 @@
 
             <!-- 1. HEADER SECTION -->
             <div class="text-center max-w-3xl mx-auto">
-                <span class="inline-block px-3.5 py-1 rounded-full bg-orange-50 text-[#FF5722] text-xs font-bold uppercase tracking-widest mb-3">
-                    FILOSOFI &amp; VISI KAMI
-                </span>
                 <h1 class="font-poppins font-black text-3xl sm:text-5xl text-[#16151A] tracking-tight">
                     Membangun Kultur Disiplin &amp; Performa Tanpa Kompromi
                 </h1>

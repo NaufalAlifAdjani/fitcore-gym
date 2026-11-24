@@ -21,6 +21,9 @@ class PtSession extends Model
         'status' => PtSessionStatus::class,
         'completed_at' => 'datetime',
         'trainer_earnings' => 'integer',
+        'gym_revenue' => 'decimal:2',
+        'trainer_revenue' => 'decimal:2',
+        'payout_date' => 'datetime',
     ];
 
     public function setSessionDateAttribute($value): void

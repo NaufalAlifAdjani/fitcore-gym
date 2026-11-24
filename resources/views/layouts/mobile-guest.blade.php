@@ -59,19 +59,9 @@
         <!-- 1. STICKY HEADER MOBILE GUEST -->
         <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E5E7EB] shadow-xs">
             <!-- Brand Bar & Tombol Masuk -->
-            <div class="px-4 py-3 flex items-center justify-between">
-                <a href="{{ route('mobile.landing.index') }}" class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white shadow-sm shadow-[#FF5722]/30 shrink-0">
-                        <svg width="18" height="18" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
-                            <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="font-poppins font-black text-sm tracking-tight text-[#16151A] leading-none">
-                            FIT <span class="text-[#FF5722]">CORE</span>
-                        </span>
-                        <span class="text-[8px] font-bold tracking-widest text-[#565A66] uppercase mt-0.5">ATHLETIC</span>
-                    </div>
+            <div class="px-4 py-2.5 sm:py-3 flex items-center justify-between">
+                <a href="{{ route('mobile.landing.index') }}" class="flex items-center gap-2">
+                    <img src="{{ asset('images/logo/logo.png') }}" class="h-5 sm:h-5.5 w-auto object-contain" alt="FitCore">
                 </a>
 
                 <div class="flex items-center gap-2">
@@ -110,11 +100,7 @@
         <!-- 3. FOOTER MOBILE GUEST -->
         <footer class="bg-white border-t border-[#E5E7EB] mt-auto py-8 px-5 text-center">
             <div class="flex flex-col items-center">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] flex items-center justify-center text-white shadow-sm shadow-[#FF5722]/20 mb-3">
-                    <svg width="20" height="20" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white">
-                        <path d="M19.1667 26.25L18 25.0833L20.9583 22.125L13.875 15.0417L10.9167 18L9.75 16.8333L10.9167 15.625L9.75 14.4583L11.5 12.7083L10.3333 11.5L11.5 10.3333L12.7083 11.5L14.4583 9.75L15.625 10.9167L16.8333 9.75L18 10.9167L15.0417 13.875L22.125 20.9583L25.0833 18L26.25 19.1667L25.0833 20.375L26.25 21.5417L24.5 23.2917L25.6667 24.5L24.5 25.6667L23.2917 24.5L21.5417 26.25L20.375 25.0833L19.1667 26.25V26.25" fill="currentColor"/>
-                    </svg>
-                </div>
+                <img src="{{ asset('images/logo/logo-icon.png') }}" class="w-10 h-10 object-contain mb-3" alt="FitCore">
                 <span class="font-poppins font-black text-base text-[#16151A] tracking-tight">FITCORE <span class="text-[#FF5722]">ATHLETIC</span></span>
                 <p class="text-xs text-[#565A66] mt-1 max-w-xs leading-relaxed">
                     Pusat kebugaran berstandar kejuaraan dunia dengan pelatih berlisensi dan fasilitas pemulihan terbaik.
