@@ -11,13 +11,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 
 #[Fillable(['name', 'email', 'password', 'role', 'shift', 'phone', 'status', 'google_id', 'avatar'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasPushSubscriptions, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -172,6 +173,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isMember(): bool
     {
         return $this->role === 'member';
+    }
+
+    /**
+     * Memeriksa apakah biodata profil member sudah lengkap (nama, nomor telepon, dan alamat).
+     */
+    public function isProfileComplete(): bool
+    {
+        if ($this->role !== 'member') {
+            return true;
+        }
+
+        $hasPhone = ! empty(trim((string) ($this->phone ?? '')));
+        $profile = $this->memberProfile ?? $this->memberProfile()->first();
+        $hasAddress = ! empty(trim((string) ($profile?->address ?? '')));
+
+        return $hasPhone && $hasAddress;
     }
 
     /**

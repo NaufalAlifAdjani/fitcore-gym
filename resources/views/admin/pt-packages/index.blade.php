@@ -21,14 +21,7 @@
             <!-- Header & Search/Filter Controls -->
             <header class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div class="min-w-0 flex-1">
-                    <div class="flex items-center gap-2">
-                        <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1 font-inter text-xs font-bold text-[#FF5722] border border-rose-200">
-                            <span class="h-1.5 w-1.5 rounded-full bg-[#FF5722]"></span>
-                            Portal Admin
-                        </span>
-                        <span class="text-xs font-medium text-[#565A66] font-inter">Personal Trainer Service</span>
-                    </div>
-                    <h1 class="mt-2 text-2xl sm:text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold font-poppins text-[#16151A] tracking-tight">
                         Manajemen Paket Sesi Personal Trainer (PT)
                     </h1>
                     <p class="font-inter text-sm text-[#565A66] mt-1 max-w-3xl">

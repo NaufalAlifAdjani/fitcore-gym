@@ -43,34 +43,8 @@
             aria-label="Navigasi PT Portal">
             <div class="flex flex-col">
                 <!-- Brand Logo -->
-                <div class="flex items-center justify-between gap-3 px-6 pt-6 pb-5 border-b border-gray-100">
+                <div class="flex items-center gap-3 px-6 pt-6 pb-5 border-b border-gray-100 mb-4">
                     <img src="{{ asset('images/logo/logo.png') }}" alt="FitCore" class="h-7 w-auto object-contain">
-                    <span
-                        class="font-inter text-[9px] font-extrabold tracking-wider text-[#FF5722] uppercase bg-orange-50 px-2 py-0.5 rounded-full border border-orange-200">
-                        PT PORTAL
-                    </span>
-                </div>
-
-                <!-- Floor Active Status Pill -->
-                <div class="px-5 mb-5">
-                    <div class="flex items-center justify-between rounded-xl bg-gray-100/80 px-3.5 py-2.5 text-xs">
-                        <div class="flex items-center gap-2">
-                            <span class="relative flex h-2.5 w-2.5">
-                                <span
-                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                            </span>
-                            <span class="font-inter font-bold tracking-wider text-gray-800 text-[11px] uppercase">
-                                FLOOR ACTIVE
-                            </span>
-                        </div>
-                        <span class="text-gray-400 text-xs" title="Live Floor Status">
-                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M9.348 14.652a3.75 3.75 0 0 1 0-5.304m5.304 0a3.75 3.75 0 0 1 0 5.304m-7.425 2.121a6.75 6.75 0 0 1 0-9.546m9.546 0a6.75 6.75 0 0 1 0 9.546M12 12h.008v.008H12V12Z" />
-                            </svg>
-                        </span>
-                    </div>
                 </div>
 
                 <!-- Main Menu Header -->
@@ -203,6 +177,18 @@
             <main class="flex-1 px-6 py-8 sm:px-10 max-w-7xl w-full mx-auto">
                 {{ $slot }}
             </main>
+
+            <!-- PT Bottom Footer -->
+            <footer class="mt-auto border-t border-gray-100 bg-white py-4 px-6 sm:px-10">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500 max-w-7xl mx-auto">
+                    <p>© {{ date('Y') }} FitCore Athletic Gym Indonesia. Seluruh Hak Cipta Dilindungi.</p>
+                    <div class="flex items-center gap-6">
+                        <span class="text-gray-400">Personal Trainer Portal</span>
+                        <a href="#" class="hover:text-[#FF5722] transition">SOP Pelatih</a>
+                        <a href="#" class="hover:text-[#FF5722] transition">Bantuan</a>
+                    </div>
+                </div>
+            </footer>
         </div>
 
         <!-- Logout Confirmation Modal -->
@@ -246,7 +232,7 @@
 
         <x-email-verified-modal />
     </div>
-    @livewireScripts
+    @livewireScriptConfig
     @stack('scripts')
 </body>
 

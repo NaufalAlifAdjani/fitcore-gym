@@ -65,6 +65,22 @@
             @endif
         </div>
 
+        <!-- Push Notification Toggle Bar -->
+        <div x-data="pushNotificationToggle" x-show="supported" x-cloak @class([
+            'px-4 py-2 border-b text-xs flex items-center justify-between',
+            'border-slate-800 bg-slate-900/60' => $isDark,
+            'border-gray-100 bg-orange-50/50' => !$isDark,
+        ])>
+            <div class="flex items-center gap-2">
+                <span class="inline-block w-2 h-2 rounded-full" :class="isSubscribed ? 'bg-emerald-500' : 'bg-amber-400'"></span>
+                <span @class(['text-slate-300' => $isDark, 'text-gray-600' => !$isDark]) x-text="isSubscribed ? 'Notifikasi HP aktif' : 'Notifikasi HP nonaktif'"></span>
+            </div>
+            <button type="button" @click="toggle()" :disabled="loading" class="font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50" :class="isSubscribed ? 'text-gray-400 hover:text-red-500' : 'text-[#FF5722] hover:text-[#E64A19]'">
+                <span x-show="!loading" x-text="isSubscribed ? 'Matikan' : 'Aktifkan'"></span>
+                <span x-show="loading" class="italic">Memproses...</span>
+            </button>
+        </div>
+
         <!-- Notification List -->
         <div class="max-h-88 overflow-y-auto divide-y {{ $isDark ? 'divide-slate-800' : 'divide-gray-100' }}">
             @forelse($notifications as $notification)
@@ -106,6 +122,22 @@
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                    </svg>
+                                </div>
+                            @elseif($type === 'membership_expiring')
+                                <div
+                                    class="w-8 h-8 rounded-full bg-amber-500/15 text-amber-500 flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                </div>
+                            @elseif($type === 'payment_rejected')
+                                <div
+                                    class="w-8 h-8 rounded-full bg-rose-500/15 text-rose-500 flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                                     </svg>
                                 </div>
                             @else

@@ -59,16 +59,30 @@ class AuthenticationTest extends TestCase
         $this->assertAuthenticatedAs($member);
     }
 
-    public function test_admins_are_redirected_to_the_admin_dashboard_after_login(): void
+    public function test_admins_are_redirected_to_the_admin_dashboard_after_login_from_admin_portal(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
 
         $this->post('/login', [
             'email' => $admin->email,
             'password' => 'password',
+            'role' => 'admin',
         ])->assertRedirect(route('admin.dashboard', absolute: false));
 
         $this->assertAuthenticatedAs($admin);
+    }
+
+    public function test_admins_cannot_login_through_public_login_page_and_receives_403_forbidden(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $response = $this->post('/login', [
+            'email' => $admin->email,
+            'password' => 'password',
+        ]);
+
+        $response->assertForbidden();
+        $this->assertGuest();
     }
 
     public function test_members_accessing_root_dashboard_are_redirected_to_member_dashboard(): void

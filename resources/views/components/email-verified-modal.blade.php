@@ -31,7 +31,7 @@
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
         x-on:click="closeModal()"
-        class="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
+        class="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
     ></div>
 
     <!-- Modal Content Window -->
@@ -43,16 +43,16 @@
         x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-        class="relative w-full max-w-md transform overflow-hidden rounded-3xl border border-zinc-800 bg-[#111622] p-6 sm:p-8 text-center shadow-2xl transition-all"
+        class="relative w-full max-w-md transform overflow-hidden rounded-3xl border border-[#E5E7EB] bg-white p-6 sm:p-8 text-center shadow-2xl transition-all"
     >
         <!-- Top Ambient Glow -->
-        <div class="pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-emerald-500/20 blur-3xl"></div>
+        <div class="pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 rounded-full bg-orange-500/10 blur-3xl"></div>
 
         <!-- Close Button (X) -->
         <button
             type="button"
             x-on:click="closeModal()"
-            class="absolute top-4 right-4 text-zinc-400 hover:text-white transition-colors p-2 rounded-xl hover:bg-zinc-800/60 focus:outline-none"
+            class="absolute top-4 right-4 text-[#565A66] hover:text-[#16151A] transition-colors p-2 rounded-xl hover:bg-gray-100 focus:outline-none"
             aria-label="Tutup modal"
         >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -61,25 +61,25 @@
         </button>
 
         <!-- Success Icon -->
-        <div class="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shadow-xl shadow-emerald-500/15">
+        <div class="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 shadow-xl shadow-emerald-500/10">
             <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
             </svg>
         </div>
 
         <!-- Status Pill -->
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/25 mb-3">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-3">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span>Email Berhasil Diverifikasi</span>
         </div>
 
         <!-- Title -->
-        <h3 id="email-verified-title" class="text-xl sm:text-2xl font-black text-white font-montserrat tracking-tight">
+        <h3 id="email-verified-title" class="text-xl sm:text-2xl font-black text-[#16151A] font-poppins tracking-tight">
             Selamat Datang di FitCore!
         </h3>
 
         <!-- Body Message -->
-        <p class="mt-3 text-sm text-zinc-300 leading-relaxed font-inter">
+        <p class="mt-3 text-sm text-[#565A66] leading-relaxed font-sans">
             Alamat email Anda telah berhasil dikonfirmasi. Akun Anda kini aktif penuh dan siap digunakan untuk menikmati seluruh fitur, jadwal latihan, dan fasilitas eksklusif FitCore Gym.
         </p>
 
@@ -87,7 +87,7 @@
         <button
             type="button"
             x-on:click="closeModal()"
-            class="mt-6 w-full inline-flex justify-center items-center gap-2 rounded-xl bg-gradient-to-r from-[#FF5722] to-[#E6003D] hover:from-[#A00029] hover:to-[#C90035] text-white px-5 py-3.5 text-sm font-bold shadow-lg shadow-[#FF5722]/25 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:ring-offset-2 focus:ring-offset-[#111622]"
+            class="mt-6 w-full inline-flex justify-center items-center gap-2 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white px-5 py-3.5 text-sm font-bold shadow-lg shadow-[#FF5722]/25 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FF5722] focus:ring-offset-2 focus:ring-offset-white"
         >
             <span>Mulai Eksplorasi Dashboard</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

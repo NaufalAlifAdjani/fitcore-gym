@@ -55,7 +55,11 @@ class CommissionController extends Controller
             ->get()
             ->sum(fn ($s) => $s->trainer_earnings ?: $currentRate);
 
-        return view('trainer.commissions.index', [
+        $view = ($request->is('m/*') || $request->is('m') || $request->routeIs('mobile.*'))
+            ? 'mobile.trainer.commissions.index'
+            : 'trainer.commissions.index';
+
+        return view($view, [
             'trainer' => $trainer,
             'trainerProfile' => $trainerProfile,
             'currentRate' => $currentRate,

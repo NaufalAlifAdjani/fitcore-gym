@@ -9,6 +9,7 @@ use App\Models\Membership;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\PtPackage;
+use App\Models\TrainerProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -390,6 +391,16 @@ class PtPackagePurchaseTest extends TestCase
     public function test_select_trainer_page_renders_with_back_button(): void
     {
         $member = $this->createMember();
+        $trainer = User::factory()->create([
+            'role' => 'trainer',
+            'name' => 'Coach Rama Prasetya',
+            'shift' => 'pagi',
+        ]);
+        TrainerProfile::factory()->create([
+            'user_id' => $trainer->id,
+            'specialization' => 'Hypertrophy',
+        ]);
+
         $response = $this->actingAs($member)->get(route('member.pt-packages.select-trainer'));
 
         $response->assertStatus(200);

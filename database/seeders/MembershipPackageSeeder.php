@@ -58,15 +58,15 @@ class MembershipPackageSeeder extends Seeder
                 'duration_in_days' => 180,
                 'price' => 2400000,
                 'promo_price' => null,
-                'pt_sessions' => 2,
-                'pt_session_count' => 2,
+                'pt_sessions' => 0,
+                'pt_session_count' => 0,
                 'is_active' => true,
                 'status' => 'active',
                 'type' => 'standard',
                 'facilities' => [
                     'Akses gym 24 jam',
                     'Kelas studio',
-                    '2 sesi PT gratis',
+                    'Loker harian & shower panas',
                 ],
             ],
 
@@ -82,15 +82,15 @@ class MembershipPackageSeeder extends Seeder
                 'duration_in_days' => 365,
                 'price' => 5400000, // Harga Asli (Original Price)
                 'promo_price' => 4200000, // Harga Promo (Diskon)
-                'pt_sessions' => 5,
-                'pt_session_count' => 5,
+                'pt_sessions' => 0,
+                'pt_session_count' => 0,
                 'is_active' => true,
                 'status' => 'active',
                 'type' => 'premium',
                 'facilities' => [
                     'Akses gym semua cabang',
                     'Kelas studio',
-                    '5 sesi PT gratis',
+                    'Loker VIP & handuk latihan',
                 ],
             ],
 
@@ -106,15 +106,15 @@ class MembershipPackageSeeder extends Seeder
                 'duration_in_days' => 365,
                 'price' => 7500000,
                 'promo_price' => null,
-                'pt_sessions' => 12,
-                'pt_session_count' => 12,
+                'pt_sessions' => 0,
+                'pt_session_count' => 0,
                 'is_active' => true,
                 'status' => 'active',
                 'type' => 'vip',
                 'facilities' => [
                     'Akses semua cabang',
                     'Kelas prioritas',
-                    '12 sesi PT eksklusif',
+                    'Akses sauna & ice bath',
                 ],
             ],
 

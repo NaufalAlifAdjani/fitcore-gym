@@ -223,20 +223,20 @@ class PaymentVerificationControllerTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_approving_membership_with_pt_sessions_creates_member_pt_quota_record(): void
+    public function test_approving_membership_does_not_create_member_pt_quota_record(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
         $member = User::factory()->create(['role' => 'member']);
         $package = MembershipPackage::create([
-            'name' => 'VIP Bundling PT',
+            'name' => 'VIP Pure Membership',
             'badge' => 'VIP',
             'tier' => 'VIP',
-            'description' => 'Paket membership dengan jatah 4 sesi PT',
+            'description' => 'Paket membership murni akses gym tanpa bonus PT',
             'price' => 1200000,
             'duration_days' => 30,
             'duration_in_days' => 30,
             'facilities' => ['All Access'],
-            'pt_session_count' => 4,
+            'pt_session_count' => 0,
             'is_active' => true,
         ]);
         $payment = $this->createPayment($member, [
@@ -250,15 +250,10 @@ class PaymentVerificationControllerTest extends TestCase
             ->assertJsonPath('success', true);
 
         $membership = Membership::query()->where('payment_id', $payment->id)->firstOrFail();
+        $this->assertSame('active', $membership->status);
 
-        $this->assertDatabaseHas('member_pt_quotas', [
+        $this->assertDatabaseMissing('member_pt_quotas', [
             'member_id' => $member->id,
-            'membership_id' => $membership->id,
-            'source' => 'bundling',
-            'total_sessions' => 4,
-            'remaining_sessions' => 4,
-            'used_sessions' => 0,
-            'status' => 'active',
         ]);
     }
 

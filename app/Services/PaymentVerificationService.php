@@ -10,6 +10,7 @@ use App\Models\Payment;
 use App\Models\PtPackage;
 use App\Models\User;
 use App\Notifications\ChoosePtScheduleNotification;
+use App\Notifications\PaymentRejectedNotification;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -31,11 +32,28 @@ class PaymentVerificationService
                 $this->activatePtPackage($lockedPayment);
             }
 
+            $isPtPayment = ! $isMembershipPayment
+                || $lockedPayment->pt_package_id !== null
+                || $lockedPayment->package_type === 'pt_session';
+
+            $amount = (float) $lockedPayment->amount;
+            $trainerRevenue = $isPtPayment ? round($amount * 0.70, 2) : 0;
+            $gymRevenue = $isPtPayment ? round($amount * 0.30, 2) : $amount;
+
+            $trainerId = $lockedPayment->trainer_id;
+            if ($isPtPayment && ! $trainerId) {
+                $trainerId = User::where('role', 'trainer')->first()?->id;
+            }
+
             $lockedPayment->forceFill([
                 'status' => 'verified',
                 'verified_at' => now(),
                 'verified_by' => $adminId,
                 'rejection_reason' => null,
+                'trainer_id' => $trainerId,
+                'trainer_revenue' => $trainerRevenue,
+                'gym_revenue' => $gymRevenue,
+                'payout_status' => $lockedPayment->payout_status ?: 'pending',
             ])->save();
 
             $lockedPayment->verificationLogs()->create([
@@ -73,6 +91,8 @@ class PaymentVerificationService
                 'action' => 'reject',
                 'notes' => $reason,
             ]);
+
+            $lockedPayment->member?->notify(new PaymentRejectedNotification($lockedPayment, $reason));
 
             return $lockedPayment->refresh();
         }, attempts: 3);
@@ -122,7 +142,7 @@ class PaymentVerificationService
             ->whereDate('end_date', '<', $startDate)
             ->update(['status' => 'expired']);
 
-        $membership = Membership::query()->create([
+        Membership::query()->create([
             'member_id' => $payment->member_id,
             'membership_package_id' => $package->id,
             'payment_id' => $payment->id,
@@ -130,20 +150,6 @@ class PaymentVerificationService
             'end_date' => $endDate,
             'status' => 'active',
         ]);
-
-        if ($package->pt_session_count > 0) {
-            MemberPtQuota::create([
-                'member_id' => $payment->member_id,
-                'membership_id' => $membership->id,
-                'source' => 'bundling',
-                'total_sessions' => $package->pt_session_count,
-                'remaining_sessions' => $package->pt_session_count,
-                'used_sessions' => 0,
-                'start_date' => $membership->start_date,
-                'end_date' => $membership->end_date,
-                'status' => 'active',
-            ]);
-        }
     }
 
     private function activatePtPackage(Payment $payment): void

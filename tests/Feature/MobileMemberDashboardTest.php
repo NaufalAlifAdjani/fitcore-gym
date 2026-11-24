@@ -81,7 +81,7 @@ class MobileMemberDashboardTest extends TestCase
             'duration_days' => 30,
             'price' => 350000,
             'facilities' => ['Akses Penuh Area Gym', 'Loker Privat'],
-            'pt_session_count' => 2,
+            'pt_session_count' => 0,
             'status' => 'active',
             'is_active' => true,
             'tier' => 'Gold',
@@ -95,7 +95,6 @@ class MobileMemberDashboardTest extends TestCase
         $response->assertSee('Paket Gold FitCore');
         $response->assertSee('350.000');
         $response->assertSee('Best Value');
-        $response->assertSee('2 Sesi');
         $response->assertSee('Paket');
 
         // Test route mobile.packages.index also works
@@ -106,7 +105,7 @@ class MobileMemberDashboardTest extends TestCase
 
     public function test_member_can_access_mobile_package_checkout(): void
     {
-        $member = User::factory()->create([
+        $member = User::factory()->completeProfile()->create([
             'role' => 'member',
             'name' => 'Budi Pratama',
         ]);

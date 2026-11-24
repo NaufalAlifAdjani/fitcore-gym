@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\PtSessionStatus;
+use App\Filament\Pages\Settings;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MemberManagementController;
 use App\Http\Controllers\Admin\MembershipPackageController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PtPackagePurchaseController;
 use App\Http\Controllers\PtSessionController;
 use App\Http\Controllers\PtSessionSlotController;
+use App\Http\Controllers\PushSubscriptionController;
 use App\Http\Controllers\QrTokenController;
 use App\Http\Controllers\Trainer\ClientController as TrainerClientController;
 use App\Http\Controllers\Trainer\CommissionController as TrainerCommissionController;
@@ -27,6 +29,7 @@ use App\Models\MemberPtQuota;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\PtSession;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -66,6 +69,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
         ->name('notifications.read');
 
+    // Push Subscriptions
+    Route::get('/push-subscriptions/vapid-public-key', [PushSubscriptionController::class, 'vapidPublicKey'])
+        ->name('push-subscriptions.vapid-public-key');
+    Route::post('/push-subscriptions', [PushSubscriptionController::class, 'store'])
+        ->name('push-subscriptions.store');
+    Route::delete('/push-subscriptions', [PushSubscriptionController::class, 'destroy'])
+        ->name('push-subscriptions.destroy');
+
     // Member Dashboard
     Route::get('/member/dashboard', [MemberDashboardController::class, 'index'])
         ->middleware('can:access-member-dashboard')
@@ -74,10 +85,10 @@ Route::middleware('auth')->group(function () {
     // Member Membership Package, Checkout, Upload Proof, and Payment Status routes
     Route::prefix('membership')->name('member.membership.')->controller(MemberMembershipPackageController::class)->group(function () {
         Route::get('/packages', 'index')->name('packages');
-        Route::get('/checkout/{package}', 'checkout')->name('checkout');
-        Route::get('/upload-proof/{package}', 'uploadProof')->name('upload-proof');
-        Route::post('/upload-proof/{package}', 'processPayment')->name('upload-proof.store');
-        Route::post('/checkout/{package}', 'processPayment')->name('process-payment');
+        Route::get('/checkout/{package}', 'checkout')->middleware('profile.complete')->name('checkout');
+        Route::get('/upload-proof/{package}', 'uploadProof')->middleware('profile.complete')->name('upload-proof');
+        Route::post('/upload-proof/{package}', 'processPayment')->middleware('profile.complete')->name('upload-proof.store');
+        Route::post('/checkout/{package}', 'processPayment')->middleware('profile.complete')->name('process-payment');
         Route::get('/payment-status/{payment}', 'paymentStatus')->name('payment-status');
     });
 
@@ -149,6 +160,7 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
     Route::patch('/pt-packages/{ptPackage}/toggle-status', [PtPackageController::class, 'toggleStatus'])->name('pt-packages.toggle-status');
     Route::get('/pt-sessions', [PtPackageController::class, 'index'])->name('pt-sessions.index');
     Route::get('/check-in', [CheckInController::class, 'index'])->name('check-in.index');
+    // Manajemen Member
     Route::prefix('member-management')->name('members.')->controller(MemberManagementController::class)->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
@@ -158,7 +170,6 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
         Route::patch('/{member}/deactivate', 'deactivate')->whereNumber('member')->name('deactivate');
         Route::delete('/{member}', 'destroy')->whereNumber('member')->name('destroy');
     });
-
     // Manajemen Personal Trainer
     Route::prefix('pt-management')->name('trainers.')->controller(PtManagementController::class)->group(function () {
         Route::get('/', 'index')->name('index');
@@ -169,7 +180,8 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
         Route::delete('/{trainer}', 'destroy')->name('destroy');
     });
 
-    Route::view('/settings', 'admin.placeholder', ['title' => 'Pengaturan'])->name('settings.index');
+    Route::get('/settings', Settings::class)->name('settings.index');
+    Route::post('/settings/{payment}/payout', [Settings::class, 'payout'])->name('settings.payout');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');
 });
 
@@ -248,6 +260,48 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
         return view('mobile.member.packages.index', $view->getData());
     })->name('mobile.packages.index');
 
+    Route::get('/pt-packages', function (Request $request, PtPackagePurchaseController $controller) {
+        $view = $controller->index($request);
+        if ($view instanceof JsonResponse) {
+            return $view;
+        }
+
+        return view('mobile.member.pt-packages.index', $view->getData());
+    })->name('mobile.member.pt-packages.index');
+
+    Route::get('/pt-packages/select-trainer', function (Request $request, PtPackagePurchaseController $controller) {
+        $view = $controller->selectTrainer($request);
+        if ($view instanceof RedirectResponse) {
+            return $view;
+        }
+
+        return view('mobile.member.pt-packages.select-trainer', $view->getData());
+    })->name('mobile.member.pt-packages.select-trainer');
+
+    Route::get('/pt-packages/checkout', function (Request $request, PtPackagePurchaseController $controller) {
+        $view = $controller->checkout($request);
+        if ($view instanceof RedirectResponse) {
+            return $view;
+        }
+
+        return view('mobile.member.pt-packages.checkout', $view->getData());
+    })->name('mobile.member.pt-packages.checkout');
+
+    Route::post('/pt-packages/checkout', [PtPackagePurchaseController::class, 'processCheckout'])
+        ->name('mobile.member.pt-packages.process-checkout');
+
+    Route::get('/pt-packages/upload-payment/{payment?}', function (Request $request, PtPackagePurchaseController $controller, $payment = null) {
+        $view = $controller->uploadPayment($request, $payment);
+        if ($view instanceof RedirectResponse) {
+            return $view;
+        }
+
+        return view('mobile.member.pt-packages.upload-payment', $view->getData());
+    })->name('mobile.member.pt-packages.upload-payment');
+
+    Route::post('/pt-packages/upload-payment/{payment?}', [PtPackagePurchaseController::class, 'submitPaymentProof'])
+        ->name('mobile.member.pt-packages.submit-proof');
+
     Route::get('/packages/{package}/checkout', function (MembershipPackage $package, Request $request, MemberMembershipPackageController $controller) {
         $view = $controller->checkout($package);
         if ($view instanceof RedirectResponse) {
@@ -255,7 +309,7 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
         }
 
         return view('mobile.member.packages.checkout', $view->getData());
-    })->name('mobile.member.packages.checkout');
+    })->middleware('profile.complete')->name('mobile.member.packages.checkout');
 
     Route::get('/payment-status/{payment}', function (Payment $payment, Request $request, MemberMembershipPackageController $controller) {
         $view = $controller->paymentStatus($payment);
@@ -304,6 +358,7 @@ Route::prefix('m/trainer')->name('mobile.trainer.')->middleware(['auth', 'role:t
     Route::post('/sessions/{ptSession}/confirm', [TrainerDashboardController::class, 'confirmSession'])->name('sessions.confirm');
     Route::post('/sessions/{ptSession}/reject', [TrainerDashboardController::class, 'rejectSession'])->name('sessions.reject');
     Route::get('/clients', [TrainerDashboardController::class, 'mobileClientsIndex'])->name('clients.index');
+    Route::get('/commissions', [TrainerCommissionController::class, 'index'])->name('commissions.index');
     Route::get('/profile', [TrainerDashboardController::class, 'mobileProfileIndex'])->name('profile.index');
 });
 

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\MemberProfile;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -41,6 +42,13 @@ class UserFactory extends Factory
         ]);
     }
 
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+        ]);
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */
@@ -49,5 +57,34 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function completeProfile(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'phone' => '081234567890',
+        ])->afterCreating(function (User $user) {
+            if ($user->role === 'member') {
+                MemberProfile::updateOrCreate(
+                    ['user_id' => $user->id],
+                    [
+                        'member_code' => 'MEM'.fake()->unique()->numerify('######'),
+                        'address' => 'Jl. Jenderal Sudirman No. 1, Jakarta',
+                        'gender' => 'male',
+                    ]
+                );
+            }
+        });
+    }
+
+    public function incompleteProfile(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'phone' => null,
+        ])->afterCreating(function (User $user) {
+            if ($user->memberProfile) {
+                $user->memberProfile->update(['address' => null]);
+            }
+        });
     }
 }

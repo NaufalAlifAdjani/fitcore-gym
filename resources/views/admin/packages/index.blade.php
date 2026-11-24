@@ -216,12 +216,6 @@
                                                     <span>{{ $facility }}</span>
                                                 </li>
                                             @endforeach
-                                            @if (! $pkg->pt_sessions)
-                                                <li class="flex items-start gap-2 font-inter text-sm text-[#565A66]">
-                                                    <span class="mt-0.5 shrink-0 font-bold text-[#EF4444]" aria-hidden="true">×</span>
-                                                    <span class="line-through text-[#565A66]">Sesi Personal Trainer tidak termasuk</span>
-                                                </li>
-                                            @endif
                                         </ul>
                                     </td>
 
