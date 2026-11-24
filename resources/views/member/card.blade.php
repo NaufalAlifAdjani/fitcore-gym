@@ -54,16 +54,25 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 py-2">
                         <!-- Left Details -->
                         <div class="space-y-4">
-                            <div>
-                                <p class="text-[10px] font-bold uppercase tracking-widest text-white/75 font-inter">Nama Member</p>
-                                <h2 class="font-heading text-xl sm:text-2xl font-bold text-white tracking-tight mt-0.5 drop-shadow-sm">
-                                    {{ $user->name }}
-                                </h2>
-                                @if($profile && $profile->member_code)
-                                    <p class="font-mono text-xs font-bold text-orange-200 mt-1 tracking-wider drop-shadow-xs">
-                                        ID: {{ $profile->member_code }}
-                                    </p>
+                            <div class="flex items-center gap-3">
+                                @if($user->avatar_url)
+                                    <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="h-14 w-14 rounded-2xl object-cover border-2 border-white/60 shadow-md shrink-0">
+                                @else
+                                    <div class="h-14 w-14 rounded-2xl bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center text-white font-poppins font-bold text-lg shrink-0">
+                                        {{ strtoupper(substr($user->name, 0, 2)) }}
+                                    </div>
                                 @endif
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-widest text-white/75 font-inter">Nama Member</p>
+                                    <h2 class="font-heading text-xl sm:text-2xl font-bold text-white tracking-tight mt-0.5 drop-shadow-sm">
+                                        {{ $user->name }}
+                                    </h2>
+                                    @if($profile && $profile->member_code)
+                                        <p class="font-mono text-xs font-bold text-orange-200 mt-0.5 tracking-wider drop-shadow-xs">
+                                            ID: {{ $profile->member_code }}
+                                        </p>
+                                    @endif
+                                </div>
                             </div>
 
                             <div class="space-y-1">
@@ -170,6 +179,29 @@
                         <span>QR Code akan otomatis diperbarui setiap 30 detik untuk menjaga keamanan akses.</span>
                     </li>
                 </ol>
+
+                @if(!$user->hasProfilePhoto())
+                    <div class="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-inter">
+                        <div class="flex items-start gap-2.5">
+                            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-200 text-amber-800">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <p class="text-xs font-bold text-amber-900">
+                                    Foto Profil Belum Dilengkapi
+                                </p>
+                                <p class="text-[11px] text-amber-800 mt-0.5">
+                                    Admin gym memerlukan foto profil Anda untuk verifikasi identitas saat check-in. Anda wajib mengunggah foto profil agar dapat check-in.
+                                </p>
+                            </div>
+                        </div>
+                        <a href="{{ route('profile.edit') }}" class="shrink-0 rounded-full bg-[#FF5722] hover:bg-[#E64A19] px-4 py-2 text-xs font-bold text-white transition shadow-xs text-center">
+                            Unggah Foto
+                        </a>
+                    </div>
+                @endif
 
                 @if(!$activeMembership)
                     <div class="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-3.5 flex items-center justify-between gap-3 font-inter">

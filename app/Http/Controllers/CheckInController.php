@@ -22,7 +22,7 @@ class CheckInController extends Controller
         $today = now('Asia/Jakarta')->toDateString();
 
         $todayCheckIns = CheckIn::with([
-            'member:id,name,email',
+            'member:id,name,email,avatar',
             'member.memberProfile:id,user_id,member_code',
             'membership.package:id,name',
             'checkedBy:id,name',
@@ -78,6 +78,14 @@ class CheckInController extends Controller
                 'memberships.payment',
                 'memberships.payments',
             ])->first();
+
+            // ── Validate Profile Photo ────────────────────────────────────────
+            if (! $member->hasProfilePhoto()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Member belum melengkapi foto profil. Harap lengkapi foto profil terlebih dahulu sebelum melakukan check-in.',
+                ], 422);
+            }
 
             $today = now('Asia/Jakarta');
 
@@ -161,6 +169,7 @@ class CheckInController extends Controller
                 'message' => 'Check-in berhasil!',
                 'member_name' => $member->name,
                 'member_code' => $memberCode,
+                'member_avatar' => $member->avatar_url,
                 'membership' => $packageName,
                 'valid_until' => $validUntil,
                 'checked_in_at' => $checkedInTime,

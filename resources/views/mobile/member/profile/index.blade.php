@@ -86,10 +86,14 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
         <!-- 3. Kartu Identitas Pengguna Utama -->
         <div class="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] relative overflow-hidden">
             <div class="flex items-center gap-4">
-                <!-- Avatar Inisial Besar -->
-                <div class="w-16 h-16 rounded-2xl bg-orange-50 border-2 border-orange-200 text-[#FF5722] flex items-center justify-center font-poppins font-black text-2xl shadow-inner shrink-0">
-                    {{ strtoupper(substr($user->name, 0, 2)) }}
-                </div>
+                <!-- Avatar Inisial Besar / Foto Profil -->
+                @if ($user->avatar_url)
+                    <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-16 h-16 rounded-2xl object-cover border-2 border-orange-200 shadow-sm shrink-0">
+                @else
+                    <div class="w-16 h-16 rounded-2xl bg-orange-50 border-2 border-orange-200 text-[#FF5722] flex items-center justify-center font-poppins font-black text-2xl shadow-inner shrink-0">
+                        {{ strtoupper(substr($user->name, 0, 2)) }}
+                    </div>
+                @endif
 
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2">
@@ -184,9 +188,62 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 <p class="text-[11px] text-[#565A66]">Pastikan nama dan email Anda selalu valid.</p>
             </div>
 
-            <form method="POST" action="{{ route('profile.update') }}" class="space-y-4">
+            <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-4" x-data="{ photoName: null, photoPreview: null }">
                 @csrf
                 @method('patch')
+
+                <!-- Foto Profil (Wajib untuk Check-in) -->
+                <div class="space-y-1.5 pb-2 border-b border-[#E5E7EB]">
+                    <label class="block text-xs font-bold text-[#16151A]">
+                        Foto Profil
+                        <span class="text-[10px] font-semibold text-[#FF5722] bg-orange-50 px-2 py-0.5 rounded-full border border-orange-200 ml-1">Wajib Check-In</span>
+                    </label>
+
+                    <div class="flex items-center gap-3.5 pt-1">
+                        <!-- Current / Preview -->
+                        <div x-show="!photoPreview" class="shrink-0">
+                            @if ($user->avatar_url)
+                                <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-14 h-14 rounded-2xl object-cover border-2 border-orange-200 shadow-xs">
+                            @else
+                                <div class="w-14 h-14 rounded-2xl bg-orange-50 border-2 border-orange-200 text-[#FF5722] flex items-center justify-center font-poppins font-bold text-sm shadow-inner">
+                                    {{ strtoupper(substr($user->name, 0, 2)) }}
+                                </div>
+                            @endif
+                        </div>
+
+                        <div x-show="photoPreview" style="display: none;" class="shrink-0">
+                            <span class="block w-14 h-14 rounded-2xl bg-cover bg-no-repeat bg-center border-2 border-[#FF5722] shadow-sm"
+                                  :style="'background-image: url(\'' + photoPreview + '\');'">
+                            </span>
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <input id="mobile_avatar" name="avatar" type="file" accept="image/*" class="hidden"
+                                   x-ref="mobilePhoto"
+                                   x-on:change="
+                                        photoName = $refs.mobilePhoto.files[0]?.name;
+                                        const reader = new FileReader();
+                                        reader.onload = (e) => {
+                                            photoPreview = e.target.result;
+                                        };
+                                        reader.readAsDataURL($refs.mobilePhoto.files[0]);
+                                   " />
+
+                            <button type="button" x-on:click="$refs.mobilePhoto.click()"
+                                    class="px-3.5 py-1.5 rounded-xl border border-[#E5E7EB] bg-[#F6F6F7] hover:bg-white text-xs font-semibold text-[#16151A] transition shadow-xs flex items-center gap-1.5 cursor-pointer">
+                                <svg class="w-3.5 h-3.5 text-[#565A66]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span>{{ $user->avatar_url ? 'Ganti Foto' : 'Unggah Foto' }}</span>
+                            </button>
+                            <p class="text-[10px] text-[#565A66] mt-1">Format JPG, PNG (Maks 2MB). Foto akan dicocokkan staf saat check-in.</p>
+                        </div>
+                    </div>
+                    @error('avatar')
+                        <p class="text-[11px] font-semibold text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
 
                 <!-- Nama Lengkap -->
                 <div class="space-y-1">

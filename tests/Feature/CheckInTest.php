@@ -32,9 +32,12 @@ class CheckInTest extends TestCase
     }
 
     /** Create a member with a MemberProfile */
-    private function memberWithProfile(): User
+    private function memberWithProfile(array $userAttributes = []): User
     {
-        $member = User::factory()->create(['role' => 'member']);
+        $member = User::factory()->create(array_merge([
+            'role' => 'member',
+            'avatar' => 'avatars/default-test-avatar.jpg',
+        ], $userAttributes));
         MemberProfile::factory()->create(['user_id' => $member->id]);
 
         return $member;
@@ -108,7 +111,7 @@ class CheckInTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson(['success' => true])
-            ->assertJsonStructure(['member_name', 'membership', 'valid_until', 'checked_in_at']);
+            ->assertJsonStructure(['member_name', 'member_avatar', 'membership', 'valid_until', 'checked_in_at']);
 
         $this->assertDatabaseHas('check_ins', [
             'member_id' => $member->id,
@@ -421,12 +424,61 @@ class CheckInTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson(['success' => true])
-            ->assertJsonStructure(['member_name', 'membership', 'valid_until', 'checked_in_at']);
+            ->assertJsonStructure(['member_name', 'member_avatar', 'membership', 'valid_until', 'checked_in_at']);
 
         $this->assertDatabaseHas('check_ins', [
             'member_id' => $member->id,
             'method' => 'qr_code',
             'checked_by' => $admin->id,
         ]);
+    }
+
+    /**
+     * TC-10: Member without profile photo cannot check in -> rejected with 422.
+     */
+    public function test_member_without_profile_photo_cannot_check_in(): void
+    {
+        $admin = $this->adminUser();
+        $member = $this->memberWithProfile(['avatar' => null]);
+        $token = $this->validQrToken($member);
+        $this->activeMembership($member);
+
+        $response = $this->actingAs($admin)
+            ->postJson(route('admin.checkin.store'), ['qr_token' => $token]);
+
+        $response->assertStatus(422)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Member belum melengkapi foto profil. Harap lengkapi foto profil terlebih dahulu sebelum melakukan check-in.',
+            ]);
+
+        $this->assertDatabaseMissing('check_ins', [
+            'member_id' => $member->id,
+        ]);
+    }
+
+    /**
+     * TC-11: Admin can see member avatar in check-in table.
+     */
+    public function test_admin_can_see_member_avatar_on_checkin_page(): void
+    {
+        $admin = $this->adminUser();
+        $member = $this->memberWithProfile(['avatar' => 'avatars/john-doe.jpg']);
+        $membership = $this->activeMembership($member);
+
+        CheckIn::create([
+            'member_id' => $member->id,
+            'membership_id' => $membership->id,
+            'check_in_date' => now('Asia/Jakarta')->toDateString(),
+            'checked_in_at' => now('Asia/Jakarta'),
+            'method' => 'qr_code',
+            'checked_by' => $admin->id,
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.checkin.index'));
+
+        $response->assertStatus(200)
+            ->assertSee($member->avatar_url, false)
+            ->assertSee($member->name);
     }
 }

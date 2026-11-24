@@ -231,6 +231,7 @@ class MemberManagementController extends Controller
             'id' => $member->id,
             'name' => $member->name,
             'email' => $member->email,
+            'avatar_url' => $member->avatar_url,
             'phone' => $member->phone ?? '-',
             'gender' => $member->memberProfile?->gender ?? 'Laki-laki',
             'address' => $member->memberProfile?->address ?? '-',

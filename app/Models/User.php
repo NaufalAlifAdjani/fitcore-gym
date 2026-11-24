@@ -123,6 +123,26 @@ class User extends Authenticatable implements MustVerifyEmail
         };
     }
 
+    public function getAvatarUrlAttribute(): ?string
+    {
+        $avatar = $this->avatar ?? $this->memberProfile?->photo_path;
+
+        if (! $avatar) {
+            return null;
+        }
+
+        if (str_starts_with($avatar, 'http://') || str_starts_with($avatar, 'https://')) {
+            return $avatar;
+        }
+
+        return asset('storage/'.$avatar);
+    }
+
+    public function hasProfilePhoto(): bool
+    {
+        return ! empty($this->avatar) || ! empty($this->memberProfile?->photo_path);
+    }
+
     /**
      * Mendapatkan ringkasan jadwal kerja rutin untuk tampilan kartu PT berdasarkan shift.
      *
