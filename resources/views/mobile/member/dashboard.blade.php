@@ -89,8 +89,10 @@
                         {{ $activeMembership->package->name ?? 'Non-Aktif' }}
                     </div>
                     <p class="mt-1 text-[10px] text-emerald-600 truncate font-sans font-medium">
-                        @if ($activeMembership && $activeMembership->end_date)
-                            Sisa {{ now()->diffInDays(\Carbon\Carbon::parse($activeMembership->end_date), false) }} hari
+                        @if ($activeMembership && isset($maxEndDate) && $maxEndDate)
+                            Sisa {{ max(0, (int) now('Asia/Jakarta')->startOfDay()->diffInDays(\Carbon\Carbon::parse($maxEndDate)->startOfDay(), false) + 1) }} hari (s/d {{ \Carbon\Carbon::parse($maxEndDate)->translatedFormat('d M Y') }})
+                        @elseif ($activeMembership && $activeMembership->end_date)
+                            Sisa {{ max(0, (int) now('Asia/Jakarta')->startOfDay()->diffInDays(\Carbon\Carbon::parse($activeMembership->end_date)->startOfDay(), false) + 1) }} hari
                         @else
                             Silakan pilih paket
                         @endif

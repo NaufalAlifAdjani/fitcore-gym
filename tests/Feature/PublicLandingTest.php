@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\MembershipPackage;
+use App\Models\PtPackage;
 use App\Models\TrainerProfile;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,8 +39,14 @@ class PublicLandingTest extends TestCase
             'user_id' => $trainer->id,
             'specialization' => 'Hypertrophy & Strength',
             'experience' => 5,
-            'rating' => 4.95,
-            'review_count' => 120,
+            'status' => 'active',
+        ]);
+
+        PtPackage::create([
+            'name' => 'PT 16 Sesi',
+            'pt_session_count' => 16,
+            'price' => 3582000,
+            'validity_days' => 60,
             'status' => 'active',
         ]);
     }
@@ -242,18 +249,38 @@ class PublicLandingTest extends TestCase
         $responseMobile->assertSee(e(route('mobile.login', ['redirect' => route('mobile.member.packages.checkout', $pkg->id)])), false);
     }
 
-    public function test_guest_clicking_booking_has_login_redirect_with_trainer_id(): void
+    public function test_guest_can_access_desktop_pt_pricing_page(): void
     {
-        $trainer = User::where('role', 'trainer')->first();
+        $response = $this->get('/pt-pricing');
+
+        $response->assertStatus(200);
+        $response->assertSee('PT 16 Sesi');
+        $response->assertSee('3.582.000');
+        $response->assertSee('Masa Aktif 60 Hari');
+        $response->assertSee('Layanan Termasuk');
+    }
+
+    public function test_guest_can_access_mobile_pt_pricing_page(): void
+    {
+        $response = $this->get('/m/pt-pricing');
+
+        $response->assertStatus(200);
+        $response->assertSee('PT 16 Sesi');
+        $response->assertSee('3.582.000');
+    }
+
+    public function test_guest_clicking_pt_package_has_login_redirect_with_package_id(): void
+    {
+        $ptPackage = PtPackage::where('status', 'active')->first();
 
         // Desktop
-        $responseDesktop = $this->get('/trainers');
+        $responseDesktop = $this->get('/pt-pricing');
         $responseDesktop->assertStatus(200);
-        $responseDesktop->assertSee(e(route('login', ['redirect' => route('pt-sessions.create', ['trainer_id' => $trainer->id])])), false);
+        $responseDesktop->assertSee(e(route('login', ['redirect' => route('member.pt-packages.select-trainer', ['package_id' => $ptPackage->id])])), false);
 
         // Mobile
-        $responseMobile = $this->get('/m/trainers');
+        $responseMobile = $this->get('/m/pt-pricing');
         $responseMobile->assertStatus(200);
-        $responseMobile->assertSee(e(route('mobile.login', ['redirect' => route('mobile.member.pt-sessions.create', ['trainer_id' => $trainer->id])])), false);
+        $responseMobile->assertSee(e(route('mobile.login', ['redirect' => route('mobile.member.pt-packages.select-trainer', ['package_id' => $ptPackage->id])])), false);
     }
 }

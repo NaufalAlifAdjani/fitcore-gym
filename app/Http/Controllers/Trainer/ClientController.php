@@ -35,12 +35,23 @@ class ClientController extends Controller
         $startOfMonth = Carbon::now()->startOfMonth()->toDateString();
         $endOfMonth = Carbon::now()->endOfMonth()->toDateString();
 
-        // Query member unik yang pernah memiliki sesi latihan dengan trainer ini
+        // Klien adalah member yang pernah memiliki sesi dengan PT ini (histori lampau tetap ada)
+        // ATAU saat ini sedang dibimbing oleh PT ini (kuota aktif atau ditugaskan di profil)
+        $belongsToTrainer = function ($q) use ($trainer) {
+            $q->whereHas('memberSessions', function ($sq) use ($trainer) {
+                $sq->where('trainer_id', $trainer->id);
+            })
+                ->orWhereHas('ptQuotas', function ($sq) use ($trainer) {
+                    $sq->where('trainer_id', $trainer->id)->where('status', 'active');
+                })
+                ->orWhereHas('memberProfile', function ($sq) use ($trainer) {
+                    $sq->where('trainer_id', $trainer->id);
+                });
+        };
+
         $query = User::query()
             ->where('role', 'member')
-            ->whereHas('memberSessions', function ($q) use ($trainer) {
-                $q->where('trainer_id', $trainer->id);
-            })
+            ->where($belongsToTrainer)
             ->with([
                 'memberProfile',
                 'ptQuotas' => function ($q) {
@@ -97,16 +108,12 @@ class ClientController extends Controller
         // Metrik Ringkasan untuk Header
         $totalClientsCount = User::query()
             ->where('role', 'member')
-            ->whereHas('memberSessions', function ($q) use ($trainer) {
-                $q->where('trainer_id', $trainer->id);
-            })
+            ->where($belongsToTrainer)
             ->count();
 
         $activeClientsCount = User::query()
             ->where('role', 'member')
-            ->whereHas('memberSessions', function ($q) use ($trainer) {
-                $q->where('trainer_id', $trainer->id);
-            })
+            ->where($belongsToTrainer)
             ->whereHas('ptQuotas', function ($q) use ($today) {
                 $q->where('status', 'active')
                     ->where('remaining_sessions', '>', 0)
@@ -116,9 +123,7 @@ class ClientController extends Controller
 
         $lowQuotaClientsCount = User::query()
             ->where('role', 'member')
-            ->whereHas('memberSessions', function ($q) use ($trainer) {
-                $q->where('trainer_id', $trainer->id);
-            })
+            ->where($belongsToTrainer)
             ->where(function ($sub) use ($today) {
                 $sub->whereHas('ptQuotas', function ($q) use ($today) {
                     $q->where('status', 'active')
@@ -156,12 +161,15 @@ class ClientController extends Controller
     {
         $trainer = $request->user();
 
-        // Otorisasi: Pastikan member pernah/sedang memiliki sesi latihan dengan trainer ini
+        // Otorisasi: Pastikan member pernah/sedang memiliki sesi latihan dengan trainer ini, atau sedang dibimbing oleh trainer ini
         $hasTrained = PtSession::where('trainer_id', $trainer->id)
             ->where('member_id', $member->id)
             ->exists();
 
-        if (! $hasTrained) {
+        $isAssignedTrainer = $member->memberProfile?->trainer_id === $trainer->id
+            || $member->ptQuotas()->where('trainer_id', $trainer->id)->where('status', 'active')->exists();
+
+        if (! $hasTrained && ! $isAssignedTrainer) {
             abort(403, 'Anda tidak memiliki akses ke data riwayat member ini.');
         }
 
@@ -177,7 +185,7 @@ class ClientController extends Controller
 
         $sessionStatusFilter = (string) $request->query('session_status', 'all');
 
-        $sessionsQuery = PtSession::with(['quota.ptPackage', 'rating'])
+        $sessionsQuery = PtSession::with(['quota.ptPackage'])
             ->where('trainer_id', $trainer->id)
             ->where('member_id', $member->id);
 

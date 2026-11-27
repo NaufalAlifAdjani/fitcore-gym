@@ -39,6 +39,56 @@
                 Pilih pelatih profesional berlisensi untuk mendampingi target kebugaran Anda.
             </p>
 
+            {{-- PELATIH ANDA SAAT INI (SMART RENEWAL) --}}
+            @if(isset($currentTrainer) && $currentTrainer)
+                @php
+                    $coachFirst = explode(' ', trim(str_replace('Coach ', '', $currentTrainer->name)))[0];
+                    $cPhotoCurr = file_exists(public_path("images/trainers/coach-" . strtolower($coachFirst) . ".jpg"))
+                        ? asset("images/trainers/coach-" . strtolower($coachFirst) . ".jpg")
+                        : ($currentTrainer->trainerProfile?->photo_path ? asset('storage/'.$currentTrainer->trainerProfile->photo_path) : ($currentTrainer->avatar_url ?? null));
+                    $currSummary = $currentTrainer->getWorkingScheduleSummary();
+                @endphp
+                <div class="mt-6 bg-gradient-to-r from-orange-50 via-white to-amber-50 border-2 border-[#FF5722]/40 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-[#2C2828] border-2 border-[#FF5722] shrink-0 shadow-md">
+                            @if($cPhotoCurr)
+                                <img src="{{ $cPhotoCurr }}" class="w-full h-full object-cover" alt="{{ $currentTrainer->name }}">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-white font-black text-xl bg-[#FF5722]">
+                                    {{ substr($coachFirst, 0, 1) }}
+                                </div>
+                            @endif
+                        </div>
+                        <div>
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#FF5722] text-white shadow-2xs">
+                                ★ Pelatih Anda Saat Ini
+                            </div>
+                            <h2 class="text-lg sm:text-xl font-black text-[#16151A] mt-1">{{ $currentTrainer->name }}</h2>
+                            <p class="text-xs text-[#565A66] mt-0.5">
+                                {{ $currentTrainer->trainerProfile?->specialization ?? 'Personal Trainer' }} &bull; Jadwal: {{ $currSummary['days_label'] }} ({{ $currSummary['periods_label'] }})
+                            </p>
+                            <p class="text-[11px] text-[#FF5722] font-semibold mt-1">
+                                Klik tombol di samping untuk langsung melanjutkan pesanan bersama pelatih ini.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-auto shrink-0">
+                        <a href="{{ route('member.pt-packages.checkout', ['package_id' => $packageId, 'trainer_id' => $currentTrainer->id]) }}" 
+                           class="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#FF5722] hover:bg-[#E64A19] text-white font-extrabold text-xs sm:text-sm rounded-xl text-center shadow-md shadow-[#FF5722]/30 transition active:scale-95">
+                            <span>Lanjut bersama {{ $currentTrainer->name }}</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative my-8 text-center">
+                    <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-[#E5E7EB]"></div></div>
+                    <span class="relative bg-[#F6F6F7] px-4 text-xs font-bold uppercase tracking-wider text-[#565A66]">
+                        Atau Pilih Pelatih Lain Di Bawah Ini
+                    </span>
+                </div>
+            @endif
+
             {{-- SEARCH BAR & FILTER WAKTU --}}
             <div class="mt-6 flex flex-col gap-3">
                 <div class="max-w-md">
@@ -102,27 +152,52 @@
                          x-transition:enter-end="opacity-100 scale-100"
                          class="rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-[#E5E7EB] flex flex-col bg-white hover:shadow-lg transition duration-200 group">
                         
-                        {{-- Foto Portrait Pelatih (Aspect 4/5) --}}
-                        <div class="aspect-[4/5] w-full overflow-hidden bg-orange-50/60 relative">
-                            <img src="{{ $trainer['photo'] }}" 
-                                 alt="{{ $trainer['name'] }}" 
-                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                 loading="lazy">
+                        {{-- 1. Foto PT (Bagian Atas) --}}
+                        <div class="aspect-[4/3] w-full overflow-hidden bg-[#2C2828] relative flex items-center justify-center">
+                            @if (!empty($trainer['photo']))
+                                <img src="{{ $trainer['photo'] }}" 
+                                     alt="{{ $trainer['name'] }}" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                     loading="lazy">
+                            @else
+                                <div class="w-full h-full bg-gradient-to-b from-[#383332] to-[#252222] flex flex-col items-center justify-center text-zinc-300 p-4">
+                                    <svg class="w-10 h-10 text-zinc-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <span class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Foto PT</span>
+                                </div>
+                            @endif
                         </div>
 
-                        {{-- Body Card --}}
-                        <div class="p-5 flex-1 flex flex-col justify-between {{ !empty($trainer['is_active_highlight']) ? 'bg-orange-50/70 border-t border-orange-200' : 'bg-white border-t border-[#E5E7EB]' }}">
+                        {{-- 2. Data Pelatih (Bagian Bawah) --}}
+                        <div class="p-5 flex-1 flex flex-col justify-between space-y-4 {{ !empty($trainer['is_active_highlight']) ? 'bg-orange-50/70 border-t border-orange-200' : 'bg-[#F6F6F7] border-t border-[#E5E7EB]' }}">
                             
-                            <div class="mb-4">
-                                <h3 class="text-base sm:text-lg font-black text-[#16151A] leading-snug">
+                            <div class="space-y-2">
+                                <!-- Nama -->
+                                <h3 class="text-base sm:text-lg font-black text-[#16151A] leading-snug font-poppins">
                                     {{ $trainer['name'] }}
                                 </h3>
-                                <p class="text-xs text-[#565A66] font-semibold mt-1">
+
+                                <!-- Specialization -->
+                                <div class="text-xs font-bold text-[#FF5722]">
                                     {{ $trainer['specialization'] }}
+                                </div>
+
+                                <!-- Experience -->
+                                <div class="text-xs font-semibold text-[#565A66] flex items-center gap-1.5 pt-0.5">
+                                    <svg class="w-3.5 h-3.5 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{{ $trainer['experience'] ?? 5 }}+ Tahun Jam Terbang</span>
+                                </div>
+
+                                <!-- Bio -->
+                                <p class="text-xs text-[#565A66] leading-relaxed line-clamp-3 pt-0.5">
+                                    {{ $trainer['bio'] ?? 'Berpengalaman mendampingi member mencapai target kebugaran dan kekuatan atletik secara optimal.' }}
                                 </p>
 
                                 {{-- Badge Ketersediaan Jam Kerja PT --}}
-                                <div class="mt-3.5 pt-3 border-t border-gray-100/90 flex flex-col gap-1.5">
+                                <div class="mt-3.5 pt-3 border-t border-gray-200/80 flex flex-col gap-1.5">
                                     <div class="flex items-center gap-2 text-xs font-semibold text-[#16151A]">
                                         <svg class="w-3.5 h-3.5 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <circle cx="12" cy="12" r="10" stroke-width="2"/>
@@ -142,14 +217,16 @@
                             </div>
 
                             {{-- Tombol Pilih Pelatih --}}
-                            <a href="{{ route('member.pt-packages.checkout', [
-                                    'package_id' => $packageId, 
-                                    'trainer_id' => $trainer['id'], 
-                                    'sessions' => $sessionCount
-                                ]) }}" 
-                               class="w-full py-3 px-4 rounded-full font-bold text-xs text-white bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] transition text-center shadow-md shadow-orange-500/20 block cursor-pointer">
-                                Pilih Pelatih &rarr;
-                            </a>
+                            <div class="pt-2">
+                                <a href="{{ route('member.pt-packages.checkout', [
+                                        'package_id' => $packageId, 
+                                        'trainer_id' => $trainer['id'], 
+                                        'sessions' => $sessionCount
+                                    ]) }}" 
+                                   class="w-full py-3 px-4 rounded-full font-bold text-xs text-white bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] transition text-center shadow-md shadow-orange-500/20 block cursor-pointer">
+                                    Pilih Pelatih &rarr;
+                                </a>
+                            </div>
 
                         </div>
 

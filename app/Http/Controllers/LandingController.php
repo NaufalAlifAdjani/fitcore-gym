@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MembershipPackage;
+use App\Models\PtPackage;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,7 +27,6 @@ class LandingController extends Controller
 
         $packages = MembershipPackage::query()
             ->where('is_active', true)
-            ->where('status', 'active')
             ->orderBy('price', 'asc')
             ->take(3)
             ->get();
@@ -48,7 +48,6 @@ class LandingController extends Controller
     {
         $packages = MembershipPackage::query()
             ->where('is_active', true)
-            ->where('status', 'active')
             ->orderBy('price', 'asc')
             ->get();
 
@@ -67,6 +66,19 @@ class LandingController extends Controller
             ->get();
 
         return view('landing.trainers', compact('trainers'));
+    }
+
+    /**
+     * Menampilkan Daftar Harga Sesi Personal Trainer publik versi desktop.
+     */
+    public function ptPricing(Request $request): View
+    {
+        $ptPackages = PtPackage::query()
+            ->where('status', 'active')
+            ->orderBy('pt_session_count', 'asc')
+            ->get();
+
+        return view('landing.pt-pricing', compact('ptPackages'));
     }
 
     /**
@@ -93,7 +105,6 @@ class LandingController extends Controller
 
         $packages = MembershipPackage::query()
             ->where('is_active', true)
-            ->where('status', 'active')
             ->orderBy('price', 'asc')
             ->take(3)
             ->get();
@@ -115,7 +126,6 @@ class LandingController extends Controller
     {
         $packages = MembershipPackage::query()
             ->where('is_active', true)
-            ->where('status', 'active')
             ->orderBy('price', 'asc')
             ->get();
 
@@ -134,6 +144,19 @@ class LandingController extends Controller
             ->get();
 
         return view('mobile.landing.trainers', compact('trainers'));
+    }
+
+    /**
+     * Menampilkan Daftar Harga Sesi Personal Trainer publik versi mobile.
+     */
+    public function mobilePtPricing(Request $request): View
+    {
+        $ptPackages = PtPackage::query()
+            ->where('status', 'active')
+            ->orderBy('pt_session_count', 'asc')
+            ->get();
+
+        return view('mobile.landing.pt-pricing', compact('ptPackages'));
     }
 
     /**

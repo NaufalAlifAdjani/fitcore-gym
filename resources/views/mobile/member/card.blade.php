@@ -83,7 +83,7 @@
                                 {{ $activeMembership->package->name ?? 'Membership FitCore' }}
                             </p>
                             <p class="font-inter text-[11px] text-white/85">
-                                Berlaku s/d <span class="text-orange-200 font-bold">{{ \Carbon\Carbon::parse($activeMembership->end_date)->translatedFormat('d M Y') }}</span>
+                                Berlaku s/d <span class="text-orange-200 font-bold">{{ \Carbon\Carbon::parse($maxEndDate ?? $activeMembership->end_date)->translatedFormat('d M Y') }}</span>
                             </p>
                         @else
                             <p class="font-inter text-xs font-semibold text-rose-200">

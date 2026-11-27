@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\QrToken;
+use App\Models\Setting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -31,8 +32,9 @@ class QrTokenController extends Controller
             ->where('expires_at', '>', now())
             ->delete();
 
+        $ttl = (int) Setting::get('qr_token_ttl', self::TOKEN_TTL);
         $token = bin2hex(random_bytes(32)); // 64 hex characters — cryptographically secure
-        $expiresAt = now()->addSeconds(self::TOKEN_TTL);
+        $expiresAt = now()->addSeconds($ttl);
 
         QrToken::create([
             'member_id' => $memberId,
@@ -43,7 +45,7 @@ class QrTokenController extends Controller
         return response()->json([
             'token' => $token,
             'expires_at_unix' => $expiresAt->timestamp,
-            'ttl' => self::TOKEN_TTL,
+            'ttl' => $ttl,
         ]);
     }
 

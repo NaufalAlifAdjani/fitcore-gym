@@ -9,6 +9,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
     'title' => 'FitCore Coach - Trainer Portal',
     'activeTab' => 'dashboard',
     'active' => null,
+    'wide' => false,
 ])
 
 @php
@@ -49,6 +50,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
     </style>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body class="h-full bg-[#F6F6F7] text-[#16151A] font-sans antialiased selection:bg-[#FF5722] selection:text-white flex flex-col overscroll-y-none">
 
@@ -59,24 +61,55 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
         </a>
 
         <div class="flex items-center gap-2">
-            <a href="{{ route('mobile.trainer.profile.index') }}" class="relative block" title="Profil Trainer">
-                @php
-                    $userFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', auth()->user()->name ?? '')))[0] ?? '');
-                    $userPhoto = ($userFirstName && file_exists(public_path("images/trainers/coach-{$userFirstName}.jpg")))
-                        ? asset("images/trainers/coach-{$userFirstName}.jpg")
-                        : (auth()->user()->trainerProfile?->photo_path ? asset('storage/' . auth()->user()->trainerProfile->photo_path) : null);
-                @endphp
-                @if ($userPhoto)
-                    <img src="{{ $userPhoto }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover border border-[#E5E7EB] shadow-xs">
-                @else
-                    <x-avatar-initial :initials="auth()->user()->name ?? 'PT'" color_theme="red" class="w-8 h-8 text-xs border border-[#E5E7EB] shadow-xs" />
-                @endif
-            </a>
+            <div class="relative" x-data="{ profileOpen: false }">
+                <button type="button" @click="profileOpen = !profileOpen" class="relative block cursor-pointer focus:outline-none" title="Menu Profil">
+                    @php
+                        $userFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', auth()->user()->name ?? '')))[0] ?? '');
+                        $userPhoto = ($userFirstName && file_exists(public_path("images/trainers/coach-{$userFirstName}.jpg")))
+                            ? asset("images/trainers/coach-{$userFirstName}.jpg")
+                            : (auth()->user()->trainerProfile?->photo_path ? asset('storage/' . auth()->user()->trainerProfile->photo_path) : null);
+                    @endphp
+                    @if ($userPhoto)
+                        <img src="{{ $userPhoto }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover border border-[#E5E7EB] shadow-xs">
+                    @else
+                        <x-avatar-initial :initials="auth()->user()->name ?? 'PT'" color_theme="red" class="w-8 h-8 text-xs border border-[#E5E7EB] shadow-xs" />
+                    @endif
+                </button>
+
+                <!-- Profile Dropdown -->
+                <div x-cloak x-show="profileOpen" @click.away="profileOpen = false"
+                    x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+                    class="absolute right-0 mt-2 w-52 rounded-2xl bg-white border border-[#E5E7EB] shadow-xl p-2 z-50 text-sm">
+                    <div class="border-b border-[#E5E7EB] px-3 py-2 mb-1">
+                        <p class="truncate text-xs font-bold text-[#16151A]">{{ Auth::user()?->name }}</p>
+                    </div>
+
+                    <a href="{{ route('profile.edit') }}"
+                        class="block rounded-xl px-3 py-2 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-[#16151A] transition-colors">
+                        Pengaturan Profil
+                    </a>
+
+                    <a href="{{ route('profile.edit') }}#password"
+                        class="block rounded-xl px-3 py-2 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-[#16151A] transition-colors">
+                        Ganti Kata Sandi
+                    </a>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="w-full rounded-xl px-3 py-2 text-left text-xs font-bold text-[#FF5722] hover:bg-orange-50 cursor-pointer transition-colors">
+                            Keluar
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </header>
 
     <!-- Scrollable Main Content Area with pb-28 -->
-    <main class="flex-1 w-full max-w-md mx-auto px-4 py-5 overflow-y-auto pb-28">
+    <main class="flex-1 w-full {{ ($wide ?? false) ? 'max-w-5xl' : 'max-w-md' }} mx-auto px-3 sm:px-4 py-4 sm:py-5 overflow-y-auto pb-28">
         {{ $slot }}
     </main>
 
@@ -141,5 +174,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
     <!-- Global Toast -->
     <x-toast />
 
+    @livewireScriptConfig
+    @stack('scripts')
 </body>
 </html>

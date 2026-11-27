@@ -28,10 +28,18 @@ class MemberCardController extends Controller
         $profile = $user->memberProfile;
         $activeMembership = $user->memberships->first();
 
+        $maxEndDate = null;
+        if ($activeMembership) {
+            $maxEndDate = $user->memberships()
+                ->where('status', 'active')
+                ->where('end_date', '>=', now('Asia/Jakarta')->toDateString())
+                ->max('end_date');
+        }
+
         // URLs passed to the view so the Blade template can wire up the JS.
         $qrGenerateUrl = route('member.card.qr-token');
         $qrSvgUrl = route('member.card.qr-svg');
 
-        return view('member.card', compact('user', 'profile', 'activeMembership', 'qrGenerateUrl', 'qrSvgUrl'));
+        return view('member.card', compact('user', 'profile', 'activeMembership', 'maxEndDate', 'qrGenerateUrl', 'qrSvgUrl'));
     }
 }

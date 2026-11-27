@@ -7,7 +7,6 @@
                 'name' => old('name', ''),
                 'pt_session_count' => old('pt_session_count', 4),
                 'price' => old('price', ''),
-                'min_membership_days' => old('min_membership_days', 0),
                 'validity_days' => old('validity_days', 30),
                 'is_active' => old('is_active') !== null ? (bool) old('is_active') : true,
             ]),
@@ -125,7 +124,6 @@
                                 <th scope="col" class="px-4 py-3.5 sm:px-5 sm:py-4">Nama Paket PT</th>
                                 <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 whitespace-nowrap">Jumlah Sesi</th>
                                 <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 whitespace-nowrap">Tarif Harga</th>
-                                <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 whitespace-nowrap">Syarat Min. Membership</th>
                                 <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 whitespace-nowrap">Masa Berlaku</th>
                                 <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 text-center whitespace-nowrap">Status</th>
                                 <th scope="col" class="px-3 py-3.5 sm:px-4 sm:py-4 text-center whitespace-nowrap">Aksi</th>
@@ -134,7 +132,7 @@
                         <tbody class="divide-y divide-[#E5E7EB] font-inter text-sm">
                             @if ($packages->isEmpty())
                                 <tr>
-                                    <td colspan="7" class="px-4 py-16 text-center">
+                                    <td colspan="6" class="px-4 py-16 text-center">
                                         <div class="mx-auto flex max-w-sm flex-col items-center">
                                             <div class="flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 text-[#FF5722] mb-4">
                                                 <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -215,25 +213,6 @@
                                             </div>
                                         </td>
 
-                                        <!-- Syarat Minimum Sisa Hari Membership -->
-                                        <td class="px-3 py-4 sm:px-4 whitespace-nowrap">
-                                            @if ($pkg->min_membership_days > 0)
-                                                <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-2.5 py-1 text-xs font-semibold text-amber-800">
-                                                    <svg class="h-3.5 w-3.5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                                        <line x1="16" y1="2" x2="16" y2="6" />
-                                                        <line x1="8" y1="2" x2="8" y2="6" />
-                                                        <line x1="3" y1="10" x2="21" y2="10" />
-                                                    </svg>
-                                                    Min. {{ $pkg->min_membership_days }} Hari
-                                                </span>
-                                            @else
-                                                <span class="inline-flex items-center rounded-full bg-slate-100 border border-slate-200 px-2.5 py-1 text-xs font-medium text-slate-600">
-                                                    Tanpa Syarat
-                                                </span>
-                                            @endif
-                                        </td>
-
                                         <!-- Masa Berlaku Sesi -->
                                         <td class="px-3 py-4 sm:px-4 whitespace-nowrap">
                                             <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#16151A]">
@@ -284,7 +263,6 @@
                                                     'name' => $pkg->name,
                                                     'pt_session_count' => $pkg->pt_session_count,
                                                     'price' => (int) $pkg->price,
-                                                    'min_membership_days' => $pkg->min_membership_days,
                                                     'validity_days' => $pkg->validity_days,
                                                     'status' => $pkg->status,
                                                     'is_active' => $pkg->status === 'active',

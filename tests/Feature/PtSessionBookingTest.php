@@ -73,7 +73,7 @@ class PtSessionBookingTest extends TestCase
             'start_time' => '10:00',
         ]);
 
-        $response->assertRedirect(route('pt-sessions.index'));
+        $response->assertRedirectContains(route('pt-sessions.index'));
         $response->assertSessionHas('success');
 
         $this->assertDatabaseHas('pt_sessions', [
@@ -88,6 +88,88 @@ class PtSessionBookingTest extends TestCase
         $quota->refresh();
         $this->assertEquals(3, $quota->used_sessions);
         $this->assertEquals(7, $quota->remaining_sessions);
+    }
+
+    public function test_member_can_book_session_at_13_00_with_pagi_shift_trainer(): void
+    {
+        $member = User::factory()->member()->create();
+        $trainer = User::factory()->trainer()->create(['shift' => 'pagi']);
+        $quota = MemberPtQuota::factory()->create([
+            'member_id' => $member->id,
+            'total_sessions' => 10,
+            'used_sessions' => 0,
+            'remaining_sessions' => 10,
+            'end_date' => now()->addMonth(),
+        ]);
+
+        $targetDate = now()->addDays(2)->toDateString();
+
+        $response = $this->actingAs($member)->post(route('pt-sessions.store'), [
+            'trainer_id' => $trainer->id,
+            'session_date' => $targetDate,
+            'start_time' => '13:00',
+        ]);
+
+        $response->assertRedirectContains(route('pt-sessions.index'));
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('pt_sessions', [
+            'member_id' => $member->id,
+            'trainer_id' => $trainer->id,
+            'session_date' => $targetDate,
+            'start_time' => '13:00:00',
+        ]);
+    }
+
+    public function test_member_can_book_session_at_evening_with_sore_shift_trainer(): void
+    {
+        $member = User::factory()->member()->create();
+        $trainer = User::factory()->trainer()->create(['shift' => 'sore']);
+        $quota = MemberPtQuota::factory()->create([
+            'member_id' => $member->id,
+            'total_sessions' => 10,
+            'used_sessions' => 0,
+            'remaining_sessions' => 10,
+            'end_date' => now()->addMonth(),
+        ]);
+
+        $targetDate = now()->addDays(2)->toDateString();
+
+        $response = $this->actingAs($member)->post(route('pt-sessions.store'), [
+            'trainer_id' => $trainer->id,
+            'session_date' => $targetDate,
+            'start_time' => '19:00',
+        ]);
+
+        $response->assertRedirectContains(route('pt-sessions.index'));
+        $response->assertSessionHas('success');
+        $this->assertDatabaseHas('pt_sessions', [
+            'member_id' => $member->id,
+            'trainer_id' => $trainer->id,
+            'session_date' => $targetDate,
+            'start_time' => '19:00:00',
+        ]);
+    }
+
+    public function test_booking_fails_when_slot_is_outside_trainer_shift(): void
+    {
+        $member = User::factory()->member()->create();
+        $trainer = User::factory()->trainer()->create(['shift' => 'pagi']);
+        MemberPtQuota::factory()->create([
+            'member_id' => $member->id,
+            'remaining_sessions' => 5,
+            'end_date' => now()->addMonth(),
+        ]);
+
+        $targetDate = now()->addDays(2)->toDateString();
+
+        $response = $this->actingAs($member)->post(route('pt-sessions.store'), [
+            'trainer_id' => $trainer->id,
+            'session_date' => $targetDate,
+            'start_time' => '16:00',
+        ]);
+
+        $response->assertSessionHasErrors('booking_error');
+        $this->assertDatabaseCount('pt_sessions', 0);
     }
 
     public function test_booking_fails_when_member_has_zero_quota(): void

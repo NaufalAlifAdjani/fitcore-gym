@@ -261,27 +261,55 @@ class DashboardController extends Controller
     public function mobileSessionsIndex(Request $request): View
     {
         $trainer = $request->user();
+        $mode = $request->query('mode', 'calendar');
         $tab = $request->query('tab', 'all');
         $date = $request->query('date');
         $today = Carbon::today()->toDateString();
+        $currentDate = $date ? Carbon::parse($date) : Carbon::today();
 
-        $query = PtSession::with(['member.memberProfile', 'quota.ptPackage', 'memberPtQuota.ptPackage', 'rating'])
-            ->where('trainer_id', $trainer->id);
+        // 1. Grid Kalender Bulanan (Google Calendar Style)
+        $startOfMonth = $currentDate->copy()->startOfMonth();
+        $endOfMonth = $currentDate->copy()->endOfMonth();
+        $gridStart = $startOfMonth->copy()->startOfWeek(Carbon::SUNDAY);
+        $gridEnd = $endOfMonth->copy()->endOfWeek(Carbon::SATURDAY);
 
-        if ($tab === 'today') {
-            $query->whereDate('session_date', $today);
-        } elseif ($tab === 'pending') {
-            $query->where('status', PtSessionStatus::Pending->value);
-        } elseif ($tab === 'confirmed') {
-            $query->where('status', PtSessionStatus::Confirmed->value);
-        } elseif ($tab === 'completed') {
-            $query->whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value]);
-        } elseif ($tab === 'cancelled') {
-            $query->where('status', PtSessionStatus::Cancelled->value);
+        $monthGrid = [];
+        $curr = $gridStart->copy();
+        while ($curr->lte($gridEnd)) {
+            $monthGrid[] = $curr->copy();
+            $curr->addDay();
         }
 
-        if ($date) {
-            $query->whereDate('session_date', $date);
+        // Ambil sesi pada rentang kalender untuk penanda titik event per tanggal
+        $calendarSessions = PtSession::where('trainer_id', $trainer->id)
+            ->whereBetween('session_date', [$gridStart->toDateString(), $gridEnd->toDateString()])
+            ->get()
+            ->groupBy(fn ($s) => Carbon::parse($s->session_date)->toDateString());
+
+        // 2. Query Sesi
+        $query = PtSession::with(['member.memberProfile', 'quota.ptPackage', 'memberPtQuota.ptPackage'])
+            ->where('trainer_id', $trainer->id);
+
+        if ($mode === 'calendar') {
+            // Mode Kalender memfilter sesi pada tanggal aktif yang dipilih
+            $query->whereDate('session_date', $currentDate->toDateString());
+        } else {
+            // Mode Tasks (Daftar Sesi) memfilter berdasarkan status tab
+            if ($tab === 'today') {
+                $query->whereDate('session_date', $today);
+            } elseif ($tab === 'pending') {
+                $query->where('status', PtSessionStatus::Pending->value);
+            } elseif ($tab === 'confirmed') {
+                $query->where('status', PtSessionStatus::Confirmed->value);
+            } elseif ($tab === 'completed') {
+                $query->whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value]);
+            } elseif ($tab === 'cancelled') {
+                $query->where('status', PtSessionStatus::Cancelled->value);
+            }
+
+            if ($date) {
+                $query->whereDate('session_date', $date);
+            }
         }
 
         $sessions = $query->orderBy('session_date', 'desc')
@@ -303,7 +331,11 @@ class DashboardController extends Controller
             'sessions' => $sessions,
             'counts' => $counts,
             'tab' => $tab,
+            'mode' => $mode,
             'selectedDate' => $date,
+            'currentDate' => $currentDate,
+            'monthGrid' => $monthGrid,
+            'calendarSessions' => $calendarSessions,
         ]);
     }
 
@@ -318,7 +350,7 @@ class DashboardController extends Controller
             abort(403, 'Akses ditolak.');
         }
 
-        $ptSession->load(['member.memberProfile', 'quota.ptPackage', 'memberPtQuota.ptPackage', 'rating']);
+        $ptSession->load(['member.memberProfile', 'quota.ptPackage', 'memberPtQuota.ptPackage']);
 
         return view('mobile.trainer.sessions.show', [
             'trainer' => $trainer,
@@ -332,18 +364,123 @@ class DashboardController extends Controller
     public function mobileClientsIndex(Request $request): View
     {
         $trainer = $request->user();
+        $search = trim((string) $request->query('search', ''));
+        $statusFilter = (string) $request->query('status', 'all');
+        $today = Carbon::today()->toDateString();
 
-        $clients = User::whereHas('memberSessions', function ($query) use ($trainer) {
-            $query->where('trainer_id', $trainer->id);
-        })
-            ->with(['memberProfile', 'ptQuotas' => function ($query) {
-                $query->where('status', 'active')->latest();
-            }])
-            ->paginate(15);
+        $belongsToTrainer = function ($q) use ($trainer) {
+            $q->whereHas('memberSessions', function ($sq) use ($trainer) {
+                $sq->where('trainer_id', $trainer->id);
+            })
+                ->orWhereHas('ptQuotas', function ($sq) use ($trainer) {
+                    $sq->where('trainer_id', $trainer->id)->where('status', 'active');
+                })
+                ->orWhereHas('memberProfile', function ($sq) use ($trainer) {
+                    $sq->where('trainer_id', $trainer->id);
+                });
+        };
+
+        $query = User::query()
+            ->where('role', 'member')
+            ->where($belongsToTrainer)
+            ->with([
+                'memberProfile',
+                'ptQuotas' => function ($q) {
+                    $q->with('ptPackage')->orderBy('end_date', 'desc');
+                },
+                'memberSessions' => function ($q) use ($trainer) {
+                    $q->where('trainer_id', $trainer->id)
+                        ->orderBy('session_date', 'desc')
+                        ->orderBy('start_time', 'desc');
+                },
+            ]);
+
+        if ($search !== '') {
+            $query->where(function ($sub) use ($search) {
+                $sub->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhereHas('memberProfile', function ($pQuery) use ($search) {
+                        $pQuery->where('member_code', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($statusFilter === 'active_quota') {
+            $query->whereHas('ptQuotas', function ($q) use ($today) {
+                $q->where('status', 'active')
+                    ->where('remaining_sessions', '>', 0)
+                    ->where('end_date', '>=', $today);
+            });
+        } elseif ($statusFilter === 'empty_quota') {
+            $query->whereDoesntHave('ptQuotas', function ($q) use ($today) {
+                $q->where('status', 'active')
+                    ->where('remaining_sessions', '>', 0)
+                    ->where('end_date', '>=', $today);
+            });
+        } elseif ($statusFilter === 'low_quota') {
+            $query->where(function ($sub) use ($today) {
+                $sub->whereHas('ptQuotas', function ($q) use ($today) {
+                    $q->where('status', 'active')
+                        ->where('end_date', '>=', $today)
+                        ->where('remaining_sessions', '<=', 2);
+                })->orWhereDoesntHave('ptQuotas', function ($q) use ($today) {
+                    $q->where('status', 'active')
+                        ->where('remaining_sessions', '>', 0)
+                        ->where('end_date', '>=', $today);
+                });
+            });
+        }
+
+        $clients = $query->orderBy('name', 'asc')->paginate(12)->withQueryString();
+
+        $totalClientsCount = User::query()
+            ->where('role', 'member')
+            ->where($belongsToTrainer)
+            ->count();
+
+        $activeClientsCount = User::query()
+            ->where('role', 'member')
+            ->where($belongsToTrainer)
+            ->whereHas('ptQuotas', function ($q) use ($today) {
+                $q->where('status', 'active')
+                    ->where('remaining_sessions', '>', 0)
+                    ->where('end_date', '>=', $today);
+            })
+            ->count();
+
+        $lowQuotaClientsCount = User::query()
+            ->where('role', 'member')
+            ->where($belongsToTrainer)
+            ->where(function ($sub) use ($today) {
+                $sub->whereHas('ptQuotas', function ($q) use ($today) {
+                    $q->where('status', 'active')
+                        ->where('end_date', '>=', $today)
+                        ->where('remaining_sessions', '<=', 2);
+                })->orWhereDoesntHave('ptQuotas', function ($q) use ($today) {
+                    $q->where('status', 'active')
+                        ->where('remaining_sessions', '>', 0)
+                        ->where('end_date', '>=', $today);
+                });
+            })
+            ->count();
+
+        $startOfMonth = Carbon::now()->startOfMonth()->toDateString();
+        $endOfMonth = Carbon::now()->endOfMonth()->toDateString();
+        $completedSessionsMonth = $trainer->trainerSessions()
+            ->whereIn('status', [PtSessionStatus::Completed->value, PtSessionStatus::Done->value])
+            ->whereBetween('session_date', [$startOfMonth, $endOfMonth])
+            ->count();
 
         return view('mobile.trainer.clients.index', [
             'trainer' => $trainer,
             'clients' => $clients,
+            'search' => $search,
+            'statusFilter' => $statusFilter,
+            'totalClientsCount' => $totalClientsCount,
+            'activeClientsCount' => $activeClientsCount,
+            'lowQuotaClientsCount' => $lowQuotaClientsCount,
+            'completedSessionsMonth' => $completedSessionsMonth,
         ]);
     }
 

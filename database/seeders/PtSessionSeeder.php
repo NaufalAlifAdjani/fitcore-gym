@@ -36,34 +36,46 @@ class PtSessionSeeder extends Seeder
 
         $today = now()->toDateString();
 
-        PtSession::create([
-            'member_pt_quota_id' => $quota->id,
-            'member_id' => $member->id,
-            'trainer_id' => $trainer->id,
-            'session_date' => $today,
-            'start_time' => '15:00:00',
-            'end_time' => '16:00:00',
-            'status' => PtSessionStatus::Confirmed,
-        ]);
+        PtSession::firstOrCreate(
+            [
+                'trainer_id' => $trainer->id,
+                'session_date' => $today,
+                'start_time' => '15:00:00',
+            ],
+            [
+                'member_pt_quota_id' => $quota->id,
+                'member_id' => $member->id,
+                'end_time' => '16:00:00',
+                'status' => PtSessionStatus::Confirmed,
+            ]
+        );
 
-        PtSession::create([
-            'member_pt_quota_id' => $quota->id,
-            'member_id' => $member->id,
-            'trainer_id' => $trainer->id,
-            'session_date' => $today,
-            'start_time' => '19:00:00',
-            'end_time' => '20:00:00',
-            'status' => PtSessionStatus::Pending,
-        ]);
+        PtSession::firstOrCreate(
+            [
+                'trainer_id' => $trainer->id,
+                'session_date' => $today,
+                'start_time' => '19:00:00',
+            ],
+            [
+                'member_pt_quota_id' => $quota->id,
+                'member_id' => $member->id,
+                'end_time' => '20:00:00',
+                'status' => PtSessionStatus::Pending,
+            ]
+        );
 
-        PtSession::create([
-            'member_pt_quota_id' => $quota->id,
-            'member_id' => $member->id,
-            'trainer_id' => $trainer->id,
-            'session_date' => $today,
-            'start_time' => '08:00:00',
-            'end_time' => '09:00:00',
-            'status' => PtSessionStatus::Confirmed,
-        ]);
+        PtSession::firstOrCreate(
+            [
+                'trainer_id' => $trainer->id,
+                'session_date' => $today,
+                'start_time' => '08:00:00',
+            ],
+            [
+                'member_pt_quota_id' => $quota->id,
+                'member_id' => $member->id,
+                'end_time' => '09:00:00',
+                'status' => PtSessionStatus::Confirmed,
+            ]
+        );
     }
 }

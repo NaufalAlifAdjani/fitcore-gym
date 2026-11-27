@@ -149,6 +149,24 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                                class="w-full block text-center py-2.5 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
                                 Lengkapi Profil &amp; Beli
                             </a>
+                        @elseif ($package->is_downgrade ?? false)
+                            <button type="button" disabled
+                               class="w-full block text-center py-2.5 px-2 rounded-full font-bold text-[10px] uppercase tracking-wider bg-gray-100 text-gray-400 border border-gray-300 cursor-not-allowed select-none shadow-none truncate">
+                                Tier Lebih Rendah (Aktif: {{ $currentActive->package->tier ?? 'Aktif' }})
+                            </button>
+                            <p class="text-[9px] text-[#565A66] text-center mt-1.5 font-medium leading-tight">
+                                Tersedia setelah aktif berakhir ({{ \Carbon\Carbon::parse($currentActive->end_date)->translatedFormat('d M Y') }}).
+                            </p>
+                        @elseif ($package->is_current_tier ?? false)
+                            <a href="{{ $checkoutUrl }}"
+                               class="w-full block text-center py-2.5 rounded-full font-bold text-xs uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/25 active:scale-[0.98] transition">
+                                Perpanjang Masa Aktif
+                            </a>
+                        @elseif ($package->is_upgrade ?? false)
+                            <a href="{{ $checkoutUrl }}"
+                               class="w-full block text-center py-2.5 rounded-full font-bold text-xs uppercase tracking-wider bg-gradient-to-r from-[#FF5722] to-[#FF9800] text-white shadow-md shadow-orange-500/25 active:scale-[0.98] transition">
+                                Upgrade Tier
+                            </a>
                         @elseif ($isFeatured)
                             <a href="{{ $checkoutUrl }}"
                                class="w-full block text-center py-2.5 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 active:scale-[0.98] transition">

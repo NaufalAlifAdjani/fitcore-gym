@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Bank;
+use App\Models\Membership;
+use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\PtPackage;
 use App\Models\User;
@@ -28,7 +30,6 @@ class MobileMemberPtPackageTest extends TestCase
             'pt_session_count' => 16,
             'price' => 3582000,
             'validity_days' => 60,
-            'min_membership_days' => 0,
             'status' => 'active',
         ]);
     }
@@ -152,6 +153,7 @@ class MobileMemberPtPackageTest extends TestCase
             'role' => 'member',
             'email_verified_at' => now(),
         ]);
+        $this->createActiveMembership($member, 90);
 
         $pkg = PtPackage::first();
 
@@ -171,6 +173,7 @@ class MobileMemberPtPackageTest extends TestCase
             'role' => 'member',
             'email_verified_at' => now(),
         ]);
+        $this->createActiveMembership($member, 90);
 
         $pkg = PtPackage::first();
         $bank = Bank::create([
@@ -192,6 +195,26 @@ class MobileMemberPtPackageTest extends TestCase
 
         $response->assertRedirect();
         $this->assertStringContainsString('/m/pt-packages/upload-payment', $response->headers->get('Location'));
+    }
+
+    private function createActiveMembership(User $member, int $days = 90): void
+    {
+        $pkg = MembershipPackage::firstOrCreate(
+            ['name' => 'Monthly Test'],
+            [
+                'duration_days' => $days,
+                'price' => 450000,
+                'is_active' => true,
+            ]
+        );
+
+        Membership::create([
+            'member_id' => $member->id,
+            'membership_package_id' => $pkg->id,
+            'start_date' => now()->subDay()->toDateString(),
+            'end_date' => now()->addDays($days)->toDateString(),
+            'status' => 'active',
+        ]);
     }
 
     public function test_mobile_member_can_upload_payment_proof(): void
@@ -233,9 +256,17 @@ class MobileMemberPtPackageTest extends TestCase
                 'sender_bank' => 'BCA',
             ]);
 
-        $response->assertRedirect(route('mobile.member.pt-packages.index'));
+        $response->assertRedirect(route('mobile.member.packages.payment-status', $payment->id));
         $payment->refresh();
         $this->assertNotNull($payment->proof_image_path);
+
+        $statusResponse = $this->actingAs($member)
+            ->withHeaders(['User-Agent' => self::IPHONE_USER_AGENT])
+            ->get(route('mobile.member.packages.payment-status', $payment->id));
+        $statusResponse->assertStatus(200);
+        $statusResponse->assertSee('Lihat Riwayat Transaksi');
+        $statusResponse->assertSee(route('mobile.member.riwayat-transaksi.index'));
+        $statusResponse->assertDontSee('Kembali ke Beranda');
     }
 
     public function test_mobile_device_redirects_desktop_pt_package_subroutes(): void

@@ -120,6 +120,31 @@
                                 >
                                     Lengkapi Profil untuk Membeli
                                 </a>
+                            @elseif ($package->is_downgrade ?? false)
+                                <button
+                                    type="button"
+                                    disabled
+                                    class="block w-full text-center py-3.5 rounded-full font-bold text-xs bg-gray-100 text-gray-400 border border-gray-300 cursor-not-allowed select-none shadow-none"
+                                >
+                                    Tier Lebih Rendah (Aktif: {{ $currentActive->package->tier ?? 'Aktif' }})
+                                </button>
+                                <p class="text-[11px] text-[#565A66] text-center mt-2 font-medium">
+                                    Tersedia setelah membership aktif berakhir ({{ \Carbon\Carbon::parse($currentActive->end_date)->translatedFormat('d M Y') }}).
+                                </p>
+                            @elseif ($package->is_current_tier ?? false)
+                                <a
+                                    href="{{ $checkoutUrl }}"
+                                    class="block w-full text-center py-3.5 rounded-full font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-lg shadow-emerald-600/30 hover:scale-[1.02]"
+                                >
+                                    Perpanjang Masa Aktif
+                                </a>
+                            @elseif ($package->is_upgrade ?? false)
+                                <a
+                                    href="{{ $checkoutUrl }}"
+                                    class="block w-full text-center py-3.5 rounded-full font-bold text-sm bg-gradient-to-r from-[#FF5722] to-[#FF9800] hover:from-[#E64A19] hover:to-[#F57C00] text-white transition-all shadow-lg shadow-orange-500/30 hover:scale-[1.02]"
+                                >
+                                    Upgrade ke Tier Ini
+                                </a>
                             @elseif ($isFeatured)
                                 <a
                                     href="{{ $checkoutUrl }}"

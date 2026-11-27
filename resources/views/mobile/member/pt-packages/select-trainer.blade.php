@@ -50,6 +50,47 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             </p>
         </div>
 
+        <!-- Pelatih Anda Saat Ini (Smart Renewal) -->
+        @if(isset($currentTrainer) && $currentTrainer)
+            @php
+                $coachFirstName = explode(' ', trim(str_replace('Coach ', '', $currentTrainer->name)))[0];
+                $cPhotoCurrent = file_exists(public_path("images/trainers/coach-" . strtolower($coachFirstName) . ".jpg"))
+                    ? asset("images/trainers/coach-" . strtolower($coachFirstName) . ".jpg")
+                    : ($currentTrainer->trainerProfile?->photo_path ? asset('storage/'.$currentTrainer->trainerProfile->photo_path) : ($currentTrainer->avatar_url ?? null));
+            @endphp
+            <div class="p-3.5 bg-gradient-to-r from-orange-50 via-white to-amber-50 border-2 border-[#FF5722]/50 rounded-2xl shadow-xs space-y-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl overflow-hidden bg-[#2C2828] border-2 border-[#FF5722] shrink-0 shadow-2xs">
+                        @if($cPhotoCurrent)
+                            <img src="{{ $cPhotoCurrent }}" class="w-full h-full object-cover" alt="{{ $currentTrainer->name }}">
+                        @else
+                            <div class="w-full h-full flex items-center justify-center text-white font-black text-sm bg-[#FF5722]">
+                                {{ substr($coachFirstName, 0, 1) }}
+                            </div>
+                        @endif
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <span class="inline-block text-[9px] font-black uppercase tracking-wider bg-[#FF5722] text-white px-2 py-0.5 rounded-full">
+                            ★ Pelatih Anda Saat Ini
+                        </span>
+                        <h3 class="font-extrabold text-sm text-[#16151A] truncate mt-0.5">{{ $currentTrainer->name }}</h3>
+                        <p class="text-[10px] text-[#565A66] truncate">{{ $currentTrainer->trainerProfile?->specialization ?? 'Personal Trainer' }}</p>
+                    </div>
+                </div>
+                <a href="{{ route('mobile.member.pt-packages.checkout', ['package_id' => $packageId, 'trainer_id' => $currentTrainer->id]) }}"
+                   class="w-full py-2.5 px-3 bg-[#FF5722] hover:bg-[#E64A19] text-white text-center font-bold text-xs rounded-xl shadow-xs transition block active:scale-95">
+                    Lanjut bersama {{ $currentTrainer->name }} &rarr;
+                </a>
+            </div>
+
+            <div class="relative py-2 text-center">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-[#E5E7EB]"></div></div>
+                <span class="relative bg-[#F6F6F7] px-3 text-[10px] font-bold uppercase tracking-wider text-[#565A66]">
+                    Atau Pilih Pelatih Lain
+                </span>
+            </div>
+        @endif
+
         <!-- 3. Search Bar & Filter Waktu (Mobile Ergonomics) -->
         <div class="space-y-2.5">
             <div class="relative w-full">
@@ -102,32 +143,57 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
         </div>
 
         <!-- 4. Daftar Kartu Pelatih (Mobile Native Card) -->
-        <div class="space-y-3">
+        <div class="space-y-4">
             @foreach($trainers as $trainer)
                 <div x-show="matches({{ Js::from($trainer) }})"
                      x-transition
-                     class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-3">
+                     class="rounded-2xl overflow-hidden border border-[#E5E7EB] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.06)] flex flex-col group">
                     
-                    <div class="flex items-start gap-3.5">
-                        <!-- Foto Pelatih -->
-                        <div class="w-20 h-24 rounded-xl overflow-hidden bg-orange-50 border border-[#E5E7EB] shrink-0">
+                    <!-- 1. Foto PT (Bagian Atas) -->
+                    <div class="w-full aspect-[4/3] bg-[#2C2828] relative overflow-hidden flex items-center justify-center">
+                        @if (!empty($trainer['photo']))
                             <img src="{{ $trainer['photo'] }}"
                                  alt="{{ $trainer['name'] }}"
-                                 class="w-full h-full object-cover"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                  loading="lazy">
-                        </div>
+                        @else
+                            <div class="w-full h-full bg-gradient-to-b from-[#383332] to-[#252222] flex flex-col items-center justify-center text-zinc-300 p-4">
+                                <svg class="w-10 h-10 text-zinc-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <span class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Foto PT</span>
+                            </div>
+                        @endif
+                    </div>
 
-                        <!-- Info Pelatih -->
-                        <div class="flex-1 min-w-0">
-                            <h3 class="font-poppins font-black text-sm text-[#16151A] leading-snug">
+                    <!-- 2. Data Pelatih (Bagian Bawah) -->
+                    <div class="p-4 bg-[#F6F6F7] flex-1 flex flex-col justify-between space-y-3">
+                        <div class="space-y-1.5">
+                            <!-- Nama -->
+                            <h3 class="font-poppins font-black text-base text-[#16151A] leading-snug">
                                 {{ $trainer['name'] }}
                             </h3>
-                            <span class="inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-bold bg-orange-50 text-[#FF5722] border border-orange-200/80">
+
+                            <!-- Specialization -->
+                            <div class="text-xs font-bold text-[#FF5722]">
                                 {{ $trainer['specialization'] }}
-                            </span>
+                            </div>
+
+                            <!-- Experience -->
+                            <div class="text-xs font-semibold text-[#565A66] flex items-center gap-1.5 pt-0.5">
+                                <svg class="w-3.5 h-3.5 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>{{ $trainer['experience'] ?? 5 }}+ Tahun Jam Terbang</span>
+                            </div>
+
+                            <!-- Bio -->
+                            <p class="text-xs text-[#565A66] leading-relaxed line-clamp-3 pt-0.5">
+                                {{ $trainer['bio'] ?? 'Berpengalaman mendampingi member mencapai target kebugaran dan kekuatan atletik secara optimal.' }}
+                            </p>
 
                             <!-- Ketersediaan Waktu -->
-                            <div class="mt-2 space-y-1 text-[11px] text-[#565A66]">
+                            <div class="mt-2.5 pt-2.5 border-t border-gray-200/80 space-y-1 text-[11px] text-[#565A66]">
                                 <div class="flex items-center gap-1.5">
                                     <svg class="w-3.5 h-3.5 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <circle cx="12" cy="12" r="10"/>
@@ -145,18 +211,18 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Tombol Pilih Pelatih -->
-                    <div class="pt-2 border-t border-[#E5E7EB]/70">
-                        <a href="{{ route('mobile.member.pt-packages.checkout', [
-                                'package_id' => $packageId,
-                                'trainer_id' => $trainer['id'],
-                                'sessions' => $sessionCount
-                            ]) }}"
-                           class="w-full py-2.5 px-4 rounded-xl font-bold font-poppins text-xs text-white bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] transition text-center shadow-md shadow-orange-500/20 block cursor-pointer">
-                            Pilih Pelatih &rarr;
-                        </a>
+                        <!-- Tombol Pilih Pelatih -->
+                        <div class="pt-2 border-t border-[#E5E7EB]">
+                            <a href="{{ route('mobile.member.pt-packages.checkout', [
+                                    'package_id' => $packageId,
+                                    'trainer_id' => $trainer['id'],
+                                    'sessions' => $sessionCount
+                                ]) }}"
+                               class="w-full py-2.5 px-4 rounded-xl font-bold font-poppins text-xs text-white bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] transition text-center shadow-md shadow-orange-500/20 block cursor-pointer">
+                                Pilih Pelatih &rarr;
+                            </a>
+                        </div>
                     </div>
 
                 </div>

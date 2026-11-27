@@ -15,6 +15,7 @@ class ChoosePtScheduleNotification extends Notification implements ShouldQueue
     public function __construct(
         public readonly int $memberPtQuotaId,
         public readonly string $packageName,
+        public readonly ?int $trainerId = null,
     ) {}
 
     /**
@@ -30,12 +31,16 @@ class ChoosePtScheduleNotification extends Notification implements ShouldQueue
      */
     public function toWebPush(object $notifiable, mixed $notification = null): WebPushMessage
     {
+        $url = $this->trainerId
+            ? route('pt-sessions.create', ['trainer_id' => $this->trainerId])
+            : route('pt-sessions.create');
+
         return (new WebPushMessage)
             ->title('Pilih Jadwal Personal Trainer 📅')
             ->icon('/images/logo/logo-icon.png')
             ->body("Paket {$this->packageName} sudah aktif. Silakan tentukan jadwal latihan sesi PT Anda!")
             ->action('Booking Sesi', 'book_session')
-            ->data(['url' => route('pt-sessions.create')]);
+            ->data(['url' => $url]);
     }
 
     /**
@@ -43,12 +48,16 @@ class ChoosePtScheduleNotification extends Notification implements ShouldQueue
      */
     public function toDatabase(object $notifiable): array
     {
+        $url = $this->trainerId
+            ? route('pt-sessions.create', ['trainer_id' => $this->trainerId])
+            : route('pt-sessions.create');
+
         return [
             'type' => 'choose_pt_schedule',
             'title' => 'Pilih jadwal Personal Trainer',
             'message' => "Paket {$this->packageName} sudah aktif. Silakan pilih jadwal sesi PT Anda.",
             'member_pt_quota_id' => $this->memberPtQuotaId,
-            'url' => route('pt-sessions.create'),
+            'url' => $url,
         ];
     }
 }

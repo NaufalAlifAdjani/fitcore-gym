@@ -27,17 +27,27 @@ class ProfileController extends Controller
      */
     public function mobileIndex(Request $request): View
     {
+        $today = now('Asia/Jakarta')->toDateString();
         $user = $request->user()->load([
             'memberProfile',
-            'memberships' => fn ($q) => $q->where('status', 'active')->with('package')->latest('start_date'),
+            'memberships' => fn ($q) => $q->where('status', 'active')
+                ->where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)
+                ->with('package')
+                ->latest('end_date'),
         ]);
 
         $activeMembership = $user->memberships->first();
+        $maxEndDate = $user->memberships()
+            ->where('status', 'active')
+            ->where('end_date', '>=', $today)
+            ->max('end_date');
         $memberProfile = $user->memberProfile;
 
         return view('mobile.member.profile.index', [
             'user' => $user,
             'activeMembership' => $activeMembership,
+            'maxEndDate' => $maxEndDate,
             'memberProfile' => $memberProfile,
         ]);
     }

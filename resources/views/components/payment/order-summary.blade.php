@@ -42,34 +42,6 @@
         </div>
     </div>
 
-    <!-- Input Form Kode Promo -->
-    <div class="mt-6 border-t border-[#E5E7EB] pt-5">
-        <label class="block text-xs font-bold text-[#16151A] mb-2">
-            Punya kode promo atau referral?
-        </label>
-        <div class="flex gap-2">
-            <x-text-input
-                type="text"
-                x-model="promoCode"
-                placeholder="Contoh: FITCORENEW"
-                class="uppercase tracking-wider !text-xs !p-2.5"
-            />
-            <x-button
-                type="button"
-                variant="dark"
-                size="sm"
-                x-on:click="applyPromo()"
-                class="!rounded-xl shrink-0 cursor-pointer"
-            >
-                Terapkan
-            </x-button>
-        </div>
-        <div x-show="promoApplied" x-cloak class="mt-2 text-xs font-semibold text-emerald-600 flex items-center gap-1.5">
-            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-            Kode promo berhasil diterapkan (-Rp 50.000)
-        </div>
-    </div>
-
     <!-- Rincian Biaya -->
     <div class="mt-6 border-t border-[#E5E7EB] pt-5 space-y-3 text-xs">
         <div class="flex justify-between text-[#565A66]">
@@ -88,10 +60,6 @@
                 <span class="text-[#565A66]/70" title="Untuk identifikasi verifikasi transfer bank">(?)</span>
             </span>
             <span class="font-bold text-[#16151A]">+Rp {{ $uniqueCode }}</span>
-        </div>
-        <div x-show="promoApplied" x-cloak class="flex justify-between text-emerald-600 font-bold">
-            <span>Diskon Promo</span>
-            <span>-Rp 50.000</span>
         </div>
     </div>
 

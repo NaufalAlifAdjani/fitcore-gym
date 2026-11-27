@@ -7,7 +7,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
 --}}
 
 <x-layouts.mobile-trainer title="Profil Pelatih - FitCore Coach" active="profile">
-    <div class="space-y-4" x-data="{ showLogoutModal: false }">
+    <div class="space-y-4">
 
         <!-- 1. Header Navigasi Atas -->
         <div class="flex items-center justify-between pb-1">
@@ -51,12 +51,6 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     </div>
 
                     <div class="flex flex-wrap items-center gap-1.5 mt-2">
-                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-50 text-[#FF5722] border border-orange-200">
-                            {{ $profile->tier ?? 'Personal Trainer' }}
-                        </span>
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                            ★ {{ $profile->rating ?? '4.9' }}
-                        </span>
                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
                             Shift {{ $trainer->shift_label }}
                         </span>
@@ -83,15 +77,11 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 @endif
             </div>
 
-            <!-- Grid Pengalaman & Studio -->
-            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#E5E7EB] text-xs">
+            <!-- Grid Pengalaman -->
+            <div class="pt-2 border-t border-[#E5E7EB] text-xs">
                 <div class="p-2.5 rounded-xl bg-[#F6F6F7] border border-[#E5E7EB]">
-                    <span class="text-[10px] font-bold text-[#565A66] uppercase block">Pengalaman</span>
+                    <span class="text-[10px] font-bold text-[#565A66] uppercase block">Pengalaman Melatih</span>
                     <span class="font-bold text-[#16151A] mt-0.5 block">{{ $profile->experience ?? 1 }} Tahun</span>
-                </div>
-                <div class="p-2.5 rounded-xl bg-[#F6F6F7] border border-[#E5E7EB]">
-                    <span class="text-[10px] font-bold text-[#565A66] uppercase block">Studio Latihan</span>
-                    <span class="font-bold text-[#16151A] mt-0.5 block truncate">{{ $profile->studio ?? 'FitCore Main Studio' }}</span>
                 </div>
             </div>
         </div>
@@ -118,19 +108,19 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             </div>
         </div>
 
-        <!-- 4. Pintasan Menu Operasional -->
+        <!-- 4. Opsi Pengaturan Akun -->
         <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] divide-y divide-[#E5E7EB]">
-            <!-- Link 1: Jadwal Sesi -->
-            <a href="{{ route('mobile.trainer.sessions.index') }}" class="py-3 flex items-center justify-between group first:pt-0">
+            <!-- Link 1: Pengaturan Profil -->
+            <a href="{{ route('profile.edit') }}" class="py-3 flex items-center justify-between group first:pt-0">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-xl bg-orange-50 text-[#FF5722] flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                     </div>
                     <div>
-                        <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Jadwal Sesi Klien</span>
-                        <span class="text-[11px] text-[#565A66]">Cek jadwal latihan aktif dan riwayat</span>
+                        <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Pengaturan Profil</span>
+                        <span class="text-[11px] text-[#565A66]">Perbarui informasi kontak dan data akun</span>
                     </div>
                 </div>
                 <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -138,35 +128,17 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 </svg>
             </a>
 
-            <!-- Link 2: Klien Saya -->
-            <a href="{{ route('mobile.trainer.clients.index') }}" class="py-3 flex items-center justify-between group">
+            <!-- Link 2: Ganti Kata Sandi -->
+            <a href="{{ route('profile.edit') }}#password" class="py-3 flex items-center justify-between group last:pb-0">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                         </svg>
                     </div>
                     <div>
-                        <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Member &amp; Klien Saya</span>
-                        <span class="text-[11px] text-[#565A66]">Daftar member dalam bimbingan latihan Anda</span>
-                    </div>
-                </div>
-                <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-            </a>
-
-            <!-- Link 3: Pendapatan & Komisi -->
-            <a href="{{ route('mobile.trainer.commissions.index') }}" class="py-3 flex items-center justify-between group last:pb-0">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Pendapatan &amp; Komisi</span>
-                        <span class="text-[11px] text-[#565A66]">Rincian bagi hasil dan komisi per sesi</span>
+                        <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Ganti Kata Sandi</span>
+                        <span class="text-[11px] text-[#565A66]">Amankan akun Anda dengan kata sandi baru</span>
                     </div>
                 </div>
                 <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -175,59 +147,16 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             </a>
         </div>
 
-        <!-- 5. Card Keluar dari Akun (Logout) -->
-        <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-            <button type="button"
-                    @click="showLogoutModal = true"
-                    class="w-full py-2.5 px-4 rounded-full border border-rose-200 bg-rose-50/50 hover:bg-rose-50 active:scale-[0.99] text-rose-600 font-poppins font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 cursor-pointer">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <!-- 4. Tombol Logout -->
+        <form method="POST" action="{{ route('logout') }}" class="pt-2 pb-6">
+            @csrf
+            <button type="submit" class="w-full py-3 px-4 rounded-xl border border-rose-200 bg-rose-50/50 hover:bg-rose-50 text-rose-600 font-bold text-xs font-inter flex items-center justify-center gap-2 transition cursor-pointer">
+                <svg class="w-4 h-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                <span>Keluar dari Akun</span>
+                Keluar dari Akun
             </button>
-        </div>
-
-        <!-- 6. Modal Konfirmasi Logout -->
-        <div x-show="showLogoutModal"
-             x-cloak
-             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-             x-transition:enter="transition ease-out duration-200"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-150"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0">
-
-            <div class="bg-white rounded-2xl max-w-xs w-full p-5 shadow-2xl border border-[#E5E7EB] text-center space-y-4"
-                 @click.away="showLogoutModal = false">
-                <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                </div>
-
-                <div>
-                    <h3 class="font-poppins font-extrabold text-base text-[#16151A]">Konfirmasi Keluar</h3>
-                    <p class="text-xs text-[#565A66] mt-1">Apakah Anda yakin ingin keluar dari akun Coach FitCore?</p>
-                </div>
-
-                <div class="flex items-center gap-2 pt-1">
-                    <button type="button"
-                            @click="showLogoutModal = false"
-                            class="flex-1 py-2.5 rounded-full border border-[#E5E7EB] text-xs font-bold text-[#565A66] hover:bg-gray-50 transition">
-                        Batal
-                    </button>
-
-                    <form method="POST" action="{{ route('logout') }}" class="flex-1">
-                        @csrf
-                        <button type="submit"
-                                class="w-full py-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold font-poppins transition shadow-sm">
-                            Ya, Keluar
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+        </form>
 
     </div>
 </x-layouts.mobile-trainer>

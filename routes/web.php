@@ -1,13 +1,13 @@
 <?php
 
 use App\Enums\PtSessionStatus;
-use App\Filament\Pages\Settings;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\MemberManagementController;
 use App\Http\Controllers\Admin\MembershipPackageController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\PtManagementController;
 use App\Http\Controllers\Admin\PtPackageController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
@@ -33,9 +33,11 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing.index');
 Route::get('/packages', [LandingController::class, 'packages'])->name('landing.packages');
+Route::get('/pt-pricing', [LandingController::class, 'ptPricing'])->name('landing.pt-pricing');
 Route::get('/trainers', [LandingController::class, 'trainers'])->name('landing.trainers');
 Route::get('/about', [LandingController::class, 'about'])->name('landing.about');
 
@@ -180,8 +182,12 @@ Route::middleware(['auth', 'can:manage-membership-packages'])->prefix('admin')->
         Route::delete('/{trainer}', 'destroy')->name('destroy');
     });
 
-    Route::get('/settings', Settings::class)->name('settings.index');
-    Route::post('/settings/{payment}/payout', [Settings::class, 'payout'])->name('settings.payout');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings/operational', [SettingController::class, 'updateOperational'])->name('settings.operational.update');
+    Route::put('/settings/profile', [SettingController::class, 'updateGymProfile'])->name('settings.profile.update');
+    Route::post('/settings/banks', [SettingController::class, 'storeBank'])->name('settings.banks.store');
+    Route::put('/settings/banks/{bank}', [SettingController::class, 'updateBank'])->name('settings.banks.update');
+    Route::delete('/settings/banks/{bank}', [SettingController::class, 'destroyBank'])->name('settings.banks.destroy');
     Route::view('/help', 'admin.placeholder', ['title' => 'Bantuan & SOP'])->name('help.index');
 });
 
@@ -219,12 +225,21 @@ Route::middleware(['auth', 'role:admin,trainer'])->prefix('admin')->name('admin.
 
 Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
     Route::get('/dashboard', function (Request $request) {
+        $today = now('Asia/Jakarta')->toDateString();
         $user = $request->user()->load([
             'memberProfile',
-            'memberships' => fn ($q) => $q->where('status', 'active')->with('package')->latest('start_date'),
+            'memberships' => fn ($q) => $q->where('status', 'active')
+                ->where('start_date', '<=', $today)
+                ->where('end_date', '>=', $today)
+                ->with('package')
+                ->latest('end_date'),
         ]);
 
         $activeMembership = $user->memberships->first();
+        $maxEndDate = $user->memberships()
+            ->where('status', 'active')
+            ->where('end_date', '>=', $today)
+            ->max('end_date');
 
         $quota = MemberPtQuota::where('member_id', $user->id)
             ->where('status', 'active')
@@ -239,7 +254,7 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
             ->orderBy('start_time', 'asc')
             ->first();
 
-        return view('mobile.member.dashboard', compact('user', 'activeMembership', 'quota', 'upcomingSession'));
+        return view('mobile.member.dashboard', compact('user', 'activeMembership', 'maxEndDate', 'quota', 'upcomingSession'));
     })->name('mobile.member.dashboard');
 
     Route::get('/card', function (Request $request, MemberCardController $controller) {
@@ -308,7 +323,46 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
             return $view;
         }
 
-        return view('mobile.member.packages.checkout', $view->getData());
+        $data = $view->getData();
+        $user = $request->user();
+        if ($user) {
+            $payment = Payment::where('member_id', $user->id)
+                ->where('package_id', $package->id)
+                ->where('package_type', 'membership')
+                ->where('status', 'pending')
+                ->whereNull('proof_image_path')
+                ->latest('id')
+                ->first();
+
+            $bank = $data['banks']->first();
+            $bankDestination = $bank ? "{$bank->name} ({$bank->account_number} a.n. {$bank->account_holder})" : null;
+            $uniqueCode = $data['uniqueCode'] ?? 521;
+            $effectivePrice = ($package->promo_price !== null && $package->promo_price < $package->price) ? $package->promo_price : $package->price;
+            $totalAmount = $effectivePrice + $uniqueCode;
+
+            if (! $payment) {
+                do {
+                    $invoiceId = 'INV-'.strtoupper(Str::random(8));
+                } while (Payment::where('invoice_id', $invoiceId)->exists());
+
+                $payment = Payment::create([
+                    'invoice_id' => $invoiceId,
+                    'member_id' => $user->id,
+                    'package_id' => $package->id,
+                    'package_type' => 'membership',
+                    'payment_type' => 'membership',
+                    'amount' => $totalAmount,
+                    'bank_id' => $bank?->id,
+                    'bank_destination' => $bankDestination,
+                    'status' => 'pending',
+                    'proof_image_path' => null,
+                    'proof_image_url' => null,
+                ]);
+            }
+            $data['payment'] = $payment;
+        }
+
+        return view('mobile.member.packages.checkout', $data);
     })->middleware('profile.complete')->name('mobile.member.packages.checkout');
 
     Route::get('/payment-status/{payment}', function (Payment $payment, Request $request, MemberMembershipPackageController $controller) {
@@ -353,7 +407,7 @@ Route::prefix('m')->middleware(['auth', 'role:member'])->group(function () {
 
 Route::prefix('m/trainer')->name('mobile.trainer.')->middleware(['auth', 'role:trainer'])->group(function () {
     Route::get('/dashboard', [TrainerDashboardController::class, 'mobileDashboard'])->name('dashboard');
-    Route::get('/sessions', [TrainerDashboardController::class, 'mobileSessionsIndex'])->name('sessions.index');
+    Route::get('/sessions', TrainerSessionsIndex::class)->name('sessions.index');
     Route::get('/sessions/{ptSession}', [TrainerDashboardController::class, 'mobileSessionShow'])->name('sessions.show');
     Route::post('/sessions/{ptSession}/confirm', [TrainerDashboardController::class, 'confirmSession'])->name('sessions.confirm');
     Route::post('/sessions/{ptSession}/reject', [TrainerDashboardController::class, 'rejectSession'])->name('sessions.reject');
@@ -365,6 +419,7 @@ Route::prefix('m/trainer')->name('mobile.trainer.')->middleware(['auth', 'role:t
 Route::prefix('m')->group(function () {
     Route::get('/', [LandingController::class, 'mobileIndex'])->name('mobile.landing.index');
     Route::get('/packages-info', [LandingController::class, 'mobilePackages'])->name('mobile.landing.packages');
+    Route::get('/pt-pricing', [LandingController::class, 'mobilePtPricing'])->name('mobile.landing.pt-pricing');
     Route::get('/trainers', [LandingController::class, 'mobileTrainers'])->name('mobile.landing.trainers');
     Route::get('/about', [LandingController::class, 'mobileAbout'])->name('mobile.landing.about');
 });

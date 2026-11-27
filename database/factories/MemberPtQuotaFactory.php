@@ -15,7 +15,7 @@ class MemberPtQuotaFactory extends Factory
     {
         $total = fake()->randomElement([5, 10, 20]);
         $used = fake()->numberBetween(0, $total);
-        $startDate = fake()->dateTimeBetween('-3 months', 'now');
+        $startDate = fake()->dateTimeBetween('-1 month', 'now');
 
         return [
             'member_id' => User::factory(),
@@ -26,7 +26,7 @@ class MemberPtQuotaFactory extends Factory
             'used_sessions' => $used,
             'remaining_sessions' => $total - $used,
             'start_date' => $startDate,
-            'end_date' => fake()->dateTimeBetween($startDate, '+3 months'),
+            'end_date' => fake()->dateTimeBetween('now', '+3 months'),
             'status' => 'active',
         ];
     }

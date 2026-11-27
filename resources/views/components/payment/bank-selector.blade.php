@@ -51,11 +51,6 @@
                             </p>
                         </div>
                     </div>
-                    <div class="hidden sm:flex flex-col items-end">
-                        <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                            Verifikasi Otomatis
-                        </span>
-                    </div>
                 </label>
             @empty
                 <div class="p-4 rounded-2xl border border-[#E5E7EB] bg-white">

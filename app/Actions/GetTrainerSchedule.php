@@ -14,7 +14,7 @@ class GetTrainerSchedule
     {
         $carbonDate = Carbon::parse($date);
 
-        $query = PtSession::with(['member.memberProfile', 'quota', 'rating'])
+        $query = PtSession::with(['member.memberProfile', 'quota'])
             ->where('trainer_id', $trainerId)
             ->orderBy('start_time', 'asc');
 

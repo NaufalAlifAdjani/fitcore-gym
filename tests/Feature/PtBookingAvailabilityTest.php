@@ -153,10 +153,9 @@ class PtBookingAvailabilityTest extends TestCase
             'status' => PtSessionStatus::Confirmed,
         ]);
 
-        $session->markAsCompleted('Latihan squat dan lunges berjalan lancar.');
+        $session->markAsCompleted();
 
         $this->assertEquals(PtSessionStatus::Completed, $session->fresh()->status);
         $this->assertEquals(75000, $session->fresh()->trainer_earnings);
-        $this->assertEquals('Latihan squat dan lunges berjalan lancar.', $session->fresh()->notes);
     }
 }

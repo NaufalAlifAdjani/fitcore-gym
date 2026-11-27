@@ -1,8 +1,8 @@
 @php
     $adminNavigationItems = [
         ['label' => 'Dashboard', 'route' => 'admin.dashboard', 'active' => request()->routeIs('admin.dashboard'), 'icon' => 'dashboard'],
-        ['label' => 'Paket & Harga', 'route' => 'admin.packages.index', 'active' => request()->routeIs('admin.packages.*'), 'icon' => 'packages'],
-        ['label' => 'Paket Sesi & Jadwal PT', 'route' => 'admin.pt-sessions.index', 'active' => request()->routeIs('admin.pt-sessions.*') || request()->routeIs('admin.pt-packages.*'), 'icon' => 'calendar'],
+        ['label' => 'Paket Membership', 'route' => 'admin.packages.index', 'active' => request()->routeIs('admin.packages.*'), 'icon' => 'packages'],
+        ['label' => 'Paket Sesi', 'route' => 'admin.pt-sessions.index', 'active' => request()->routeIs('admin.pt-sessions.*') || request()->routeIs('admin.pt-packages.*'), 'icon' => 'calendar'],
         ['label' => 'Verifikasi Pembayaran', 'route' => 'admin.payments.index', 'active' => request()->routeIs('admin.payments.*'), 'icon' => 'payments'],
         ['label' => 'Scanner Check-in', 'route' => 'admin.checkin.index', 'active' => request()->routeIs('admin.checkin.*') || request()->routeIs('admin.check-in.*'), 'icon' => 'scan'],
         ['label' => 'Manajemen Member', 'route' => 'admin.members.index', 'active' => request()->routeIs('admin.members.*'), 'icon' => 'members'],
@@ -42,7 +42,6 @@
     <!-- Menu Navigation Items -->
     <div class="flex-1 overflow-y-auto px-4 py-6">
         <!-- Kategori Menu -->
-        <p class="font-inter text-[11px] font-bold text-[#565A66] uppercase tracking-wider mb-2 px-4">Navigasi Portal</p>
         <nav class="space-y-1">
             @if (Auth::user()->role === 'admin')
                 @foreach ($adminNavigationItems as $item)
@@ -245,33 +244,6 @@
                 </a>
             @endif
         </nav>
-
-        @if (Auth::user()->role === 'admin')
-            <div class="mt-8 border-t border-[#E5E7EB] pt-5">
-                <p class="font-inter text-[11px] font-bold text-[#565A66] uppercase tracking-wider mb-2 px-4">Bantuan</p>
-                <a href="{{ route('admin.help.index') }}" class="flex items-center gap-3 rounded-full px-4 py-3 font-inter text-sm font-medium text-[#565A66] transition duration-200 hover:bg-[#F6F6F7] hover:text-[#16151A]" x-on:click="sidebarOpen = false">
-                    <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" />
-                        <path d="M9.6 9a2.5 2.5 0 1 1 4.2 1.8c-1.1 1-1.8 1.3-1.8 2.7M12 17h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-                    </svg>
-                    <span>Bantuan &amp; SOP</span>
-                </a>
-            </div>
-        @endif
-    </div>
-
-    <!-- Tombol Keluar Sidebar -->
-    <div class="border-t border-[#E5E7EB] p-4">
-        <button
-            type="button"
-            x-on:click="showLogoutModal = true"
-            class="flex w-full items-center gap-3 rounded-full px-4 py-3 text-left font-inter text-sm font-semibold text-[#FF5722] transition hover:bg-[#FF5722]/10 cursor-pointer"
-        >
-            <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M10 17l5-5-5-5m5 5H3m9-9h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            <span>Keluar</span>
-        </button>
     </div>
 </aside>
 

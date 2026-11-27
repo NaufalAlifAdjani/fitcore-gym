@@ -37,7 +37,7 @@ class DashboardMetricsDummySeeder extends Seeder
                 'name' => 'Standard Membership',
                 'tier' => 'Standard',
                 'price' => 350000,
-                'duration_in_days' => 30,
+                'duration_days' => 30,
                 'facilities' => ['Gym Access'],
                 'is_active' => true,
             ]);
@@ -124,7 +124,6 @@ class DashboardMetricsDummySeeder extends Seeder
                     'member_id' => $membership->member_id,
                     'membership_id' => $membership->id,
                     'checked_in_at' => $checkedInAt,
-                    'checked_out_at' => (rand(0, 1) === 1) ? $checkedInAt->copy()->addMinutes(rand(30, 120)) : null,
                     'method' => fake()->randomElement(['manual', 'qr']),
                     'created_at' => $checkedInAt,
                     'updated_at' => $checkedInAt,

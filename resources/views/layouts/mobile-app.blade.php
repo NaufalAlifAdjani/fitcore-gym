@@ -38,9 +38,40 @@
         </a>
 
         <div class="flex items-center gap-2">
-            <a href="{{ route('mobile.member.profile.index') }}" class="relative block" title="Profil Saya">
-                <x-avatar-initial :initials="auth()->user()->name ?? 'MB'" color_theme="red" class="w-8 h-8 text-xs border border-[#E5E7EB] shadow-xs" />
-            </a>
+            <div class="relative" x-data="{ profileOpen: false }">
+                <button type="button" @click="profileOpen = !profileOpen" class="relative block cursor-pointer focus:outline-none" title="Menu Profil">
+                    <x-avatar-initial :initials="auth()->user()->name ?? 'MB'" color_theme="red" class="w-8 h-8 text-xs border border-[#E5E7EB] shadow-xs" />
+                </button>
+
+                <!-- Profile Dropdown -->
+                <div x-cloak x-show="profileOpen" @click.away="profileOpen = false"
+                    x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-100"
+                    x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+                    class="absolute right-0 mt-2 w-52 rounded-2xl bg-white border border-[#E5E7EB] shadow-xl p-2 z-50 text-sm">
+                    <div class="border-b border-[#E5E7EB] px-3 py-2 mb-1">
+                        <p class="truncate text-xs font-bold text-[#16151A]">{{ Auth::user()?->name }}</p>
+                    </div>
+
+                    <a href="{{ route('mobile.member.profile.index') }}"
+                        class="block rounded-xl px-3 py-2 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-[#16151A] transition-colors">
+                        Pengaturan Profil
+                    </a>
+
+                    <a href="{{ route('mobile.member.profile.index', ['tab' => 'password']) }}"
+                        class="block rounded-xl px-3 py-2 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-[#16151A] transition-colors">
+                        Ganti Kata Sandi
+                    </a>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="w-full rounded-xl px-3 py-2 text-left text-xs font-bold text-[#FF5722] hover:bg-orange-50 cursor-pointer transition-colors">
+                            Keluar
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </header>
 

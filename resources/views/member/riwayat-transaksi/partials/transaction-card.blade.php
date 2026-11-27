@@ -36,6 +36,10 @@
 
     $hasProofImage = !empty($payment->proof_image_url) || !empty($payment->proof_image_path);
     $proofUrl = $payment->proof_image_url ?: ($payment->proof_image_path ? asset('storage/' . $payment->proof_image_path) : null);
+    $packageId = $payment->package_id ?? $payment->membership_id;
+    $resumePaymentUrl = $isPt
+        ? route('member.pt-packages.upload-payment', ['payment' => $payment->id])
+        : ($packageId ? route('member.membership.upload-proof', ['package' => $packageId, 'bank_id' => $payment->bank_id, 'unique_code' => ($payment->amount % 1000 > 0 ? $payment->amount % 1000 : 521), 'payment_id' => $payment->id]) : route('member.membership.packages'));
 @endphp
 
 <article
@@ -47,10 +51,17 @@
             <!-- Header Kartu: Status Badge, Nomor Invoice, Tanggal -->
             <div class="flex flex-wrap items-center gap-3">
                 @if ($payment->status === 'pending')
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-inter font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                        <span class="h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
-                        Menunggu Verifikasi
-                    </span>
+                    @if (! $hasProofImage)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-inter font-semibold bg-amber-50 text-amber-800 border border-amber-300">
+                            <span class="h-2 w-2 rounded-full bg-amber-500"></span>
+                            Menunggu Pembayaran
+                        </span>
+                    @else
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-inter font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                            <span class="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+                            Menunggu Verifikasi
+                        </span>
+                    @endif
                 @elseif ($payment->status === 'verified')
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-inter font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                         <svg class="h-3.5 w-3.5 text-emerald-600" viewBox="0 0 20 20" fill="currentColor">
@@ -154,31 +165,33 @@
             <!-- Tombol Aksi (Kondisional) -->
             <div class="flex items-center gap-2.5">
                 @if ($payment->status === 'pending')
-                    <!-- Tombol Bukti Transfer (Outline Gelap) -->
-                    <button
-                        type="button"
-                        @click="openReceiptModal({
-                            invoice_id: '{{ $payment->invoice_id }}',
-                            amount: '{{ number_format((float) $payment->amount, 0, ',', '.') }}',
-                            bank_sender: '{{ $payment->bank_sender }}',
-                            transfer_date: '{{ $formattedDate }}',
-                            image_url: '{{ $proofUrl }}'
-                        })"
-                        class="rounded-full border border-[#16151A] text-[#16151A] hover:bg-[#16151A] hover:text-white px-4 py-2 font-inter text-xs font-semibold transition cursor-pointer"
-                    >
-                        Bukti Transfer
-                    </button>
-
-                    <!-- Tombol Cek Status (Primary Red) -->
-                    <a
-                        href="{{ route('member.membership.payment-status', $payment->id) }}"
-                        class="rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white px-4 py-2 font-inter text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5"
-                    >
-                        <span>Cek Status</span>
-                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </a>
+                    @if (! $hasProofImage)
+                        <!-- Tombol Lanjutkan Pembayaran -->
+                        <a
+                            href="{{ $resumePaymentUrl }}"
+                            class="rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white px-4 py-2 font-inter text-xs font-semibold shadow-sm transition inline-flex items-center gap-1.5 cursor-pointer"
+                        >
+                            <span>Lanjutkan Pembayaran</span>
+                            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    @else
+                        <!-- Hanya 1 Tombol: Bukti Transfer -->
+                        <button
+                            type="button"
+                            @click="openReceiptModal({
+                                invoice_id: '{{ $payment->invoice_id }}',
+                                amount: '{{ number_format((float) $payment->amount, 0, ',', '.') }}',
+                                bank_sender: '{{ $payment->bank_sender }}',
+                                transfer_date: '{{ $formattedDate }}',
+                                image_url: '{{ $proofUrl }}'
+                            })"
+                            class="rounded-full border border-[#16151A] text-[#16151A] hover:bg-[#16151A] hover:text-white px-4 py-2 font-inter text-xs font-semibold transition cursor-pointer"
+                        >
+                            Bukti Transfer
+                        </button>
+                    @endif
                 @elseif ($payment->status === 'verified')
                     <!-- Tombol Rincian (Outline Gelap) -->
                     <button

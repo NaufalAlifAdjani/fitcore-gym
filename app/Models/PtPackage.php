@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
     'name',
     'pt_session_count',
     'price',
-    'min_membership_days',
     'validity_days',
     'status',
 ])]
@@ -24,7 +23,6 @@ class PtPackage extends Model
         return [
             'pt_session_count' => 'integer',
             'price' => 'integer',
-            'min_membership_days' => 'integer',
             'validity_days' => 'integer',
         ];
     }

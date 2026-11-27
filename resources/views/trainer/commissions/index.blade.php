@@ -117,7 +117,6 @@
                             <th class="py-4 px-6">Tanggal &amp; Waktu</th>
                             <th class="py-4 px-6">Member Klien</th>
                             <th class="py-4 px-6">Paket Latihan</th>
-                            <th class="py-4 px-6">Catatan Evaluasi</th>
                             <th class="py-4 px-6">Komisi Didapatkan</th>
                             <th class="py-4 px-6 text-right">Status</th>
                         </tr>
@@ -152,17 +151,6 @@
                                     <span class="inline-block px-2.5 py-1 rounded-full bg-[#F3F4F6] text-[#374151] font-semibold text-[11px]">
                                         {{ $session->session_info }}
                                     </span>
-                                </td>
-
-                                <!-- Catatan Evaluasi -->
-                                <td class="py-4 px-6 max-w-xs">
-                                    @if ($session->notes)
-                                        <p class="text-[11px] text-[#374151] truncate" title="{{ $session->notes }}">
-                                            {{ $session->notes }}
-                                        </p>
-                                    @else
-                                        <span class="text-[#9CA3AF] italic text-[11px]">Tidak ada catatan</span>
-                                    @endif
                                 </td>
 
                                 <!-- Komisi Didapatkan -->

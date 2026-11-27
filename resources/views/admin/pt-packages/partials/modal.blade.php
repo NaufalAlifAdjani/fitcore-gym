@@ -104,55 +104,29 @@
                 <span class="font-bold text-[#FF5722] text-sm" x-text="formattedPerSessionPrice() + ' / sesi'"></span>
             </div>
 
-            <!-- Syarat Sisa Hari & Masa Berlaku Sesi -->
-            <div class="grid gap-4 sm:grid-cols-2">
-                <div>
-                    <x-input-label for="pt-pkg-min-membership-days" value="Syarat Min. Sisa Hari Membership *" class="!mb-1.5 font-inter text-xs text-[#565A66]" />
-                    <div class="relative">
-                        <x-text-input
-                            id="pt-pkg-min-membership-days"
-                            type="number"
-                            name="min_membership_days"
-                            x-model="form.min_membership_days"
-                            required
-                            min="0"
-                            step="1"
-                            placeholder="0"
-                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#FF5722] focus:!ring-[#FF5722] w-full"
-                        />
-                        <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#565A66] font-inter">
-                            Hari
-                        </span>
-                    </div>
-                    <p class="mt-1 text-[11px] font-inter text-[#565A66]">
-                        Isi 0 jika tidak memerlukan syarat sisa masa aktif membership.
-                    </p>
-                    @error('min_membership_days') <span class="mt-1 block font-inter text-xs text-red-600">{{ $message }}</span> @enderror
+            <!-- Masa Berlaku Sesi (Otomatis Menjadi Syarat Durasi Membership) -->
+            <div>
+                <x-input-label for="pt-pkg-validity-days" value="Masa Berlaku Sesi *" class="!mb-1.5 font-inter text-xs text-[#565A66]" />
+                <div class="relative">
+                    <x-text-input
+                        id="pt-pkg-validity-days"
+                        type="number"
+                        name="validity_days"
+                        x-model="form.validity_days"
+                        required
+                        min="1"
+                        step="1"
+                        placeholder="30"
+                        class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#FF5722] focus:!ring-[#FF5722] w-full"
+                    />
+                    <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#565A66] font-inter">
+                        Hari
+                    </span>
                 </div>
-
-                <div>
-                    <x-input-label for="pt-pkg-validity-days" value="Masa Berlaku Sesi *" class="!mb-1.5 font-inter text-xs text-[#565A66]" />
-                    <div class="relative">
-                        <x-text-input
-                            id="pt-pkg-validity-days"
-                            type="number"
-                            name="validity_days"
-                            x-model="form.validity_days"
-                            required
-                            min="1"
-                            step="1"
-                            placeholder="30"
-                            class="!bg-white !border-[#E5E7EB] !py-3 !pl-3 !pr-16 font-inter !text-sm focus:!border-[#FF5722] focus:!ring-[#FF5722] w-full"
-                        />
-                        <span class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#565A66] font-inter">
-                            Hari
-                        </span>
-                    </div>
-                    <p class="mt-1 text-[11px] font-inter text-[#565A66]">
-                        Masa kedaluwarsa kuota sesi PT sejak paket dibeli.
-                    </p>
-                    @error('validity_days') <span class="mt-1 block font-inter text-xs text-red-600">{{ $message }}</span> @enderror
-                </div>
+                <p class="mt-1 text-[11px] font-inter text-[#565A66]">
+                    Masa kedaluwarsa kuota sesi PT sejak paket dibeli (syarat minimum sisa hari membership otomatis mengikuti masa berlaku ini).
+                </p>
+                @error('validity_days') <span class="mt-1 block font-inter text-xs text-red-600">{{ $message }}</span> @enderror
             </div>
 
             <!-- Checkbox Status Aktif -->

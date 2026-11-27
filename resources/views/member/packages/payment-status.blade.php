@@ -84,19 +84,10 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                    @if ($payment->ptPackage || in_array($payment->package_type, ['pt_session', 'pt_package']) || $payment->payment_type === 'pt_package')
-                        <x-button href="{{ route('member.pt-packages.index') }}" variant="outline" class="w-full sm:w-auto justify-center">
-                            Kembali ke Paket PT
-                        </x-button>
-                    @else
-                        <x-button href="{{ route('member.membership.packages') }}" variant="outline" class="w-full sm:w-auto justify-center">
-                            Kembali ke Katalog Paket
-                        </x-button>
-                    @endif
-                    <x-button href="{{ route('dashboard') }}" variant="primary" class="w-full sm:w-auto justify-center">
-                        Ke Dashboard Member
+                <!-- Action Buttons: Hanya 1 tombol ke Riwayat Transaksi -->
+                <div class="mt-8 flex justify-center">
+                    <x-button href="{{ route('member.riwayat-transaksi.index') }}" variant="primary" class="w-full sm:w-auto justify-center px-8 py-3.5">
+                        Lihat Riwayat Transaksi
                     </x-button>
                 </div>
             </div>

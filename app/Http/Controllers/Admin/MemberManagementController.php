@@ -65,7 +65,8 @@ class MemberManagementController extends Controller
         // 3. Query Daftar Anggota dengan Filter dan Pencarian
         $query = User::where('role', 'member')
             ->with([
-                'memberProfile',
+                'memberProfile.trainer.trainerProfile',
+                'ptQuotas' => fn ($q) => $q->where('status', 'active')->with('trainer.trainerProfile'),
                 'latestMembership.package',
                 'checkIns' => fn ($q) => $q->latest('checked_in_at')->limit(5),
             ]);
@@ -139,10 +140,12 @@ class MemberManagementController extends Controller
         $members = $query->paginate(10)->withQueryString();
 
         $packages = MembershipPackage::where('is_active', true)->orderBy('name')->get();
+        $trainers = User::where('role', 'trainer')->where('status', 'active')->orderBy('name')->get();
 
         return view('admin.member-management.index', compact(
             'members',
             'packages',
+            'trainers',
             'totalMembers',
             'activeMembers',
             'expiringMembers',
@@ -227,6 +230,8 @@ class MemberManagementController extends Controller
             ];
         });
 
+        $currentTrainer = $member->getCurrentPtTrainer();
+
         return response()->json([
             'id' => $member->id,
             'name' => $member->name,
@@ -239,6 +244,13 @@ class MemberManagementController extends Controller
             'status' => $member->status,
             'status_label' => $statusLabel,
             'status_color' => $statusColor,
+            'trainer' => $currentTrainer ? [
+                'id' => $currentTrainer->id,
+                'name' => $currentTrainer->name,
+                'email' => $currentTrainer->email,
+            ] : null,
+            'trainer_id' => $currentTrainer?->id,
+            'trainer_name' => $currentTrainer?->name,
             'package' => [
                 'name' => $latestMembership?->package?->name ?? 'Belum Ada Paket',
                 'tier' => $latestMembership?->package?->tier ?? 'Standar',
@@ -341,6 +353,7 @@ class MemberManagementController extends Controller
             'status' => ['required', 'string', 'in:active,inactive'],
             'membership_package_id' => ['nullable', 'exists:membership_packages,id'],
             'end_date' => ['nullable', 'date'],
+            'trainer_id' => ['nullable'],
         ]);
 
         DB::transaction(function () use ($validated, $member) {
@@ -351,13 +364,31 @@ class MemberManagementController extends Controller
                 'status' => $validated['status'],
             ]);
 
+            $trainerId = ! empty($validated['trainer_id']) ? (int) $validated['trainer_id'] : null;
+            if ($trainerId) {
+                $trainerExists = User::where('id', $trainerId)->where('role', 'trainer')->exists();
+                if (! $trainerExists) {
+                    $trainerId = null;
+                }
+            }
+
             $member->memberProfile()->updateOrCreate(
                 ['user_id' => $member->id],
                 [
                     'gender' => $validated['gender'] ?? 'Laki-laki',
                     'address' => $validated['address'] ?? null,
+                    'trainer_id' => $trainerId,
                 ]
             );
+
+            // Jika member ganti PT: perbarui trainer_id pada kuota aktif bersisa
+            // Sesi yang sudah completed/done tetap mempertahankan trainer_id lama
+            if ($trainerId) {
+                $member->ptQuotas()
+                    ->where('status', 'active')
+                    ->where('remaining_sessions', '>', 0)
+                    ->update(['trainer_id' => $trainerId]);
+            }
 
             if (! empty($validated['membership_package_id'])) {
                 $package = MembershipPackage::findOrFail($validated['membership_package_id']);

@@ -23,8 +23,6 @@ use Illuminate\Support\Facades\Storage;
     'amount',
     'gym_revenue',
     'trainer_revenue',
-    'payout_status',
-    'payout_date',
     'bank_sender',
     'bank_destination',
     'proof_image_path',
@@ -51,10 +49,6 @@ class Payment extends Model
                 $payment->trainer_revenue = round($amount * 0.70, 2);
                 $payment->gym_revenue = round($amount * 0.30, 2);
             }
-
-            if (! $payment->payout_status) {
-                $payment->payout_status = 'pending';
-            }
         });
     }
 
@@ -64,7 +58,6 @@ class Payment extends Model
             'amount' => 'integer',
             'gym_revenue' => 'decimal:2',
             'trainer_revenue' => 'decimal:2',
-            'payout_date' => 'datetime',
             'transfer_date' => 'datetime',
             'verified_at' => 'datetime',
         ];

@@ -128,8 +128,8 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                         <p class="text-xs text-[#565A66]">
                             {{ $profile->specialization ?? 'CSCS Certified Trainer' }}
                         </p>
-                        <span class="inline-flex items-center gap-1 text-[11px] text-amber-500 font-bold mt-0.5">
-                            ★ {{ $profile->rating ?? '4.9' }} Rating Member
+                        <span class="inline-flex items-center gap-1 text-[11px] text-[#565A66] font-medium mt-0.5">
+                            {{ $profile->experience ?? 1 }} Tahun Pengalaman
                         </span>
                     </div>
                 </div>
@@ -246,20 +246,9 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                     </p>
                 </div>
 
-                <form method="POST" action="{{ route('pt-sessions.cancel', $ptSession->id) }}" class="space-y-3">
+                <form method="POST" action="{{ route('pt-sessions.cancel', $ptSession->id) }}" class="space-y-4">
                     @csrf
                     @method('PATCH')
-
-                    <div class="space-y-1 text-left">
-                        <label for="modal_reason" class="block text-[11px] font-bold text-[#16151A]">
-                            Alasan Pembatalan <span class="text-[#565A66] font-normal">(Opsional)</span>
-                        </label>
-                        <textarea id="modal_reason"
-                                  name="reason"
-                                  rows="2"
-                                  placeholder="Contoh: Ada keperluan mendadak..."
-                                  class="w-full p-2.5 rounded-xl border border-[#E5E7EB] bg-white text-xs text-[#16151A] focus:outline-none focus:ring-2 focus:ring-[#FF5722] shadow-xs"></textarea>
-                    </div>
 
                     <div class="flex items-center gap-2 pt-1">
                         <button type="button"

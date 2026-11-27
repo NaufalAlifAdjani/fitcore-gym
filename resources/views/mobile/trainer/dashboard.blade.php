@@ -55,7 +55,7 @@
                     </div>
                     <div>
                         <span class="block font-inter text-[9px] font-bold uppercase tracking-wider text-[#565A66]">AGENDA</span>
-                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Hari Ini</h3>
+                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Sesi Hari Ini</h3>
                     </div>
                 </div>
 
@@ -63,9 +63,6 @@
                     <div class="font-poppins text-2xl font-black text-[#16151A]">
                         {{ $todaySessionsCount }}
                     </div>
-                    <p class="text-[10px] text-emerald-600 font-medium mt-0.5">
-                        {{ $todaySessions->whereIn('status', [\App\Enums\PtSessionStatus::Completed, \App\Enums\PtSessionStatus::Done])->count() }} sesi tuntas
-                    </p>
                 </div>
             </div>
 
@@ -80,7 +77,7 @@
                     </div>
                     <div>
                         <span class="block font-inter text-[9px] font-bold uppercase tracking-wider text-[#565A66]">VOLUME</span>
-                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Bulan Ini</h3>
+                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Total Sesi Selesai</h3>
                     </div>
                 </div>
 
@@ -88,9 +85,6 @@
                     <div class="font-poppins text-2xl font-black text-[#16151A]">
                         {{ $completedSessions ?? 0 }}
                     </div>
-                    <p class="text-[10px] text-[#565A66] font-medium mt-0.5">
-                        Sesi terlaksana
-                    </p>
                 </div>
             </div>
 
@@ -104,7 +98,7 @@
                     </div>
                     <div>
                         <span class="block font-inter text-[9px] font-bold uppercase tracking-wider text-amber-600">Butuh Respon</span>
-                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Permintaan</h3>
+                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Permintaan Sesi</h3>
                     </div>
                 </div>
 
@@ -112,9 +106,6 @@
                     <div class="font-poppins text-2xl font-black text-amber-600">
                         {{ $pendingSessions->count() }}
                     </div>
-                    <p class="text-[10px] text-amber-700 font-medium mt-0.5">
-                        Menunggu konfirmasi
-                    </p>
                 </div>
             </div>
 
@@ -128,7 +119,7 @@
                     </div>
                     <div>
                         <span class="block font-inter text-[9px] font-bold uppercase tracking-wider text-blue-600">KOMISI</span>
-                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Estimasi</h3>
+                        <h3 class="font-poppins text-xs font-bold text-[#16151A] leading-tight">Estimasi Komisi</h3>
                     </div>
                 </div>
 
@@ -136,9 +127,6 @@
                     <div class="font-poppins text-lg font-black text-[#FF5722] truncate">
                         Rp {{ number_format($estimatedCommission, 0, ',', '.') }}
                     </div>
-                    <p class="text-[10px] text-[#565A66] font-medium mt-0.5">
-                        {{ $currentMonthLabel }}
-                    </p>
                 </div>
             </div>
         </div>
@@ -147,7 +135,6 @@
         <div class="space-y-3">
             <div class="flex items-center justify-between">
                 <h3 class="text-xs font-bold uppercase tracking-wider text-amber-700 flex items-center gap-1.5 font-poppins">
-                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                     Permintaan Masuk ({{ $pendingSessions->count() }})
                 </h3>
             </div>
@@ -273,7 +260,6 @@
             <div class="space-y-3">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-rose-700 flex items-center gap-1.5 font-poppins">
-                        <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
                         Kuota Klien Menipis (&le; 2 Sesi)
                     </h3>
                 </div>

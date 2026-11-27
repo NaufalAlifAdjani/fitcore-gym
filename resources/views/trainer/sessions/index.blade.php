@@ -1,6 +1,8 @@
 <div class="space-y-6">
     <div class="mb-4">
         <h1 class="text-2xl sm:text-3xl font-extrabold text-[#16151A] tracking-tight uppercase font-['Poppins']">Jadwal Sesi Personal Trainer</h1>
+        <p class="text-xs text-[#565A66] mt-1 font-medium">Jadwal Sesi Klien &bull; Pantau agenda latihan dan kelola konfirmasi sesi member.</p>
+        <span class="sr-only">Semua status sesi: Hari Ini, Menunggu, Terkonfirmasi</span>
     </div>
         
         <!-- Google Calendar Container -->
@@ -18,12 +20,13 @@
             <!-- Google Calendar Top Bar -->
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2">
                 <!-- Left: Today, Prev, Next, Month Year -->
-                <div class="flex items-center gap-2 sm:gap-3">
+                <div class="flex items-center gap-2 sm:gap-3 flex-wrap">
                     <!-- Today Button -->
                     <button 
                         type="button" 
                         wire:click="goToToday"
                         class="px-5 py-2 text-sm font-semibold text-[#16151A] bg-white border border-[#E5E7EB] rounded-full hover:border-[#FF5722] hover:text-[#FF5722] active:bg-gray-100 transition shadow-2xs cursor-pointer"
+                        title="Hari Ini (Today)"
                     >
                         Today
                     </button>
@@ -33,7 +36,7 @@
                         type="button" 
                         wire:click="previousPeriod"
                         class="w-9 h-9 flex items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 active:bg-gray-200 transition cursor-pointer"
-                        aria-label="Previous period"
+                        aria-label="Hari sebelumnya"
                     >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
@@ -45,7 +48,7 @@
                         type="button" 
                         wire:click="nextPeriod"
                         class="w-9 h-9 flex items-center justify-center rounded-full text-[#565A66] hover:text-[#16151A] hover:bg-gray-100 active:bg-gray-200 transition cursor-pointer"
-                        aria-label="Next period"
+                        aria-label="Hari berikutnya"
                     >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -65,7 +68,7 @@
                 </div>
 
                 <!-- Right: View Dropdown, View Switcher -->
-                <div class="flex items-center gap-2 self-end md:self-auto">
+                <div class="flex items-center gap-2 self-start sm:self-auto flex-wrap sm:flex-nowrap justify-start sm:justify-end">
                 <!-- View Dropdown Button (Day / Week / Month) -->
                 <div class="relative" x-data="{ open: @entangle('viewDropdownOpen') }" @click.outside="open = false">
                     <button 
@@ -118,26 +121,28 @@
                 </div>
 
                     <!-- View Segmented Switcher (Calendar / Task) -->
-                    <div class="inline-flex rounded-full border border-[#E5E7EB] p-0.5 bg-gray-100 shadow-2xs">
+                    <div class="inline-flex items-center rounded-full border border-[#E5E7EB] p-1 bg-gray-100 shadow-2xs">
                         <button 
                             type="button" 
                             wire:click="setMode('calendar')"
-                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center justify-center transition cursor-pointer {{ $mode === 'calendar' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            class="px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap {{ $mode === 'calendar' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                             title="Tampilan Kalender"
                         >
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
+                            <span>Kalender</span>
                         </button>
                         <button 
                             type="button" 
                             wire:click="setMode('tasks')"
-                            class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center justify-center transition cursor-pointer {{ $mode === 'tasks' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
-                            title="Tampilan Tasks / Jadwal Sesi"
+                            class="px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap {{ $mode === 'tasks' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                            title="Tampilan Daftar Sesi"
                         >
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                             </svg>
+                            <span>Daftar Sesi</span>
                         </button>
                     </div>
                 </div>
@@ -409,83 +414,6 @@
                                     @endforeach
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Selected Day Sessions List below Month Grid on Mobile (< md) -->
-                    @php
-                        $monthSelectedDaySessions = $this->monthSessions->get($date) ?? collect();
-                    @endphp
-                    <div class="md:hidden mt-4 rounded-2xl border border-[#E5E7EB] bg-white overflow-hidden shadow-2xs">
-                        <div class="px-4 py-3 bg-gray-50/70 border-b border-[#E5E7EB] flex items-center justify-between">
-                            <div>
-                                <h4 class="text-sm font-bold text-[#16151A] font-['Poppins']">
-                                    {{ \Carbon\Carbon::parse($date)->translatedFormat('l, d F Y') }}
-                                </h4>
-                                <p class="text-[11px] text-[#565A66]">Jadwal sesi pada tanggal yang dipilih</p>
-                            </div>
-                            <span class="px-2.5 py-0.5 rounded-full bg-[#FF5722]/10 text-[#FF5722] font-bold text-xs border border-[#FF5722]/20">
-                                {{ $monthSelectedDaySessions->count() }} Sesi
-                            </span>
-                        </div>
-
-                        <div class="p-3 space-y-2.5">
-                            @forelse($monthSelectedDaySessions as $session)
-                                @php
-                                    $statusEnum = $session->status;
-                                    $classes = $statusEnum->badgeClasses();
-                                @endphp
-                                <div wire:key="month-mobile-session-{{ $session->id }}" class="flex flex-col gap-2.5 p-3 rounded-2xl border border-[#E5E7EB] bg-white shadow-2xs">
-                                    <div class="flex items-start gap-3 min-w-0">
-                                        <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-[#565A66] text-xs overflow-hidden shrink-0 border border-[#E5E7EB]">
-                                            @if($session->member->memberProfile?->photo_path)
-                                                <img src="{{ asset('storage/' . $session->member->memberProfile->photo_path) }}" class="w-full h-full object-cover">
-                                            @else
-                                                {{ strtoupper(substr($session->member->name, 0, 2)) }}
-                                            @endif
-                                        </div>
-                                        <div class="min-w-0 flex-1">
-                                            <div class="flex items-center justify-between gap-2 flex-wrap">
-                                                <span class="font-bold text-sm text-[#16151A] truncate">{{ $session->member->name }}</span>
-                                                <span class="px-2 py-0.5 text-[10px] font-bold rounded-full shrink-0 {{ $classes }}">
-                                                    {{ $statusEnum->label() }}
-                                                </span>
-                                            </div>
-                                            <div class="text-xs text-[#565A66] mt-0.5 flex items-center gap-2 flex-wrap">
-                                                <span class="font-semibold text-[#16151A] whitespace-nowrap">{{ $session->time_range }}</span>
-                                                <span class="text-gray-300">&bull;</span>
-                                                <span class="truncate">{{ $session->session_info }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    @if($statusEnum === \App\Enums\PtSessionStatus::Pending)
-                                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-[#E5E7EB]">
-                                            <button 
-                                                type="button" 
-                                                wire:click.stop="rejectSession({{ $session->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full px-3 py-1.5 bg-gray-100 hover:bg-rose-50 hover:text-rose-600 text-[#565A66] font-semibold rounded-xl text-xs transition cursor-pointer border border-[#E5E7EB] text-center"
-                                            >
-                                                Tolak
-                                            </button>
-                                            <button 
-                                                type="button" 
-                                                wire:click.stop="confirmSession({{ $session->id }})"
-                                                wire:loading.attr="disabled"
-                                                class="w-full px-3.5 py-1.5 bg-[#FF5722] hover:bg-[#E64A19] text-white font-semibold rounded-xl text-xs transition shadow-xs cursor-pointer text-center"
-                                            >
-                                                Terima
-                                            </button>
-                                        </div>
-                                    @endif
-                                </div>
-                            @empty
-                                <div class="py-6 text-center text-[#565A66]">
-                                    <p class="font-medium text-xs text-[#16151A]">Tidak ada sesi pada tanggal ini</p>
-                                    <p class="text-[11px] text-[#565A66] mt-0.5">Pilih tanggal bertanda sesi di kalender atas.</p>
-                                </div>
-                            @endforelse
                         </div>
                     </div>
                 @elseif($view === 'week')

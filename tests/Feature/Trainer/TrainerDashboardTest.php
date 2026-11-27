@@ -74,7 +74,6 @@ class TrainerDashboardTest extends TestCase
             'name' => 'Paket PT 10 Sesi',
             'pt_session_count' => 10,
             'price' => 600000,
-            'min_membership_days' => 0,
             'validity_days' => 90,
             'status' => 'active',
         ]);
@@ -140,7 +139,6 @@ class TrainerDashboardTest extends TestCase
             'name' => 'Paket PT 10 Sesi',
             'pt_session_count' => 10,
             'price' => 600000,
-            'min_membership_days' => 0,
             'validity_days' => 90,
             'status' => 'active',
         ]);
@@ -187,7 +185,6 @@ class TrainerDashboardTest extends TestCase
             'name' => 'Paket PT 10 Sesi',
             'pt_session_count' => 10,
             'price' => 600000,
-            'min_membership_days' => 0,
             'validity_days' => 90,
             'status' => 'active',
         ]);
@@ -241,7 +238,6 @@ class TrainerDashboardTest extends TestCase
             'name' => 'Paket PT 10 Sesi',
             'pt_session_count' => 10,
             'price' => 600000,
-            'min_membership_days' => 0,
             'validity_days' => 90,
             'status' => 'active',
         ]);

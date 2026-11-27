@@ -57,7 +57,6 @@ class MobileMemberDashboardTest extends TestCase
         MemberProfile::create([
             'user_id' => $member->id,
             'member_code' => 'MEM-123456',
-            'qr_token' => 'test-qr-token-uuid-1234',
         ]);
 
         $response = $this->actingAs($member)->get('/m/card');
@@ -215,12 +214,18 @@ class MobileMemberDashboardTest extends TestCase
         $member = User::factory()->create([
             'role' => 'member',
         ]);
+        MemberPtQuota::factory()->create([
+            'member_id' => $member->id,
+            'remaining_sessions' => 5,
+            'status' => 'active',
+            'end_date' => now()->addMonth(),
+        ]);
 
         $response = $this->actingAs($member)->get('/m/pt-sessions');
 
         $response->assertStatus(200);
         $response->assertSee('Sesi Latihan PT');
-        $response->assertSee('+ Booking');
+        $response->assertSee('Booking Sesi Baru');
         $response->assertSee('Semua');
         $response->assertSee('Menunggu');
         $response->assertSee('Terkonfirmasi');
@@ -262,7 +267,7 @@ class MobileMemberDashboardTest extends TestCase
             'workout_focus' => 'Chest & Triceps Hypertrophy',
         ]);
 
-        $response->assertRedirect(route('pt-sessions.index'));
+        $response->assertRedirectContains(route('pt-sessions.index'));
         $this->assertDatabaseHas('pt_sessions', [
             'member_id' => $member->id,
             'trainer_id' => $trainer->id,
@@ -285,7 +290,6 @@ class MobileMemberDashboardTest extends TestCase
         TrainerProfile::create([
             'user_id' => $trainer->id,
             'specialization' => 'Hypertrophy Specialist',
-            'rating' => 4.9,
         ]);
 
         $quota = MemberPtQuota::factory()->create([
@@ -383,8 +387,14 @@ class MobileMemberDashboardTest extends TestCase
         $response->assertSee('budi@example.com');
         $response->assertSee('MEM-123456');
         $response->assertSee('Edit Informasi Akun');
-        $response->assertSee('Perbarui Kata Sandi');
-        $response->assertSee('Keluar dari Akun');
+        $response->assertSee('Pengaturan Profil');
+        $response->assertSee('Ganti Kata Sandi');
+        $response->assertSee('Keluar');
+
+        $passwordResponse = $this->actingAs($member)->get(route('mobile.member.profile.index', ['tab' => 'password']));
+        $passwordResponse->assertStatus(200);
+        $passwordResponse->assertSee('Ganti Kata Sandi');
+        $passwordResponse->assertSee('Perbarui Kata Sandi');
     }
 
     public function test_non_member_cannot_access_mobile_dashboard(): void

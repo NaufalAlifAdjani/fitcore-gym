@@ -27,7 +27,6 @@ class MemberManagementDemoSeeder extends Seeder
                 'description' => 'Akses penuh seluruh cabang 24/7',
                 'price' => 3200000,
                 'duration_days' => 365,
-                'duration_in_days' => 365,
                 'is_active' => true,
             ]
         );
@@ -40,7 +39,6 @@ class MemberManagementDemoSeeder extends Seeder
                 'description' => 'Akses 6 bulan fasilitas gym',
                 'price' => 1800000,
                 'duration_days' => 180,
-                'duration_in_days' => 180,
                 'is_active' => true,
             ]
         );
@@ -53,7 +51,6 @@ class MemberManagementDemoSeeder extends Seeder
                 'description' => 'Paket hemat pelajar/mahasiswa',
                 'price' => 300000,
                 'duration_days' => 30,
-                'duration_in_days' => 30,
                 'is_active' => true,
             ]
         );
@@ -66,7 +63,6 @@ class MemberManagementDemoSeeder extends Seeder
                 'description' => 'Akses bulanan reguler',
                 'price' => 450000,
                 'duration_days' => 30,
-                'duration_in_days' => 30,
                 'is_active' => true,
             ]
         );
@@ -217,7 +213,6 @@ class MemberManagementDemoSeeder extends Seeder
                     ],
                     [
                         'method' => 'qr',
-                        'checked_out_at' => (clone $checkinTime)->addHours(2),
                     ]
                 );
             }

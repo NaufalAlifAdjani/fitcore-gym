@@ -9,7 +9,6 @@ use App\Models\MemberProfile;
 use App\Models\MemberPtQuota;
 use App\Models\PtPackage;
 use App\Models\PtSession;
-use App\Models\Rating;
 use App\Models\TrainerProfile;
 use App\Models\User;
 use Carbon\Carbon;
@@ -225,16 +224,7 @@ class ClientManagementTest extends TestCase
             'start_time' => '08:00:00',
             'end_time' => '09:00:00',
             'status' => PtSessionStatus::Completed,
-            'notes' => 'Latihan punggung & bisep. Beban lat pull down 45kg.',
             'completed_at' => Carbon::today()->subDays(3)->setTime(9, 5),
-        ]);
-
-        Rating::create([
-            'pt_session_id' => $sessionCompleted->id,
-            'member_id' => $this->member->id,
-            'trainer_id' => $this->trainer->id,
-            'rating' => 5,
-            'comment' => 'Pelayanan coach sangat mantap dan teliti!',
         ]);
 
         $sessionConfirmed = PtSession::create([
@@ -254,8 +244,6 @@ class ClientManagementTest extends TestCase
         $response->assertSee('John Doe');
         $response->assertSee('MBR-0001');
         $response->assertSee('10 Sesi PT');
-        $response->assertSee('Latihan punggung & bisep');
-        $response->assertSee('Pelayanan coach sangat mantap dan teliti!');
         $response->assertDontSee('Selesaikan Sesi');
     }
 
@@ -304,7 +292,6 @@ class ClientManagementTest extends TestCase
 
         $session->refresh();
         $this->assertEquals(PtSessionStatus::Completed, $session->status);
-        $this->assertEquals('Sesi kardio & HIIT 45 menit. Detak jantung stabil di 140 bpm.', $session->notes);
         $this->assertNotNull($session->completed_at);
     }
 

@@ -33,8 +33,8 @@
                 </div>
             @endif
 
-            {{-- Alert Jika Tidak Ada Paket Eligible (Syarat Test 10) --}}
-            @if(isset($packages) && $packages->isEmpty() && isset($activeMembership))
+            {{-- Alert Jika Tidak Ada Paket Eligible --}}
+            @if((isset($noEligiblePackages) && $noEligiblePackages && isset($activeMembership) && empty($isQuotaThresholdBlocked)) || (isset($packages) && $packages->isEmpty() && isset($activeMembership)))
                 <div class="bg-amber-50/80 border border-amber-200 text-[#16151A] p-6 rounded-2xl mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
                     <div class="flex items-center gap-3">
                         <svg class="w-6 h-6 text-[#FFB703] shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -48,6 +48,67 @@
                     <a href="{{ route('member.membership.packages') }}" class="px-5 py-2.5 bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs rounded-xl transition shadow-xs shrink-0">
                         Perpanjang Membership Sekarang
                     </a>
+                </div>
+            @endif
+
+            {{-- Alert Jika Kuota Sesi Masih di atas Threshold (> 2 Sesi) --}}
+            @if(isset($isQuotaThresholdBlocked) && $isQuotaThresholdBlocked)
+                <div class="bg-amber-50/90 border border-amber-200 text-[#16151A] p-6 rounded-3xl mb-8 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                            <svg class="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-sm sm:text-base text-[#16151A]">Sisa Kuota Sesi Latihan Anda Masih Tersedia ({{ $activeRemainingSessions }} Sesi)</h4>
+                            <p class="text-xs text-[#565A66] mt-0.5">
+                                Pembelian paket sesi PT baru dapat dilakukan kembali saat sisa kuota aktif Anda maksimal <strong>2 sesi</strong>. Silakan gunakan sisa sesi latihan Anda terlebih dahulu.
+                            </p>
+                        </div>
+                    </div>
+                    <a href="{{ route('pt-sessions.index') }}" class="px-5 py-2.5 bg-[#16151A] hover:bg-[#FF5722] text-white font-bold text-xs rounded-xl transition shadow-xs shrink-0">
+                        Lihat Jadwal Latihan &rarr;
+                    </a>
+                </div>
+            @endif
+
+            {{-- Smart Renewal Banner: Pelatih Anda Saat Ini --}}
+            @if(isset($currentTrainer) && $currentTrainer)
+                @php
+                    $coachFirstName = explode(' ', trim(str_replace('Coach ', '', $currentTrainer->name)))[0];
+                    $cPhotoCurrent = file_exists(public_path("images/trainers/coach-" . strtolower($coachFirstName) . ".jpg"))
+                        ? asset("images/trainers/coach-" . strtolower($coachFirstName) . ".jpg")
+                        : ($currentTrainer->trainerProfile?->photo_path ? asset('storage/'.$currentTrainer->trainerProfile->photo_path) : ($currentTrainer->avatar_url ?? null));
+                @endphp
+                <div class="bg-gradient-to-r from-orange-50 via-white to-amber-50 border border-orange-200/80 rounded-3xl p-5 sm:p-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-xs">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-2xl overflow-hidden bg-[#2C2828] border-2 border-[#FF5722] shrink-0 shadow-xs">
+                            @if($cPhotoCurrent)
+                                <img src="{{ $cPhotoCurrent }}" class="w-full h-full object-cover" alt="{{ $currentTrainer->name }}">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-white font-black text-sm bg-[#FF5722]">
+                                    {{ substr($coachFirstName, 0, 1) }}
+                                </div>
+                            @endif
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-black uppercase tracking-wider bg-[#FF5722] text-white px-2.5 py-0.5 rounded-full shadow-2xs">
+                                    Pelatih Anda
+                                </span>
+                                <h3 class="font-extrabold text-base text-[#16151A]">{{ $currentTrainer->name }}</h3>
+                            </div>
+                            <p class="text-xs text-[#565A66] mt-1 leading-relaxed">
+                                Anda sudah memiliki pelatih. Beli paket sesi tambahan untuk melanjutkan program latihan bersama <strong>{{ $currentTrainer->name }}</strong> tanpa perlu memilih ulang pelatih.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                        <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $packages->first()?->id ?? 1]) }}" class="text-xs font-bold text-[#565A66] hover:text-[#FF5722] hover:underline transition">
+                            Ingin ganti pelatih? &rarr;
+                        </a>
+                    </div>
                 </div>
             @endif
 
@@ -71,14 +132,14 @@
             {{-- GRID PAKET (3 Kolom di Desktop) --}}
             @php
                 $defaultFigmaPackages = [
-                    ['id' => '1', 'name' => 'PT 4 Sesi', 'sessions' => 4, 'price' => 1155000, 'original_price' => 1443750, 'per_session' => 288750, 'is_popular' => false],
-                    ['id' => '2', 'name' => 'PT 8 Sesi', 'sessions' => 8, 'price' => 2072700, 'original_price' => 2590875, 'per_session' => 259088, 'is_popular' => false],
-                    ['id' => '3', 'name' => 'PT 16 Sesi', 'sessions' => 16, 'price' => 3582000, 'original_price' => 4515000, 'per_session' => 223875, 'is_popular' => true],
-                    ['id' => '4', 'name' => 'PT 24 Sesi', 'sessions' => 24, 'price' => 5040000, 'original_price' => 6300000, 'per_session' => 210000, 'is_popular' => false],
-                    ['id' => '5', 'name' => 'PT 36 Sesi', 'sessions' => 36, 'price' => 6804000, 'original_price' => 8505000, 'per_session' => 189000, 'is_popular' => false],
-                    ['id' => '6', 'name' => 'PT 48 Sesi', 'sessions' => 48, 'price' => 8316000, 'original_price' => 10395000, 'per_session' => 173250, 'is_popular' => false],
-                    ['id' => '7', 'name' => 'PT 72 Sesi', 'sessions' => 72, 'price' => 12168000, 'original_price' => 15210000, 'per_session' => 169000, 'is_popular' => false],
-                    ['id' => '8', 'name' => 'PT 96 Sesi', 'sessions' => 96, 'price' => 15840000, 'original_price' => 19800000, 'per_session' => 165000, 'is_popular' => false],
+                    ['id' => '1', 'name' => 'PT 4 Sesi', 'sessions' => 4, 'price' => 1155000, 'original_price' => 1443750, 'per_session' => 288750, 'is_popular' => false, 'validity_days' => 30],
+                    ['id' => '2', 'name' => 'PT 8 Sesi', 'sessions' => 8, 'price' => 2072700, 'original_price' => 2590875, 'per_session' => 259088, 'is_popular' => false, 'validity_days' => 45],
+                    ['id' => '3', 'name' => 'PT 16 Sesi', 'sessions' => 16, 'price' => 3582000, 'original_price' => 4515000, 'per_session' => 223875, 'is_popular' => true, 'validity_days' => 60],
+                    ['id' => '4', 'name' => 'PT 24 Sesi', 'sessions' => 24, 'price' => 5040000, 'original_price' => 6300000, 'per_session' => 210000, 'is_popular' => false, 'validity_days' => 90],
+                    ['id' => '5', 'name' => 'PT 36 Sesi', 'sessions' => 36, 'price' => 6804000, 'original_price' => 8505000, 'per_session' => 189000, 'is_popular' => false, 'validity_days' => 120],
+                    ['id' => '6', 'name' => 'PT 48 Sesi', 'sessions' => 48, 'price' => 8316000, 'original_price' => 10395000, 'per_session' => 173250, 'is_popular' => false, 'validity_days' => 150],
+                    ['id' => '7', 'name' => 'PT 72 Sesi', 'sessions' => 72, 'price' => 12168000, 'original_price' => 15210000, 'per_session' => 169000, 'is_popular' => false, 'validity_days' => 180],
+                    ['id' => '8', 'name' => 'PT 96 Sesi', 'sessions' => 96, 'price' => 15840000, 'original_price' => 19800000, 'per_session' => 165000, 'is_popular' => false, 'validity_days' => 240],
                 ];
 
                 $displayPackages = $defaultFigmaPackages;
@@ -87,18 +148,25 @@
                     foreach ($packages as $pkg) {
                         $sessions = (int) ($pkg->pt_session_count ?? 10);
                         $price = (float) $pkg->price;
-                        $originalPrice = round($price * 1.25);
                         $perSession = round($price / max(1, $sessions));
                         $isPopular = ($sessions === 16);
+                        $minDays = (int) ($pkg->validity_days ?? 0);
+                        $isEligible = isset($pkg->is_eligible) ? (bool) $pkg->is_eligible : (($minDays === 0) || ($activeMembership && $remainingDays >= $minDays));
 
                         $customPackages[] = [
                             'id' => $pkg->id,
                             'name' => $pkg->name,
                             'sessions' => $sessions,
                             'price' => $price,
-                            'original_price' => $originalPrice,
                             'per_session' => $perSession,
                             'is_popular' => $isPopular,
+                            'min_days' => $minDays,
+                            'validity_days' => (int) ($pkg->validity_days ?? 30),
+                            'is_eligible' => $isEligible,
+                            'projected_end_date' => $pkg->projected_end_date ?? null,
+                            'is_membership_extension_needed' => (bool) ($pkg->is_membership_extension_needed ?? false),
+                            'disabled_label' => $pkg->disabled_label ?? ($minDays > 0 ? "Min. Membership {$minDays} Hari" : 'Wajib Membership Aktif'),
+                            'disabled_title' => $pkg->disabled_title ?? ($minDays > 0 ? "Min. Membership {$minDays} Hari" : 'Wajib Membership Aktif'),
                         ];
                     }
                     $displayPackages = $customPackages;
@@ -122,17 +190,22 @@
                         @endif
 
                         <div>
-                            {{-- Header Paket: Angka Sesi Blaze Orange (#FF5722) --}}
-                            <div class="flex items-baseline">
-                                <span class="text-4xl sm:text-5xl font-black tracking-tight text-[#FF5722]">
-                                    {{ $pkg['sessions'] }}
-                                </span>
-                                <span class="text-lg sm:text-xl font-bold ml-1.5 text-[#FF5722]">
-                                    Sesi
+                            {{-- Header Paket: Angka Sesi Blaze Orange (#FF5722) & Masa Aktif --}}
+                            <div class="flex items-baseline justify-between gap-2">
+                                <div class="flex items-baseline">
+                                    <span class="text-4xl sm:text-5xl font-black tracking-tight text-[#FF5722]">
+                                        {{ $pkg['sessions'] }}
+                                    </span>
+                                    <span class="text-lg sm:text-xl font-bold ml-1.5 text-[#FF5722]">
+                                        Sesi
+                                    </span>
+                                </div>
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-100 text-[#565A66] text-xs font-bold shrink-0">
+                                    Masa Aktif {{ $pkg['validity_days'] ?? 30 }} Hari
                                 </span>
                             </div>
 
-                            {{-- Nama Paket --}}
+                            {{-- Nama Paket & Kuota Aktif --}}
                             <div class="flex items-center justify-between gap-2 mt-1">
                                 <span class="text-xs font-bold text-[#565A66] uppercase tracking-wider">
                                     {{ $pkg['name'] ?? ('PT ' . $pkg['sessions'] . ' Sesi') }}
@@ -144,13 +217,10 @@
                                 @endif
                             </div>
 
-                            {{-- Total Harga Aktif & Coret --}}
+                            {{-- Total Harga --}}
                             <div class="mt-4">
                                 <div class="text-base font-black text-[#16151A]">
                                     Rp {{ number_format($pkg['price'], 0, ',', '.') }}
-                                </div>
-                                <div class="text-xs text-[#565A66]/60 line-through mt-0.5">
-                                    Rp {{ number_format($pkg['original_price'], 0, ',', '.') }}
                                 </div>
                             </div>
 
@@ -168,10 +238,29 @@
                         </div>
 
                         {{-- Tombol Pilih Paket --}}
-                        <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $pkg['id'], 'sessions' => $pkg['sessions']]) }}" 
-                           class="mt-6 w-full py-3.5 rounded-xl font-extrabold text-xs sm:text-sm text-center block transition-all duration-200 active:scale-[0.99] {{ $isPopular ? 'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-[#FF5722]/25' : 'bg-[#16151A] hover:bg-[#FF5722] text-white shadow-xs' }}">
-                            {{ $userQuota ? 'Beli Sesi Tambahan' : ($isPopular ? 'Paket Terpilih' : 'Pilih Paket') }}
-                        </a>
+                        @if ($pkg['is_eligible'] ?? true)
+                            @if(isset($currentTrainer) && $currentTrainer)
+                                <a href="{{ route('member.pt-packages.checkout', ['package_id' => $pkg['id'], 'trainer_id' => $currentTrainer->id]) }}" 
+                                   class="mt-6 w-full py-3.5 rounded-xl font-extrabold text-xs sm:text-sm text-center block transition-all duration-200 active:scale-[0.99] bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-[#FF5722]/25">
+                                    Lanjut dengan {{ $currentTrainer->name }} &rarr;
+                                </a>
+                                <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $pkg['id'], 'sessions' => $pkg['sessions']]) }}" 
+                                   class="mt-2.5 text-center block text-[11px] font-bold text-[#565A66] hover:text-[#FF5722] transition">
+                                    atau pilih pelatih lain
+                                </a>
+                            @else
+                                <a href="{{ route('member.pt-packages.select-trainer', ['package_id' => $pkg['id'], 'sessions' => $pkg['sessions']]) }}" 
+                                   class="mt-6 w-full py-3.5 rounded-xl font-extrabold text-xs sm:text-sm text-center block transition-all duration-200 active:scale-[0.99] {{ $isPopular ? 'bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-[#FF5722]/25' : 'bg-[#16151A] hover:bg-[#FF5722] text-white shadow-xs' }}">
+                                    {{ $userQuota ? 'Beli Sesi Tambahan' : ($isPopular ? 'Paket Terpilih' : 'Pilih Paket') }}
+                                </a>
+                            @endif
+                        @else
+                            <button type="button" disabled
+                               class="mt-6 w-full py-3.5 rounded-xl font-extrabold text-xs sm:text-sm text-center block bg-gray-100 text-gray-400 border border-gray-300 cursor-not-allowed select-none shadow-none"
+                               title="{{ $pkg['disabled_title'] ?? ($pkg['min_days'] > 0 ? 'Min. Membership ' . $pkg['min_days'] . ' Hari' : 'Wajib Membership Aktif') }}">
+                                {{ $pkg['disabled_label'] ?? ($pkg['min_days'] > 0 ? 'Min. Membership ' . $pkg['min_days'] . ' Hari' : 'Wajib Membership Aktif') }}
+                            </button>
+                        @endif
 
                     </div>
                 @endforeach

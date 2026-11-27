@@ -21,7 +21,6 @@ class PtPackageManagementTest extends TestCase
             'name' => 'PT Test 12 Sesi',
             'pt_session_count' => 12,
             'price' => 3000000,
-            'min_membership_days' => 14,
             'validity_days' => 60,
             'status' => 'active',
         ]);
@@ -31,7 +30,6 @@ class PtPackageManagementTest extends TestCase
             ->assertOk()
             ->assertSee('PT Test 12 Sesi')
             ->assertSee('12 Sesi')
-            ->assertSee('Min. 14 Hari')
             ->assertSee('60 Hari');
 
         // Test alias route
@@ -75,7 +73,6 @@ class PtPackageManagementTest extends TestCase
                 'name' => 'PT Performance Gold 20 Sesi',
                 'pt_session_count' => 20,
                 'price' => 5000000,
-                'min_membership_days' => 30,
                 'validity_days' => 90,
                 'is_active' => true,
             ]);
@@ -87,7 +84,6 @@ class PtPackageManagementTest extends TestCase
             'name' => 'PT Performance Gold 20 Sesi',
             'pt_session_count' => 20,
             'price' => 5000000,
-            'min_membership_days' => 30,
             'validity_days' => 90,
             'status' => 'active',
         ]);
@@ -100,7 +96,6 @@ class PtPackageManagementTest extends TestCase
             'name' => 'PT Old Name',
             'pt_session_count' => 8,
             'price' => 2000000,
-            'min_membership_days' => 0,
             'validity_days' => 30,
             'status' => 'active',
         ]);
@@ -110,7 +105,6 @@ class PtPackageManagementTest extends TestCase
                 'name' => 'PT Updated Elite 10 Sesi',
                 'pt_session_count' => 10,
                 'price' => 2500000,
-                'min_membership_days' => 15,
                 'validity_days' => 45,
                 'is_active' => true,
             ]);
@@ -123,7 +117,6 @@ class PtPackageManagementTest extends TestCase
             'name' => 'PT Updated Elite 10 Sesi',
             'pt_session_count' => 10,
             'price' => 2500000,
-            'min_membership_days' => 15,
             'validity_days' => 45,
         ]);
     }
@@ -168,7 +161,7 @@ class PtPackageManagementTest extends TestCase
         // Missing fields
         $this->actingAs($admin)
             ->post(route('admin.pt-packages.store'), [])
-            ->assertSessionHasErrors(['name', 'pt_session_count', 'price', 'min_membership_days', 'validity_days']);
+            ->assertSessionHasErrors(['name', 'pt_session_count', 'price', 'validity_days']);
 
         // Negative values & zero sessions
         $this->actingAs($admin)
@@ -176,13 +169,11 @@ class PtPackageManagementTest extends TestCase
                 'name' => 'Invalid Package',
                 'pt_session_count' => 0,
                 'price' => -50000,
-                'min_membership_days' => -5,
                 'validity_days' => 0,
             ])
             ->assertSessionHasErrors([
                 'pt_session_count',
                 'price',
-                'min_membership_days',
                 'validity_days',
             ]);
     }
@@ -245,7 +236,6 @@ class PtPackageManagementTest extends TestCase
             'name' => 'PT Khusus Nonaktif',
             'pt_session_count' => 10,
             'price' => 2000000,
-            'min_membership_days' => 0,
             'validity_days' => 30,
             'status' => 'inactive',
         ]);
@@ -292,7 +282,6 @@ class PtPackageManagementTest extends TestCase
             'name' => 'PT Paket Standard 8 Sesi',
             'pt_session_count' => 8,
             'price' => 2000000,
-            'min_membership_days' => 0,
             'validity_days' => 45,
             'is_active' => true,
         ], $overrides);
