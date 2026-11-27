@@ -152,7 +152,6 @@ class CheckInController extends Controller
                 'membership_id' => $activeMembership->id,
                 'check_in_date' => $todayDate,
                 'checked_in_at' => $today,
-                'checked_out_at' => null,
                 'method' => 'qr_code',
                 'checked_by' => $request->user()->id,
             ]);

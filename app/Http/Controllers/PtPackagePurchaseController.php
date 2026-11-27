@@ -54,37 +54,85 @@ class PtPackagePurchaseController extends Controller
             ->first();
 
         $remainingDays = 0;
+        $maxEndDate = null;
         if ($activeMembership) {
-            $endDate = Carbon::parse($activeMembership->end_date)->startOfDay();
-            $remainingDays = max(0, (int) $today->diffInDays($endDate, false));
+            $maxEndDate = $user->memberships()
+                ->where('status', 'active')
+                ->where('end_date', '>=', $today->toDateString())
+                ->max('end_date') ?? $activeMembership->end_date;
+            $endDate = Carbon::parse($maxEndDate)->startOfDay();
+            $remainingDays = max(0, (int) $today->diffInDays($endDate, false) + 1);
         }
 
-        // ── 2. Fetch Active PT Packages & Filter by Min Membership Days ───────
+        // ── 2. Fetch Active PT Quota with remaining sessions (for dynamic stacking projection) ───
+        $latestActivePtQuota = $user->ptQuotas()
+            ->where('status', 'active')
+            ->where('remaining_sessions', '>', 0)
+            ->whereDate('end_date', '>=', $today->toDateString())
+            ->latest('end_date')
+            ->first();
+
+        $membershipEndDateCarbon = $maxEndDate ? Carbon::parse($maxEndDate)->startOfDay() : null;
+
+        // ── 3. Fetch Active PT Quota Remaining Sessions (Batas Solusi A: Maksimal <= 2 Sesi) ───
+        $activeRemainingSessions = (int) $user->ptQuotas()
+            ->where('status', 'active')
+            ->where('remaining_sessions', '>', 0)
+            ->whereDate('end_date', '>=', $today->toDateString())
+            ->sum('remaining_sessions');
+
+        $isQuotaThresholdBlocked = $activeRemainingSessions > 2;
+
+        // ── 4. Fetch Active PT Packages & Evaluate Eligibility by Min Membership Days & Quota Threshold ───
         $allPackages = PtPackage::where('status', 'active')
             ->orderBy('pt_session_count')
             ->get();
 
-        // Hanya tampilkan paket yang nilai min_membership_days-nya terpenuhi oleh sisa hari membership Member
-        $packages = $allPackages->filter(function ($pkg) use ($activeMembership, $remainingDays) {
-            $minDays = (int) $pkg->min_membership_days;
-            if ($minDays === 0) {
-                return true;
-            }
+        // Tampilkan semua paket dan tandai status kelayakannya secara dinamis
+        $packages = $allPackages->map(function ($pkg) use ($activeMembership, $remainingDays, $isQuotaThresholdBlocked, $activeRemainingSessions) {
+            $minDays = (int) ($pkg->validity_days ?? 30);
+            $validityDays = $minDays;
 
-            return $activeMembership && ($remainingDays >= $minDays);
-        })->values();
+            $isMinDaysSatisfied = ($minDays === 0 && $activeMembership) || ($activeMembership && $remainingDays >= $minDays);
+            $isEligible = $isMinDaysSatisfied && ! $isQuotaThresholdBlocked;
 
-        $hasHiddenPackages = $allPackages->count() > $packages->count();
+            $disabledLabel = ! $activeMembership
+                ? 'Wajib Membership Aktif'
+                : ($isQuotaThresholdBlocked
+                    ? "Sisa Kuota Masih {$activeRemainingSessions} Sesi"
+                    : ($minDays > 0 ? "Min. Membership {$minDays} Hari" : ''));
+
+            $disabledTitle = ! $activeMembership
+                ? 'Anda wajib memiliki membership aktif untuk membeli paket personal trainer.'
+                : ($isQuotaThresholdBlocked
+                    ? "Pembelian paket PT baru hanya dapat dilakukan saat sisa kuota Anda maksimal 2 sesi (Sisa kuota aktif saat ini: {$activeRemainingSessions} sesi)."
+                    : ($minDays > 0 ? "Masa aktif membership Anda ({$remainingDays} hari) kurang dari syarat minimum ({$minDays} hari)." : ''));
+
+            $pkg->min_days = $minDays;
+            $pkg->validity_days = $validityDays;
+            $pkg->disabled_label = $disabledLabel;
+            $pkg->disabled_title = $disabledTitle;
+            $pkg->is_membership_extension_needed = false;
+            $pkg->is_eligible = (bool) $isEligible;
+
+            return $pkg;
+        });
+
+        $eligiblePackagesCount = $packages->where('is_eligible', true)->count();
+        $hasHiddenPackages = false;
+        $noEligiblePackages = $packages->isNotEmpty() && $eligiblePackagesCount === 0;
 
         $banks = Bank::where('status', 'active')
             ->orderBy('name')
             ->get();
 
-        // ── 3. Fetch Member's Existing Quotas ────────────────────────────────
+        // ── 5. Fetch Member's Existing Quotas ────────────────────────────────
         $myQuotas = $user->ptQuotas()
-            ->with('ptPackage')
+            ->with(['ptPackage', 'trainer.trainerProfile'])
             ->latest()
             ->get();
+
+        $currentTrainer = $user->getCurrentPtTrainer();
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -93,32 +141,45 @@ class PtPackagePurchaseController extends Controller
                 'remaining_days' => $remainingDays,
                 'packages' => $packages,
                 'has_hidden_packages' => $hasHiddenPackages,
+                'no_eligible_packages' => $noEligiblePackages,
                 'banks' => $banks,
                 'my_quotas' => $myQuotas,
+                'active_remaining_sessions' => $activeRemainingSessions,
+                'is_quota_threshold_blocked' => $isQuotaThresholdBlocked,
+                'current_trainer' => $currentTrainer ? [
+                    'id' => $currentTrainer->id,
+                    'name' => $currentTrainer->name,
+                    'specialization' => $currentTrainer->trainerProfile?->specialization ?? 'Personal Trainer',
+                    'photo' => $currentTrainer->avatar_url,
+                ] : null,
             ]);
         }
 
         // Data default 8 paket sesuai Figma
         $defaultPackages = [
-            ['id' => 'pkg-4', 'name' => 'PT 4 Sesi', 'sessions' => 4, 'price' => 1155000, 'original_price' => 1443750, 'per_session' => 288750, 'is_popular' => false],
-            ['id' => 'pkg-8', 'name' => 'PT 8 Sesi', 'sessions' => 8, 'price' => 2072700, 'original_price' => 2590875, 'per_session' => 259088, 'is_popular' => false],
-            ['id' => 'pkg-16', 'name' => 'PT 16 Sesi', 'sessions' => 16, 'price' => 3582000, 'original_price' => 4515000, 'per_session' => 223875, 'is_popular' => true],
-            ['id' => 'pkg-24', 'name' => 'PT 24 Sesi', 'sessions' => 24, 'price' => 5040000, 'original_price' => 6300000, 'per_session' => 210000, 'is_popular' => false],
-            ['id' => 'pkg-36', 'name' => 'PT 36 Sesi', 'sessions' => 36, 'price' => 6804000, 'original_price' => 8505000, 'per_session' => 189000, 'is_popular' => false],
-            ['id' => 'pkg-48', 'name' => 'PT 48 Sesi', 'sessions' => 48, 'price' => 8316000, 'original_price' => 10395000, 'per_session' => 173250, 'is_popular' => false],
-            ['id' => 'pkg-72', 'name' => 'PT 72 Sesi', 'sessions' => 72, 'price' => 12168000, 'original_price' => 15210000, 'per_session' => 169000, 'is_popular' => false],
-            ['id' => 'pkg-96', 'name' => 'PT 96 Sesi', 'sessions' => 96, 'price' => 15840000, 'original_price' => 19800000, 'per_session' => 165000, 'is_popular' => false],
+            ['id' => 'pkg-4', 'name' => 'PT 4 Sesi', 'sessions' => 4, 'price' => 1155000, 'original_price' => 1443750, 'per_session' => 288750, 'is_popular' => false, 'min_days' => 0, 'is_eligible' => true],
+            ['id' => 'pkg-8', 'name' => 'PT 8 Sesi', 'sessions' => 8, 'price' => 2072700, 'original_price' => 2590875, 'per_session' => 259088, 'is_popular' => false, 'min_days' => 0, 'is_eligible' => true],
+            ['id' => 'pkg-16', 'name' => 'PT 16 Sesi', 'sessions' => 16, 'price' => 3582000, 'original_price' => 4515000, 'per_session' => 223875, 'is_popular' => true, 'min_days' => 0, 'is_eligible' => true],
+            ['id' => 'pkg-24', 'name' => 'PT 24 Sesi', 'sessions' => 24, 'price' => 5040000, 'original_price' => 6300000, 'per_session' => 210000, 'is_popular' => false, 'min_days' => 0, 'is_eligible' => true],
+            ['id' => 'pkg-36', 'name' => 'PT 36 Sesi', 'sessions' => 36, 'price' => 6804000, 'original_price' => 8505000, 'per_session' => 189000, 'is_popular' => false, 'min_days' => 0, 'is_eligible' => true],
+            ['id' => 'pkg-48', 'name' => 'PT 48 Sesi', 'sessions' => 48, 'price' => 8316000, 'original_price' => 10395000, 'per_session' => 173250, 'is_popular' => false, 'min_days' => 0, 'is_eligible' => true],
+            ['id' => 'pkg-72', 'name' => 'PT 72 Sesi', 'sessions' => 72, 'price' => 12168000, 'original_price' => 15210000, 'per_session' => 169000, 'is_popular' => false, 'min_days' => 0, 'is_eligible' => true],
+            ['id' => 'pkg-96', 'name' => 'PT 96 Sesi', 'sessions' => 96, 'price' => 15840000, 'original_price' => 19800000, 'per_session' => 165000, 'is_popular' => false, 'min_days' => 0, 'is_eligible' => true],
         ];
 
         return view('member.pt-packages', compact(
             'packages',
             'allPackages',
             'hasHiddenPackages',
+            'noEligiblePackages',
             'banks',
             'activeMembership',
             'remainingDays',
             'myQuotas',
-            'defaultPackages'
+            'defaultPackages',
+            'currentTrainer',
+            'activeRemainingSessions',
+            'isQuotaThresholdBlocked'
         ));
     }
 
@@ -127,78 +188,88 @@ class PtPackagePurchaseController extends Controller
      */
     public function selectTrainer(Request $request): View|RedirectResponse
     {
+        $user = $request->user();
         $packageId = $request->query('package_id');
         $sessionCount = (int) $request->query('sessions', 12);
+
+        // Batas Solusi A: Kuota aktif harus <= 2 sesi
+        $activeRemainingSessions = (int) $user->ptQuotas()
+            ->where('status', 'active')
+            ->where('remaining_sessions', '>', 0)
+            ->whereDate('end_date', '>=', now('Asia/Jakarta')->startOfDay()->toDateString())
+            ->sum('remaining_sessions');
+
+        if ($activeRemainingSessions > 2) {
+            $targetRoute = ($request->is('m/*') || $request->routeIs('mobile.*'))
+                ? 'mobile.member.pt-packages.index'
+                : 'member.pt-packages.index';
+
+            return redirect()->route($targetRoute)
+                ->with('error', "Pembelian paket PT baru hanya dapat dilakukan saat sisa kuota Anda maksimal 2 sesi. Anda saat ini masih memiliki {$activeRemainingSessions} sesi aktif.");
+        }
 
         $selectedPackage = null;
         if ($packageId && is_numeric($packageId)) {
             $selectedPackage = PtPackage::find($packageId);
-            if ($selectedPackage && $selectedPackage->status !== 'active') {
-                return redirect()->route('member.pt-packages.index')
-                    ->with('error', 'Paket PT yang dipilih sedang tidak aktif dan tidak dapat dipilih.');
+            if ($selectedPackage) {
+                if ($selectedPackage->status !== 'active') {
+                    return redirect()->route('member.pt-packages.index')
+                        ->with('error', 'Paket PT yang dipilih sedang tidak aktif dan tidak dapat dipilih.');
+                }
+
+                $eligibilityError = $this->validatePtPackageEligibility($request->user(), $selectedPackage);
+                if ($eligibilityError) {
+                    $targetRoute = ($request->is('m/*') || $request->routeIs('mobile.*'))
+                        ? 'mobile.member.pt-packages.index'
+                        : 'member.pt-packages.index';
+
+                    return redirect()->route($targetRoute)->with('error', $eligibilityError);
+                }
             }
         }
 
-        // 4 Trainer sesuai Figma
-        $trainers = [
-            [
-                'id' => 1,
-                'name' => 'Coach Rama Prasetya',
-                'title' => 'Coach Rama Prasetya, CSCS',
-                'specialization' => 'Hypertrophy & Strength Conditioning',
-                'photo' => asset('images/trainers/coach-rama.jpg'),
-                'is_active_highlight' => true,
-            ],
-            [
-                'id' => 2,
-                'name' => 'Coach Sarah Jenkins',
-                'title' => 'Coach Sarah Jenkins, CPT',
-                'specialization' => 'Fat Loss & Functional Mobility',
-                'photo' => asset('images/trainers/coach-sarah.jpg'),
-                'is_active_highlight' => false,
-            ],
-            [
-                'id' => 3,
-                'name' => 'Coach Dimas Pratama',
-                'title' => 'Coach Dimas Pratama, CSCS',
-                'specialization' => 'Powerlifting & Athletic Performance',
-                'photo' => asset('images/trainers/coach-dimas.jpg'),
-                'is_active_highlight' => false,
-            ],
-            [
-                'id' => 4,
-                'name' => 'Coach Maya Anindita',
-                'title' => 'Coach Maya Anindita, RYT',
-                'specialization' => 'Calisthenics, Yoga & Flexibility',
-                'photo' => asset('images/trainers/coach-maya.jpg'),
-                'is_active_highlight' => false,
-            ],
-        ];
-
+        // Ambil daftar pelatih aktif langsung dari database
         $dbTrainers = User::where('role', 'trainer')
+            ->where('status', 'active')
+            ->whereHas('trainerProfile')
             ->with(['trainerProfile'])
-            ->get()
-            ->keyBy('id');
+            ->get();
 
-        foreach ($trainers as &$trainerItem) {
-            $dbTrainer = $dbTrainers->get($trainerItem['id']);
-            if ($dbTrainer) {
-                $summary = $dbTrainer->getWorkingScheduleSummary();
-            } else {
-                $summary = [
-                    'days_label' => 'Senin – Sabtu',
-                    'periods' => ['morning', 'afternoon', 'evening'],
-                    'periods_label' => 'Pagi – Malam',
-                    'has_custom_schedule' => false,
+        if ($dbTrainers->isEmpty()) {
+            $trainers = [
+                ['id' => 1, 'name' => 'Coach Rama Prasetya', 'title' => 'Coach Rama Prasetya, CSCS', 'specialization' => 'Hypertrophy & Strength Conditioning', 'photo' => asset('images/trainers/coach-rama.jpg'), 'is_active_highlight' => true, 'days_label' => 'Senin – Sabtu', 'periods' => ['morning', 'afternoon', 'evening'], 'periods_label' => 'Pagi – Malam', 'experience' => 8, 'bio' => 'Head Coach dengan spesialisasi hipertrofi dan kekuatan atletik tingkat lanjut.'],
+                ['id' => 2, 'name' => 'Coach Sarah Jenkins', 'title' => 'Coach Sarah Jenkins, CPT', 'specialization' => 'Fat Loss & Functional Mobility', 'photo' => asset('images/trainers/coach-sarah.jpg'), 'is_active_highlight' => false, 'days_label' => 'Senin – Sabtu', 'periods' => ['morning', 'afternoon'], 'periods_label' => 'Pagi – Siang', 'experience' => 5, 'bio' => 'Spesialis penurunan lemak tubuh, mobilitas fungsional, dan program pasca cedera.'],
+                ['id' => 3, 'name' => 'Coach Dimas Pratama', 'title' => 'Coach Dimas Pratama, CSCS', 'specialization' => 'Powerlifting & Athletic Performance', 'photo' => asset('images/trainers/coach-dimas.jpg'), 'is_active_highlight' => false, 'days_label' => 'Senin – Sabtu', 'periods' => ['afternoon', 'evening'], 'periods_label' => 'Siang – Malam', 'experience' => 6, 'bio' => 'Fokus pada teknik powerlifting presisi, performa daya ledak, dan kekuatan maksimal.'],
+                ['id' => 4, 'name' => 'Coach Maya Anindita', 'title' => 'Coach Maya Anindita, RYT', 'specialization' => 'Calisthenics, Yoga & Flexibility', 'photo' => asset('images/trainers/coach-maya.jpg'), 'is_active_highlight' => false, 'days_label' => 'Senin – Sabtu', 'periods' => ['morning', 'afternoon', 'evening'], 'periods_label' => 'Pagi – Malam', 'experience' => 4, 'bio' => 'Pendampingan fleksibilitas, calisthenics, keseimbangan tubuh, dan teknik yoga dinamis.'],
+            ];
+        } else {
+            $trainers = $dbTrainers->map(function ($trainer, $index) {
+                $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $trainer->name)))[0]);
+                $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
+                    ? asset("images/trainers/coach-{$cFirstName}.jpg")
+                    : ($trainer->trainerProfile?->photo_path ? asset('storage/'.$trainer->trainerProfile->photo_path) : ($trainer->avatar_url ?? null));
+
+                $summary = $trainer->getWorkingScheduleSummary();
+
+                return [
+                    'id' => $trainer->id,
+                    'name' => $trainer->name,
+                    'title' => $trainer->name,
+                    'specialization' => $trainer->trainerProfile?->specialization ?? 'Personal Trainer',
+                    'photo' => $cPhoto,
+                    'is_active_highlight' => $index === 0,
+                    'days_label' => $summary['days_label'],
+                    'periods' => $summary['periods'],
+                    'periods_label' => $summary['periods_label'],
+                    'experience' => $trainer->trainerProfile?->experience ?? 1,
+                    'bio' => $trainer->trainerProfile?->bio ?? 'Berpengalaman mendampingi member mencapai target kebugaran dan kekuatan atletik secara optimal.',
                 ];
-            }
-            $trainerItem['days_label'] = $summary['days_label'];
-            $trainerItem['periods'] = $summary['periods'];
-            $trainerItem['periods_label'] = $summary['periods_label'];
+            })->values()->all();
         }
-        unset($trainerItem);
 
-        return view('member.pt-select-trainer', compact('trainers', 'packageId', 'sessionCount', 'selectedPackage'));
+        $currentTrainer = $request->user()?->getCurrentPtTrainer();
+
+        return view('member.pt-select-trainer', compact('trainers', 'packageId', 'sessionCount', 'selectedPackage', 'currentTrainer'));
     }
 
     /**
@@ -206,23 +277,62 @@ class PtPackagePurchaseController extends Controller
      */
     public function checkout(Request $request): View|RedirectResponse
     {
+        $user = $request->user();
         $packageId = $request->query('package_id');
-        $trainerId = (int) $request->query('trainer_id', 1);
+        $trainerId = (int) $request->query('trainer_id');
+        $currentTrainer = $user?->getCurrentPtTrainer();
 
-        $trainers = [
-            1 => 'Coach Rama Prasetya',
-            2 => 'Coach Sarah Jenkins',
-            3 => 'Coach Dimas Pratama',
-            4 => 'Coach Maya Anindita',
-        ];
-        $selectedTrainerName = $trainers[$trainerId] ?? 'Coach Rama Prasetya';
+        // Batas Solusi A: Kuota aktif harus <= 2 sesi
+        $activeRemainingSessions = (int) $user->ptQuotas()
+            ->where('status', 'active')
+            ->where('remaining_sessions', '>', 0)
+            ->whereDate('end_date', '>=', now('Asia/Jakarta')->startOfDay()->toDateString())
+            ->sum('remaining_sessions');
+
+        if ($activeRemainingSessions > 2) {
+            $targetRoute = ($request->is('m/*') || $request->routeIs('mobile.*'))
+                ? 'mobile.member.pt-packages.index'
+                : 'member.pt-packages.index';
+
+            return redirect()->route($targetRoute)
+                ->with('error', "Pembelian paket PT baru hanya dapat dilakukan saat sisa kuota Anda maksimal 2 sesi. Anda saat ini masih memiliki {$activeRemainingSessions} sesi aktif.");
+        }
+
+        // Jika trainer_id tidak disertakan tetapi member sudah punya trainer, gunakan currentTrainer
+        if ($trainerId <= 0 && $currentTrainer) {
+            $trainerId = $currentTrainer->id;
+        }
+
+        $trainer = null;
+        if ($trainerId > 0) {
+            $trainer = User::where('role', 'trainer')->where('id', $trainerId)->first();
+        }
+
+        if (! $trainer) {
+            $trainer = $currentTrainer
+                ?? User::where('role', 'trainer')->where('email', 'rama@gym.test')->first()
+                ?? User::where('role', 'trainer')->first();
+        }
+        $selectedTrainerName = $trainer?->name ?? 'Coach Rama Prasetya';
+        $trainerId = $trainer?->id ?? 1;
 
         $selectedPackage = null;
         if ($packageId && is_numeric($packageId)) {
             $selectedPackage = PtPackage::find($packageId);
-            if ($selectedPackage && $selectedPackage->status !== 'active') {
-                return redirect()->route('member.pt-packages.index')
-                    ->with('error', 'Paket PT yang dipilih sedang tidak aktif dan tidak dapat dibeli.');
+            if ($selectedPackage) {
+                if ($selectedPackage->status !== 'active') {
+                    return redirect()->route('member.pt-packages.index')
+                        ->with('error', 'Paket PT yang dipilih sedang tidak aktif dan tidak dapat dibeli.');
+                }
+
+                $eligibilityError = $this->validatePtPackageEligibility($request->user(), $selectedPackage);
+                if ($eligibilityError) {
+                    $targetRoute = ($request->is('m/*') || $request->routeIs('mobile.*'))
+                        ? 'mobile.member.pt-packages.index'
+                        : 'member.pt-packages.index';
+
+                    return redirect()->route($targetRoute)->with('error', $eligibilityError);
+                }
             }
         }
 
@@ -252,7 +362,8 @@ class PtPackagePurchaseController extends Controller
             'subtotal',
             'uniqueCode',
             'totalAmount',
-            'banks'
+            'banks',
+            'currentTrainer'
         ));
     }
 
@@ -266,16 +377,49 @@ class PtPackagePurchaseController extends Controller
         ]);
 
         $user = $request->user();
+
+        // Batas Solusi A: Kuota aktif harus <= 2 sesi
+        $activeRemainingSessions = (int) $user->ptQuotas()
+            ->where('status', 'active')
+            ->where('remaining_sessions', '>', 0)
+            ->whereDate('end_date', '>=', now('Asia/Jakarta')->startOfDay()->toDateString())
+            ->sum('remaining_sessions');
+
+        if ($activeRemainingSessions > 2) {
+            $targetRoute = ($request->routeIs('mobile.*') || str_contains(url()->previous(), '/m/'))
+                ? 'mobile.member.pt-packages.index'
+                : 'member.pt-packages.index';
+
+            return redirect()->route($targetRoute)
+                ->with('error', "Pembelian paket PT baru hanya dapat dilakukan saat sisa kuota Anda maksimal 2 sesi. Anda saat ini masih memiliki {$activeRemainingSessions} sesi aktif.");
+        }
+
         $packageId = $request->input('package_id');
-        $trainerId = $request->input('trainer_id', 1);
+        $trainerInputId = (int) $request->input('trainer_id', 1);
         $bankId = $request->input('bank_id');
+
+        $selectedTrainer = User::where('role', 'trainer')->where('id', $trainerInputId)->first()
+            ?? User::where('role', 'trainer')->where('email', 'rama@gym.test')->first()
+            ?? User::where('role', 'trainer')->first();
+        $trainerId = $selectedTrainer?->id ?? $trainerInputId;
 
         $ptPackage = null;
         if ($packageId && is_numeric($packageId)) {
             $ptPackage = PtPackage::find($packageId);
-            if ($ptPackage && $ptPackage->status !== 'active') {
-                return redirect()->route('member.pt-packages.index')
-                    ->with('error', 'Paket PT yang dipilih sedang tidak aktif dan tidak dapat dibeli.');
+            if ($ptPackage) {
+                if ($ptPackage->status !== 'active') {
+                    return redirect()->route('member.pt-packages.index')
+                        ->with('error', 'Paket PT yang dipilih sedang tidak aktif dan tidak dapat dibeli.');
+                }
+
+                $eligibilityError = $this->validatePtPackageEligibility($user, $ptPackage);
+                if ($eligibilityError) {
+                    $targetRoute = ($request->routeIs('mobile.*') || str_contains(url()->previous(), '/m/'))
+                        ? 'mobile.member.pt-packages.index'
+                        : 'member.pt-packages.index';
+
+                    return redirect()->route($targetRoute)->with('error', $eligibilityError);
+                }
             }
         }
 
@@ -340,14 +484,12 @@ class PtPackagePurchaseController extends Controller
         }
 
         $orderNumber = $payment?->invoice_id ?? ($payment ? ('#PT-'.date('Y').'-'.str_pad($payment->id, 4, '0', STR_PAD_LEFT)) : '#PT-2024-8849');
-        $trainerId = (int) $request->query('trainer_id', 1);
-        $trainers = [
-            1 => 'Coach Rama Prasetya',
-            2 => 'Coach Sarah Jenkins',
-            3 => 'Coach Dimas Pratama',
-            4 => 'Coach Maya Anindita',
-        ];
-        $trainerName = $trainers[$trainerId] ?? 'Coach Rama Prasetya';
+        $trainerId = (int) $request->query('trainer_id', $payment?->trainer_id ?? 0);
+        $trainer = User::where('role', 'trainer')->where('id', $trainerId)->first()
+            ?? ($payment?->trainer_id ? User::find($payment->trainer_id) : null)
+            ?? User::where('role', 'trainer')->where('email', 'rama@gym.test')->first()
+            ?? User::where('role', 'trainer')->first();
+        $trainerName = $trainer?->name ?? 'Coach Rama Prasetya';
 
         $packageName = $payment?->ptPackage?->name ?? 'Paket Performance Pro';
         $packageSubtext = '12 Sesi Pelatihan Terstruktur + Monitoring InBody Bulanan';
@@ -388,15 +530,23 @@ class PtPackagePurchaseController extends Controller
     public function submitPaymentProof(Request $request, $paymentId = null): RedirectResponse
     {
         $request->validate([
-            'proof_image' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+            'proof_image' => ['required', 'file', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
             'sender_name' => ['required', 'string', 'max:255'],
-            'sender_bank' => ['required', 'string', 'max:255'],
+            'sender_bank' => ['nullable', 'string', 'max:255'],
+        ], [
+            'proof_image.required' => 'Foto atau berkas bukti transfer wajib diunggah.',
+            'proof_image.image' => 'Berkas bukti pembayaran harus berupa gambar.',
+            'proof_image.mimes' => 'Format berkas bukti pembayaran harus berupa JPG, JPEG, PNG, atau WEBP.',
+            'proof_image.max' => 'Ukuran berkas bukti pembayaran maksimal 2 MB.',
+            'sender_name.required' => 'Nama pengirim / pemilik rekening wajib diisi.',
         ]);
 
         $file = $request->file('proof_image');
         $proofPath = $file ? $file->store('payment-proofs', 'public') : null;
         $proofUrl = $proofPath ? Storage::url($proofPath) : null;
-        $bankSender = $request->input('sender_name').' ('.$request->input('sender_bank').')';
+        $bankSender = $request->filled('sender_bank')
+            ? $request->input('sender_name').' ('.$request->input('sender_bank').')'
+            : $request->input('sender_name');
 
         $payment = null;
         if ($paymentId && is_numeric($paymentId)) {
@@ -416,11 +566,22 @@ class PtPackagePurchaseController extends Controller
             }
         }
 
-        $targetRoute = ($request->routeIs('mobile.*') || str_contains(url()->previous(), '/m/'))
+        $isMobile = ($request->routeIs('mobile.*') || str_contains(url()->previous(), '/m/'));
+
+        if ($payment) {
+            $targetRoute = $isMobile
+                ? 'mobile.member.packages.payment-status'
+                : 'member.membership.payment-status';
+
+            return redirect()->route($targetRoute, $payment->id)
+                ->with('success', 'Bukti pembayaran berhasil diunggah! Tim finance akan memverifikasi dalam 1×24 jam.');
+        }
+
+        $fallbackRoute = $isMobile
             ? 'mobile.member.pt-packages.index'
             : 'member.pt-packages.index';
 
-        return redirect()->route($targetRoute)
+        return redirect()->route($fallbackRoute)
             ->with('success', 'Bukti pembayaran berhasil diunggah! Tim finance akan memverifikasi dalam 1×24 jam.');
     }
 
@@ -461,6 +622,26 @@ class PtPackagePurchaseController extends Controller
             return back()->with('error', $msg);
         }
 
+        // ── 2b. Validate PT Eligibility (Maksimal sisa kuota <= 2 sesi) ───────
+        $today = now('Asia/Jakarta')->startOfDay();
+        $activeRemainingSessions = (int) $user->ptQuotas()
+            ->where('status', 'active')
+            ->where('remaining_sessions', '>', 0)
+            ->whereDate('end_date', '>=', $today->toDateString())
+            ->sum('remaining_sessions');
+
+        if ($activeRemainingSessions > 2) {
+            $msg = "Pembelian paket PT baru hanya dapat dilakukan saat sisa kuota Anda maksimal 2 sesi. Anda saat ini masih memiliki {$activeRemainingSessions} sesi aktif.";
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $msg,
+                ], 422);
+            }
+
+            return back()->with('error', $msg);
+        }
+
         // ── 3. Validate Minimum Membership Days (Aturan Bisnis Project) ────────
         $today = now('Asia/Jakarta')->startOfDay();
 
@@ -487,11 +668,15 @@ class PtPackagePurchaseController extends Controller
 
         $remainingDays = 0;
         if ($activeMembership) {
-            $endDate = Carbon::parse($activeMembership->end_date)->startOfDay();
-            $remainingDays = (int) $today->diffInDays($endDate, false);
+            $maxEndDate = $user->memberships()
+                ->where('status', 'active')
+                ->where('end_date', '>=', $today->toDateString())
+                ->max('end_date') ?? $activeMembership->end_date;
+            $endDate = Carbon::parse($maxEndDate)->startOfDay();
+            $remainingDays = max(0, (int) $today->diffInDays($endDate, false) + 1);
         }
 
-        $minDays = (int) $ptPackage->min_membership_days;
+        $minDays = (int) ($ptPackage->validity_days ?? 30);
 
         if ($minDays > 0) {
             if (! $activeMembership) {
@@ -570,6 +755,7 @@ class PtPackagePurchaseController extends Controller
                 'member_id' => $user->id,
                 'membership_id' => $activeMembership?->id,
                 'pt_package_id' => $ptPackage->id,
+                'trainer_id' => $payment->trainer_id,
                 'source' => 'purchase',
                 'total_sessions' => $ptPackage->pt_session_count,
                 'used_sessions' => 0,
@@ -595,5 +781,49 @@ class PtPackagePurchaseController extends Controller
         }
 
         return back()->with('success', $successMessage);
+    }
+
+    /**
+     * Memvalidasi apakah member memenuhi syarat masa aktif membership (validity_days) dan batas kuota sesi PT (Solusi A: Sisa <= 2 Sesi).
+     */
+    private function validatePtPackageEligibility(User $user, PtPackage $package): ?string
+    {
+        $today = now('Asia/Jakarta')->startOfDay();
+
+        // 1. Validasi Batas Kuota Sesi Aktif (Solusi A: Pembelian baru hanya diperbolehkan jika sisa kuota <= 2 sesi)
+        $activeRemainingSessions = (int) $user->ptQuotas()
+            ->where('status', 'active')
+            ->where('remaining_sessions', '>', 0)
+            ->whereDate('end_date', '>=', $today->toDateString())
+            ->sum('remaining_sessions');
+
+        if ($activeRemainingSessions > 2) {
+            return "Pembelian paket PT baru hanya dapat dilakukan saat sisa kuota Anda maksimal 2 sesi. Anda saat ini masih memiliki {$activeRemainingSessions} sesi aktif.";
+        }
+
+        $activeMembership = $user->memberships()
+            ->where('status', 'active')
+            ->where('start_date', '<=', $today->toDateString())
+            ->where('end_date', '>=', $today->toDateString())
+            ->latest('end_date')
+            ->first();
+
+        $maxEndDate = $user->memberships()
+            ->where('status', 'active')
+            ->where('end_date', '>=', $today->toDateString())
+            ->max('end_date') ?? $activeMembership?->end_date;
+
+        $remainingDays = $activeMembership ? max(0, (int) $today->diffInDays(Carbon::parse($maxEndDate)->startOfDay(), false) + 1) : 0;
+        $minDays = (int) ($package->validity_days ?? 30);
+
+        if (! $activeMembership) {
+            return 'Anda wajib memiliki membership aktif untuk mengambil paket personal trainer.';
+        }
+
+        if ($minDays > 0 && $remainingDays < $minDays) {
+            return "Masa aktif membership Anda ({$remainingDays} hari) tidak mencukupi untuk paket ini (Min. {$minDays} hari).";
+        }
+
+        return null;
     }
 }

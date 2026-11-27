@@ -6,31 +6,37 @@ LAYOUT: layouts.mobile-app
 TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #565A66)
 --}}
 
-<x-layouts.mobile-app title="Profil Saya - FitCore Athletic" active-tab="profile">
-    <div class="space-y-4" x-data="{ activeTab: 'contact', showLogoutModal: false }">
+@php
+    $isPasswordTab = request('tab') === 'password';
+@endphp
+
+<x-layouts.mobile-app :title="($isPasswordTab ? 'Ganti Kata Sandi' : 'Profil Saya') . ' - FitCore Athletic'" active-tab="profile">
+    <div class="space-y-4">
 
         <!-- 1. Header Navigasi Atas -->
         <div class="flex items-center justify-between pb-1">
             <div class="flex items-center gap-3">
-                <a href="{{ route('mobile.member.dashboard') }}"
+                <a href="{{ $isPasswordTab ? route('mobile.member.profile.index') : route('mobile.member.dashboard') }}"
                    class="w-9 h-9 rounded-full bg-white border border-[#E5E7EB] flex items-center justify-center text-[#16151A] hover:bg-gray-50 transition shadow-2xs">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
                 </a>
                 <div>
-                    <h1 class="text-xl font-black font-poppins text-[#16151A] tracking-tight">Profil Saya</h1>
-                    <p class="text-[11px] font-semibold text-[#565A66]">Kelola akun & preferensi latihanmu</p>
+                    <h1 class="text-xl font-black font-poppins text-[#16151A] tracking-tight">{{ $isPasswordTab ? 'Ganti Kata Sandi' : 'Profil Saya' }}</h1>
+                    <p class="text-[11px] font-semibold text-[#565A66]">{{ $isPasswordTab ? 'Amankan akun Anda dengan kata sandi baru' : 'Kelola akun & preferensi latihanmu' }}</p>
                 </div>
             </div>
 
-            <a href="{{ route('mobile.member.card') }}"
-               class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-50 text-[#FF5722] border border-orange-200 hover:bg-orange-100 transition">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                </svg>
-                <span>Kartu QR</span>
-            </a>
+            @if (!$isPasswordTab)
+                <a href="{{ route('mobile.member.card') }}"
+                   class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-50 text-[#FF5722] border border-orange-200 hover:bg-orange-100 transition">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                    <span>Kartu QR</span>
+                </a>
+            @endif
         </div>
 
         <!-- 2. Flash Status Notifications -->
@@ -83,6 +89,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             </div>
         @endif
 
+        @if (!$isPasswordTab)
         <!-- 3. Kartu Identitas Pengguna Utama -->
         <div class="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] relative overflow-hidden">
             <div class="flex items-center gap-4">
@@ -139,7 +146,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                         </div>
                         <div class="text-right">
                             <span class="text-[10px] uppercase font-bold tracking-wider text-[#565A66] block">Berlaku Hingga</span>
-                            <span class="font-bold text-[#FF5722]">{{ \Carbon\Carbon::parse($activeMembership->end_date)->translatedFormat('d M Y') }}</span>
+                            <span class="font-bold text-[#FF5722]">{{ \Carbon\Carbon::parse($maxEndDate ?? $activeMembership->end_date)->translatedFormat('d M Y') }}</span>
                         </div>
                     </div>
                 @else
@@ -157,32 +164,8 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             </div>
         </div>
 
-        <!-- 4. Tab Switcher Sub-Menu -->
-        <div class="flex rounded-xl bg-gray-200/80 p-1 text-xs font-bold font-inter">
-            <button type="button"
-                    @click="activeTab = 'contact'"
-                    :class="activeTab === 'contact' ? 'bg-white text-[#16151A] shadow-xs' : 'text-[#565A66] hover:text-[#16151A]'"
-                    class="flex-1 py-2 text-center rounded-lg transition">
-                Kontak & Profil
-            </button>
-            <button type="button"
-                    @click="activeTab = 'password'"
-                    :class="activeTab === 'password' ? 'bg-white text-[#16151A] shadow-xs' : 'text-[#565A66] hover:text-[#16151A]'"
-                    class="flex-1 py-2 text-center rounded-lg transition">
-                Ubah Sandi
-            </button>
-            <button type="button"
-                    @click="activeTab = 'services'"
-                    :class="activeTab === 'services' ? 'bg-white text-[#16151A] shadow-xs' : 'text-[#565A66] hover:text-[#16151A]'"
-                    class="flex-1 py-2 text-center rounded-lg transition">
-                Pintasan & Layanan
-            </button>
-        </div>
-
-        <!-- 5. Tab Panels -->
-        
-        <!-- Panel 1: Update Profil & Informasi Kontak -->
-        <div x-show="activeTab === 'contact'" x-cloak class="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-4">
+        <!-- Update Profil & Informasi Kontak -->
+        <div class="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-4">
             <div class="border-b border-[#E5E7EB] pb-3">
                 <h3 class="font-poppins font-extrabold text-sm text-[#16151A]">Edit Informasi Akun</h3>
                 <p class="text-[11px] text-[#565A66]">Pastikan nama dan email Anda selalu valid.</p>
@@ -354,8 +337,9 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             </form>
         </div>
 
-        <!-- Panel 2: Ubah Kata Sandi -->
-        <div x-show="activeTab === 'password'" x-cloak class="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-4">
+        @else
+        <!-- 2. Ubah Kata Sandi -->
+        <div class="bg-white border border-[#E5E7EB] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-4">
             <div class="border-b border-[#E5E7EB] pb-3">
                 <h3 class="font-poppins font-extrabold text-sm text-[#16151A]">Perbarui Kata Sandi</h3>
                 <p class="text-[11px] text-[#565A66]">Gunakan kata sandi yang kuat dengan minimal 8 karakter.</p>
@@ -418,140 +402,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 </div>
             </form>
         </div>
-
-        <!-- Panel 3: Pintasan & Layanan Keanggotaan -->
-        <div x-show="activeTab === 'services'" x-cloak class="space-y-3">
-            <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] divide-y divide-[#E5E7EB]">
-                <!-- Link 1: Riwayat Transaksi -->
-                <a href="{{ route('mobile.member.riwayat-transaksi.index') }}" class="py-3 flex items-center justify-between group first:pt-0">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Riwayat Transaksi</span>
-                            <span class="text-[11px] text-[#565A66]">Cek status invoice dan bukti transfer</span>
-                        </div>
-                    </div>
-                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-
-                <!-- Link 2: Sesi Personal Trainer -->
-                <a href="{{ route('mobile.member.pt-sessions.index') }}" class="py-3 flex items-center justify-between group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Jadwal Sesi PT</span>
-                            <span class="text-[11px] text-[#565A66]">Daftar sesi latihan & riwayat booking</span>
-                        </div>
-                    </div>
-                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-
-                <!-- Link 3: Katalog Paket Gym -->
-                <a href="{{ route('mobile.packages.index') }}" class="py-3 flex items-center justify-between group">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Katalog Paket Gym</span>
-                            <span class="text-[11px] text-[#565A66]">Langganan paket keanggotaan baru</span>
-                        </div>
-                    </div>
-                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </a>
-
-                <!-- Link 4: Bantuan WhatsApp CS -->
-                <a href="https://wa.me/6281234567890?text=Halo%20Admin%20FitCore%20Gym,%20saya%20member%20memerlukan%20bantuan"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="py-3 flex items-center justify-between group last:pb-0">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="block text-xs font-bold text-[#16151A] group-hover:text-[#FF5722] transition">Pusat Bantuan & CS</span>
-                            <span class="text-[11px] text-[#565A66]">Hubungi WhatsApp customer support</span>
-                        </div>
-                    </div>
-                    <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 group-hover:text-[#FF5722] transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                </a>
-            </div>
-        </div>
-
-        <!-- 6. Card Keluar dari Akun (Logout) -->
-        <div class="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-[0_4px_12px_rgba(0,0,0,0.04)]">
-            <button type="button"
-                    @click="showLogoutModal = true"
-                    class="w-full py-2.5 px-4 rounded-full border border-red-200 bg-red-50/50 hover:bg-red-50 active:scale-[0.99] text-red-600 font-poppins font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                <span>Keluar dari Akun</span>
-            </button>
-        </div>
-
-        <!-- 7. Modal Konfirmasi Logout -->
-        <div x-show="showLogoutModal"
-             x-cloak
-             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs"
-             x-transition:enter="transition ease-out duration-200"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-150"
-             x-transition:leave-start="opacity-100"
-             x-transition:leave-end="opacity-0">
-
-            <div class="bg-white rounded-2xl max-w-xs w-full p-5 shadow-2xl border border-[#E5E7EB] text-center space-y-4"
-                 @click.away="showLogoutModal = false">
-                <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                </div>
-
-                <div>
-                    <h3 class="font-poppins font-extrabold text-base text-[#16151A]">Konfirmasi Keluar</h3>
-                    <p class="text-xs text-[#565A66] mt-1">Apakah Anda yakin ingin keluar dari aplikasi FitCore Gym?</p>
-                </div>
-
-                <div class="flex items-center gap-2 pt-1">
-                    <button type="button"
-                            @click="showLogoutModal = false"
-                            class="flex-1 py-2.5 rounded-full border border-[#E5E7EB] text-xs font-bold text-[#565A66] hover:bg-gray-50 transition">
-                        Batal
-                    </button>
-
-                    <form method="POST" action="{{ route('logout') }}" class="flex-1">
-                        @csrf
-                        <button type="submit"
-                                class="w-full py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold font-poppins transition shadow-sm">
-                            Ya, Keluar
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+        @endif
 
     </div>
 </x-layouts.mobile-app>

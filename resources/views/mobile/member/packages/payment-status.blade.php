@@ -85,14 +85,10 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 </div>
             </div>
 
-            <!-- Tombol Aksi Navigasi Mobile -->
-            <div class="pt-2 space-y-2">
-                <a href="{{ route('mobile.member.dashboard') }}"
-                   class="w-full block text-center py-3 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 transition">
-                    Kembali ke Beranda
-                </a>
+            <!-- Tombol Aksi Navigasi Mobile: Hanya 1 tombol ke Riwayat Transaksi -->
+            <div class="pt-2">
                 <a href="{{ route('mobile.member.riwayat-transaksi.index') }}"
-                   class="w-full block text-center py-3 rounded-full font-bold text-xs uppercase tracking-wider bg-white border border-[#E5E7EB] text-[#16151A] hover:bg-gray-50 transition">
+                   class="w-full block text-center py-3.5 rounded-full font-bold text-xs uppercase tracking-wider bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-md shadow-orange-500/25 transition">
                     Lihat Riwayat Transaksi
                 </a>
             </div>

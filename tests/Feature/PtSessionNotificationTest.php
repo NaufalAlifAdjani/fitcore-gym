@@ -45,7 +45,7 @@ class PtSessionNotificationTest extends TestCase
             'start_time' => '10:00',
         ]);
 
-        $response->assertRedirect(route('pt-sessions.index'));
+        $response->assertRedirectContains(route('pt-sessions.index'));
 
         Notification::assertSentTo(
             $trainer,
@@ -148,7 +148,7 @@ class PtSessionNotificationTest extends TestCase
             'reason' => $reason,
         ]);
 
-        $response->assertRedirect(route('pt-sessions.index'));
+        $response->assertRedirectContains(route('pt-sessions.index'));
 
         Notification::assertSentTo(
             $trainer,
@@ -282,7 +282,7 @@ class PtSessionNotificationTest extends TestCase
 
         $response = $this->actingAs($member)->post(route('notifications.read', $dbNotification->id));
 
-        $response->assertRedirect(route('pt-sessions.index'));
+        $response->assertRedirectContains(route('pt-sessions.index'));
         $this->assertEquals(0, $member->unreadNotifications()->count());
     }
 

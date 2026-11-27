@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
 use App\Models\User;
 use App\View\Components\PublicLayout;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,8 +30,26 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('layouts.public', PublicLayout::class);
         Blade::component('public-layout', PublicLayout::class);
 
-        Blade::component('layouts.public', PublicLayout::class);
-        Blade::component('public-layout', PublicLayout::class);
+        // Hydrate operational settings from database if available
+        if (Schema::hasTable('settings')) {
+            try {
+                $settings = Setting::all()->pluck('value', 'key');
+                if ($settings->has('change_deadline_hours')) {
+                    config(['pt_booking.change_deadline_hours' => (int) $settings->get('change_deadline_hours')]);
+                }
+                if ($settings->has('min_booking_notice_hours')) {
+                    config(['pt_booking.min_booking_notice_hours' => (int) $settings->get('min_booking_notice_hours')]);
+                }
+                if ($settings->has('session_duration_minutes')) {
+                    config(['pt_booking.session_duration_minutes' => (int) $settings->get('session_duration_minutes')]);
+                }
+                if ($settings->has('auto_cancel_pending_hours_before')) {
+                    config(['pt_booking.auto_cancel_pending_hours_before' => (int) $settings->get('auto_cancel_pending_hours_before')]);
+                }
+            } catch (\Throwable) {
+                // Ignore during pre-migration bootstrapping
+            }
+        }
 
         // Pure Laravel Native Authorization (Gates) - No third-party / Spatie
         // Roles

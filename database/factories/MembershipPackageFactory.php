@@ -18,8 +18,7 @@ class MembershipPackageFactory extends Factory
             'price' => fake()->randomElement([150000, 300000, 500000, 1000000]),
             'facilities' => [fake()->sentence()],
             'pt_session_count' => 0,
-            'pt_sessions' => 0,
-            'status' => 'active',
+            'is_active' => true,
         ];
     }
 }

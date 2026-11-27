@@ -41,7 +41,28 @@ class Index extends Component
 
     public function mount(): void
     {
-        $this->date = $this->date ?: now()->toDateString();
+        if (empty($this->date)) {
+            $memberId = Auth::id() ?? 1;
+            $currentMonthStart = now()->startOfMonth()->toDateString();
+            $currentMonthEnd = now()->endOfMonth()->toDateString();
+
+            $hasSessionThisMonth = PtSession::where('member_id', $memberId)
+                ->whereBetween('session_date', [$currentMonthStart, $currentMonthEnd])
+                ->exists();
+
+            if (! $hasSessionThisMonth) {
+                $nextSession = PtSession::where('member_id', $memberId)
+                    ->where('session_date', '>=', now()->toDateString())
+                    ->orderBy('session_date', 'asc')
+                    ->first();
+
+                $this->date = $nextSession
+                    ? Carbon::parse($nextSession->session_date)->toDateString()
+                    : now()->toDateString();
+            } else {
+                $this->date = now()->toDateString();
+            }
+        }
 
         if ($this->view === 'daily') {
             $this->view = 'day';
@@ -249,6 +270,17 @@ class Index extends Component
     }
 
     #[Computed]
+    public function nextUpcomingSession(): ?PtSession
+    {
+        return PtSession::with('trainer')
+            ->where('member_id', Auth::id() ?? 1)
+            ->where('session_date', '>=', now()->toDateString())
+            ->orderBy('session_date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->first();
+    }
+
+    #[Computed]
     public function tasksList()
     {
         $carbon = Carbon::parse($this->date);
@@ -276,7 +308,7 @@ class Index extends Component
             ->orderBy('session_date', 'asc')
             ->orderBy('start_time', 'asc')
             ->get()
-            ->groupBy(fn ($session) => Carbon::parse($session->session_date)->locale('id')->translatedFormat('D, d M'));
+            ->groupBy(fn ($session) => Carbon::parse($session->session_date)->locale('id')->translatedFormat('D, d M Y'));
     }
 
     #[Computed]

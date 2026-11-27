@@ -102,7 +102,7 @@
                 </nav>
             </div>
 
-            <!-- Bottom Footer (Bantuan & SOP, Keluar) -->
+            <!-- Bottom Footer (Bantuan & SOP) -->
             <div class="p-4">
                 <div class="rounded-2xl bg-gray-50 p-2 space-y-1">
                     <a href="#"
@@ -115,17 +115,6 @@
                         </svg>
                         <span>Bantuan & SOP</span>
                     </a>
-
-                    <button type="button" x-on:click="showLogoutModal = true"
-                        class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 font-inter text-xs font-semibold text-gray-700 transition hover:bg-rose-50 hover:text-[#FF5722] cursor-pointer">
-                        <svg class="h-4 w-4 shrink-0 text-gray-500 hover:text-[#FF5722]" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                            <polyline points="16 17 21 12 16 7" />
-                            <line x1="21" y1="12" x2="9" y2="12" />
-                        </svg>
-                        <span>Keluar</span>
-                    </button>
                 </div>
             </div>
         </aside>
@@ -150,22 +139,54 @@
                     <!-- Notification Bell & Dropdown -->
                     <x-notification-dropdown theme="light" />
 
-                    <!-- Coach Profile -->
-                    <div class="flex items-center gap-3">
-                        <div class="text-right hidden sm:block">
-                            <p class="font-poppins font-bold text-sm text-gray-900 leading-tight">
-                                {{ Auth::user() ? (str_starts_with(Auth::user()->name, 'Coach') ? Auth::user()->name : 'Coach ' . Auth::user()->name) : 'Coach' }}
-                            </p>
-                            <p class="font-inter text-xs text-gray-400">
-                                {{ Auth::user()?->trainerProfile?->specialization ?: 'Master Trainer' }}
-                            </p>
-                        </div>
-                        <div
-                            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF5722] text-white shadow-sm ring-2 ring-rose-100">
-                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
+                    <!-- Coach Profile Dropdown -->
+                    <div class="relative" x-data="{ profileOpen: false }">
+                        <button type="button" @click="profileOpen = !profileOpen"
+                            class="flex items-center gap-3 p-1.5 rounded-2xl hover:bg-gray-50 transition-colors focus:outline-none cursor-pointer group">
+                            <div class="text-right hidden sm:block">
+                                <p class="font-poppins font-bold text-sm text-gray-900 leading-tight group-hover:text-[#FF5722] transition-colors">
+                                    {{ Auth::user() ? (str_starts_with(Auth::user()->name, 'Coach') ? Auth::user()->name : 'Coach ' . Auth::user()->name) : 'Coach' }}
+                                </p>
+                                <p class="font-inter text-xs text-gray-400">
+                                    {{ Auth::user()?->trainerProfile?->specialization ?: 'Master Trainer' }}
+                                </p>
+                            </div>
+                            <div
+                                class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF5722] text-white shadow-sm ring-2 ring-rose-100 group-hover:ring-[#FF5722]/30 transition-all">
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                            </div>
+                            <svg class="h-4 w-4 text-[#565A66] hidden sm:block transition-transform duration-200" :class="{ 'rotate-180': profileOpen }" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
+                        </button>
+
+                        <!-- Profile Dropdown -->
+                        <div x-cloak x-show="profileOpen" @click.away="profileOpen = false"
+                            x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95"
+                            x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-100"
+                            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+                            class="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-[#E5E7EB] shadow-xl p-2 z-50 text-sm">
+                            <div class="border-b border-[#E5E7EB] px-3 py-2 mb-1">
+                                <p class="truncate text-xs font-bold text-[#16151A]">{{ Auth::user()?->name }}</p>
+                            </div>
+
+                            <a href="{{ route('profile.edit') }}"
+                                class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-[#16151A] transition-colors">
+                                Pengaturan Profil
+                            </a>
+
+                            <a href="{{ route('profile.edit') }}#password"
+                                class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-[#16151A] transition-colors">
+                                Ganti Kata Sandi
+                            </a>
+
+                            <button type="button" @click="profileOpen = false; showLogoutModal = true"
+                                class="w-full rounded-xl px-3 py-2.5 text-left text-xs font-bold text-[#FF5722] hover:bg-orange-50 cursor-pointer transition-colors">
+                                Keluar
+                            </button>
                         </div>
                     </div>
                 </div>

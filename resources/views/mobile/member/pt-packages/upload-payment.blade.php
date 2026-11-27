@@ -13,6 +13,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
         copiedAmount: false,
         copiedAccount: false,
         previewUrl: null,
+        errorMessage: '',
         init() {
             setInterval(() => {
                 if (this.seconds > 0) {
@@ -39,7 +40,21 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
         },
         handleImageChange(event) {
             const file = event.target.files[0];
+            this.errorMessage = '';
             if (file) {
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    this.errorMessage = 'Format berkas tidak didukung. Harap pilih gambar JPG, JPEG, PNG, atau WEBP.';
+                    event.target.value = '';
+                    this.previewUrl = null;
+                    return;
+                }
+                if (file.size > 2 * 1024 * 1024) {
+                    this.errorMessage = 'Ukuran berkas melebihi 2 MB. Silakan pilih berkas yang lebih kecil.';
+                    event.target.value = '';
+                    this.previewUrl = null;
+                    return;
+                }
                 this.previewUrl = URL.createObjectURL(file);
             } else {
                 this.previewUrl = null;
@@ -100,7 +115,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 </button>
             </div>
             <p class="text-[11px] text-[#565A66] leading-relaxed">
-                Penting: Transfer hingga <strong class="text-[#FF5722]">3 digit terakhir</strong> (+{{ $uniqueCode }}) agar pembayaran Anda dapat diverifikasi otomatis.
+                Penting: Transfer hingga <strong class="text-[#FF5722]">3 digit terakhir</strong> (+{{ $uniqueCode }}) agar pembayaran Anda dapat segera diverifikasi.
             </p>
         </div>
 
@@ -138,84 +153,84 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
               class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-4">
             @csrf
 
-            <div>
-                <h3 class="text-xs font-bold uppercase tracking-wider text-[#16151A] font-poppins">
-                    Unggah Struk Pembayaran
-                </h3>
-                <p class="text-[11px] text-[#565A66] mt-0.5">
-                    Unggah foto struk ATM, bukti m-banking, atau file PDF (Maks. 5 MB).
-                </p>
-            </div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-[#16151A] font-poppins">
+                Unggah Bukti Pembayaran
+            </h3>
 
-            <!-- Upload Area -->
-            <div class="relative">
-                <input type="file"
-                       name="proof_image"
-                       required
-                       accept="image/jpeg,image/png,image/jpg,application/pdf"
-                       @change="handleImageChange($event)"
-                       class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-
-                <div class="border-2 border-dashed border-[#E5E7EB] rounded-2xl p-4 text-center hover:border-[#FF5722] transition-colors bg-[#F6F6F7]/50"
-                     :class="previewUrl ? 'border-emerald-400 bg-emerald-50/20' : ''">
-                    
-                    <template x-if="previewUrl">
-                        <div class="space-y-2">
-                            <img :src="previewUrl" class="max-h-40 mx-auto rounded-xl object-contain shadow-xs">
-                            <span class="text-xs font-bold text-emerald-600 block">Struk Berhasil Dipilih (Ketuk untuk ganti)</span>
-                        </div>
-                    </template>
-
-                    <template x-if="!previewUrl">
-                        <div class="space-y-1.5 py-3">
-                            <div class="w-10 h-10 rounded-full bg-orange-50 text-[#FF5722] mx-auto flex items-center justify-center">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <span class="text-xs font-bold text-[#16151A] block">Ambil Foto atau Pilih dari Galeri</span>
-                            <span class="text-[10px] text-[#565A66] block">Format: JPG, PNG, atau PDF</span>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- Field Nama Pengirim -->
+            <!-- 1. Input Nama Pengirim -->
             <div class="space-y-1">
                 <label for="sender_name" class="block text-xs font-bold text-[#16151A]">
-                    Nama Pemilik Rekening Pengirim <span class="text-[#FF5722]">*</span>
+                    Nama Pemilik Rekening / Pengirim <span class="text-[#FF5722]">*</span>
                 </label>
                 <input type="text"
                        id="sender_name"
                        name="sender_name"
                        required
-                       value="{{ old('sender_name') }}"
+                       value="{{ old('sender_name', auth()->user()?->name) }}"
                        placeholder="Contoh: Budi Santoso"
-                       class="w-full p-3 rounded-xl bg-white border border-[#E5E7EB] text-xs text-[#16151A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] shadow-xs">
+                       class="w-full px-3.5 py-2.5 rounded-xl border border-[#E5E7EB] bg-white text-xs text-[#16151A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] shadow-xs">
             </div>
 
-            <!-- Field Bank Pengirim -->
-            <div class="space-y-1">
-                <label for="sender_bank" class="block text-xs font-bold text-[#16151A]">
-                    Bank / E-Wallet Pengirim <span class="text-[#FF5722]">*</span>
+            <!-- 2. Upload File Bukti Bayar -->
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold text-[#16151A]">
+                    Foto / Struk Bukti Transfer <span class="text-[#FF5722]">*</span>
                 </label>
-                <input type="text"
-                       id="sender_bank"
-                       name="sender_bank"
-                       required
-                       value="{{ old('sender_bank') }}"
-                       placeholder="Contoh: BCA / Mandiri / GoPay"
-                       class="w-full p-3 rounded-xl bg-white border border-[#E5E7EB] text-xs text-[#16151A] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FF5722] shadow-xs">
+
+                <!-- Dropzone / Picker -->
+                <div class="relative border-2 border-dashed border-[#E5E7EB] hover:border-[#FF5722]/50 rounded-2xl p-4 text-center bg-[#F6F6F7] transition cursor-pointer"
+                     :class="previewUrl ? 'border-emerald-400 bg-emerald-50/20' : ''">
+                    <input type="file"
+                           name="proof_image"
+                           id="proof_image"
+                           accept="image/jpeg,image/png,image/jpg,image/webp"
+                           required
+                           @change="handleImageChange($event)"
+                           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+
+                    <!-- Preview Mode -->
+                    <template x-if="previewUrl">
+                        <div class="space-y-2">
+                            <img :src="previewUrl" alt="Preview Bukti Transfer" class="max-h-40 mx-auto rounded-lg shadow-sm border border-[#E5E7EB] object-contain">
+                            <span class="text-[10px] text-emerald-600 font-bold block">✓ Gambar berhasil dipilih. Ketuk untuk mengganti.</span>
+                        </div>
+                    </template>
+
+                    <!-- Placeholder Mode -->
+                    <template x-if="!previewUrl">
+                        <div class="space-y-1.5 py-2">
+                            <div class="w-10 h-10 rounded-xl bg-white text-[#FF5722] border border-[#E5E7EB] flex items-center justify-center mx-auto shadow-xs">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <span class="block text-xs font-bold text-[#16151A]">Ambil Foto / Pilih dari Galeri</span>
+                            <span class="block text-[10px] text-[#565A66]">Mendukung JPG, JPEG, PNG, WEBP (Maksimal 2MB)</span>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Pesan Error Client-Side -->
+                <p x-show="errorMessage" x-text="errorMessage" class="mt-2 text-xs text-rose-600 font-bold" x-cloak></p>
             </div>
+
+            <!-- 3. Checkbox Kebijakan & Kebenaran Data -->
+            <label class="flex items-start gap-2.5 cursor-pointer text-xs text-[#565A66] pt-1">
+                <input type="checkbox" required name="agreed_policy"
+                       class="w-4 h-4 mt-0.5 text-[#FF5722] border-[#E5E7EB] bg-white rounded focus:ring-[#FF5722] shrink-0" />
+                <span class="text-[11px] leading-tight select-none">
+                    Saya menyatakan telah mentransfer sejumlah <strong class="text-[#16151A]">Rp {{ number_format($totalAmount, 0, ',', '.') }}</strong> dengan benar dan sah ke rekening resmi FitCore.
+                </span>
+            </label>
 
             <!-- Tombol Kirim Bukti Pembayaran -->
             <div class="pt-2">
                 <button type="submit"
-                        class="w-full py-3.5 px-4 rounded-xl bg-[#FF5722] hover:bg-[#E64A19] active:scale-[0.99] text-white font-bold font-poppins text-xs tracking-wide shadow-md shadow-orange-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
+                        class="w-full py-3.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white font-bold text-xs uppercase tracking-wider shadow-md shadow-orange-500/25 flex items-center justify-center gap-2 cursor-pointer transition active:scale-[0.98]">
                     <span>Kirim Bukti Pembayaran</span>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
                 </button>
             </div>
         </form>

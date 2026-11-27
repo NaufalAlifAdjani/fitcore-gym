@@ -113,8 +113,8 @@ class PtSessionController extends Controller
             ->orderBy('end_date', 'asc')
             ->first();
 
-        // Trainer terpilih dari parameter atau default (Coach Rama jika ada, atau trainer aktif pertama)
-        $selectedTrainerId = $request->query('trainer_id');
+        // Trainer terpilih dari parameter, atau kuota aktif yang dibeli, atau fallback
+        $selectedTrainerId = $request->query('trainer_id') ?? $quota?->trainer_id;
         $trainer = null;
 
         if ($selectedTrainerId) {
@@ -161,8 +161,13 @@ class PtSessionController extends Controller
             );
 
             return redirect()
-                ->route('pt-sessions.index')
-                ->with('success', __('pt_booking.booking_success'));
+                ->route('pt-sessions.index', [
+                    'd' => $session->session_date->toDateString(),
+                    'm' => 'tasks',
+                    'booked' => $session->id,
+                ])
+                ->with('success', __('pt_booking.booking_success'))
+                ->with('booked_session_id', $session->id);
         } catch (PtBookingException $e) {
             return back()
                 ->withInput()

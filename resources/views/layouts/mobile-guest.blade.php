@@ -17,6 +17,7 @@
     $currentRoute = request()->route()?->getName() ?? '';
     $isHome       = $currentRoute === 'mobile.landing.index';
     $isPackages   = $currentRoute === 'mobile.landing.packages';
+    $isPtPricing  = $currentRoute === 'mobile.landing.pt-pricing';
     $isTrainers   = $currentRoute === 'mobile.landing.trainers';
     $isAbout      = $currentRoute === 'mobile.landing.about';
 @endphp
@@ -81,6 +82,10 @@
                     class="shrink-0 px-3.5 py-1.5 rounded-full font-bold transition duration-150 {{ $isPackages ? 'bg-[#FF5722] text-white shadow-sm' : 'bg-white text-[#565A66] hover:text-[#16151A] border border-[#E5E7EB]' }}">
                     Paket Gym
                 </a>
+                <a href="{{ route('mobile.landing.pt-pricing') }}"
+                    class="shrink-0 px-3.5 py-1.5 rounded-full font-bold transition duration-150 {{ $isPtPricing ? 'bg-[#FF5722] text-white shadow-sm' : 'bg-white text-[#565A66] hover:text-[#16151A] border border-[#E5E7EB]' }}">
+                    Harga Sesi PT
+                </a>
                 <a href="{{ route('mobile.landing.trainers') }}"
                     class="shrink-0 px-3.5 py-1.5 rounded-full font-bold transition duration-150 {{ $isTrainers ? 'bg-[#FF5722] text-white shadow-sm' : 'bg-white text-[#565A66] hover:text-[#16151A] border border-[#E5E7EB]' }}">
                     Pelatih PT
@@ -108,6 +113,8 @@
 
                 <div class="flex items-center justify-center gap-4 text-xs font-semibold text-[#565A66] my-4">
                     <a href="{{ route('mobile.landing.packages') }}" class="hover:text-[#FF5722] transition">Paket</a>
+                    <span>•</span>
+                    <a href="{{ route('mobile.landing.pt-pricing') }}" class="hover:text-[#FF5722] transition">Harga PT</a>
                     <span>•</span>
                     <a href="{{ route('mobile.landing.trainers') }}" class="hover:text-[#FF5722] transition">Pelatih</a>
                     <span>•</span>

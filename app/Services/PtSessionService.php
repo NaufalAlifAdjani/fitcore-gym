@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\DB;
 
 class PtSessionService
 {
+    public const SHIFT_PAGI_SLOTS = ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00'];
+
+    public const SHIFT_SORE_SLOTS = ['14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
+
     /**
      * Mendapatkan daftar slot jam harian beserta statusnya (available, booked, passed).
      */
@@ -57,8 +61,8 @@ class PtSessionService
         $isPastDate = $carbonDate->isPast() && ! $isToday;
 
         $groups = [];
-        $pagiSlots = ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00'];
-        $soreSlots = ['14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
+        $pagiSlots = self::SHIFT_PAGI_SLOTS;
+        $soreSlots = self::SHIFT_SORE_SLOTS;
 
         foreach ($configuredSlots as $groupKey => $times) {
             $groups[$groupKey] = [];
@@ -191,17 +195,7 @@ class PtSessionService
         }
 
         // 2. Trainer Shift validation
-        $trainerShift = $trainer->shift ?? 'pagi';
-        $morningSlots = config('pt_booking.slots.morning', ['06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00']);
-        $afternoonSlots = config('pt_booking.slots.afternoon', ['14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']);
-
-        if ($trainerShift === 'pagi' && ! in_array($timeShort, $morningSlots, true)) {
-            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam shift bertugas pelatih (Shift Pagi: 06:00 – 14:00 WIB).');
-        } elseif ($trainerShift === 'sore' && ! in_array($timeShort, $afternoonSlots, true)) {
-            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam shift bertugas pelatih (Shift Sore: 14:00 – 22:00 WIB).');
-        } elseif ($trainerShift === 'fleksibel' && ! in_array($timeShort, array_merge($morningSlots, $afternoonSlots), true)) {
-            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam operasional sesi PT (06:00 – 22:00 WIB).');
-        }
+        $this->validateTrainerShift($trainer, $timeShort);
 
         // 3. Trainer slot conflict check
         $trainerQuery = PtSession::where('trainer_id', $trainer->id)
@@ -235,6 +229,26 @@ class PtSessionService
     }
 
     /**
+     * Memvalidasi apakah jam yang dipilih berada dalam shift bertugas pelatih.
+     *
+     * @throws SlotUnavailableException
+     */
+    public function validateTrainerShift(User $trainer, string $timeShort): void
+    {
+        $trainerShift = $trainer->shift ?? 'pagi';
+        $morningSlots = self::SHIFT_PAGI_SLOTS;
+        $afternoonSlots = self::SHIFT_SORE_SLOTS;
+
+        if ($trainerShift === 'pagi' && ! in_array($timeShort, $morningSlots, true)) {
+            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam shift bertugas pelatih (Shift Pagi: 06:00 – 14:00 WIB).');
+        } elseif ($trainerShift === 'sore' && ! in_array($timeShort, $afternoonSlots, true)) {
+            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam shift bertugas pelatih (Shift Sore: 14:00 – 22:00 WIB).');
+        } elseif ($trainerShift === 'fleksibel' && ! in_array($timeShort, array_merge($morningSlots, $afternoonSlots), true)) {
+            throw new SlotUnavailableException('Jam yang dipilih berada di luar jam operasional sesi PT (06:00 – 22:00 WIB).');
+        }
+    }
+
+    /**
      * Membuat booking sesi baru dalam transaksi database dengan pessimistic lock.
      *
      * @throws QuotaExceededException|SlotUnavailableException
@@ -265,8 +279,6 @@ class PtSessionService
                 'end_time' => $endTime,
                 'status' => PtSessionStatus::Pending,
                 'trainer_revenue' => round($sessionPrice * 0.70, 2),
-                'gym_revenue' => round($sessionPrice * 0.30, 2),
-                'payout_status' => 'pending',
             ]);
 
             $session->loadMissing(['member', 'trainer']);
@@ -532,6 +544,7 @@ class PtSessionService
                     'status' => PtSessionStatus::Completed,
                     'completed_at' => $lockedSession->ends_at ?? $now,
                     'trainer_earnings' => $earnings,
+                    'trainer_revenue' => $lockedSession->trainer_revenue ?? $earnings,
                 ]);
 
                 $completedCount++;

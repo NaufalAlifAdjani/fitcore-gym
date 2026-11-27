@@ -13,7 +13,6 @@ class CheckIn extends Model
 
     protected $casts = [
         'checked_in_at' => 'datetime',
-        'checked_out_at' => 'datetime',
         'check_in_date' => 'date',
     ];
 

@@ -35,8 +35,7 @@
                             </label>
                         </div>
                         <span
-                            class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold font-inter bg-emerald-50 text-emerald-700 border border-emerald-200 w-fit">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold font-inter bg-emerald-50 text-emerald-700 border border-emerald-200 w-fit">
                             Siap Terima Tembakan Scanner
                         </span>
                     </div>
@@ -120,7 +119,6 @@
 
                 <!-- Status Text -->
                 <div class="flex items-center gap-2">
-                    <span class="h-2 w-2 rounded-full bg-[#565A66]"></span>
                     <p id="scanner-status" class="text-sm font-inter font-medium text-[#565A66]">
                         Scanner belum aktif. Klik "Mulai Scanner" untuk memulai.
                     </p>
@@ -228,8 +226,7 @@
                                     </td>
                                     <td class="py-3.5 px-4 text-center whitespace-nowrap">
                                         <span
-                                            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                             Berhasil
                                         </span>
                                     </td>

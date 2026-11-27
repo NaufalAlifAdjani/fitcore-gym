@@ -32,7 +32,19 @@ class Index extends Component
 
     public function mount(): void
     {
+        if (empty($this->date) && request()->has('date')) {
+            $this->date = (string) request()->query('date');
+        }
+
         $this->date = $this->date ?: now()->toDateString();
+
+        if (request()->has('mode') && in_array(request()->query('mode'), ['calendar', 'tasks'])) {
+            $this->mode = (string) request()->query('mode');
+        }
+
+        if (request()->has('tab') && in_array(request()->query('tab'), ['all', 'pending', 'confirmed', 'completed', 'cancelled'])) {
+            $this->taskStatusFilter = (string) request()->query('tab');
+        }
 
         if ($this->view === 'daily') {
             $this->view = 'day';
@@ -187,7 +199,7 @@ class Index extends Component
             $endDate = $carbon->copy()->endOfMonth()->toDateString();
         }
 
-        $query = PtSession::with(['member.memberProfile', 'quota', 'rating'])
+        $query = PtSession::with(['member.memberProfile', 'quota'])
             ->where('trainer_id', Auth::id() ?? 1)
             ->whereBetween('session_date', [$startDate, $endDate]);
 
@@ -278,7 +290,7 @@ class Index extends Component
         $from = $startOfMonth->min($startOfWeek)->toDateString();
         $to = $endOfMonth->max($endOfWeek)->toDateString();
 
-        return PtSession::with(['member.memberProfile', 'quota', 'rating'])
+        return PtSession::with(['member.memberProfile', 'quota'])
             ->where('trainer_id', Auth::id() ?? 1)
             ->whereBetween('session_date', [$from, $to])
             ->orderBy('start_time', 'asc')
@@ -333,8 +345,14 @@ class Index extends Component
 
     public function render()
     {
-        return view('trainer.sessions.index')->layout('layouts.trainer', [
+        $isMobile = request()->is('m/*') || request()->routeIs('mobile.*');
+        $layout = $isMobile ? 'layouts.mobile-trainer' : 'layouts.trainer';
+
+        return view('trainer.sessions.index')->layout($layout, [
             'title' => 'Jadwal Sesi Personal Trainer - FitCore PT Portal',
+            'active' => 'sessions',
+            'activeTab' => 'sessions',
+            'wide' => true,
         ]);
     }
 }

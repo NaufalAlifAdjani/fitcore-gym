@@ -42,9 +42,24 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 setTimeout(() => this.copied = false, 2000);
             }
         },
+        errorMessage: '',
         handleImageChange(event) {
             const file = event.target.files[0];
+            this.errorMessage = '';
             if (file) {
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    this.errorMessage = 'Format berkas tidak didukung. Harap pilih gambar JPG, JPEG, PNG, atau WEBP.';
+                    event.target.value = '';
+                    this.previewUrl = null;
+                    return;
+                }
+                if (file.size > 2 * 1024 * 1024) {
+                    this.errorMessage = 'Ukuran berkas melebihi 2 MB. Silakan pilih berkas yang lebih kecil.';
+                    event.target.value = '';
+                    this.previewUrl = null;
+                    return;
+                }
                 this.previewUrl = URL.createObjectURL(file);
             } else {
                 this.previewUrl = null;
@@ -122,7 +137,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 <div class="flex items-center justify-between text-[#565A66]">
                     <span class="flex items-center gap-1">
                         Kode Unik Verifikasi
-                        <span class="text-[10px] text-amber-600 font-bold" title="Kode unik untuk verifikasi otomatis">(3 Digit)</span>
+                        <span class="text-[10px] text-amber-600 font-bold" title="Kode unik verifikasi transfer">(3 Digit)</span>
                     </span>
                     <span class="font-bold text-amber-600">+Rp {{ $uniqueCode }}</span>
                 </div>
@@ -136,7 +151,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                 </div>
             </div>
             <p class="text-[10px] text-[#565A66] italic text-center">
-                * Pastikan nominal transfer persis hingga digit terakhir agar verifikasi otomatis berjalan lancar.
+                * Pastikan nominal transfer persis hingga digit terakhir agar verifikasi berjalan lancar.
             </p>
         </div>
 
@@ -201,6 +216,7 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             @csrf
             <input type="hidden" name="bank_id" :value="selectedBankId">
             <input type="hidden" name="unique_code" value="{{ $uniqueCode }}">
+            <input type="hidden" name="payment_id" value="{{ $payment?->id ?? '' }}">
 
             <h3 class="text-xs font-bold uppercase tracking-wider text-[#16151A] font-poppins">
                 2. Unggah Bukti Pembayaran
@@ -253,10 +269,13 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
                                 </svg>
                             </div>
                             <span class="block text-xs font-bold text-[#16151A]">Ambil Foto / Pilih dari Galeri</span>
-                            <span class="block text-[10px] text-[#565A66]">Mendukung JPG, PNG, WEBP (Maksimal 2MB)</span>
+                            <span class="block text-[10px] text-[#565A66]">Mendukung JPG, JPEG, PNG, WEBP (Maksimal 2MB)</span>
                         </div>
                     </template>
                 </div>
+
+                <!-- Pesan Error Client-Side -->
+                <p x-show="errorMessage" x-text="errorMessage" class="mt-2 text-xs text-rose-600 font-bold" x-cloak></p>
             </div>
 
             <!-- Checkbox Kebijakan & Kebenaran Data -->

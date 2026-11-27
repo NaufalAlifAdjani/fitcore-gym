@@ -49,7 +49,7 @@
                 'bg-[#FF5722] text-white shadow-xs' => $isPt,
                 'text-[#565A66] hover:text-[#16151A]' => !$isPt,
             ])>
-                Personal Trainer
+                Harga Sesi PT
             </a>
             <a href="{{ route('pt-sessions.index') }}" @class([
                 'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
@@ -95,32 +95,21 @@
                 <!-- Profile Dropdown -->
                 <div x-cloak x-show="userMenuOpen" x-transition
                     class="absolute right-0 top-12 z-50 w-56 rounded-2xl border border-[#E5E7EB] bg-white p-2 shadow-xl">
-                    <div class="border-b border-[#E5E7EB] px-3 py-2">
+                    <div class="border-b border-[#E5E7EB] px-3 py-2 mb-1">
                         <p class="truncate text-xs font-bold text-[#16151A]">{{ Auth::user()?->name }}</p>
-                        <p class="truncate text-[10px] text-[#565A66]">{{ Auth::user()?->email }}</p>
                     </div>
-                    <a href="{{ route('member.card') }}"
-                        class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-zinc-900">
-                        Kartu Member Digital
-                    </a>
                     <a href="{{ route('profile.edit') }}"
-                        class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-zinc-900">
+                        class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-zinc-900 transition-colors">
                         Pengaturan Profil
                     </a>
-                    <a href="{{ route('member.membership.packages') }}"
-                        class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-zinc-900">
-                        Status Membership
+                    <a href="{{ route('profile.edit') }}#password"
+                        class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-zinc-900 transition-colors">
+                        Ganti Kata Sandi
                     </a>
-                    @if (Auth::user()?->role === 'admin')
-                        <a href="{{ route('admin.dashboard') }}"
-                            class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-amber-700 hover:bg-amber-50">
-                            Portal Admin
-                        </a>
-                    @endif
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
-                            class="w-full rounded-xl px-3 py-2.5 text-left text-xs font-bold text-[#FF5722] hover:bg-orange-50 cursor-pointer">
+                            class="w-full rounded-xl px-3 py-2.5 text-left text-xs font-bold text-[#FF5722] hover:bg-orange-50 cursor-pointer transition-colors">
                             Keluar
                         </button>
                     </form>
@@ -159,7 +148,7 @@
         </a>
         <a href="{{ route('member.pt-packages.index') }}"
             class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $isPt ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:bg-orange-50 hover:text-[#16151A]' }}">
-            Personal Trainer
+            Harga Sesi PT
         </a>
         <a href="{{ route('pt-sessions.index') }}"
             class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ $isBooking ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:bg-orange-50 hover:text-[#16151A]' }}">

@@ -10,7 +10,7 @@
         $displayTitle = 'CSCS - Head Trainer';
     } else {
         $displayName = $rawName;
-        $displayTitle = $user?->trainerProfile?->specialization ?? ($user?->trainerProfile?->tier ?? 'CSCS - Head Trainer');
+        $displayTitle = $user?->trainerProfile?->specialization ?? 'Personal Trainer';
     }
 @endphp
 
@@ -88,29 +88,25 @@
                     x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
                     class="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-[#E5E7EB] shadow-xl p-2 z-50 text-sm text-[#16151A]"
                     style="display: none;">
-                    <div class="px-3 py-2 border-b border-[#E5E7EB] mb-1">
+                    <div class="border-b border-[#E5E7EB] px-3 py-2 mb-1">
                         <p class="text-xs font-bold text-[#16151A]">{{ $displayName }}</p>
-                        <p class="text-[11px] text-[#565A66] truncate">{{ $user?->email ?? 'trainer@maxfit.test' }}</p>
                     </div>
 
                     <a href="{{ route('profile.edit') }}"
-                        class="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-gray-50 text-[#16151A] transition-colors">
-                        <svg class="w-4 h-4 text-[#565A66]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <span>Profil Saya</span>
+                        class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-[#16151A] transition-colors">
+                        Pengaturan Profil
+                    </a>
+
+                    <a href="{{ route('profile.edit') }}#password"
+                        class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-[#16151A] transition-colors">
+                        Ganti Kata Sandi
                     </a>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit"
-                            class="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-[#FF5722] hover:bg-red-50 transition-colors text-left font-semibold cursor-pointer">
-                            <svg class="w-4 h-4 text-[#FF5722]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
-                            <span>Keluar (Logout)</span>
+                            class="w-full rounded-xl px-3 py-2.5 text-left text-xs font-bold text-[#FF5722] hover:bg-orange-50 cursor-pointer transition-colors">
+                            Keluar
                         </button>
                     </form>
                 </div>

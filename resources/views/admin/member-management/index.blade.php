@@ -154,8 +154,7 @@
                         <div class="font-poppins text-3xl font-extrabold text-[#16151A]">
                             {{ number_format($activeMembers, 0, ',', '.') }}
                         </div>
-                        <p class="mt-1 flex items-center gap-1.5 text-xs font-medium text-[#565A66]">
-                            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                        <p class="mt-1 text-xs font-medium text-[#565A66]">
                             <span class="font-bold text-emerald-600">{{ $activeRatio }}%</span> rasio aktif
                         </p>
                     </div>
@@ -388,6 +387,7 @@
                             <tr>
                                 <th class="px-6 py-4">MEMBER</th>
                                 <th class="px-6 py-4">PAKET</th>
+                                <th class="px-6 py-4">PERSONAL TRAINER</th>
                                 <th class="px-6 py-4">TANGGAL KEDALUWARSA</th>
                                 <th class="px-6 py-4">STATUS</th>
                                 <th class="px-6 py-4 text-right">AKSI</th>
@@ -423,6 +423,7 @@
 
                                     $memberCode = $m->memberProfile?->member_code ?? '#FC-'.str_pad((string)$m->id, 4, '0', STR_PAD_LEFT);
                                     $initials = collect(explode(' ', $m->name))->map(fn($w) => strtoupper(substr($w, 0, 1)))->take(2)->join('');
+                                    $memberTrainer = $m->memberProfile?->trainer ?? $m->ptQuotas->firstWhere('status', 'active')?->trainer;
                                 @endphp
                                 <tr class="hover:bg-gray-50/60 transition">
                                     <!-- Member Info -->
@@ -458,6 +459,25 @@
                                         @endif
                                     </td>
 
+                                    <!-- Personal Trainer -->
+                                    <td class="px-6 py-4">
+                                        @if ($memberTrainer)
+                                            <div class="flex items-center gap-2">
+                                                <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-50 text-[10px] font-bold text-[#FF5722] border border-orange-200">
+                                                    {{ strtoupper(substr($memberTrainer->name, 0, 2)) }}
+                                                </div>
+                                                <div>
+                                                    <div class="font-semibold text-xs text-[#16151A] leading-tight">{{ $memberTrainer->name }}</div>
+                                                    <div class="text-[10px] text-[#565A66]">{{ $memberTrainer->trainerProfile?->specialization ?? 'Personal Trainer' }}</div>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium text-gray-400 bg-gray-50 border border-gray-100">
+                                                Tanpa PT
+                                            </span>
+                                        @endif
+                                    </td>
+
                                     <!-- Tanggal Kedaluwarsa -->
                                     <td class="px-6 py-4">
                                         @if ($isExpired)
@@ -478,18 +498,15 @@
                                     <!-- Status Badge -->
                                     <td class="px-6 py-4">
                                         @if ($m->status === 'inactive' || $isExpired)
-                                            <span class="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-600 border border-rose-200">
-                                                <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
+                                            <span class="inline-flex items-center rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-600 border border-rose-200">
                                                 Nonaktif/Expired
                                             </span>
                                         @elseif ($isExpiring)
-                                            <span class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-600 border border-amber-200">
-                                                <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                                            <span class="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-600 border border-amber-200">
                                                 Akan Berakhir
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600 border border-emerald-200">
-                                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+                                            <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600 border border-emerald-200">
                                                 Aktif
                                             </span>
                                         @endif
@@ -511,6 +528,8 @@
                                                 'package_id' => $pkg?->id,
                                                 'package_name' => $pkg?->name ?? 'Belum Ada',
                                                 'end_date' => $latest?->end_date ? \Carbon\Carbon::parse($latest->end_date)->format('Y-m-d') : null,
+                                                'trainer_id' => $memberTrainer?->id,
+                                                'trainer_name' => $memberTrainer?->name,
                                             ]) }})"
                                             class="inline-flex items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-3.5 py-1.5 text-xs font-semibold text-[#16151A] shadow-xs transition hover:bg-gray-50 hover:text-[#FF5722] cursor-pointer"
                                         >
@@ -524,7 +543,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="py-14 text-center text-[#565A66]">
+                                    <td colspan="6" class="py-14 text-center text-[#565A66]">
                                         <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-[#FF5722] mb-3">
                                             <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -721,6 +740,10 @@
                                 <div class="flex justify-between">
                                     <span class="text-[#565A66]">Tanggal Berakhir:</span>
                                     <span class="font-bold text-amber-600" x-text="selectedMember?.package?.end_date || '-'"></span>
+                                </div>
+                                <div class="flex justify-between items-center pt-2 border-t border-gray-200/60">
+                                    <span class="text-[#565A66]">Personal Trainer:</span>
+                                    <span class="font-bold text-[#FF5722]" x-text="selectedMember?.trainer?.name || selectedMember?.trainer_name || 'Tanpa PT'"></span>
                                 </div>
                             </div>
 
@@ -1007,6 +1030,22 @@
                                     class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
                                 >
                             </div>
+                        </div>
+
+                        <!-- Personal Trainer -->
+                        <div>
+                            <label class="block font-semibold text-[#16151A] mb-1">Personal Trainer</label>
+                            <select
+                                name="trainer_id"
+                                class="w-full rounded-xl border border-[#E5E7EB] px-3.5 py-2.5 text-xs text-[#16151A] focus:border-[#FF5722] focus:ring-1 focus:ring-[#FF5722] outline-none"
+                            >
+                                <option value="">-- Tanpa Personal Trainer --</option>
+                                @foreach ($trainers as $tr)
+                                    <option value="{{ $tr->id }}" :selected="(selectedMember?.trainer?.id == {{ $tr->id }}) || (selectedMember?.trainer_id == {{ $tr->id }})">
+                                        {{ $tr->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <!-- Alamat -->

@@ -24,56 +24,69 @@
                 <p class="text-[#565A66] text-sm sm:text-base mt-4 leading-relaxed font-normal">
                     Setiap instruktur FitCore mengantongi akreditasi resmi dan dedikasi mendalam untuk memastikan teknik angkat beban Anda tepat, terukur, dan bebas cedera.
                 </p>
+                <div class="mt-6 flex justify-center">
+                    <a href="{{ route('landing.pt-pricing') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white hover:bg-orange-50/60 border border-[#E5E7EB] hover:border-[#FF5722] text-xs font-bold text-[#16151A] hover:text-[#FF5722] shadow-xs transition group">
+                        <svg class="w-4 h-4 text-[#FF5722]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                        <span>Lihat Daftar Harga Paket Sesi PT &rarr;</span>
+                    </a>
+                </div>
             </div>
 
             <!-- 2. GRID PELATIH -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
                 @forelse ($trainers as $trainer)
-                    <div class="bg-white rounded-2xl p-7 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] flex flex-col justify-between transition hover:-translate-y-1 duration-200">
-                        <div>
-                            <!-- Top Profile Info -->
-                            <div class="flex items-start gap-4 mb-5">
-                                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] text-white flex items-center justify-center font-poppins font-black text-xl border-2 border-white shadow-md shadow-orange-500/25 shrink-0">
-                                    {{ strtoupper(substr($trainer->name, 0, 2)) }}
+                    @php
+                        $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $trainer->name)))[0]);
+                        $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
+                            ? asset("images/trainers/coach-{$cFirstName}.jpg")
+                            : ($trainer->trainerProfile?->photo_path ? asset('storage/' . $trainer->trainerProfile->photo_path) : ($trainer->avatar_url ?? null));
+                    @endphp
+                    <div class="rounded-2xl overflow-hidden border border-[#E5E7EB] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-xl transition-all duration-300 flex flex-col group">
+                        <!-- 1. Foto PT -->
+                        <div class="w-full aspect-[4/3] bg-[#2C2828] relative overflow-hidden flex items-center justify-center">
+                            @if ($cPhoto)
+                                <img src="{{ $cPhoto }}" 
+                                     alt="{{ $trainer->name }}" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                                     loading="lazy">
+                            @else
+                                <div class="w-full h-full bg-gradient-to-b from-[#383332] to-[#252222] flex flex-col items-center justify-center text-zinc-300 p-4">
+                                    <svg class="w-10 h-10 text-zinc-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <span class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Foto PT</span>
                                 </div>
-                                <div>
-                                    <h3 class="font-poppins font-extrabold text-xl text-[#16151A] leading-tight">{{ $trainer->name }}</h3>
-                                    <span class="inline-block px-2.5 py-0.5 rounded-md bg-orange-50 text-[#FF5722] text-xs font-bold mt-1.5">
-                                        {{ $trainer->trainerProfile->specialization ?? 'Strength & Performance' }}
-                                    </span>
-                                    <p class="text-[11px] text-[#565A66] font-medium mt-1">
-                                        {{ $trainer->trainerProfile->tier ?? 'Senior PT Tier III' }} • {{ $trainer->trainerProfile->studio ?? 'SCBD Studio' }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Rating & Pengalaman Bar -->
-                            <div class="flex items-center justify-between text-xs py-3 px-3.5 bg-[#F6F6F7] rounded-xl border border-[#E5E7EB] mb-5">
-                                <div class="flex items-center gap-1 font-bold text-amber-500">
-                                    <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                    <span class="text-[#16151A]">{{ $trainer->trainerProfile->rating ?? '4.98' }}</span>
-                                    <span class="text-[#565A66] font-normal">({{ $trainer->trainerProfile->review_count ?? '184' }} sesi)</span>
-                                </div>
-                                <span class="font-bold text-[#16151A]">{{ $trainer->trainerProfile->experience ?? 5 }}+ Tahun Jam Terbang</span>
-                            </div>
-
-                            <!-- Bio & Filosofi -->
-                            <p class="text-xs text-[#565A66] leading-relaxed mb-6 font-normal">
-                                {{ $trainer->trainerProfile->bio ?? 'Berpengalaman melatih atlet dan pegiat kebugaran umum dengan fokus pada hipertrofi, biomekanika beban, dan pencegahan cedera.' }}
-                            </p>
+                            @endif
                         </div>
 
-                        <!-- Action Button -->
-                        <div class="pt-4 border-t border-[#E5E7EB]">
-                            @auth
-                                <a href="{{ route('pt-sessions.create', ['trainer_id' => $trainer->id]) }}" class="block w-full py-3 rounded-full text-center text-xs font-bold bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-sm shadow-orange-500/25 transition">
-                                    Booking Sesi Bersama {{ explode(' ', $trainer->name)[0] }}
-                                </a>
-                            @else
-                                <a href="{{ route('login', ['redirect' => route('pt-sessions.create', ['trainer_id' => $trainer->id])]) }}" class="block w-full py-3 rounded-full text-center text-xs font-bold bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-sm shadow-orange-500/25 transition">
-                                    Booking Sesi Bersama {{ explode(' ', $trainer->name)[0] }}
-                                </a>
-                            @endauth
+                        <!-- 2. Data Pelatih -->
+                        <div class="p-6 bg-[#F6F6F7] flex-1 flex flex-col justify-between space-y-4">
+                            <div class="space-y-2">
+                                <!-- Nama -->
+                                <h3 class="font-poppins font-extrabold text-xl text-[#16151A] leading-snug">
+                                    {{ $trainer->name }}
+                                </h3>
+
+                                <!-- Specialization -->
+                                <div class="text-xs font-bold text-[#FF5722] tracking-wide">
+                                    {{ $trainer->trainerProfile->specialization ?? 'Strength & Performance' }}
+                                </div>
+
+                                <!-- Experience -->
+                                <div class="text-xs font-semibold text-[#565A66] flex items-center gap-1.5 pt-0.5">
+                                    <svg class="w-3.5 h-3.5 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{{ $trainer->trainerProfile->experience ?? 5 }}+ Tahun Jam Terbang</span>
+                                </div>
+
+                                <!-- Bio -->
+                                <p class="text-xs text-[#565A66] leading-relaxed line-clamp-3 pt-1">
+                                    {{ $trainer->trainerProfile->bio ?? 'Berpengalaman melatih atlet dan pegiat kebugaran umum dengan fokus pada hipertrofi, biomekanika beban, dan pencegahan cedera.' }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 @empty
@@ -81,32 +94,6 @@
                         <p class="text-sm font-semibold text-[#565A66]">Belum ada pelatih yang terdaftar saat ini.</p>
                     </div>
                 @endforelse
-            </div>
-
-            <!-- 3. HOW PT BOOKING WORKS BANNER -->
-            <div class="bg-white rounded-2xl p-8 sm:p-10 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)]">
-                <div class="max-w-2xl mx-auto text-center space-y-3 mb-8">
-                    <span class="text-xs font-bold text-[#FF5722] uppercase tracking-wider">CARA KERJA</span>
-                    <h3 class="font-poppins font-black text-2xl text-[#16151A]">3 Langkah Memulai Sesi Personal Trainer</h3>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                    <div class="space-y-2 p-4">
-                        <span class="w-9 h-9 rounded-full bg-[#FF5722] text-white font-black text-sm shadow-sm shadow-orange-500/30 inline-flex items-center justify-center">1</span>
-                        <h4 class="font-poppins font-bold text-sm text-[#16151A]">Miliki Paket PT Aktif</h4>
-                        <p class="text-xs text-[#565A66]">Pilih paket membership yang menyertakan kuota PT atau beli paket sesi tambahan di portal.</p>
-                    </div>
-                    <div class="space-y-2 p-4">
-                        <span class="w-9 h-9 rounded-full bg-[#FF5722] text-white font-black text-sm shadow-sm shadow-orange-500/30 inline-flex items-center justify-center">2</span>
-                        <h4 class="font-poppins font-bold text-sm text-[#16151A]">Pilih Pelatih &amp; Waktu</h4>
-                        <p class="text-xs text-[#565A66]">Tentukan instruktur pilihan dan pilih jam slot latihan yang cocok dengan rutinitas Anda.</p>
-                    </div>
-                    <div class="space-y-2 p-4">
-                        <span class="w-9 h-9 rounded-full bg-[#FF5722] text-white font-black text-sm shadow-sm shadow-orange-500/30 inline-flex items-center justify-center">3</span>
-                        <h4 class="font-poppins font-bold text-sm text-[#16151A]">Latihan Terarah</h4>
-                        <p class="text-xs text-[#565A66]">Pelatih mengonfirmasi jadwal dan mendampingi sesi Anda secara intensif di gym.</p>
-                    </div>
-                </div>
             </div>
 
         </div>

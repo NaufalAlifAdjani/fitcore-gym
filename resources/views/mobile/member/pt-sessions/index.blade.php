@@ -34,11 +34,8 @@
 
         <!-- 2. Kartu Saldo Kuota Sesi (Terstruktur, Rapi, & Bernapas Lega) -->
         <div class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.04)] space-y-3">
-            <div class="flex items-center justify-between">
+            <div>
                 <span class="text-[10px] font-bold uppercase tracking-wider text-[#565A66]">Sisa Kuota Sesi</span>
-                <a href="{{ route('mobile.member.pt-packages.index') }}" class="text-xs font-bold text-[#FF5722] hover:text-[#E64A19] transition">
-                    Top-up / Beli Sesi &rarr;
-                </a>
             </div>
 
             <div>
@@ -96,7 +93,7 @@
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
-                        <span>Beli Paket Sesi PT (+ Booking Sesi)</span>
+                        <span>Beli Paket Sesi PT</span>
                     </a>
                     <p class="text-[11px] text-center text-[#565A66]">
                         Selesaikan pembelian paket untuk membuka akses booking jadwal latihan.

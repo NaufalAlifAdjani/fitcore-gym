@@ -22,11 +22,19 @@
                 ])>
                 Paket Membership
             </a>
+            <a href="{{ route('landing.pt-pricing') }}"
+                @class([
+                    'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
+                    'bg-[#FF5722] text-white shadow-xs' => request()->routeIs('landing.pt-pricing') || $active === 'pt-pricing',
+                    'text-[#565A66] hover:text-[#16151A]' => !request()->routeIs('landing.pt-pricing') && $active !== 'pt-pricing',
+                ])>
+                Harga Sesi PT
+            </a>
             <a href="{{ Route::has('landing.trainers') ? route('landing.trainers') : (Route::has('pt-sessions.index') ? route('pt-sessions.index') : '#') }}"
                 @class([
                     'px-4 py-2 text-xs font-bold rounded-full transition-all duration-200',
-                    'bg-[#FF5722] text-white shadow-xs' => request()->routeIs('landing.trainers') || request()->routeIs('pt-sessions.*') || $active === 'pt',
-                    'text-[#565A66] hover:text-[#16151A]' => !request()->routeIs('landing.trainers') && !request()->routeIs('pt-sessions.*') && $active !== 'pt',
+                    'bg-[#FF5722] text-white shadow-xs' => request()->routeIs('landing.trainers') || request()->routeIs('pt-sessions.*') || $active === 'pt' || $active === 'trainers',
+                    'text-[#565A66] hover:text-[#16151A]' => !request()->routeIs('landing.trainers') && !request()->routeIs('pt-sessions.*') && $active !== 'pt' && $active !== 'trainers',
                 ])>
                 Personal Trainer
             </a>
@@ -63,38 +71,27 @@
                         <!-- Profile Dropdown -->
                         <div x-cloak x-show="userMenuOpen" x-transition
                             class="absolute right-0 top-12 z-50 w-56 rounded-2xl border border-gray-200 bg-white p-2 shadow-xl">
-                            <div class="border-b border-gray-100 px-3 py-2">
-                                <p class="truncate text-xs font-bold text-zinc-900">{{ Auth::user()?->name }}</p>
-                                <p class="truncate text-[10px] text-zinc-500">{{ Auth::user()?->email }}</p>
+                            <div class="border-b border-[#E5E7EB] px-3 py-2 mb-1">
+                                <p class="truncate text-xs font-bold text-[#16151A]">{{ Auth::user()?->name }}</p>
                             </div>
                             @if (Auth::user()?->role === 'admin')
                                 <a href="{{ route('admin.dashboard') }}"
                                     class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-amber-600 hover:bg-amber-50">
                                     Portal Admin
                                 </a>
-                            @elseif (Auth::user()?->role === 'trainer')
-                                <a href="{{ route('trainer.dashboard') }}"
-                                    class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-emerald-600 hover:bg-emerald-50">
-                                    Portal Trainer
-                                </a>
-                            @else
-                                <a href="{{ route('member.dashboard') }}"
-                                    class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-zinc-700 hover:bg-orange-50/70 hover:text-zinc-900">
-                                    Dashboard Member
-                                </a>
-                                <a href="{{ route('member.card') }}"
-                                    class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-zinc-700 hover:bg-orange-50/70 hover:text-zinc-900">
-                                    Kartu Member Digital
-                                </a>
                             @endif
                             <a href="{{ route('profile.edit') }}"
-                                class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-zinc-700 hover:bg-orange-50/70 hover:text-zinc-900">
+                                class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-[#16151A] transition-colors">
                                 Pengaturan Profil
+                            </a>
+                            <a href="{{ route('profile.edit') }}#password"
+                                class="block rounded-xl px-3 py-2.5 text-xs font-semibold text-[#565A66] hover:bg-orange-50/70 hover:text-[#16151A] transition-colors">
+                                Ganti Kata Sandi
                             </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit"
-                                    class="w-full rounded-xl px-3 py-2.5 text-left text-xs font-bold text-[#FF5722] hover:bg-orange-50 cursor-pointer">
+                                    class="w-full rounded-xl px-3 py-2.5 text-left text-xs font-bold text-[#FF5722] hover:bg-orange-50 cursor-pointer transition-colors">
                                     Keluar
                                 </button>
                             </form>
@@ -140,8 +137,12 @@
             class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('landing.packages') || request()->routeIs('member.membership.*') || $active === 'packages') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-zinc-700 hover:bg-orange-50 hover:text-zinc-900' }}">
             Paket Membership
         </a>
+        <a href="{{ route('landing.pt-pricing') }}"
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('landing.pt-pricing') || $active === 'pt-pricing') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-zinc-700 hover:bg-orange-50 hover:text-zinc-900' }}">
+            Harga Sesi PT
+        </a>
         <a href="{{ Route::has('landing.trainers') ? route('landing.trainers') : (Route::has('pt-sessions.index') ? route('pt-sessions.index') : '#') }}"
-            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('landing.trainers') || request()->routeIs('pt-sessions.*') || $active === 'pt') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-zinc-700 hover:bg-orange-50 hover:text-zinc-900' }}">
+            class="block rounded-xl px-4 py-2.5 text-xs font-bold {{ (request()->routeIs('landing.trainers') || request()->routeIs('pt-sessions.*') || $active === 'pt' || $active === 'trainers') ? 'bg-[#FF5722] text-white shadow-xs' : 'text-zinc-700 hover:bg-orange-50 hover:text-zinc-900' }}">
             Personal Trainer
         </a>
         <a href="{{ Route::has('landing.about') ? route('landing.about') : '#' }}"

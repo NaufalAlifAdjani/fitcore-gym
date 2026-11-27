@@ -16,6 +16,8 @@
         x-data="{
             showDetailModal: false,
             selectedDetail: null,
+            showReceiptModal: false,
+            selectedReceipt: null,
 
             openDetailModal(detail) {
                 this.selectedDetail = detail;
@@ -24,9 +26,17 @@
             closeDetailModal() {
                 this.showDetailModal = false;
                 this.selectedDetail = null;
+            },
+            openReceiptModal(receipt) {
+                this.selectedReceipt = receipt;
+                this.showReceiptModal = true;
+            },
+            closeReceiptModal() {
+                this.showReceiptModal = false;
+                this.selectedReceipt = null;
             }
         }"
-        x-on:keydown.escape.window="closeDetailModal()"
+        x-on:keydown.escape.window="closeDetailModal(); closeReceiptModal();"
         class="space-y-5"
     >
         <!-- 1. Header Halaman Riwayat Transaksi -->
@@ -82,6 +92,14 @@
                                 $isVerified = $payment->status === 'verified';
                                 $isPending = $payment->status === 'pending';
                                 $isRejected = $payment->status === 'rejected';
+                                $hasProofImage = !empty($payment->proof_image_url) || !empty($payment->proof_image_path);
+                                $proofUrl = $payment->proof_image_url ?: ($payment->proof_image_path ? asset('storage/' . $payment->proof_image_path) : null);
+                                $isPt = $payment->package_type === 'pt_session' || $payment->payment_type === 'pt_package';
+                                $packageId = $payment->package_id ?? $payment->membership_id;
+                                $resumeUrl = $isPt
+                                    ? route('mobile.member.pt-packages.upload-payment', ['payment' => $payment->id])
+                                    : ($packageId ? route('mobile.member.packages.checkout', $packageId) : route('mobile.member.packages'));
+
                                 $packageName = $payment->membershipPackage->name 
                                     ?? $payment->ptPackage->name 
                                     ?? $payment->activatedMembership->package->name 
@@ -102,10 +120,17 @@
                                             Berhasil
                                         </span>
                                     @elseif ($isPending)
-                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                            Menunggu Verifikasi
-                                        </span>
+                                        @if (! $hasProofImage)
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-300">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                                Menunggu Pembayaran
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                                                Menunggu Verifikasi
+                                            </span>
+                                        @endif
                                     @else
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
                                             Ditolak
@@ -130,28 +155,72 @@
                                     </div>
                                 </div>
 
-                                <!-- Aksi Aksi Cepat (Detail & Unduh Invoice) -->
+                                <!-- Aksi Aksi Cepat -->
                                 <div class="pt-2.5 border-t border-[#E5E7EB] flex items-center justify-between gap-2">
-                                    <button
-                                        type="button"
-                                        @click="openDetailModal({
-                                            invoice: '{{ $invoiceNumber }}',
-                                            packageName: '{{ addslashes($packageName) }}',
-                                            bank: '{{ addslashes($payment->bank->name ?? 'Transfer Bank') }}',
-                                            accountNumber: '{{ $payment->bank->account_number ?? '-' }}',
-                                            accountName: '{{ addslashes($payment->bank->account_name ?? 'FitCore Gym') }}',
-                                            amount: 'Rp {{ number_format($payment->amount, 0, ',', '.') }}',
-                                            date: '{{ $dateFormatted }}',
-                                            status: '{{ $payment->status }}',
-                                            rejectionReason: '{{ addslashes($payment->rejection_reason ?? '') }}',
-                                            downloadUrl: '{{ $isVerified ? route('mobile.member.riwayat-transaksi.invoice', $payment) : '' }}'
-                                        })"
-                                        class="px-3 py-1.5 rounded-full text-[11px] font-bold border border-[#E5E7EB] text-[#16151A] hover:bg-gray-50 transition cursor-pointer"
-                                    >
-                                        Rincian Detail
-                                    </button>
+                                    @if ($isPending)
+                                        @if (! $hasProofImage)
+                                            <button
+                                                type="button"
+                                                @click="openDetailModal({
+                                                    invoice: '{{ $invoiceNumber }}',
+                                                    packageName: '{{ addslashes($packageName) }}',
+                                                    bank: '{{ addslashes($payment->bank->name ?? 'Transfer Bank') }}',
+                                                    accountNumber: '{{ $payment->bank->account_number ?? '-' }}',
+                                                    accountName: '{{ addslashes($payment->bank->account_name ?? 'FitCore Gym') }}',
+                                                    amount: 'Rp {{ number_format($payment->amount, 0, ',', '.') }}',
+                                                    date: '{{ $dateFormatted }}',
+                                                    status: 'Menunggu Pembayaran',
+                                                    rejectionReason: '',
+                                                    downloadUrl: ''
+                                                })"
+                                                class="px-3 py-1.5 rounded-full text-[11px] font-bold border border-[#E5E7EB] text-[#16151A] hover:bg-gray-50 transition cursor-pointer"
+                                            >
+                                                Rincian
+                                            </button>
 
-                                    @if ($isVerified)
+                                            <a href="{{ $resumeUrl }}"
+                                               class="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-[11px] font-bold transition shadow-xs">
+                                                <span>Lanjutkan Pembayaran</span>
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                                </svg>
+                                            </a>
+                                        @else
+                                            <!-- Hanya 1 button: Bukti Transfer -->
+                                            <button
+                                                type="button"
+                                                @click="openReceiptModal({
+                                                    invoice_id: '{{ $invoiceNumber }}',
+                                                    amount: 'Rp {{ number_format($payment->amount, 0, ',', '.') }}',
+                                                    bank_sender: '{{ addslashes($payment->bank_sender ?? '-') }}',
+                                                    transfer_date: '{{ $dateFormatted }}',
+                                                    image_url: '{{ $proofUrl }}'
+                                                })"
+                                                class="w-full py-2 rounded-full text-[11px] font-bold border border-[#16151A] text-[#16151A] hover:bg-[#16151A] hover:text-white transition text-center cursor-pointer shadow-xs"
+                                            >
+                                                Bukti Transfer
+                                            </button>
+                                        @endif
+                                    @elseif ($isVerified)
+                                        <button
+                                            type="button"
+                                            @click="openDetailModal({
+                                                invoice: '{{ $invoiceNumber }}',
+                                                packageName: '{{ addslashes($packageName) }}',
+                                                bank: '{{ addslashes($payment->bank->name ?? 'Transfer Bank') }}',
+                                                accountNumber: '{{ $payment->bank->account_number ?? '-' }}',
+                                                accountName: '{{ addslashes($payment->bank->account_name ?? 'FitCore Gym') }}',
+                                                amount: 'Rp {{ number_format($payment->amount, 0, ',', '.') }}',
+                                                date: '{{ $dateFormatted }}',
+                                                status: '{{ $payment->status }}',
+                                                rejectionReason: '',
+                                                downloadUrl: '{{ route('mobile.member.riwayat-transaksi.invoice', $payment) }}'
+                                            })"
+                                            class="px-3 py-1.5 rounded-full text-[11px] font-bold border border-[#E5E7EB] text-[#16151A] hover:bg-gray-50 transition cursor-pointer"
+                                        >
+                                            Rincian Detail
+                                        </button>
+
                                         <a href="{{ route('mobile.member.riwayat-transaksi.invoice', $payment) }}"
                                            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-[11px] font-bold transition shadow-xs group">
                                             <svg class="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -159,10 +228,31 @@
                                             </svg>
                                             <span>Invoice PDF</span>
                                         </a>
-                                    @elseif ($isRejected && $payment->rejection_reason)
-                                        <span class="text-[10px] text-rose-600 font-medium truncate max-w-[150px]">
-                                            Alasan: {{ $payment->rejection_reason }}
-                                        </span>
+                                    @else
+                                        <button
+                                            type="button"
+                                            @click="openDetailModal({
+                                                invoice: '{{ $invoiceNumber }}',
+                                                packageName: '{{ addslashes($packageName) }}',
+                                                bank: '{{ addslashes($payment->bank->name ?? 'Transfer Bank') }}',
+                                                accountNumber: '{{ $payment->bank->account_number ?? '-' }}',
+                                                accountName: '{{ addslashes($payment->bank->account_name ?? 'FitCore Gym') }}',
+                                                amount: 'Rp {{ number_format($payment->amount, 0, ',', '.') }}',
+                                                date: '{{ $dateFormatted }}',
+                                                status: '{{ $payment->status }}',
+                                                rejectionReason: '{{ addslashes($payment->rejection_reason ?? '') }}',
+                                                downloadUrl: ''
+                                            })"
+                                            class="px-3 py-1.5 rounded-full text-[11px] font-bold border border-[#E5E7EB] text-[#16151A] hover:bg-gray-50 transition cursor-pointer"
+                                        >
+                                            Rincian
+                                        </button>
+
+                                        @if ($payment->rejection_reason)
+                                            <span class="text-[10px] text-rose-600 font-medium truncate max-w-[150px]">
+                                                Alasan: {{ $payment->rejection_reason }}
+                                            </span>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
@@ -260,6 +350,70 @@
                             Unduh Invoice
                         </a>
                     </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL BUKTI TRANSFER MOBILE -->
+        <div
+            x-cloak
+            x-show="showReceiptModal"
+            x-transition.opacity
+            class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs"
+            role="dialog"
+            aria-modal="true"
+        >
+            <div
+                x-show="showReceiptModal"
+                x-transition
+                @click.outside="closeReceiptModal()"
+                class="w-full max-w-sm overflow-hidden rounded-2xl bg-white shadow-2xl border border-[#E5E7EB] space-y-4 p-5"
+            >
+                <div class="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-[#FF5722]">Bukti Pembayaran</span>
+                        <h3 class="font-poppins text-base font-bold text-[#16151A]" x-text="'Invoice #' + (selectedReceipt?.invoice_id || '')"></h3>
+                    </div>
+                    <button
+                        type="button"
+                        @click="closeReceiptModal()"
+                        class="rounded-full p-1.5 text-[#565A66] hover:bg-[#F6F6F7] hover:text-[#16151A] transition cursor-pointer"
+                        aria-label="Tutup"
+                    >
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none"><path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </button>
+                </div>
+
+                <div class="space-y-3">
+                    <template x-if="selectedReceipt?.image_url">
+                        <div class="overflow-hidden rounded-xl border border-[#E5E7EB] bg-slate-100 flex items-center justify-center max-h-72">
+                            <img
+                                :src="selectedReceipt.image_url"
+                                alt="Bukti Transfer"
+                                class="max-h-72 w-full object-contain"
+                            />
+                        </div>
+                    </template>
+                    <template x-if="!selectedReceipt?.image_url">
+                        <div class="p-6 text-center text-xs text-[#565A66] bg-gray-50 rounded-xl border border-[#E5E7EB]">
+                            Berkas bukti pembayaran tidak tersedia atau berupa dokumen PDF.
+                        </div>
+                    </template>
+
+                    <div class="flex justify-between text-xs py-1">
+                        <span class="text-[#565A66]">Total Transfer</span>
+                        <span class="font-bold text-[#FF5722]" x-text="selectedReceipt?.amount || '-'"></span>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button
+                        type="button"
+                        @click="closeReceiptModal()"
+                        class="w-full py-2 rounded-full border border-[#E5E7EB] text-xs font-bold text-[#565A66] hover:bg-gray-50 transition"
+                    >
+                        Tutup
+                    </button>
                 </div>
             </div>
         </div>

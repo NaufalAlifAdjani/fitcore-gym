@@ -7,19 +7,28 @@
 <x-card :padding="false" {{ $attributes->merge(['class' => '!rounded-3xl border border-[#E5E7EB] p-6 sm:p-8 shadow-[0_4px_12px_rgba(0,0,0,0.04)] bg-white']) }} x-data="{
     fileName: '',
     filePreview: null,
+    errorMessage: '',
     handleFileChange(event) {
         const file = event.target.files[0];
+        this.errorMessage = '';
         if (file) {
-            this.fileName = file.name;
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.filePreview = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            } else {
-                this.filePreview = null;
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                this.errorMessage = 'Format berkas tidak didukung. Harap pilih gambar dengan format JPG, JPEG, PNG, atau WEBP.';
+                this.removeFile();
+                return;
             }
+            if (file.size > 2 * 1024 * 1024) {
+                this.errorMessage = 'Ukuran berkas melebihi 2 MB. Silakan pilih berkas yang lebih kecil.';
+                this.removeFile();
+                return;
+            }
+            this.fileName = file.name;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.filePreview = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
     },
     removeFile() {
@@ -56,23 +65,7 @@
             <p class="mt-1 text-[11px] text-[#565A66]">Nama yang tertera pada akun bank atau mutasi rekening Anda.</p>
         </div>
 
-        <!-- 2. Bank Pengirim -->
-        <div>
-            <label for="sender_bank" class="block text-xs font-bold text-[#16151A] mb-2">
-                Bank Pengirim <span class="text-[#FF5722]">*</span>
-            </label>
-            <x-text-input
-                id="sender_bank"
-                name="sender_bank"
-                type="text"
-                required
-                placeholder="Contoh: BCA / Mandiri / BRI / BNI / Seabank"
-                class="w-full !text-xs !p-3.5"
-                value="{{ old('sender_bank', $defaultSenderBank) }}"
-            />
-        </div>
-
-        <!-- 3. Unggah Berkas Bukti Transfer -->
+        <!-- 2. Unggah Berkas Bukti Transfer -->
         <div>
             <label class="block text-xs font-bold text-[#16151A] mb-2">
                 Foto / Screenshot Bukti Transfer <span class="text-[#FF5722]">*</span>
@@ -85,7 +78,7 @@
                     name="proof_image"
                     id="proof_image"
                     required
-                    accept="image/jpeg,image/png,image/jpg,image/webp,application/pdf"
+                    accept="image/jpeg,image/png,image/jpg,image/webp"
                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     x-ref="fileInput"
                     x-on:change="handleFileChange($event)"
@@ -102,7 +95,7 @@
                             Pilih atau seret berkas bukti bayar ke sini
                         </p>
                         <p class="text-[11px] text-[#565A66] mt-0.5">
-                            Format yang didukung: JPG, PNG, WEBP, PDF (Maks. 5 MB)
+                            Format yang didukung: JPG, JPEG, PNG, WEBP (Maks. 2 MB)
                         </p>
                     </div>
                 </div>
@@ -112,11 +105,6 @@
                     <div class="flex items-center gap-3 truncate">
                         <template x-if="filePreview">
                             <img :src="filePreview" class="h-10 w-10 object-cover rounded-lg border border-[#E5E7EB] shrink-0" alt="Preview Bukti" />
-                        </template>
-                        <template x-if="!filePreview">
-                            <span class="h-10 w-10 flex items-center justify-center rounded-lg bg-gray-100 text-[#565A66] shrink-0 text-xs font-bold uppercase">
-                                PDF
-                            </span>
                         </template>
                         <div class="truncate">
                             <p class="text-xs font-bold text-[#16151A] truncate" x-text="fileName"></p>
@@ -130,6 +118,9 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Error Message Client-side -->
+            <p x-show="errorMessage" x-text="errorMessage" class="mt-2 text-xs text-rose-600 font-bold" x-cloak></p>
             <p class="mt-1.5 text-[11px] text-[#565A66]">
                 Gambar struk akan dikompres secara otomatis untuk mempercepat proses verifikasi.
             </p>

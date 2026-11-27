@@ -153,8 +153,7 @@
                     <div>
                         <p class="text-xs font-bold text-[#565A66] uppercase tracking-wider font-inter">Trainer Aktif</p>
                         <h3 class="text-3xl font-extrabold font-poppins text-[#16151A] mt-1">{{ number_format($activeTrainers) }}</h3>
-                        <p class="text-xs font-medium text-[#10B981] mt-1 flex items-center gap-1">
-                            <span class="inline-block w-2 h-2 rounded-full bg-[#10B981]"></span>
+                        <p class="text-xs font-medium text-[#10B981] mt-1">
                             <span>{{ $totalTrainers > 0 ? round(($activeTrainers / $totalTrainers) * 100) : 0 }}% rasio aktif</span>
                         </p>
                     </div>
@@ -326,18 +325,15 @@
                                     <!-- Kolom Shift Kerja -->
                                     <td class="py-4 px-6">
                                         @if ($trainer->shift === 'sore')
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-bold">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-[11px] font-bold">
                                                 Sore (14:00 – 22:00)
                                             </span>
                                         @elseif ($trainer->shift === 'fleksibel')
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold">
                                                 Fleksibel (06:00 – 22:00)
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-bold">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[11px] font-bold">
                                                 Pagi (06:00 – 14:00)
                                             </span>
                                         @endif
@@ -360,13 +356,11 @@
                                     <!-- Kolom Status -->
                                     <td class="py-4 px-6">
                                         @if ($trainer->status === 'active')
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0] text-[11px] font-bold">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-[#16A34A]"></span>
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#DCFCE7] text-[#16A34A] border border-[#BBF7D0] text-[11px] font-bold">
                                                 Aktif
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA] text-[11px] font-bold">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-[#DC2626]"></span>
+                                            <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA] text-[11px] font-bold">
                                                 Nonaktif
                                             </span>
                                         @endif

@@ -184,46 +184,64 @@
                     <span class="text-[10px] font-bold text-[#FF5722] uppercase tracking-wider">TIM COACH</span>
                     <h2 class="font-poppins font-bold text-lg text-[#16151A]">Personal Trainer</h2>
                 </div>
-                <a href="{{ route('mobile.landing.trainers') }}" class="text-xs font-bold text-[#FF5722]">Lihat Semua &rarr;</a>
+                <div class="flex items-center gap-2.5">
+                    <a href="{{ route('mobile.landing.pt-pricing') }}" class="text-xs font-bold text-[#565A66] hover:text-[#FF5722]">Harga Sesi &rarr;</a>
+                    <a href="{{ route('mobile.landing.trainers') }}" class="text-xs font-bold text-[#FF5722]">Lihat Semua &rarr;</a>
+                </div>
             </div>
 
-            <div class="space-y-3">
+            <div class="space-y-4">
                 @foreach ($trainers as $trainer)
-                    <div class="bg-white rounded-2xl p-4 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] flex items-center justify-between gap-3">
-                        <div class="flex items-center gap-3">
-                            @php
-                                $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $trainer->name)))[0]);
-                                $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
-                                    ? asset("images/trainers/coach-{$cFirstName}.jpg")
-                                    : ($trainer->trainerProfile?->photo_path ? asset('storage/' . $trainer->trainerProfile->photo_path) : null);
-                            @endphp
+                    @php
+                        $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $trainer->name)))[0]);
+                        $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
+                            ? asset("images/trainers/coach-{$cFirstName}.jpg")
+                            : ($trainer->trainerProfile?->photo_path ? asset('storage/' . $trainer->trainerProfile->photo_path) : ($trainer->avatar_url ?? null));
+                    @endphp
+                    <div class="rounded-2xl overflow-hidden border border-[#E5E7EB] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.06)] flex flex-col group">
+                        <!-- 1. Foto PT -->
+                        <div class="w-full aspect-[4/3] bg-[#2C2828] relative overflow-hidden flex items-center justify-center">
                             @if ($cPhoto)
-                                <img src="{{ $cPhoto }}" alt="{{ $trainer->name }}" class="w-12 h-12 rounded-xl object-cover shrink-0 border border-orange-200 shadow-xs">
+                                <img src="{{ $cPhoto }}" 
+                                     alt="{{ $trainer->name }}" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                                     loading="lazy">
                             @else
-                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#FF5722] to-[#FFB703] text-white flex items-center justify-center font-poppins font-black text-sm shrink-0 border border-white/20 shadow-xs shadow-orange-500/25">
-                                    {{ strtoupper(substr($trainer->name, 0, 2)) }}
+                                <div class="w-full h-full bg-gradient-to-b from-[#383332] to-[#252222] flex flex-col items-center justify-center text-zinc-300 p-4">
+                                    <svg class="w-10 h-10 text-zinc-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <span class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Foto PT</span>
                                 </div>
                             @endif
-                            <div>
-                                <h3 class="font-poppins font-bold text-sm text-[#16151A]">{{ $trainer->name }}</h3>
-                                <p class="text-[11px] font-semibold text-[#FF5722]">{{ $trainer->trainerProfile->specialization ?? 'Strength Coach' }}</p>
-                                <div class="flex items-center gap-1 text-[11px] text-amber-500 font-bold mt-0.5">
-                                    <span>★ {{ $trainer->trainerProfile->rating ?? '4.98' }}</span>
-                                    <span class="text-[#565A66] font-normal">• {{ $trainer->trainerProfile->experience ?? 4 }} Thn</span>
-                                </div>
-                            </div>
                         </div>
 
-                        <div>
-                            @auth
-                                <a href="{{ route('mobile.member.pt-sessions.create', ['trainer_id' => $trainer->id]) }}" class="px-3.5 py-2 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-[11px] font-bold shadow-xs shadow-orange-500/25 active:scale-95 transition whitespace-nowrap">
-                                    Booking
-                                </a>
-                            @else
-                                <a href="{{ route('mobile.login', ['redirect' => route('mobile.member.pt-sessions.create', ['trainer_id' => $trainer->id])]) }}" class="px-3.5 py-2 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-[11px] font-bold shadow-xs shadow-orange-500/25 active:scale-95 transition whitespace-nowrap">
-                                    Booking
-                                </a>
-                            @endauth
+                        <!-- 2. Data Pelatih -->
+                        <div class="p-4 bg-[#F6F6F7] flex-1 flex flex-col justify-between space-y-3">
+                            <div class="space-y-1.5">
+                                <!-- Nama -->
+                                <h3 class="font-poppins font-extrabold text-base text-[#16151A] leading-snug">
+                                    {{ $trainer->name }}
+                                </h3>
+
+                                <!-- Specialization -->
+                                <div class="text-xs font-bold text-[#FF5722]">
+                                    {{ $trainer->trainerProfile->specialization ?? 'Strength Coach' }}
+                                </div>
+
+                                <!-- Experience -->
+                                <div class="text-xs font-semibold text-[#565A66] flex items-center gap-1.5 pt-0.5">
+                                    <svg class="w-3.5 h-3.5 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{{ $trainer->trainerProfile->experience ?? 4 }}+ Tahun Jam Terbang</span>
+                                </div>
+
+                                <!-- Bio -->
+                                <p class="text-xs text-[#565A66] leading-relaxed line-clamp-2 pt-0.5">
+                                    {{ $trainer->trainerProfile->bio ?? 'Mendampingi program latihan intensif dan pembentukan kekuatan fungsional.' }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 @endforeach

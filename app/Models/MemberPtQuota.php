@@ -38,6 +38,11 @@ class MemberPtQuota extends Model
         return $this->belongsTo(PtPackage::class);
     }
 
+    public function trainer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'trainer_id');
+    }
+
     public function sessions(): HasMany
     {
         return $this->hasMany(PtSession::class);
@@ -58,10 +63,20 @@ class MemberPtQuota extends Model
         return $this->remaining_sessions > 0 && ! $this->isExpired();
     }
 
+    public function isFullyConsumed(): bool
+    {
+        return (int) $this->remaining_sessions <= 0;
+    }
+
     public function scopeActiveValid(Builder $query): Builder
     {
         return $query->where('status', 'active')
             ->where('end_date', '>=', now()->toDateString())
             ->where('remaining_sessions', '>', 0);
+    }
+
+    public function scopeActiveWithSessions(Builder $query): Builder
+    {
+        return $this->scopeActiveValid($query);
     }
 }

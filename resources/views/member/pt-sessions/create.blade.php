@@ -17,6 +17,22 @@
                 </p>
             </div>
 
+            @if ($errors->any())
+                <div class="p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm flex items-start gap-3 shadow-xs">
+                    <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div class="space-y-1">
+                        <div class="font-bold">Gagal mengajukan booking sesi:</div>
+                        <ul class="list-disc list-inside text-xs space-y-0.5">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
+
             <!-- Main 2-Column Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
@@ -244,52 +260,96 @@
                 <div class="lg:col-span-4 space-y-6">
 
                     <!-- Trainer Profile Card -->
-                    <div class="bg-white rounded-3xl border border-[#E5E7EB] p-6 shadow-sm space-y-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full overflow-hidden bg-zinc-800 shrink-0">
-                                @if (isset($trainer?->trainerProfile?->photo_path) && $trainer?->trainerProfile?->photo_path)
-                                    <img src="{{ asset('storage/'.$trainer->trainerProfile->photo_path) }}"
-                                        alt="{{ $trainer?->name ?? 'Coach' }}" class="w-full h-full object-cover">
-                                @else
-                                    <div class="w-full h-full bg-gradient-to-tr from-zinc-800 to-zinc-600 flex items-center justify-center text-white font-bold text-sm">
-                                        {{ strtoupper(substr($trainer?->name ?? 'Rama', 0, 2)) }}
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="min-w-0">
-                                <div class="flex items-center gap-1.5">
-                                    <h3 class="text-sm font-bold text-[#16151A] truncate">
-                                        {{ $trainer?->name ?? 'Coach Rama Prasetya' }}
-                                    </h3>
-                                    <span class="text-[#FF5722] text-xs">✓</span>
+                    @php
+                        $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $trainer?->name ?? 'Rama')))[0]);
+                        $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
+                            ? asset("images/trainers/coach-{$cFirstName}.jpg")
+                            : ($trainer?->trainerProfile?->photo_path ? asset('storage/'.$trainer->trainerProfile->photo_path) : ($trainer?->avatar_url ?? null));
+                    @endphp
+                    <div class="bg-white rounded-3xl border border-[#E5E7EB] overflow-hidden shadow-sm flex flex-col">
+                        <!-- 1. Foto PT -->
+                        <div class="w-full aspect-[4/3] bg-[#2C2828] relative overflow-hidden flex items-center justify-center">
+                            @if ($cPhoto)
+                                <img src="{{ $cPhoto }}"
+                                    alt="{{ $trainer?->name ?? 'Coach' }}" 
+                                    class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full bg-gradient-to-b from-[#383332] to-[#252222] flex flex-col items-center justify-center text-zinc-300 p-4">
+                                    <svg class="w-10 h-10 text-zinc-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <span class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Foto PT</span>
                                 </div>
-                                <p class="text-[11px] text-[#565A66]">
-                                    {{ $trainer?->trainerProfile?->specialization ?? 'Hypertrophy & Strength Conditioning' }}
-                                </p>
-                            </div>
+                            @endif
                         </div>
 
-                        <!-- Sisa Kuota Bar -->
-                        <div class="pt-2 border-t border-[#E5E7EB] space-y-2">
-                            <div class="flex justify-between items-center text-xs">
-                                <span class="text-[#565A66] font-medium">Sisa Kuota Sesi</span>
-                                <div class="font-bold">
-                                    <span class="text-[#FF5722]">{{ $quota->remaining_sessions ?? 0 }}</span>
-                                    <span class="text-[#16151A]"> / {{ $quota->total_sessions ?? 0 }} Sesi</span>
+                        <!-- 2. Data Pelatih -->
+                        <div class="p-5 bg-[#F6F6F7] flex-1 flex flex-col justify-between space-y-4">
+                            <div class="space-y-2">
+                                <!-- Nama & Pilihan Ganti Pelatih -->
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="text-base sm:text-lg font-black text-[#16151A] leading-snug font-poppins">
+                                        {{ $trainer?->name ?? 'Coach Rama Prasetya' }}
+                                    </h3>
+                                    @if(isset($trainers) && $trainers->count() > 1)
+                                        <div x-data="{ openTrainerSelect: false }" class="relative shrink-0">
+                                            <button type="button" @click="openTrainerSelect = !openTrainerSelect" class="text-[11px] font-bold text-[#FF5722] hover:text-[#E64A19] hover:underline flex items-center gap-0.5 cursor-pointer">
+                                                <span>Ganti</span>
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                                            </button>
+                                            <div x-show="openTrainerSelect" @click.away="openTrainerSelect = false" x-cloak class="absolute right-0 mt-1 w-56 bg-white rounded-xl shadow-lg border border-[#E5E7EB] py-1.5 z-50">
+                                                <div class="px-3 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-wider">Pilih Pelatih</div>
+                                                @foreach($trainers as $tOption)
+                                                    <a href="{{ route('pt-sessions.create', ['trainer_id' => $tOption->id]) }}" class="block px-3 py-1.5 text-xs hover:bg-orange-50 transition {{ $tOption->id === $trainer?->id ? 'font-bold text-[#FF5722] bg-orange-50/50' : 'text-[#16151A]' }}">
+                                                        {{ $tOption->name }}
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
+
+                                <!-- Specialization -->
+                                <div class="text-xs font-bold text-[#FF5722]">
+                                    {{ $trainer?->trainerProfile?->specialization ?? 'Hypertrophy & Strength Conditioning' }}
+                                </div>
+
+                                <!-- Experience -->
+                                <div class="text-xs font-semibold text-[#565A66] flex items-center gap-1.5 pt-0.5">
+                                    <svg class="w-3.5 h-3.5 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{{ $trainer?->trainerProfile?->experience ?? 5 }}+ Tahun Jam Terbang</span>
+                                </div>
+
+                                <!-- Bio -->
+                                <p class="text-xs text-[#565A66] leading-relaxed line-clamp-3 pt-0.5">
+                                    {{ $trainer?->trainerProfile?->bio ?? 'Membimbing program latihan presisi tinggi dengan fokus biomekanika dan perkembangan fisik maksimal.' }}
+                                </p>
                             </div>
-                            @php
-                                $total = $quota->total_sessions ?? 0;
-                                $rem = $quota->remaining_sessions ?? 0;
-                                $pct = $total > 0 ? round(($rem / $total) * 100) : 0;
-                            @endphp
-                            <div class="w-full bg-zinc-100 rounded-full h-2 overflow-hidden">
-                                <div class="bg-[#FF5722] h-full rounded-full transition-all duration-300"
-                                    style="width: {{ $pct }}%"></div>
+
+                            <!-- Sisa Kuota Bar -->
+                            <div class="pt-3 border-t border-[#E5E7EB] space-y-2">
+                                <div class="flex justify-between items-center text-xs">
+                                    <span class="text-[#565A66] font-medium">Sisa Kuota Sesi</span>
+                                    <div class="font-bold">
+                                        <span class="text-[#FF5722]">{{ $quota->remaining_sessions ?? 0 }}</span>
+                                        <span class="text-[#16151A]"> / {{ $quota->total_sessions ?? 0 }} Sesi</span>
+                                    </div>
+                                </div>
+                                @php
+                                    $total = $quota->total_sessions ?? 0;
+                                    $rem = $quota->remaining_sessions ?? 0;
+                                    $pct = $total > 0 ? round(($rem / $total) * 100) : 0;
+                                @endphp
+                                <div class="w-full bg-zinc-200 rounded-full h-2 overflow-hidden">
+                                    <div class="bg-[#FF5722] h-full rounded-full transition-all duration-300"
+                                        style="width: {{ $pct }}%"></div>
+                                </div>
+                                <p class="text-[11px] text-[#565A66]">
+                                    Berlaku s/d {{ $quota && $quota->end_date ? \Carbon\Carbon::parse($quota->end_date)->translatedFormat('d M Y') : 'Aktif' }}
+                                </p>
                             </div>
-                            <p class="text-[11px] text-[#565A66]">
-                                Berlaku s/d {{ $quota && $quota->end_date ? \Carbon\Carbon::parse($quota->end_date)->translatedFormat('d M Y') : 'Aktif' }}
-                            </p>
                         </div>
                     </div>
 

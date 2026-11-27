@@ -53,7 +53,7 @@
             </div>
 
             <!-- Right: View Dropdown, View Switcher -->
-            <div class="flex items-center gap-2 self-end md:self-auto">
+            <div class="flex items-center gap-2 self-end md:self-auto flex-wrap sm:flex-nowrap justify-end">
                 <!-- View Dropdown Button (Day / Week / Month) -->
                 <div class="relative" x-data="{ open: @entangle('viewDropdownOpen') }" @click.outside="open = false">
                     <button 
@@ -106,26 +106,28 @@
                 </div>
 
                 <!-- View Segmented Switcher (Calendar / Task) -->
-                <div class="inline-flex rounded-full border border-[#E5E7EB] p-0.5 bg-gray-100 shadow-2xs">
+                <div class="inline-flex items-center rounded-full border border-[#E5E7EB] p-1 bg-gray-100 shadow-2xs">
                     <button 
                         type="button" 
                         wire:click="setMode('calendar')"
-                        class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center justify-center transition cursor-pointer {{ $mode === 'calendar' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                        class="px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap {{ $mode === 'calendar' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
                         title="Tampilan Kalender"
                     >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
+                        <span>Kalender</span>
                     </button>
                     <button 
                         type="button" 
                         wire:click="setMode('tasks')"
-                        class="px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center justify-center transition cursor-pointer {{ $mode === 'tasks' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
-                        title="Tampilan Tasks / Jadwal Sesi"
+                        class="px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap {{ $mode === 'tasks' ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}"
+                        title="Tampilan Daftar Sesi"
                     >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>
+                        <span>Daftar Sesi</span>
                     </button>
                 </div>
             </div>
@@ -136,9 +138,9 @@
             <div wire:key="view-mode-tasks" class="pt-2 space-y-5">
                 <!-- Header Tasks & Filter Tabs -->
                 <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3 border-b border-[#E5E7EB]">
-                    <div>
+                    <div class="space-y-1">
                         <h3 class="text-xl font-bold text-[#16151A] font-heading">Daftar Sesi Latihan</h3>
-                        <p class="text-xs text-[#565A66] mt-0.5">Kelola dan pantau seluruh sesi latihan privat bersama pelatih Anda</p>
+                        <p class="text-xs text-[#565A66]">Kelola dan pantau seluruh sesi latihan privat bersama pelatih Anda</p>
                     </div>
 
                     <!-- Status Filter Pills -->
@@ -195,23 +197,44 @@
 
                 <!-- Tasks List Grouped by Date -->
                 @if($this->tasksList->isEmpty())
-                    <div class="py-12 text-center text-[#565A66]">
-                        <div class="w-12 h-12 rounded-full bg-[#FF5722]/10 text-[#FF5722] flex items-center justify-center mx-auto mb-3">
+                    <div class="py-12 text-center text-[#565A66] space-y-4">
+                        <div class="w-12 h-12 rounded-full bg-[#FF5722]/10 text-[#FF5722] flex items-center justify-center mx-auto">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                             </svg>
                         </div>
-                        <p class="font-medium text-sm">
-                            @if($taskStatusFilter === 'all')
-                                Tidak ada jadwal sesi pada periode ini.
-                            @else
-                                Tidak ada sesi berstatus <strong>{{ $taskStatusFilter === 'pending' ? 'Menunggu' : ($taskStatusFilter === 'confirmed' ? 'Terkonfirmasi' : 'Dibatalkan') }}</strong> pada periode ini.
+                        <div>
+                            <p class="font-medium text-sm text-[#16151A]">
+                                @if($taskStatusFilter === 'all')
+                                    Tidak ada jadwal sesi pada periode {{ \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('F Y') }}.
+                                @else
+                                    Tidak ada sesi berstatus <strong>{{ $taskStatusFilter === 'pending' ? 'Menunggu' : ($taskStatusFilter === 'confirmed' ? 'Terkonfirmasi' : 'Dibatalkan') }}</strong> pada periode ini.
+                                @endif
+                            </p>
+                            @if($taskStatusFilter !== 'all')
+                                <button type="button" wire:click="setTaskStatusFilter('all')" class="mt-2 text-xs font-bold text-[#FF5722] hover:underline cursor-pointer inline-flex items-center gap-1">
+                                    Lihat Semua Status Sesi
+                                </button>
                             @endif
-                        </p>
-                        @if($taskStatusFilter !== 'all')
-                            <button type="button" wire:click="setTaskStatusFilter('all')" class="mt-2.5 text-xs font-bold text-[#FF5722] hover:underline cursor-pointer inline-flex items-center gap-1">
-                                Lihat Semua Status Sesi
-                            </button>
+                        </div>
+
+                        @if($this->nextUpcomingSession && \Carbon\Carbon::parse($this->nextUpcomingSession->session_date)->format('Y-m') !== \Carbon\Carbon::parse($date)->format('Y-m'))
+                            <div class="p-4 bg-orange-50 border border-orange-200 rounded-2xl max-w-md mx-auto text-center space-y-2.5">
+                                <div class="text-[11px] font-bold text-[#FF5722] uppercase tracking-wider">
+                                    Sesi Mendatang Ditemukan
+                                </div>
+                                <p class="text-xs text-[#565A66] leading-relaxed">
+                                    Anda memiliki sesi latihan pada <strong>{{ \Carbon\Carbon::parse($this->nextUpcomingSession->session_date)->locale('id')->translatedFormat('l, d F Y') }}</strong> ({{ substr($this->nextUpcomingSession->start_time, 0, 5) }} WIB) bersama <strong>{{ $this->nextUpcomingSession->trainer->name }}</strong>.
+                                </p>
+                                <button 
+                                    type="button" 
+                                    wire:click="goToDate('{{ $this->nextUpcomingSession->session_date->toDateString() }}')"
+                                    class="px-4 py-2 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold shadow-xs cursor-pointer inline-flex items-center gap-1.5 transition"
+                                >
+                                    <span>Buka Jadwal {{ \Carbon\Carbon::parse($this->nextUpcomingSession->session_date)->locale('id')->translatedFormat('F Y') }}</span>
+                                    <span>&rarr;</span>
+                                </button>
+                            </div>
                         @endif
                     </div>
                 @else
@@ -270,8 +293,8 @@
                                             </div>
 
                                             <!-- Actions: Ubah Jadwal & Batal Sesi -->
-                                            <div class="pt-2 border-t border-[#E5E7EB] flex items-center justify-end gap-2">
-                                                @if($taskSession->can_be_changed)
+                                            @if($taskSession->can_be_changed)
+                                                <div class="pt-2 border-t border-[#E5E7EB] flex items-center justify-end gap-2">
                                                     <a href="{{ route('pt-sessions.edit', $taskSession->id) }}" 
                                                        class="px-3.5 py-1.5 rounded-full bg-white hover:bg-zinc-100 text-[#16151A] border border-[#E5E7EB] text-xs font-bold transition shadow-2xs">
                                                         Ubah Jadwal
@@ -281,14 +304,12 @@
                                                             class="text-[#FF5722] hover:underline text-xs font-bold px-2 py-1 cursor-pointer">
                                                         Batal Sesi
                                                     </button>
-                                                @else
-                                                    @if($statusEnum === \App\Enums\PtSessionStatus::Cancelled)
-                                                        <span class="text-xs text-zinc-400 italic">Sesi Telah Dibatalkan</span>
-                                                    @else
-                                                        <span class="text-[11px] text-zinc-400 italic">Batas waktu lewat (&lt; 24 jam)</span>
-                                                    @endif
-                                                @endif
-                                            </div>
+                                                </div>
+                                            @elseif($statusEnum !== \App\Enums\PtSessionStatus::Cancelled)
+                                                <div class="pt-2 border-t border-[#E5E7EB] flex items-center justify-end gap-2">
+                                                    <span class="text-[11px] text-zinc-400 italic">Batas waktu lewat (&lt; 24 jam)</span>
+                                                </div>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>
@@ -640,8 +661,8 @@
                                             </div>
                                         </div>
 
-                                        <div class="flex items-center gap-2 sm:self-auto shrink-0 w-full sm:w-auto pt-2 border-t border-[#E5E7EB] sm:border-0 sm:pt-0 justify-end">
-                                            @if($session->can_be_changed)
+                                        @if($session->can_be_changed)
+                                            <div class="flex items-center gap-2 sm:self-auto shrink-0 w-full sm:w-auto pt-2 border-t border-[#E5E7EB] sm:border-0 sm:pt-0 justify-end">
                                                 <a href="{{ route('pt-sessions.edit', $session->id) }}" 
                                                    class="px-3.5 py-1.5 rounded-full bg-white hover:bg-zinc-100 text-[#16151A] border border-[#E5E7EB] text-xs font-bold transition shadow-2xs">
                                                     Ubah Jadwal
@@ -651,14 +672,12 @@
                                                         class="text-[#FF5722] hover:underline text-xs font-bold px-2 py-1 cursor-pointer">
                                                     Batal Sesi
                                                 </button>
-                                            @else
-                                                @if($statusEnum === \App\Enums\PtSessionStatus::Cancelled)
-                                                    <span class="text-xs text-zinc-400 italic">Dibatalkan</span>
-                                                @else
-                                                    <span class="text-[11px] text-zinc-400 italic">&lt; 24 jam</span>
-                                                @endif
-                                            @endif
-                                        </div>
+                                            </div>
+                                        @elseif($statusEnum !== \App\Enums\PtSessionStatus::Cancelled)
+                                            <div class="flex items-center gap-2 sm:self-auto shrink-0 w-full sm:w-auto pt-2 border-t border-[#E5E7EB] sm:border-0 sm:pt-0 justify-end">
+                                                <span class="text-[11px] text-zinc-400 italic">&lt; 24 jam</span>
+                                            </div>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
@@ -693,28 +712,18 @@
                     </p>
                 </div>
 
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-[#565A66] mb-1">Alasan Pembatalan (Opsional)</label>
-                        <input type="text"
-                               wire:model="cancelReason"
-                               placeholder="Contoh: Ada keperluan mendadak"
-                               class="w-full bg-white border border-[#E5E7EB] rounded-xl px-3 py-2 text-xs text-[#16151A] placeholder-zinc-400 focus:ring-[#FF5722] focus:border-[#FF5722]">
-                    </div>
-
-                    <div class="flex items-center justify-end gap-3 pt-2">
-                        <button type="button"
-                                wire:click="closeCancelModal"
-                                class="px-5 py-2.5 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-bold transition-colors cursor-pointer">
-                            Kembali
-                        </button>
-                        <button type="button"
-                                wire:click="confirmCancel"
-                                wire:loading.attr="disabled"
-                                class="px-6 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold transition-colors shadow-md shadow-[#FF5722]/20 cursor-pointer">
-                            Ya, Batalkan Sesi
-                        </button>
-                    </div>
+                <div class="flex items-center justify-end gap-3 pt-1">
+                    <button type="button"
+                            wire:click="closeCancelModal"
+                            class="px-5 py-2.5 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-xs font-bold transition-colors cursor-pointer">
+                        Kembali
+                    </button>
+                    <button type="button"
+                            wire:click="confirmCancel"
+                            wire:loading.attr="disabled"
+                            class="px-6 py-2.5 rounded-full bg-[#FF5722] hover:bg-[#E64A19] text-white text-xs font-bold transition-colors shadow-md shadow-[#FF5722]/20 cursor-pointer">
+                        Ya, Batalkan Sesi
+                    </button>
                 </div>
             </div>
         </div>

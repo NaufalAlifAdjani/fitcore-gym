@@ -30,6 +30,7 @@ class GoogleAuthTest extends TestCase
         $googleUser->shouldReceive('getAvatar')->andReturn('https://example.com/avatar.jpg');
 
         $driver = Mockery::mock();
+        $driver->shouldReceive('user')->andReturn($googleUser);
         $driver->shouldReceive('stateless->user')->andReturn($googleUser);
 
         Socialite::shouldReceive('driver')->with('google')->andReturn($driver);

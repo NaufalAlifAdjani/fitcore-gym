@@ -4,7 +4,6 @@ function emptyPtPackageForm() {
         name: '',
         pt_session_count: 4,
         price: '',
-        min_membership_days: 0,
         validity_days: 30,
         is_active: true,
     };

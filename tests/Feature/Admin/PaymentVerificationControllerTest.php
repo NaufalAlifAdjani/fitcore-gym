@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Bank;
+use App\Models\MemberPtQuota;
 use App\Models\Membership;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
@@ -10,6 +11,8 @@ use App\Models\PtPackage;
 use App\Models\User;
 use App\Models\VerificationLog;
 use App\Notifications\ChoosePtScheduleNotification;
+use App\Notifications\MembershipPaymentVerifiedNotification;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -143,7 +146,6 @@ class PaymentVerificationControllerTest extends TestCase
             'name' => 'PT 8 Sesi',
             'pt_session_count' => 8,
             'price' => 800000,
-            'min_membership_days' => 0,
             'validity_days' => 56,
             'status' => 'active',
         ]);
@@ -255,6 +257,229 @@ class PaymentVerificationControllerTest extends TestCase
         $this->assertDatabaseMissing('member_pt_quotas', [
             'member_id' => $member->id,
         ]);
+    }
+
+    public function test_approving_upgraded_membership_activates_higher_tier_immediately_with_carry_over_days(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $member = User::factory()->create(['role' => 'member']);
+
+        $silverPackage = MembershipPackage::create([
+            'name' => 'Silver Monthly Pass Test',
+            'tier' => 'Basic',
+            'price' => 450000,
+            'duration_days' => 30,
+            'duration_in_days' => 30,
+            'is_active' => true,
+        ]);
+
+        $goldPackage = MembershipPackage::create([
+            'name' => 'Gold 6-Months Pass Test',
+            'tier' => 'Standard',
+            'price' => 2400000,
+            'duration_days' => 180,
+            'duration_in_days' => 180,
+            'is_active' => true,
+        ]);
+
+        $today = CarbonImmutable::today();
+
+        // 1. Existing active Silver membership (ends in 20 days)
+        $silverMembership = Membership::create([
+            'member_id' => $member->id,
+            'membership_package_id' => $silverPackage->id,
+            'start_date' => $today->subDays(10)->toDateString(),
+            'end_date' => $today->addDays(19)->toDateString(),
+            'status' => 'active',
+        ]);
+
+        // 2. Member pays for Gold 6-Months Pass
+        $payment = $this->createPayment($member, [
+            'package_id' => $goldPackage->id,
+            'amount' => 2400000,
+        ]);
+
+        $this->actingAs($admin)
+            ->postJson(route('admin.payments.approve', $payment))
+            ->assertOk();
+
+        // Silver membership should be marked as expired/superseded
+        $this->assertSame('expired', $silverMembership->fresh()->status);
+
+        // Gold membership should start TODAY and include the 20 days carried over (180 + 20 = 200 days)
+        $goldMembership = Membership::where('payment_id', $payment->id)->firstOrFail();
+        $this->assertSame('active', $goldMembership->status);
+        $this->assertSame($goldPackage->id, $goldMembership->membership_package_id);
+        $this->assertSame($today->toDateString(), $goldMembership->start_date->toDateString());
+        $this->assertSame($today->addDays(199)->toDateString(), $goldMembership->end_date->toDateString());
+    }
+
+    public function test_admin_approving_repeat_pt_purchase_stacks_validity_from_existing_active_quota(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $member = User::factory()->create(['role' => 'member']);
+
+        $ptPackage = PtPackage::create([
+            'name' => 'PT 10 Sesi Test',
+            'pt_session_count' => 10,
+            'price' => 1000000,
+            'validity_days' => 30,
+            'status' => 'active',
+        ]);
+
+        $today = CarbonImmutable::today();
+
+        // Existing active PT quota expiring in 20 days with 5 sessions remaining
+        $existingQuota = MemberPtQuota::create([
+            'member_id' => $member->id,
+            'pt_package_id' => $ptPackage->id,
+            'source' => 'purchase',
+            'total_sessions' => 10,
+            'used_sessions' => 5,
+            'remaining_sessions' => 5,
+            'start_date' => $today->subDays(10)->toDateString(),
+            'end_date' => $today->addDays(20)->toDateString(),
+            'status' => 'active',
+        ]);
+
+        $payment = $this->createPayment($member, [
+            'package_type' => 'pt_session',
+            'payment_type' => 'pt_package',
+            'package_id' => $ptPackage->id,
+            'pt_package_id' => $ptPackage->id,
+            'amount' => 1000000,
+        ]);
+
+        $this->actingAs($admin)
+            ->postJson(route('admin.payments.approve', $payment))
+            ->assertOk();
+
+        // New quota should stack validity from existing quota's end date (+30 days)
+        $newQuota = MemberPtQuota::where('member_id', $member->id)
+            ->where('id', '!=', $existingQuota->id)
+            ->firstOrFail();
+
+        $this->assertSame('active', $newQuota->status);
+        $this->assertSame(10, $newQuota->total_sessions);
+        $this->assertSame(10, $newQuota->remaining_sessions);
+        $this->assertSame($today->toDateString(), $newQuota->start_date->toDateString());
+        $this->assertSame($today->addDays(50)->toDateString(), $newQuota->end_date->toDateString());
+    }
+
+    public function test_admin_approving_pt_purchase_marks_zero_session_quotas_as_completed_and_starts_fresh(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $member = User::factory()->create(['role' => 'member']);
+
+        $ptPackage = PtPackage::create([
+            'name' => 'PT 10 Sesi Fresh',
+            'pt_session_count' => 10,
+            'price' => 1000000,
+            'validity_days' => 30,
+            'status' => 'active',
+        ]);
+
+        $today = CarbonImmutable::today();
+
+        // Old quota which finished early (remaining_sessions = 0) but end_date is still in future
+        $oldQuota = MemberPtQuota::create([
+            'member_id' => $member->id,
+            'pt_package_id' => $ptPackage->id,
+            'source' => 'purchase',
+            'total_sessions' => 10,
+            'used_sessions' => 10,
+            'remaining_sessions' => 0,
+            'start_date' => $today->subDays(10)->toDateString(),
+            'end_date' => $today->addDays(20)->toDateString(),
+            'status' => 'active',
+        ]);
+
+        $payment = $this->createPayment($member, [
+            'package_type' => 'pt_session',
+            'payment_type' => 'pt_package',
+            'package_id' => $ptPackage->id,
+            'pt_package_id' => $ptPackage->id,
+            'amount' => 1000000,
+        ]);
+
+        $this->actingAs($admin)
+            ->postJson(route('admin.payments.approve', $payment))
+            ->assertOk();
+
+        // Old quota should be marked as completed
+        $this->assertSame('completed', $oldQuota->fresh()->status);
+
+        // New quota starts fresh today with 30 days validity (today + 29 days)
+        $newQuota = MemberPtQuota::where('member_id', $member->id)
+            ->where('id', '!=', $oldQuota->id)
+            ->firstOrFail();
+
+        $this->assertSame('active', $newQuota->status);
+        $this->assertSame($today->toDateString(), $newQuota->start_date->toDateString());
+        $this->assertSame($today->addDays(29)->toDateString(), $newQuota->end_date->toDateString());
+    }
+
+    public function test_admin_approving_membership_payment_sends_membership_payment_verified_notification(): void
+    {
+        Notification::fake();
+
+        $admin = User::factory()->create(['role' => 'admin']);
+        $member = User::factory()->create(['role' => 'member']);
+        $package = MembershipPackage::create([
+            'name' => 'Silver Monthly Pass Test',
+            'tier' => 'Basic',
+            'price' => 450000,
+            'duration_days' => 30,
+            'duration_in_days' => 30,
+            'is_active' => true,
+        ]);
+        $payment = $this->createPayment($member, [
+            'package_id' => $package->id,
+            'amount' => 450000,
+        ]);
+
+        $this->actingAs($admin)
+            ->postJson(route('admin.payments.approve', $payment))
+            ->assertOk();
+
+        Notification::assertSentTo(
+            $member,
+            MembershipPaymentVerifiedNotification::class,
+            function (MembershipPaymentVerifiedNotification $notification) use ($package) {
+                return $notification->package->id === $package->id;
+            }
+        );
+    }
+
+    public function test_admin_approving_pt_purchase_assigns_trainer_id_to_member_pt_quota(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $member = User::factory()->create(['role' => 'member']);
+        $trainer = User::factory()->create(['role' => 'trainer', 'name' => 'Coach Sarah Test']);
+
+        $ptPackage = PtPackage::create([
+            'name' => 'PT 12 Sesi Test',
+            'pt_session_count' => 12,
+            'price' => 2000000,
+            'validity_days' => 30,
+            'status' => 'active',
+        ]);
+
+        $payment = $this->createPayment($member, [
+            'package_type' => 'pt_session',
+            'payment_type' => 'pt_package',
+            'package_id' => $ptPackage->id,
+            'pt_package_id' => $ptPackage->id,
+            'trainer_id' => $trainer->id,
+            'amount' => 2000000,
+        ]);
+
+        $this->actingAs($admin)
+            ->postJson(route('admin.payments.approve', $payment))
+            ->assertOk();
+
+        $quota = MemberPtQuota::where('member_id', $member->id)->latest()->firstOrFail();
+        $this->assertSame($trainer->id, $quota->trainer_id);
     }
 
     private function createPayment(User $member, array $overrides = []): Payment

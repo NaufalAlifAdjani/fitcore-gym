@@ -10,6 +10,7 @@ use App\Models\Payment;
 use App\Models\PtPackage;
 use App\Models\User;
 use App\Notifications\ChoosePtScheduleNotification;
+use App\Notifications\MembershipPaymentVerifiedNotification;
 use App\Notifications\PaymentRejectedNotification;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
@@ -53,7 +54,6 @@ class PaymentVerificationService
                 'trainer_id' => $trainerId,
                 'trainer_revenue' => $trainerRevenue,
                 'gym_revenue' => $gymRevenue,
-                'payout_status' => $lockedPayment->payout_status ?: 'pending',
             ])->save();
 
             $lockedPayment->verificationLogs()->create([
@@ -124,25 +124,67 @@ class PaymentVerificationService
         $package = MembershipPackage::query()
             ->findOrFail($payment->package_id ?? $payment->membership?->membership_package_id);
         $today = CarbonImmutable::today();
+
+        $currentActive = Membership::query()
+            ->where('member_id', $payment->member_id)
+            ->where('status', 'active')
+            ->whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
+            ->with('package')
+            ->latest('end_date')
+            ->first();
+
         $latestActiveEndDate = Membership::query()
             ->where('member_id', $payment->member_id)
             ->where('status', 'active')
             ->whereDate('end_date', '>=', $today)
             ->max('end_date');
 
-        $startDate = $latestActiveEndDate
-            ? CarbonImmutable::parse($latestActiveEndDate)->addDay()
-            : $today;
-        $durationDays = $package->duration_in_days ?? $package->duration_days;
-        $endDate = $startDate->addDays($durationDays - 1);
+        $tierRanks = [
+            'Basic' => 1,
+            'Student Tier' => 1,
+            'Standard' => 2,
+            'Premium & VIP' => 3,
+        ];
 
-        Membership::query()
-            ->where('member_id', $payment->member_id)
-            ->where('status', 'active')
-            ->whereDate('end_date', '<', $startDate)
-            ->update(['status' => 'expired']);
+        $currentTierRank = $currentActive ? ($tierRanks[$currentActive->package?->tier] ?? 1) : 0;
+        $newTierRank = $tierRanks[$package->tier] ?? 1;
 
-        Membership::query()->create([
+        $isUpgrade = $currentActive && (
+            $newTierRank > $currentTierRank ||
+            ($package->price > ($currentActive->package?->price ?? 0) && $package->id !== $currentActive->membership_package_id)
+        );
+
+        $durationDays = $package->duration_days;
+
+        if ($isUpgrade) {
+            $startDate = $today;
+            $carryOverEndDate = $latestActiveEndDate
+                ? CarbonImmutable::parse($latestActiveEndDate)
+                : CarbonImmutable::parse($currentActive->end_date);
+            $remainingDays = max(0, (int) $today->diffInDays($carryOverEndDate, false) + 1);
+            $totalDuration = $durationDays + $remainingDays;
+            $endDate = $startDate->addDays($totalDuration - 1);
+
+            Membership::query()
+                ->where('member_id', $payment->member_id)
+                ->where('status', 'active')
+                ->whereDate('end_date', '>=', $today)
+                ->update(['status' => 'expired']);
+        } else {
+            $startDate = $latestActiveEndDate
+                ? CarbonImmutable::parse($latestActiveEndDate)->addDay()
+                : $today;
+            $endDate = $startDate->addDays($durationDays - 1);
+
+            Membership::query()
+                ->where('member_id', $payment->member_id)
+                ->where('status', 'active')
+                ->whereDate('end_date', '<', $today)
+                ->update(['status' => 'expired']);
+        }
+
+        $membership = Membership::query()->create([
             'member_id' => $payment->member_id,
             'membership_package_id' => $package->id,
             'payment_id' => $payment->id,
@@ -150,21 +192,53 @@ class PaymentVerificationService
             'end_date' => $endDate,
             'status' => 'active',
         ]);
+
+        $member = User::query()->findOrFail($payment->member_id);
+        $member->notify(new MembershipPaymentVerifiedNotification($membership, $package, $payment));
     }
 
     private function activatePtPackage(Payment $payment): void
     {
         $package = PtPackage::query()->findOrFail($payment->package_id ?? $payment->pt_package_id);
-        $startDate = CarbonImmutable::today();
+        $today = CarbonImmutable::today();
+
+        // 1. Mark existing quotas that have 0 remaining sessions as completed
+        MemberPtQuota::query()
+            ->where('member_id', $payment->member_id)
+            ->where('status', 'active')
+            ->where('remaining_sessions', '<=', 0)
+            ->update(['status' => 'completed']);
+
+        // 2. Check for active quota with remaining sessions
+        $latestActiveQuota = MemberPtQuota::query()
+            ->where('member_id', $payment->member_id)
+            ->where('status', 'active')
+            ->where('remaining_sessions', '>', 0)
+            ->whereDate('end_date', '>=', $today)
+            ->latest('end_date')
+            ->first();
+
+        if ($latestActiveQuota) {
+            // STACKING: Extend validity from existing quota's end date
+            $startDate = $today;
+            $baseEndDate = CarbonImmutable::parse($latestActiveQuota->end_date);
+            $endDate = $baseEndDate->addDays($package->validity_days);
+        } else {
+            // FRESH START: Start from today with full package validity
+            $startDate = $today;
+            $endDate = $startDate->addDays($package->validity_days - 1);
+        }
+
         $memberQuota = MemberPtQuota::query()->create([
             'member_id' => $payment->member_id,
             'pt_package_id' => $package->id,
+            'trainer_id' => $payment->trainer_id,
             'source' => 'purchase',
             'total_sessions' => $package->pt_session_count,
             'used_sessions' => 0,
             'remaining_sessions' => $package->pt_session_count,
             'start_date' => $startDate,
-            'end_date' => $startDate->addDays($package->validity_days),
+            'end_date' => $endDate,
             'status' => 'active',
         ]);
 
@@ -172,6 +246,7 @@ class PaymentVerificationService
         $member->notify(new ChoosePtScheduleNotification(
             $memberQuota->id,
             $package->name,
+            $payment->trainer_id,
         ));
     }
 }

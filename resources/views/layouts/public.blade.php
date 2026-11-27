@@ -18,9 +18,10 @@
 
 @php
     $isPackages = request()->routeIs('landing.packages') || $activeTab === 'packages';
+    $isPtPricing = request()->routeIs('landing.pt-pricing') || $activeTab === 'pt-pricing';
     $isTrainers = request()->routeIs('landing.trainers') || $activeTab === 'trainers';
     $isAbout = request()->routeIs('landing.about') || $activeTab === 'about';
-    $isHome = (request()->routeIs('landing.index') || $activeTab === 'home') && ! $isPackages && ! $isTrainers && ! $isAbout;
+    $isHome = (request()->routeIs('landing.index') || $activeTab === 'home') && ! $isPackages && ! $isPtPricing && ! $isTrainers && ! $isAbout;
 @endphp
 
 <!DOCTYPE html>
@@ -62,6 +63,10 @@
                 <a href="{{ route('landing.packages') }}"
                     class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isPackages ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}">
                     Paket Gym
+                </a>
+                <a href="{{ route('landing.pt-pricing') }}"
+                    class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isPtPricing ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}">
+                    Harga Sesi PT
                 </a>
                 <a href="{{ route('landing.trainers') }}"
                     class="px-5 py-2 text-xs font-bold rounded-full transition-all duration-200 {{ $isTrainers ? 'bg-[#FF5722] text-white shadow-xs' : 'text-[#565A66] hover:text-[#16151A]' }}">
@@ -107,6 +112,7 @@
         <div x-cloak x-show="mobileMenuOpen" class="md:hidden border-t border-[#E5E7EB] bg-white px-4 py-4 space-y-2">
             <a href="{{ route('landing.index') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isHome ? 'bg-[#FF5722] text-white' : 'text-[#565A66]' }}">Beranda</a>
             <a href="{{ route('landing.packages') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isPackages ? 'bg-[#FF5722] text-white' : 'text-[#565A66]' }}">Paket Gym</a>
+            <a href="{{ route('landing.pt-pricing') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isPtPricing ? 'bg-[#FF5722] text-white' : 'text-[#565A66]' }}">Harga Sesi PT</a>
             <a href="{{ route('landing.trainers') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isTrainers ? 'bg-[#FF5722] text-white' : 'text-[#565A66]' }}">Pelatih PT</a>
             <a href="{{ route('landing.about') }}" class="block px-4 py-2 text-xs font-bold rounded-xl {{ $isAbout ? 'bg-[#FF5722] text-white' : 'text-[#565A66]' }}">Tentang Kami</a>
             <div class="pt-3 border-t border-[#E5E7EB] flex flex-col gap-2">
@@ -167,6 +173,7 @@
                     <h4 class="font-poppins font-bold text-sm text-[#16151A] uppercase tracking-wider">Navigasi</h4>
                     <ul class="space-y-2 text-xs text-[#565A66]">
                         <li><a href="{{ route('landing.packages') }}" class="hover:text-[#FF5722] transition">Katalog Paket Membership</a></li>
+                        <li><a href="{{ route('landing.pt-pricing') }}" class="hover:text-[#FF5722] transition">Harga Sesi Personal Trainer</a></li>
                         <li><a href="{{ route('landing.trainers') }}" class="hover:text-[#FF5722] transition">Daftar Personal Trainer</a></li>
                         <li><a href="{{ route('landing.about') }}" class="hover:text-[#FF5722] transition">Visi &amp; Galeri Fasilitas</a></li>
                         <li><a href="{{ route('login') }}" class="hover:text-[#FF5722] transition">Portal Masuk Member</a></li>

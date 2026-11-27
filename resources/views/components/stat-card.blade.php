@@ -1,8 +1,6 @@
 @props([
     'title' => null,
     'value' => null,
-    'trend_text' => null,
-    'trend_color' => 'bg-[#10B981]',
     // Backwards-compat props for auth-hero
     'number' => null,
     'label' => null,
@@ -24,16 +22,10 @@
                 </div>
             @endif
         </div>
-        <div class="mt-4">
-            <div class="font-poppins font-extrabold text-[3rem] leading-none text-[#16151A]">
+        <div class="mt-3">
+            <div class="font-poppins font-extrabold text-2xl sm:text-3xl tracking-tight text-[#16151A]">
                 {{ $value }}
             </div>
-            @if ($trend_text)
-                <p class="mt-2.5 flex items-center gap-1.5 font-inter text-xs text-[#565A66]">
-                    <span class="inline-block h-2 w-2 rounded-full {{ $trend_color }}"></span>
-                    {{ $trend_text }}
-                </p>
-            @endif
         </div>
     </x-card>
 @else

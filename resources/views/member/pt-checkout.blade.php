@@ -32,21 +32,10 @@
 
             <form action="{{ route('member.pt-packages.process-checkout') }}" method="POST" x-data="{
                 selectedBank: '{{ $defaultBankId }}',
-                promoCode: '',
-                promoApplied: false,
-                discount: 0,
                 basePrice: {{ $subtotal }},
                 uniqueCode: {{ $uniqueCode }},
                 get total() {
-                    return this.basePrice - this.discount + this.uniqueCode;
-                },
-                applyPromo() {
-                    if (this.promoCode.trim().toUpperCase() === 'FITCORENEW' || this.promoCode.trim().toUpperCase() === 'MAXFIT') {
-                        this.discount = 50000;
-                        this.promoApplied = true;
-                    } else if (this.promoCode.trim().length > 0) {
-                        alert('Kode promo tidak valid atau telah kedaluwarsa.');
-                    }
+                    return this.basePrice + this.uniqueCode;
                 }
             }">
                 @csrf

@@ -81,8 +81,7 @@
 
             <!-- Indikator Rentang Filter Aktif -->
             <div class="flex items-center justify-between text-xs text-[#565A66] font-inter">
-                <span class="flex items-center gap-1.5">
-                    <span class="inline-block h-2 w-2 rounded-full bg-[#FF5722]"></span>
+                <span>
                     Menampilkan data performa periode: <strong class="text-[#16151A]">{{ $filterRangeLabel ?? 'Bulan Ini' }}</strong>
                 </span>
             </div>
@@ -120,8 +119,6 @@
                 <x-stat-card
                     title="TOTAL MEMBER AKTIF"
                     :value="$totalActiveMembers ?? '0'"
-                    trend_text="Member dengan status aktif"
-                    trend_color="bg-[#10B981]"
                 >
                     <x-slot name="icon">
                         <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FF5722]/10 text-[#FF5722]">
@@ -136,8 +133,6 @@
                 <x-stat-card
                     title="PENDAPATAN MEMBERSHIP"
                     :value="$formattedMembershipRevenue ?? 'Rp 0'"
-                    trend_text="Paket langganan membership"
-                    trend_color="bg-[#10B981]"
                 >
                     <x-slot name="icon">
                         <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#10B981]/10 text-[#10B981]">
@@ -152,8 +147,6 @@
                 <x-stat-card
                     title="PENDAPATAN SESI PT"
                     :value="$formattedPtRevenue ?? 'Rp 0'"
-                    trend_text="Paket sesi Personal Trainer"
-                    trend_color="bg-[#8B5CF6]"
                 >
                     <x-slot name="icon">
                         <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#8B5CF6]/10 text-[#8B5CF6]">
@@ -168,8 +161,6 @@
                 <x-stat-card
                     title="TOTAL CHECKIN"
                     :value="$formattedTotalCheckIns ?? '0'"
-                    trend_text="Presensi akses gym 24 jam"
-                    trend_color="bg-[#3B82F6]"
                 >
                     <x-slot name="icon">
                         <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-[#3B82F6]/10 text-[#3B82F6]">
@@ -192,8 +183,7 @@
                             Grafik nominal pendapatan dari paket membership dan personal trainer terverifikasi.
                         </p>
                     </div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F6F6F7] border border-[#E5E7EB] text-xs font-medium text-[#565A66] w-fit">
-                        <span class="h-2 w-2 rounded-full bg-[#FF5722]"></span>
+                    <div class="inline-flex items-center px-3 py-1.5 rounded-full bg-[#F6F6F7] border border-[#E5E7EB] text-xs font-medium text-[#565A66] w-fit">
                         <span>Periode: <strong class="text-[#16151A]">{{ $filterRangeLabel ?? 'Bulan Ini' }}</strong></span>
                     </div>
                 </div>

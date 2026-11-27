@@ -94,6 +94,7 @@
                     >
                         <input type="hidden" name="bank_id" value="{{ $selectedBank->id }}" />
                         <input type="hidden" name="unique_code" value="{{ $uniqueCode }}" />
+                        <input type="hidden" name="payment_id" value="{{ $payment?->id }}" />
                     </x-payment.upload-proof-form>
                 </div>
             </div>

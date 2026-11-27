@@ -95,14 +95,61 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(PtSession::class, 'trainer_id');
     }
 
-    public function givenRatings(): HasMany
+    /**
+     * Mendapatkan pelatih personal trainer aktif atau terakhir dari member.
+     */
+    public function getCurrentPtTrainer(): ?self
     {
-        return $this->hasMany(Rating::class, 'member_id');
-    }
+        // 0. Dari profil member jika ditugaskan langsung
+        if ($this->memberProfile?->trainer) {
+            return $this->memberProfile->trainer;
+        }
 
-    public function receivedRatings(): HasMany
-    {
-        return $this->hasMany(Rating::class, 'trainer_id');
+        // 1. Dari kuota PT aktif yang memiliki pelatih
+        $quotaWithTrainer = $this->ptQuotas()
+            ->whereNotNull('trainer_id')
+            ->where('status', 'active')
+            ->where('remaining_sessions', '>', 0)
+            ->with(['trainer.trainerProfile'])
+            ->latest('end_date')
+            ->first();
+
+        if ($quotaWithTrainer?->trainer) {
+            return $quotaWithTrainer->trainer;
+        }
+
+        // 2. Dari kuota PT terakhir (meskipun sudah habis / kedaluwarsa)
+        $latestQuota = $this->ptQuotas()
+            ->whereNotNull('trainer_id')
+            ->with(['trainer.trainerProfile'])
+            ->latest('created_at')
+            ->first();
+
+        if ($latestQuota?->trainer) {
+            return $latestQuota->trainer;
+        }
+
+        // 3. Dari sesi latihan PT terakhir
+        $latestSession = $this->memberSessions()
+            ->whereNotNull('trainer_id')
+            ->with(['trainer.trainerProfile'])
+            ->latest('session_date')
+            ->latest('start_time')
+            ->first();
+
+        if ($latestSession?->trainer) {
+            return $latestSession->trainer;
+        }
+
+        // 4. Dari riwayat transaksi pembayaran PT terakhir
+        $latestPayment = $this->payments()
+            ->whereNotNull('trainer_id')
+            ->where('payment_type', 'pt_package')
+            ->with(['trainer.trainerProfile'])
+            ->latest('created_at')
+            ->first();
+
+        return $latestPayment?->trainer;
     }
 
     public function getShiftLabelAttribute(): string
@@ -125,7 +172,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getAvatarUrlAttribute(): ?string
     {
-        $avatar = $this->avatar ?? $this->memberProfile?->photo_path;
+        $avatar = $this->avatar;
 
         if (! $avatar) {
             return null;
@@ -140,7 +187,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasProfilePhoto(): bool
     {
-        return ! empty($this->avatar) || ! empty($this->memberProfile?->photo_path);
+        return ! empty($this->avatar);
     }
 
     /**

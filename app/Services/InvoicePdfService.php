@@ -219,9 +219,7 @@ class InvoicePdfService
         }
 
         $baseDate = $payment->transfer_date ?? $payment->created_at ?? now();
-        $duration = $payment->membershipPackage?->duration_in_days
-            ?? $payment->membershipPackage?->duration_days
-            ?? 30;
+        $duration = $payment->membershipPackage?->duration_days ?? 30;
 
         $end = Carbon::parse($baseDate)->addDays((int) $duration);
 

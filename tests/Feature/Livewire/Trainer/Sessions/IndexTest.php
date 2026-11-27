@@ -448,7 +448,6 @@ class IndexTest extends TestCase
         ]);
         TrainerProfile::factory()->create([
             'user_id' => $trainer->id,
-            'tier' => 'Senior PT Tier III',
             'specialization' => 'CSCS - Head Trainer',
         ]);
 

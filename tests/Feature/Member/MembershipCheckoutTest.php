@@ -3,6 +3,7 @@
 namespace Tests\Feature\Member;
 
 use App\Models\Bank;
+use App\Models\Membership;
 use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\User;
@@ -434,5 +435,117 @@ class MembershipCheckoutTest extends TestCase
         $this->assertIsInt($uniqueCode);
         $this->assertGreaterThanOrEqual(100, $uniqueCode);
         $this->assertLessThanOrEqual(999, $uniqueCode);
+    }
+
+    public function test_member_with_active_higher_tier_cannot_checkout_lower_tier_package(): void
+    {
+        $member = $this->createMember();
+
+        $goldPackage = MembershipPackage::create([
+            'name' => 'Gold Standard Pass',
+            'tier' => 'Standard',
+            'price' => 2400000,
+            'duration_in_days' => 180,
+            'is_active' => true,
+        ]);
+
+        $silverPackage = MembershipPackage::create([
+            'name' => 'Silver Monthly Pass',
+            'tier' => 'Basic',
+            'price' => 450000,
+            'duration_in_days' => 30,
+            'is_active' => true,
+        ]);
+
+        // Member has active Gold membership
+        Membership::create([
+            'member_id' => $member->id,
+            'membership_package_id' => $goldPackage->id,
+            'start_date' => now()->subDays(10)->toDateString(),
+            'end_date' => now()->addDays(170)->toDateString(),
+            'status' => 'active',
+        ]);
+
+        // In catalog, Silver is marked as downgrade
+        $catalogResponse = $this->actingAs($member)->get(route('member.membership.packages'));
+        $catalogResponse->assertOk();
+        $catalogResponse->assertSee('Tier Lebih Rendah');
+
+        // Accessing checkout for Silver should be rejected
+        $checkoutResponse = $this->actingAs($member)->get(route('member.membership.checkout', $silverPackage));
+        $checkoutResponse->assertRedirect(route('member.membership.packages'));
+        $checkoutResponse->assertSessionHas('error');
+    }
+
+    public function test_member_with_active_tier_can_checkout_same_or_higher_tier_package(): void
+    {
+        $member = $this->createMember();
+
+        $goldPackage = MembershipPackage::create([
+            'name' => 'Gold Standard Pass',
+            'tier' => 'Standard',
+            'price' => 2400000,
+            'duration_in_days' => 180,
+            'is_active' => true,
+        ]);
+
+        $vipPackage = MembershipPackage::create([
+            'name' => 'Platinum VIP Pass',
+            'tier' => 'Premium & VIP',
+            'price' => 7500000,
+            'duration_in_days' => 365,
+            'is_active' => true,
+        ]);
+
+        // Member has active Gold membership
+        Membership::create([
+            'member_id' => $member->id,
+            'membership_package_id' => $goldPackage->id,
+            'start_date' => now()->subDays(10)->toDateString(),
+            'end_date' => now()->addDays(170)->toDateString(),
+            'status' => 'active',
+        ]);
+
+        // Member can checkout same tier (Gold - renewal)
+        $renewalResponse = $this->actingAs($member)->get(route('member.membership.checkout', $goldPackage));
+        $renewalResponse->assertOk();
+
+        // Member can checkout higher tier (VIP - upgrade)
+        $upgradeResponse = $this->actingAs($member)->get(route('member.membership.checkout', $vipPackage));
+        $upgradeResponse->assertOk();
+    }
+
+    public function test_member_can_checkout_lower_tier_package_once_higher_tier_has_expired(): void
+    {
+        $member = $this->createMember();
+
+        $goldPackage = MembershipPackage::create([
+            'name' => 'Gold Standard Pass',
+            'tier' => 'Standard',
+            'price' => 2400000,
+            'duration_in_days' => 180,
+            'is_active' => true,
+        ]);
+
+        $silverPackage = MembershipPackage::create([
+            'name' => 'Silver Monthly Pass',
+            'tier' => 'Basic',
+            'price' => 450000,
+            'duration_in_days' => 30,
+            'is_active' => true,
+        ]);
+
+        // Member has expired Gold membership
+        Membership::create([
+            'member_id' => $member->id,
+            'membership_package_id' => $goldPackage->id,
+            'start_date' => now()->subDays(190)->toDateString(),
+            'end_date' => now()->subDay()->toDateString(),
+            'status' => 'active', // expired date
+        ]);
+
+        // Once Gold is past end_date, member can checkout Silver
+        $response = $this->actingAs($member)->get(route('member.membership.checkout', $silverPackage));
+        $response->assertOk();
     }
 }

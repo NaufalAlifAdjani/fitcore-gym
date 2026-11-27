@@ -16,66 +16,71 @@
     <div class="px-4 py-5 space-y-5">
 
         <!-- Header Ringkas -->
-        <div class="space-y-1">
+        <div class="space-y-2">
             <h1 class="font-poppins font-black text-2xl text-[#16151A]">Personal Trainer</h1>
             <p class="text-xs text-[#565A66] leading-relaxed">
                 Bimbingan intensif dari instruktur berlisensi internasional untuk hasil latihan terukur dan bebas cedera.
             </p>
+            <div class="pt-1">
+                <a href="{{ route('mobile.landing.pt-pricing') }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white border border-[#E5E7EB] text-xs font-bold text-[#FF5722] hover:bg-orange-50 shadow-2xs transition">
+                    <span>Lihat Daftar Harga Sesi PT &rarr;</span>
+                </a>
+            </div>
         </div>
 
         <!-- Stack Daftar Pelatih -->
         <div class="space-y-4">
             @forelse ($trainers as $trainer)
-                <div class="bg-white rounded-2xl p-5 border border-[#E5E7EB] shadow-[0_4px_12px_rgba(0,0,0,0.06)] space-y-4">
-                    <div class="flex items-start gap-3.5">
-                        @php
-                            $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $trainer->name)))[0]);
-                            $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
-                                ? asset("images/trainers/coach-{$cFirstName}.jpg")
-                                : ($trainer->trainerProfile?->photo_path ? asset('storage/' . $trainer->trainerProfile->photo_path) : null);
-                        @endphp
+                @php
+                    $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $trainer->name)))[0]);
+                    $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
+                        ? asset("images/trainers/coach-{$cFirstName}.jpg")
+                        : ($trainer->trainerProfile?->photo_path ? asset('storage/' . $trainer->trainerProfile->photo_path) : ($trainer->avatar_url ?? null));
+                @endphp
+                <div class="rounded-2xl overflow-hidden border border-[#E5E7EB] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.06)] flex flex-col group">
+                    <!-- 1. Foto PT -->
+                    <div class="w-full aspect-[4/3] bg-[#2C2828] relative overflow-hidden flex items-center justify-center">
                         @if ($cPhoto)
-                            <img src="{{ $cPhoto }}" alt="{{ $trainer->name }}" class="w-14 h-14 rounded-2xl object-cover shrink-0 border-2 border-white shadow-md shadow-orange-500/25">
+                            <img src="{{ $cPhoto }}" 
+                                 alt="{{ $trainer->name }}" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                                 loading="lazy">
                         @else
-                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#FF5722] to-[#FFB703] text-white flex items-center justify-center font-poppins font-black text-base shrink-0 border-2 border-white shadow-md shadow-orange-500/25">
-                                {{ strtoupper(substr($trainer->name, 0, 2)) }}
+                            <div class="w-full h-full bg-gradient-to-b from-[#383332] to-[#252222] flex flex-col items-center justify-center text-zinc-300 p-4">
+                                <svg class="w-10 h-10 text-zinc-500 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <span class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Foto PT</span>
                             </div>
                         @endif
-                        <div class="flex-1 min-w-0">
-                            <h2 class="font-poppins font-bold text-base text-[#16151A] truncate">{{ $trainer->name }}</h2>
-                            <span class="inline-block px-2.5 py-0.5 rounded-md bg-orange-50 text-[#FF5722] text-[11px] font-bold mt-1">
+                    </div>
+
+                    <!-- 2. Data Pelatih -->
+                    <div class="p-4 bg-[#F6F6F7] flex-1 flex flex-col justify-between space-y-3">
+                        <div class="space-y-1.5">
+                            <!-- Nama -->
+                            <h2 class="font-poppins font-extrabold text-base text-[#16151A] leading-snug">
+                                {{ $trainer->name }}
+                            </h2>
+
+                            <!-- Specialization -->
+                            <div class="text-xs font-bold text-[#FF5722]">
                                 {{ $trainer->trainerProfile->specialization ?? 'Strength Coach' }}
-                            </span>
-                            <p class="text-[11px] text-[#565A66] mt-0.5">
-                                {{ $trainer->trainerProfile->tier ?? 'Senior PT' }} • {{ $trainer->trainerProfile->studio ?? 'SCBD' }}
+                            </div>
+
+                            <!-- Experience -->
+                            <div class="text-xs font-semibold text-[#565A66] flex items-center gap-1.5 pt-0.5">
+                                <svg class="w-3.5 h-3.5 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>{{ $trainer->trainerProfile->experience ?? 4 }}+ Tahun Jam Terbang</span>
+                            </div>
+
+                            <!-- Bio -->
+                            <p class="text-xs text-[#565A66] leading-relaxed line-clamp-3 pt-0.5">
+                                {{ $trainer->trainerProfile->bio ?? 'Mendampingi program hipertrofi, pembentukan massa otot, dan peningkatan kekuatan fungsional.' }}
                             </p>
                         </div>
-                    </div>
-
-                    <!-- Rating & Experience Tag -->
-                    <div class="flex items-center justify-between text-xs py-2.5 px-3 bg-[#F6F6F7] rounded-xl border border-[#E5E7EB]">
-                        <div class="flex items-center gap-1 font-bold text-amber-500">
-                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <span class="text-[#16151A]">{{ $trainer->trainerProfile->rating ?? '4.98' }}</span>
-                            <span class="text-[#565A66] font-normal">({{ $trainer->trainerProfile->review_count ?? '150+' }})</span>
-                        </div>
-                        <span class="font-bold text-[#16151A]">{{ $trainer->trainerProfile->experience ?? 4 }}+ Tahun Jam Terbang</span>
-                    </div>
-
-                    <p class="text-xs text-[#565A66] leading-relaxed">
-                        {{ $trainer->trainerProfile->bio ?? 'Mendampingi program hipertrofi, pembentukan massa otot, dan peningkatan kekuatan fungsional.' }}
-                    </p>
-
-                    <div>
-                        @auth
-                            <a href="{{ route('mobile.member.pt-sessions.create', ['trainer_id' => $trainer->id]) }}" class="block w-full py-2.5 rounded-full text-center text-xs font-bold bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-sm shadow-orange-500/25 active:scale-98 transition">
-                                Booking Sesi Bersama {{ explode(' ', $trainer->name)[0] }}
-                            </a>
-                        @else
-                            <a href="{{ route('mobile.login', ['redirect' => route('mobile.member.pt-sessions.create', ['trainer_id' => $trainer->id])]) }}" class="block w-full py-2.5 rounded-full text-center text-xs font-bold bg-[#FF5722] hover:bg-[#E64A19] text-white shadow-sm shadow-orange-500/25 active:scale-98 transition">
-                                Booking Sesi Bersama {{ explode(' ', $trainer->name)[0] }}
-                            </a>
-                        @endauth
                     </div>
                 </div>
             @empty
@@ -83,14 +88,6 @@
                     <p class="text-xs text-[#565A66]">Belum ada pelatih terdaftar saat ini.</p>
                 </div>
             @endforelse
-        </div>
-
-        <!-- Banner Info Alur Booking -->
-        <div class="bg-white rounded-2xl p-4 border border-[#E5E7EB] space-y-2">
-            <span class="text-xs font-bold text-[#16151A] block">Cara Booking Sesi PT di Mobile</span>
-            <p class="text-[11px] text-[#565A66] leading-relaxed">
-                Masuk ke akun Anda &gt; buka tab Sesi PT &gt; pilih pelatih favorit Anda &gt; tentukan jam latihan yang masih tersedia.
-            </p>
         </div>
 
     </div>

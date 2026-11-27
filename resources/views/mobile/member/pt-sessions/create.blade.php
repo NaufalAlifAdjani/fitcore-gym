@@ -323,41 +323,63 @@ TEMA: LIGHT THEME (#F6F6F7, Surface #FFFFFF, Primary #FF5722, Text #16151A / #56
             <!-- List Horizontal Kartu Trainer -->
             <div class="flex gap-3 overflow-x-auto pb-2 pt-1 no-scrollbar">
                 @forelse ($trainers as $t)
+                    @php
+                        $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $t->name)))[0]);
+                        $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
+                            ? asset("images/trainers/coach-{$cFirstName}.jpg")
+                            : ($t->trainerProfile?->photo_path ? asset('storage/' . $t->trainerProfile->photo_path) : null);
+                    @endphp
                     <div x-show="filterTrainer('{{ addslashes($t->trainerProfile->specialization ?? '') }}')"
                          @click="selectTrainer('{{ $t->id }}', '{{ $t->name }}', '{{ $t->trainerProfile->specialization ?? 'CSCS Certified' }}')"
-                         class="min-w-[170px] max-w-[185px] p-3.5 rounded-2xl border transition-all cursor-pointer shrink-0 relative flex flex-col justify-between"
+                         class="min-w-[190px] max-w-[210px] rounded-2xl border transition-all cursor-pointer shrink-0 relative flex flex-col justify-between overflow-hidden"
                          :class="selectedTrainerId == '{{ $t->id }}' ? 'bg-white border-[#FF5722] shadow-md shadow-orange-500/15 ring-2 ring-[#FF5722]' : 'bg-white border-[#E5E7EB] hover:border-gray-300 shadow-[0_4px_12px_rgba(0,0,0,0.04)]'">
                         
-                        <!-- Checkmark Terpilih Pill -->
-                        <div x-show="selectedTrainerId == '{{ $t->id }}'" class="absolute top-2 right-2 px-1.5 py-0.5 rounded-full bg-[#FF5722] text-white text-[9px] font-bold">
-                            Terpilih
-                        </div>
-
-                        <div>
-                            @php
-                                $cFirstName = strtolower(explode(' ', trim(str_replace('Coach ', '', $t->name)))[0]);
-                                $cPhoto = file_exists(public_path("images/trainers/coach-{$cFirstName}.jpg"))
-                                    ? asset("images/trainers/coach-{$cFirstName}.jpg")
-                                    : ($t->trainerProfile?->photo_path ? asset('storage/' . $t->trainerProfile->photo_path) : null);
-                            @endphp
+                        <!-- 1. Foto PT -->
+                        <div class="w-full aspect-[4/3] bg-[#2C2828] relative overflow-hidden flex items-center justify-center">
                             @if ($cPhoto)
-                                <img src="{{ $cPhoto }}" alt="{{ $t->name }}" class="w-12 h-12 rounded-xl object-cover mb-2 border border-[#E5E7EB]">
+                                <img src="{{ $cPhoto }}" alt="{{ $t->name }}" class="w-full h-full object-cover">
                             @else
-                                <div class="w-12 h-12 rounded-xl bg-gray-100 text-[#16151A] flex items-center justify-center font-bold text-sm mb-2 border border-[#E5E7EB]">
-                                    {{ strtoupper(substr($t->name, 0, 2)) }}
+                                <div class="w-full h-full bg-gradient-to-b from-[#383332] to-[#252222] flex flex-col items-center justify-center text-zinc-300 p-2">
+                                    <svg class="w-8 h-8 text-zinc-500 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                    <span class="text-[9px] font-semibold tracking-wider uppercase text-zinc-400">Foto PT</span>
                                 </div>
                             @endif
-                            <h4 class="text-xs font-bold text-[#16151A] truncate font-poppins">
-                                Coach {{ $t->name }}
-                            </h4>
-                            <p class="text-[10px] text-[#565A66] mt-0.5 line-clamp-1 font-sans">
-                                {{ $t->trainerProfile->specialization ?? 'CSCS Certified' }}
-                            </p>
+
+                            <!-- Checkmark Terpilih Pill -->
+                            <div x-show="selectedTrainerId == '{{ $t->id }}'" class="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-[#FF5722] text-white text-[9px] font-bold shadow-xs">
+                                Terpilih
+                            </div>
                         </div>
 
-                        <div class="mt-3 pt-2 border-t border-[#E5E7EB] flex items-center justify-between text-[10px]">
-                            <span class="text-amber-500 font-bold">★ {{ $t->trainerProfile->rating ?? '4.9' }}</span>
-                            <span class="text-emerald-600 font-semibold">Tersedia</span>
+                        <!-- 2. Data Pelatih -->
+                        <div class="p-3 bg-[#F6F6F7] flex-1 flex flex-col justify-between space-y-2">
+                            <div class="space-y-1">
+                                <h4 class="text-xs font-bold text-[#16151A] truncate font-poppins">
+                                    {{ $t->name }}
+                                </h4>
+                                <div class="text-[10px] font-bold text-[#FF5722] truncate">
+                                    {{ $t->trainerProfile->specialization ?? 'CSCS Certified' }}
+                                </div>
+                                <div class="text-[10px] text-[#565A66] font-medium flex items-center gap-1">
+                                    <svg class="w-3 h-3 text-[#FF5722] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{{ $t->trainerProfile->experience ?? 1 }} Thn Jam Terbang</span>
+                                </div>
+                                <p class="text-[10px] text-[#565A66] line-clamp-2 leading-relaxed pt-0.5">
+                                    {{ $t->trainerProfile->bio ?? 'Membimbing program latihan presisi tinggi.' }}
+                                </p>
+                            </div>
+
+                            <div class="pt-2 border-t border-[#E5E7EB] flex items-center justify-between text-[10px]">
+                                <span class="text-emerald-600 font-semibold flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    <span>Tersedia</span>
+                                </span>
+                                <span class="text-[#FF5722] font-bold text-[10px]">Pilih &rarr;</span>
+                            </div>
                         </div>
                     </div>
                 @empty

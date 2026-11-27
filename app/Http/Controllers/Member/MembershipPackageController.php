@@ -23,17 +23,47 @@ use Throwable;
 
 class MembershipPackageController extends Controller
 {
+    public const TIER_RANKS = [
+        'Basic' => 1,
+        'Student Tier' => 1,
+        'Standard' => 2,
+        'Premium & VIP' => 3,
+    ];
+
     /**
      * Menampilkan katalog paket membership untuk member.
      */
     public function index(): View
     {
-        $packages = MembershipPackage::query()
-            ->where('is_active', true)
+        $today = now('Asia/Jakarta')->startOfDay();
+        $user = auth()->user();
+
+        $currentActive = $user?->memberships()
             ->where('status', 'active')
+            ->where('start_date', '<=', $today->toDateString())
+            ->where('end_date', '>=', $today->toDateString())
+            ->with('package')
+            ->latest('end_date')
+            ->first();
+
+        $currentTierRank = $currentActive ? (self::TIER_RANKS[$currentActive->package?->tier] ?? 1) : 0;
+
+        $allPackages = MembershipPackage::query()
+            ->where('is_active', true)
             ->get();
 
-        return view('member.packages.index', compact('packages'));
+        $packages = $allPackages->map(function ($pkg) use ($currentActive, $currentTierRank) {
+            $newTierRank = self::TIER_RANKS[$pkg->tier] ?? 1;
+
+            $pkg->is_downgrade = $currentActive && ($newTierRank < $currentTierRank);
+            $pkg->is_eligible = ! $pkg->is_downgrade;
+            $pkg->is_current_tier = $currentActive && ($newTierRank === $currentTierRank);
+            $pkg->is_upgrade = $currentActive && ($newTierRank > $currentTierRank);
+
+            return $pkg;
+        });
+
+        return view('member.packages.index', compact('packages', 'currentActive'));
     }
 
     /**
@@ -52,10 +82,34 @@ class MembershipPackageController extends Controller
                 ->with('profile_incomplete', true);
         }
 
-        if (! $package->is_active || $package->status !== 'active') {
+        if (! $package->is_active) {
             return redirect()
                 ->route('member.membership.packages')
                 ->with('error', 'Paket membership yang dipilih sedang tidak aktif.');
+        }
+
+        // Proteksi Tier (Pilihan 2): Dilarang downgrade saat masih memiliki membership tier lebih tinggi yang aktif
+        $today = now('Asia/Jakarta')->startOfDay();
+        $user = auth()->user();
+        $currentActive = $user?->memberships()
+            ->where('status', 'active')
+            ->where('start_date', '<=', $today->toDateString())
+            ->where('end_date', '>=', $today->toDateString())
+            ->with('package')
+            ->latest('end_date')
+            ->first();
+
+        $currentTierRank = $currentActive ? (self::TIER_RANKS[$currentActive->package?->tier] ?? 1) : 0;
+        $newTierRank = self::TIER_RANKS[$package->tier] ?? 1;
+
+        if ($currentActive && $newTierRank < $currentTierRank) {
+            $currentTierName = $currentActive->package?->name ?? 'tingkat lebih tinggi';
+            $targetRoute = (request()->is('m/*') || request()->routeIs('mobile.*'))
+                ? 'mobile.packages.index'
+                : 'member.membership.packages';
+
+            return redirect()->route($targetRoute)
+                ->with('error', "Anda saat ini memiliki keanggotaan aktif {$currentTierName}. Pembelian tier yang lebih rendah hanya dapat dilakukan setelah masa aktif membership Anda berakhir.");
         }
 
         $banks = Bank::query()
@@ -87,10 +141,34 @@ class MembershipPackageController extends Controller
                 ->with('profile_incomplete', true);
         }
 
-        if (! $package->is_active || $package->status !== 'active') {
+        if (! $package->is_active) {
             return redirect()
                 ->route('member.membership.packages')
                 ->with('error', 'Paket membership yang dipilih sedang tidak aktif.');
+        }
+
+        // Proteksi Tier (Pilihan 2): Dilarang downgrade saat masih memiliki membership tier lebih tinggi yang aktif
+        $today = now('Asia/Jakarta')->startOfDay();
+        $user = $request->user();
+        $currentActive = $user?->memberships()
+            ->where('status', 'active')
+            ->where('start_date', '<=', $today->toDateString())
+            ->where('end_date', '>=', $today->toDateString())
+            ->with('package')
+            ->latest('end_date')
+            ->first();
+
+        $currentTierRank = $currentActive ? (self::TIER_RANKS[$currentActive->package?->tier] ?? 1) : 0;
+        $newTierRank = self::TIER_RANKS[$package->tier] ?? 1;
+
+        if ($currentActive && $newTierRank < $currentTierRank) {
+            $currentTierName = $currentActive->package?->name ?? 'tingkat lebih tinggi';
+            $targetRoute = ($request->is('m/*') || $request->routeIs('mobile.*'))
+                ? 'mobile.packages.index'
+                : 'member.membership.packages';
+
+            return redirect()->route($targetRoute)
+                ->with('error', "Anda saat ini memiliki keanggotaan aktif {$currentTierName}. Pembelian tier yang lebih rendah hanya dapat dilakukan setelah masa aktif membership Anda berakhir.");
         }
 
         $banks = Bank::query()
@@ -119,12 +197,62 @@ class MembershipPackageController extends Controller
 
         $totalAmount = $effectivePrice + $uniqueCode;
 
+        $user = $request->user();
+        $payment = null;
+        if ($user) {
+            $bankDestination = $selectedBank ? "{$selectedBank->name} ({$selectedBank->account_number} a.n. {$selectedBank->account_holder})" : null;
+
+            if ($request->filled('payment_id')) {
+                $payment = Payment::where('id', $request->query('payment_id'))
+                    ->where('member_id', $user->id)
+                    ->where('status', 'pending')
+                    ->first();
+            }
+
+            if (! $payment) {
+                $payment = Payment::where('member_id', $user->id)
+                    ->where('package_id', $package->id)
+                    ->where('package_type', 'membership')
+                    ->where('status', 'pending')
+                    ->whereNull('proof_image_path')
+                    ->latest('id')
+                    ->first();
+            }
+
+            if (! $payment) {
+                do {
+                    $invoiceId = 'INV-'.strtoupper(Str::random(8));
+                } while (Payment::where('invoice_id', $invoiceId)->exists());
+
+                $payment = Payment::create([
+                    'invoice_id' => $invoiceId,
+                    'member_id' => $user->id,
+                    'package_id' => $package->id,
+                    'package_type' => 'membership',
+                    'payment_type' => 'membership',
+                    'amount' => $totalAmount,
+                    'bank_id' => $selectedBank?->id,
+                    'bank_destination' => $bankDestination,
+                    'status' => 'pending',
+                    'proof_image_path' => null,
+                    'proof_image_url' => null,
+                ]);
+            } else {
+                $payment->update([
+                    'amount' => $totalAmount,
+                    'bank_id' => $selectedBank?->id,
+                    'bank_destination' => $bankDestination,
+                ]);
+            }
+        }
+
         return view('member.packages.upload-proof', compact(
             'package',
             'banks',
             'selectedBank',
             'uniqueCode',
-            'totalAmount'
+            'totalAmount',
+            'payment'
         ));
     }
 
@@ -144,10 +272,34 @@ class MembershipPackageController extends Controller
                 ->with('profile_incomplete', true);
         }
 
-        if (! $package->is_active || $package->status !== 'active') {
+        if (! $package->is_active) {
             return redirect()
                 ->route('member.membership.packages')
                 ->with('error', 'Paket membership yang dipilih sedang tidak aktif.');
+        }
+
+        // Proteksi Tier (Pilihan 2): Dilarang downgrade saat masih memiliki membership tier lebih tinggi yang aktif
+        $today = now('Asia/Jakarta')->startOfDay();
+        $user = $request->user();
+        $currentActive = $user?->memberships()
+            ->where('status', 'active')
+            ->where('start_date', '<=', $today->toDateString())
+            ->where('end_date', '>=', $today->toDateString())
+            ->with('package')
+            ->latest('end_date')
+            ->first();
+
+        $currentTierRank = $currentActive ? (self::TIER_RANKS[$currentActive->package?->tier] ?? 1) : 0;
+        $newTierRank = self::TIER_RANKS[$package->tier] ?? 1;
+
+        if ($currentActive && $newTierRank < $currentTierRank) {
+            $currentTierName = $currentActive->package?->name ?? 'tingkat lebih tinggi';
+            $targetRoute = ($request->is('m/*') || $request->routeIs('mobile.*'))
+                ? 'mobile.packages.index'
+                : 'member.membership.packages';
+
+            return redirect()->route($targetRoute)
+                ->with('error', "Anda saat ini memiliki keanggotaan aktif {$currentTierName}. Pembelian tier yang lebih rendah hanya dapat dilakukan setelah masa aktif membership Anda berakhir.");
         }
 
         $validated = $request->validated();
@@ -203,21 +355,56 @@ class MembershipPackageController extends Controller
 
         $bankDestination = "{$bank->name} ({$bank->account_number} a.n. {$bank->account_holder})";
 
-        $payment = Payment::create([
-            'invoice_id' => $invoiceId,
-            'member_id' => $request->user()->id,
-            'package_id' => $package->id,
-            'package_type' => 'membership',
-            'payment_type' => 'membership',
-            'amount' => $totalAmount,
-            'bank_id' => $bank->id,
-            'bank_sender' => $validated['sender_name'],
-            'bank_destination' => $bankDestination,
-            'proof_image_path' => $path,
-            'proof_image_url' => $url,
-            'transfer_date' => now(),
-            'status' => 'pending',
-        ]);
+        $payment = null;
+        if ($request->filled('payment_id')) {
+            $payment = Payment::where('id', $request->input('payment_id'))
+                ->where('member_id', $request->user()->id)
+                ->where('status', 'pending')
+                ->first();
+        }
+
+        if (! $payment) {
+            $payment = Payment::where('member_id', $request->user()->id)
+                ->where('package_id', $package->id)
+                ->where('package_type', 'membership')
+                ->where('status', 'pending')
+                ->whereNull('proof_image_path')
+                ->latest('id')
+                ->first();
+        }
+
+        if ($payment) {
+            $payment->update([
+                'amount' => $totalAmount,
+                'bank_id' => $bank->id,
+                'bank_sender' => $validated['sender_name'],
+                'bank_destination' => $bankDestination,
+                'proof_image_path' => $path,
+                'proof_image_url' => $url,
+                'transfer_date' => now(),
+                'status' => 'pending',
+            ]);
+        } else {
+            do {
+                $invoiceId = 'INV-'.strtoupper(Str::random(8));
+            } while (Payment::where('invoice_id', $invoiceId)->exists());
+
+            $payment = Payment::create([
+                'invoice_id' => $invoiceId,
+                'member_id' => $request->user()->id,
+                'package_id' => $package->id,
+                'package_type' => 'membership',
+                'payment_type' => 'membership',
+                'amount' => $totalAmount,
+                'bank_id' => $bank->id,
+                'bank_sender' => $validated['sender_name'],
+                'bank_destination' => $bankDestination,
+                'proof_image_path' => $path,
+                'proof_image_url' => $url,
+                'transfer_date' => now(),
+                'status' => 'pending',
+            ]);
+        }
 
         $admins = User::where('role', 'admin')->get();
         Notification::send($admins, new AdminNewPaymentNotification($payment));
@@ -236,7 +423,7 @@ class MembershipPackageController extends Controller
             abort(403, 'Anda tidak memiliki akses ke transaksi ini.');
         }
 
-        $payment->load(['membershipPackage', 'bank']);
+        $payment->load(['membershipPackage', 'ptPackage', 'bank']);
 
         return view('member.packages.payment-status', compact('payment'));
     }

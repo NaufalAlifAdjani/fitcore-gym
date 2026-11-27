@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PtSession extends Model
 {
@@ -21,9 +20,7 @@ class PtSession extends Model
         'status' => PtSessionStatus::class,
         'completed_at' => 'datetime',
         'trainer_earnings' => 'integer',
-        'gym_revenue' => 'decimal:2',
         'trainer_revenue' => 'decimal:2',
-        'payout_date' => 'datetime',
     ];
 
     public function setSessionDateAttribute($value): void
@@ -51,11 +48,6 @@ class PtSession extends Model
     public function trainer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'trainer_id');
-    }
-
-    public function rating(): HasOne
-    {
-        return $this->hasOne(Rating::class);
     }
 
     // Accessors
@@ -117,7 +109,7 @@ class PtSession extends Model
         return now()->greaterThanOrEqualTo($startsAt->copy()->subHours($cutoffHours));
     }
 
-    public function markAsCompleted(?string $notes = null): void
+    public function markAsCompleted(): void
     {
         $rate = $this->trainer?->trainerProfile?->commission_rate
             ?? (int) config('pt_booking.default_commission_rate', 60000);
@@ -128,9 +120,9 @@ class PtSession extends Model
 
         $this->update([
             'status' => PtSessionStatus::Completed,
-            'notes' => $notes ?? $this->notes,
             'completed_at' => now(),
             'trainer_earnings' => $earnings,
+            'trainer_revenue' => $this->trainer_revenue ?? $earnings,
         ]);
     }
 
